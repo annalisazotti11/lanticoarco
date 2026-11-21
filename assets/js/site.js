@@ -10,46 +10,103 @@
   function startHero() { $('fuoco').classList.add('in'); }
   function intro() {
     if (!root.classList.contains('has-intro')) { startHero(); return; }
-    var page = $('page'), logo = $('introLogo'), done = false;
+    var box = $('intro'), logo = $('introLogo'), fire = $('introFire'), done = false;
     function finish() {
       if (done) return; done = true;
-      page.style.clipPath = ''; root.classList.remove('has-intro');
+      root.classList.remove('has-intro');
       try { sessionStorage.setItem('aa-intro', '1'); } catch (e) {}
       startHero();
     }
+    function rectCSS(r) {
+      var rad = r.width / 2;
+      return { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', borderRadius: rad + 'px ' + rad + 'px 0px 0px' };
+    }
     function run() {
-      var r = logo.getBoundingClientRect();
-      if (!r.width || !page.animate) { finish(); return; }
-      var W = window.innerWidth, H = window.innerHeight;
-      // vano dell'arco nel logo (proporzioni misurate sul disegno)
-      var L = r.left + r.width * .325, R = r.left + r.width * .695, T = r.top + r.height * .5, B = r.top + r.height * .985;
-      var rad = (R - L) / 2, cx = (L + R) / 2;
-      var p0 = 'inset(' + (B - 2) + 'px ' + (W - cx - 2) + 'px ' + (H - B) + 'px ' + (cx - 2) + 'px round 2px 2px 0px 0px)';
-      var p1 = 'inset(' + T + 'px ' + (W - R) + 'px ' + (H - B) + 'px ' + L + 'px round ' + rad + 'px ' + rad + 'px 0px 0px)';
-      var p2 = 'inset(0px 0px 0px 0px round 0px 0px 0px 0px)';
-      page.style.clipPath = p0;
-      var a1 = page.animate([{ clipPath: p0 }, { clipPath: p1 }], { duration: 700, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
-      a1.onfinish = function () {
+      var lr = logo.getBoundingClientRect(), mouth = document.querySelector('.oven-mouth');
+      if (!lr.width || !mouth || !fire.animate) { finish(); return; }
+      // vano dell'arco nel disegno del logo: il fuoco sta dietro al logo, che resta intatto
+      var from = { left: lr.left + lr.width * .325, top: lr.top + lr.height * .5, width: lr.width * .37, height: lr.height * .485 };
+      var a = rectCSS(from);
+      Object.keys(a).forEach(function (k) { fire.style[k] = a[k]; });
+      var ignite = fire.animate([{ opacity: 0, transform: 'scaleY(.4)' }, { opacity: 1, transform: 'scaleY(1)' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' });
+      ignite.onfinish = function () {
         setTimeout(function () {
-          var a2 = page.animate([{ clipPath: p1 }, { clipPath: p2 }], { duration: 1100, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' });
-          logo.animate([{ transform: 'scale(1)', opacity: 1 }, { transform: 'scale(1.6)', opacity: 0 }], { duration: 1100, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' });
-          a2.onfinish = function () { a1.cancel(); a2.cancel(); finish(); };
-        }, 350);
+          var to = rectCSS(mouth.getBoundingClientRect());
+          var fly = fire.animate([rectCSS(from), to], { duration: 1100, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' });
+          logo.animate([{ opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }, { opacity: 0, transform: 'translate(-50%,-50%) scale(1.08)' }], { duration: 650, easing: 'ease-in', fill: 'forwards' });
+          box.animate([{ backgroundColor: getComputedStyle(box).backgroundColor }, { backgroundColor: 'rgba(244,235,223,0)' }], { duration: 900, delay: 250, easing: 'ease-in-out', fill: 'forwards' });
+          fly.onfinish = function () {
+            fire.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, fill: 'forwards' }).onfinish = finish;
+          };
+        }, 450);
       };
     }
-    $('intro').addEventListener('click', finish);
-    var go = function () { setTimeout(run, 900); };
+    box.addEventListener('click', finish);
+    var go = function () { setTimeout(run, 850); };
     if (logo.complete) go(); else { logo.onload = go; logo.onerror = finish; }
-    setTimeout(finish, 6000);
+    setTimeout(finish, 7000);
   }
   intro();
 
   document.querySelectorAll('[data-arch-path]').forEach(function (p) { p.setAttribute('d', AA.ARCH_PATH); });
 
+
+  /* ================= Il fuoco nel forno (WebGL, leggero) ================= */
+  var fireCtl = (function fire() {
+    var c = $('fire');
+    if (!c) return null;
+    var gl;
+    try { gl = c.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'low-power' }); } catch (e) { gl = null; }
+    if (!gl) return null;
+    var fs = [
+      'precision mediump float;uniform vec2 R;uniform float T;',
+      'float h(vec2 p){p=fract(p*vec2(.1031,.1030));p+=dot(p,p.yx+33.33);return fract((p.x+p.y)*p.x);}',
+      'float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}',
+      'float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}',
+      'void main(){',
+      ' vec2 uv=gl_FragCoord.xy/R; float x=(uv.x-.5)*R.x/R.y; float y=uv.y;',
+      ' vec3 col=mix(vec3(.17,.055,.02),vec3(.02,.008,.004),smoothstep(.0,.85,y));',
+      ' float gy=y-.12; col+=vec3(.40,.12,.03)*exp(-(x*x*2.5+gy*gy*5.));',
+      ' float n1=fbm(vec2(x*3.2,y*2.2-T*1.5));',
+      ' float n2=fbm(vec2(x*6.5+n1*1.8,y*4.6-T*2.6));',
+      ' float bx=x+.04; float bed=exp(-bx*bx*7.);',
+      ' float v=bed*(1.-y/(.26+.52*bed))*(.7+.6*n2);',
+      ' float f=clamp((v*.8+n1*.75+n2*.6-1.)*2.,0.,1.)*(.5+.5*v)*smoothstep(.0,.03,y);',
+      ' col=col*(1.-clamp(f*1.6,0.,1.))+vec3(1.5*f,1.5*f*f*f,f*f*f*f*f*f);',
+      ' float e=fbm(vec2(x*24.,y*20.-T*.35))*smoothstep(.07,.0,y);',
+      ' col+=vec3(1.,.36,.07)*e*.9+vec3(1.,.7,.3)*e*e*e*e*1.2;',
+      ' gl_FragColor=vec4(col,1.);',
+      '}'].join('\n');
+    function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; }
+    var a = sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'), b = sh(gl.FRAGMENT_SHADER, fs);
+    if (!a || !b) return null;
+    var pr = gl.createProgram(); gl.attachShader(pr, a); gl.attachShader(pr, b); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+    gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    var uR = gl.getUniformLocation(pr, 'R'), uT = gl.getUniformLocation(pr, 'T');
+    var scale = Math.min(window.devicePixelRatio || 1, 2) * .6, running = false, t0 = performance.now();
+    function size() {
+      var w = Math.max(2, Math.round(c.clientWidth * scale)), hh = Math.max(2, Math.round(c.clientHeight * scale));
+      if (c.width !== w || c.height !== hh) { c.width = w; c.height = hh; gl.viewport(0, 0, w, hh); }
+    }
+    function draw(t) { gl.uniform2f(uR, c.width, c.height); gl.uniform1f(uT, t); gl.drawArrays(gl.TRIANGLES, 0, 3); }
+    function loop(now) { if (!running) return; draw((now - t0) / 1000); requestAnimationFrame(loop); }
+    size(); draw(3.2);
+    c.closest('.oven').classList.add('gl');
+    window.addEventListener('resize', function () { clearTimeout(c._t); c._t = setTimeout(function () { size(); if (!running) draw(3.2); }, 150); });
+    return {
+      play: function () { if (reduce || running) return; running = true; requestAnimationFrame(loop); },
+      pause: function () { running = false; }
+    };
+  })();
+
   /* ================= Scintille che salgono dal forno ================= */
   (function sparks() {
     var c = $('sparks');
-    if (!c || reduce) return;
+    if (!c || reduce) { if (fireCtl && !reduce) fireCtl.play(); return; }
     var ctx = c.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W, H, ps = [], running = true;
     function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
     function spawn(initial) {
@@ -82,18 +139,11 @@
     new IntersectionObserver(function (es) {
       var vis = es[0].isIntersecting;
       if (vis && !running) { running = true; tick(); } else if (!vis) running = false;
+      if (fireCtl) { if (vis) fireCtl.play(); else fireCtl.pause(); }
     }).observe($('fuoco'));
   })();
+  if (fireCtl && reduce) fireCtl.pause();
 
-  /* Bagliore che segue il mouse */
-  var glow = $('glow');
-  if (glow && window.matchMedia('(pointer: fine)').matches) {
-    $('fuoco').addEventListener('pointermove', function (e) {
-      var r = glow.getBoundingClientRect();
-      glow.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      glow.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    });
-  }
 
   /* ================= Capitoli: comparsa, pallini, colore della barra ================= */
   var chapters = [].slice.call(document.querySelectorAll('.ch'));
@@ -146,14 +196,16 @@
     var list = $('imList'), info = $('imInfo'), photo = $('imPhoto'), cur = -1, timer, user = false;
     $('imCount').textContent = NUM[items.length] || items.length;
     list.innerHTML = items.map(function (it, i) {
-      return '<li><button type="button" data-i="' + i + '" aria-pressed="false">' + esc(it.name.replace(/^Impasto\s+/i, '')) + '</button></li>';
+      var label = it.name.replace(/^Impasto\s+/i, '');
+      label = label.charAt(0).toUpperCase() + label.slice(1);
+      return '<li><button type="button" data-i="' + i + '" aria-pressed="false">' + esc(label) + '</button></li>';
     }).join('');
     function show(i) {
       if (i === cur) return;
       cur = i;
       var it = items[i];
       list.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', Number(b.dataset.i) === i); });
-      var p = it.price == null ? '' : (Number(it.price) === 0 ? 'Impasto base, incluso' : AA.price(it.price, { signed: true }));
+      var p = it.price == null ? '' : (Number(it.price) === 0 ? 'Compreso nel prezzo della pizza' : AA.price(it.price, { signed: true }) + ' sul prezzo della pizza');
       info.classList.remove('swap'); void info.offsetWidth; info.classList.add('swap');
       info.innerHTML = '<h3>' + esc(it.name) + '</h3>' + (it.desc ? '<p>' + esc(it.desc) + '</p>' : '') + (p ? '<span class="im-price">' + p + '</span>' : '');
       var src = it.image ? AA.src(it.image) : AA.ROOT + 'assets/img/impasti-grano.webp';
@@ -170,36 +222,82 @@
     if (!reduce) timer = setInterval(function () { if (!user && $('impasti').classList.contains('in')) show((cur + 1) % items.length); }, 4200);
   }
 
-  /* ================= Pizze: il carosello che gira ================= */
+  /* ================= Pizze: che voglia hai? ================= */
+  var HINTS = [
+    [/gourmet/i, 'Le ricette di casa, con prodotti del territorio e presìdi Slow Food.'],
+    [/classic/i, 'Le pizze di sempre, con pomodoro 100% italiano e basilico fresco.'],
+    [/bianc/i, 'Senza pomodoro: mozzarella, verdure, salumi e formaggi.'],
+    [/vegan/i, 'Nessun ingrediente di origine animale.']
+  ];
   function pizzas(data) {
-    var items = [];
+    var tabs = [];
     data.sections.forEach(function (s) {
-      if (!s.visible) return;
-      s.items.forEach(function (it) { if (it.featured && it.available !== false && it.image) items.push(it); });
+      if (!s.visible || s.group !== 'pizze') return;
+      var all = AA.visibleItems(s).filter(function (it) { return it.available !== false; });
+      var cut = all.filter(function (it) { return it.cutout; });
+      var list = cut.length ? cut : all.filter(function (it) { return it.image; });
+      if (!list.length) return;
+      list.sort(function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0); });
+      var hint = s.subtitle || '';
+      HINTS.forEach(function (h) { if (!hint && h[0].test(s.name)) hint = h[1]; });
+      tabs.push({ sec: s, items: list, total: all.length, hint: hint, label: s.name.replace(/^Pizze\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); }) });
     });
-    if (!items.length) return;
-    var i = 0, timer, plate = document.querySelector('.pz-plate'), text = document.querySelector('.pz-text');
+    if (!tabs.length) return;
+    var tabBox = $('pzTabs'), plate = $('pzPlate'), card = $('pzCard'), big = $('pzBig');
+    var t = 0, i = 0, timer = null;
+    tabBox.innerHTML = tabs.map(function (tb, k) {
+      return '<button type="button" role="tab" data-k="' + k + '" aria-selected="' + (k === 0) + '">' + esc(tb.label) + '</button>';
+    }).join('');
+    function fitBig() {
+      var n = (big.textContent || '').length || 1;
+      big.style.setProperty('--bn', Math.min(22, 150 / n).toFixed(2) + 'vw');
+    }
     function paint() {
-      var it = items[i];
+      var tb = tabs[t], it = tb.items[i];
       $('pzName').textContent = it.name;
       $('pzDesc').textContent = it.desc || '';
-      $('pzPrice').textContent = it.price != null ? AA.price(it.price) : '';
-      $('pzBig').textContent = it.name;
-      $('pzCount').textContent = (i + 1) + ' / ' + items.length;
-      $('pzImg').src = AA.src(it.image);
-      $('pzImg').alt = 'Pizza ' + it.name;
-      text.classList.remove('swap'); void text.offsetWidth; text.classList.add('swap');
+      var pr = it.price;
+      if (it.prices && it.prices.length) pr = Math.min.apply(null, it.prices.map(function (p) { return Number(p.price) || Infinity; }));
+      $('pzPrice').textContent = pr != null && isFinite(pr) ? (it.prices && it.prices.length ? 'da ' : '') + AA.price(pr) : '';
+      $('pzTags').innerHTML = (it.tags || []).map(function (c) { var tg = AA.TAG_BY_CODE[c]; return tg ? '<span>' + esc(tg.short) + '</span>' : ''; }).join('') + (it.featured ? '<span>Preferita</span>' : '');
+      $('pzCount').textContent = (i + 1) + ' / ' + tb.items.length;
+      big.textContent = it.name; fitBig();
+      var img = $('pzImg');
+      plate.classList.toggle('photo', !it.cutout);
+      img.src = AA.src(it.cutout || it.image);
+      img.alt = 'Pizza ' + it.name;
+      card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
     }
-    function go(d) {
-      i = (i + d + items.length) % items.length;
-      if (reduce) { paint(); return; }
+    function swapTo(fn) {
+      if (reduce) { fn(); paint(); return; }
       plate.classList.remove('inn'); plate.classList.add('out');
-      setTimeout(function () { paint(); plate.classList.remove('out'); void plate.offsetWidth; plate.classList.add('inn'); }, 430);
+      setTimeout(function () { fn(); paint(); plate.classList.remove('out'); void plate.offsetWidth; plate.classList.add('inn'); }, 420);
     }
-    $('pzPrev').onclick = function () { clearInterval(timer); go(-1); };
-    $('pzNext').onclick = function () { clearInterval(timer); go(1); };
-    paint();
-    if (!reduce) timer = setInterval(function () { if ($('pizze').classList.contains('in')) go(1); }, 5500);
+    function setTab(k) {
+      t = k; i = 0;
+      tabBox.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-selected', Number(b.dataset.k) === k); });
+      $('pzHint').textContent = tabs[k].hint;
+      var a = $('pzAll');
+      a.href = AA.ROOT + 'menu/#' + encodeURIComponent(tabs[k].sec.id);
+      a.textContent = 'Tutte le ' + tabs[k].total + ' nel menu';
+    }
+    function stop() { clearInterval(timer); timer = null; }
+    tabBox.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b || Number(b.dataset.k) === t) return;
+      stop(); var k = Number(b.dataset.k); swapTo(function () { setTab(k); });
+    });
+    $('pzPrev').onclick = function () { stop(); swapTo(function () { i = (i - 1 + tabs[t].items.length) % tabs[t].items.length; }); };
+    $('pzNext').onclick = function () { stop(); swapTo(function () { i = (i + 1) % tabs[t].items.length; }); };
+    // scorrimento col dito sulla pizza
+    var sx = null;
+    plate.parentNode.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    plate.parentNode.addEventListener('touchend', function (e) {
+      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) (dx < 0 ? $('pzNext') : $('pzPrev')).click();
+    });
+    setTab(0); paint();
+    window.addEventListener('resize', fitBig);
+    if (!reduce) timer = setInterval(function () { if ($('pizze').classList.contains('in')) swapTo(function () { i = (i + 1) % tabs[t].items.length; }); }, 6000);
   }
 
   /* ================= Inserzioni nell'apertura ================= */
@@ -245,7 +343,13 @@
     var info = data.info || {};
     bind(info);
     var st = AA.openStatus(info);
-    if (st) { var s = $('status'); s.hidden = false; s.textContent = st.text; s.classList.toggle('is-open', st.open); }
+    if (st) {
+      var s = $('status'); s.hidden = false; s.textContent = st.text; s.classList.toggle('is-open', st.open);
+      var vs = $('viStatus'); vs.hidden = false; vs.textContent = st.text; vs.classList.toggle('is-open', st.open);
+      var now = new Date(), d = now.getDay(), open = (info.openDays || []).indexOf(d) >= 0;
+      var late = info.openTo && (now.getHours() * 60 + now.getMinutes()) >= (function (x) { var p = x.split(':'); return p[0] * 60 + Number(p[1]); })(info.openTo);
+      $('viTitle').textContent = st.open ? 'Ti teniamo un tavolo?' : (open && !late ? 'Ci vediamo stasera?' : 'Ti teniamo un tavolo?');
+    }
     var ann = AA.announcement(data);
     if (ann) { $('notice').hidden = false; $('notice').textContent = ann; }
     doughs(data); pizzas(data); promos(data);

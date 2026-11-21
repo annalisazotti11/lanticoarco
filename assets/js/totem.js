@@ -131,7 +131,7 @@
           measure.innerHTML = '<div class="pg">' + headHTML(sec, g, first) + '<div class="pg-body"></div></div>';
           var body = measure.querySelector('.pg-body');
           var avail = body.clientHeight;
-          var colsHTML = [], colEls = [];
+          var colsHTML = [], colEls = [], colFit = [];
           for (var c0 = 0; c0 < cols; c0++) {
             var ce = document.createElement('div');
             ce.className = 'pg-col';
@@ -148,12 +148,12 @@
               if (col.offsetHeight > avail && html) { col.removeChild(col.lastChild); break; }
               html += units[k];
               k++;
-              if (col.offsetHeight > avail) break; // unità più alta dello schermo: la mostra da sola
+              if (col.offsetHeight > avail) { colFit[c] = Math.max(.6, avail / col.offsetHeight); break; } // unità più alta dello schermo: la mostra da sola, rimpicciolita
             }
             colsHTML.push(html);
           }
           secPages.push({ group: g.id, sec: sec.id, html: '<div class="pg">' + headHTML(sec, g, first) + '<div class="pg-body">' +
-            colEls.map(function (ce, ci) { return '<div class="pg-col">' + (colsHTML[ci] || '') + '</div>'; }).join('') + '</div></div>' });
+            colEls.map(function (ce, ci) { return '<div class="pg-col' + (colFit[ci] ? ' fit" style="--fit:' + colFit[ci].toFixed(3) : '') + '">' + (colsHTML[ci] || '') + '</div>'; }).join('') + '</div></div>' });
         }
         secPages.forEach(function (p, i) {
           if (secPages.length > 1) p.html = p.html.replace('<p class="pg-count" data-count></p>', '<p class="pg-count">' + (i + 1) + ' di ' + secPages.length + '</p>');
@@ -212,6 +212,17 @@
     bar.style.width = '100%';
   }
 
+  /* Rete di sicurezza: se una colonna sfora lo schermo, la rimpicciolisce quanto basta */
+  function fitPage(node) {
+    var body = node.querySelector && node.querySelector('.pg-body');
+    if (!body) return;
+    var avail = body.clientHeight;
+    body.querySelectorAll('.pg-col').forEach(function (c) {
+      c.classList.remove('fit'); c.style.removeProperty('--fit');
+      var h = c.offsetHeight;
+      if (h > avail + 1) { c.classList.add('fit'); c.style.setProperty('--fit', Math.max(.55, avail / h).toFixed(3)); }
+    });
+  }
   function show(i, instant) {
     if (!pages.length) return;
     idx = (i + pages.length) % pages.length;
@@ -231,6 +242,8 @@
     var loading = stage.querySelector('.tv-loading');
     if (loading) loading.remove();
     stage.appendChild(node);
+    fitPage(node);
+    node.querySelectorAll('img').forEach(function (im) { if (!im.complete) im.addEventListener('load', function () { fitPage(node); }, { once: true }); });
     document.querySelectorAll('#groups button').forEach(function (b) { b.setAttribute('aria-current', b.dataset.g === p.group ? 'true' : 'false'); });
     schedule();
   }

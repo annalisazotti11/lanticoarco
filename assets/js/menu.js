@@ -44,7 +44,7 @@
   }
 
   function itemHTML(it, sec) {
-    var meta = tagsHTML(it.tags) + algsHTML(it.allergens);
+    var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags) + algsHTML(it.allergens);
     return '<li class="item"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
       '<span class="item-main">' +
       '<span class="item-name">' + hl(it.name) + (it.frozen ? '<span class="frz" title="' + esc(DATA.info.frozenLegend) + '">*</span>' : '') + '</span>' +
@@ -96,6 +96,29 @@
     });
   }
 
+  /* Come si sceglie: tre passi, chiudibile */
+  function renderGuide() {
+    var box = $('guide'), seen = false;
+    try { seen = localStorage.getItem('aa-guida') === '1'; } catch (e) {}
+    if (seen || filtering()) { box.hidden = true; return; }
+    var imp = DATA.sections.filter(function (s) { return s.group === 'impasti' && s.visible; })[0];
+    var min = null;
+    if (imp) imp.items.forEach(function (it) { var v = Number(it.price); if (v > 0 && (min === null || v < min)) min = v; });
+    var hasExtra = DATA.sections.some(function (s) { return s.group === 'aggiunte' && s.visible && s.items.length; });
+    var steps = [
+      ['g-impasti', 'Scegli l\'impasto', 'Il classico è compreso' + (min ? ', gli altri da ' + AA.price(min) + ' in più' : '') + '.'],
+      ['g-pizze', 'Poi la pizza', 'Gourmet, classiche, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
+      hasExtra ? ['g-aggiunte', 'Aggiungi o togli', 'Ogni pizza si può personalizzare: le aggiunte sono in fondo al menu.'] : null
+    ].filter(function (x) { return x && document.getElementById(x[0]); });
+    if (!steps.length) { box.hidden = true; return; }
+    box.innerHTML = '<div class="guide-in"><div class="guide-h"><h2 id="guideT">Prima volta da noi?</h2><button type="button" class="guide-x" id="guideX">Ho capito</button></div><ol>' +
+      steps.map(function (st) { return '<li><a href="#' + st[0] + '"><b>' + esc(st[1]) + '</b><span>' + esc(st[2]) + '</span></a></li>'; }).join('') +
+      '</ol><p class="guide-f">Allergie o intolleranze? Usa i <button type="button" id="guideF">filtri</button> o chiedi a noi: molte pizze si possono preparare senza glutine o senza lattosio.</p></div>';
+    box.hidden = false;
+    $('guideX').onclick = function () { try { localStorage.setItem('aa-guida', '1'); } catch (e) {} box.hidden = true; };
+    $('guideF').onclick = function () { $('filterBtn').click(); };
+  }
+
   function renderTiles() {
     var f = filtering();
     $('tiles').hidden = f;
@@ -122,7 +145,7 @@
     $('contenuto').innerHTML = html || '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
     $('gnavIn').innerHTML = nav;
     $('gnav').hidden = !nav;
-    renderTiles();
+    renderTiles(); renderGuide();
     spy(); reveal();
   }
 

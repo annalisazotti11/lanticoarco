@@ -273,6 +273,7 @@
       var path = 'img/uploads/' + stamp + '-' + slug(nameHint) + '.' + r.ext;
       S.pending[path] = r.url;
       obj.image = path;
+      delete obj.cutout; // la pizza scontornata era della foto vecchia
       changed();
       return true;
     } catch (ex) { toast(ex.message); return false; }
@@ -695,7 +696,8 @@
       var target = ed.type === 'promo' ? S.data.promos[ed.promo] : it;
       if (await uploadInto(target, target.name || target.title)) refreshEditor();
     } else if (act === 'img-del') {
-      (ed.type === 'promo' ? S.data.promos[ed.promo] : it).image = ''; changed(); refreshEditor();
+      var tgt = ed.type === 'promo' ? S.data.promos[ed.promo] : it;
+      tgt.image = ''; delete tgt.cutout; changed(); refreshEditor();
     } else if (act === 'pmode') {
       if (a.dataset.v === 'n' && !(it.prices && it.prices.length)) it.prices = [{ label: '', price: it.price }, { label: '', price: null }];
       if (a.dataset.v === '1' && it.prices && it.prices.length) { it.price = it.prices[0].price; it.prices = []; }
