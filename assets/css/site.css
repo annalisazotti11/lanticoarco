@@ -61,8 +61,8 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .hero { position: relative; height: 155vh; height: 155svh; }
 .hero-stick { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .arch { position: absolute; inset: 0; background: var(--night); clip-path: inset(100% 50% 0 50%); will-change: clip-path; }
-.arch canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform-origin: 70% 100%; }
-#fire { background: radial-gradient(70% 45% at 70% 100%, #ff8a36 0%, #c24418 22%, #4a180a 52%, var(--night) 80%); }
+.arch canvas, .arch video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform-origin: 66% 80%; }
+#fire { object-fit: cover; object-position: 50% 75%; background: radial-gradient(60% 40% at 66% 78%, #9a3a12 0%, #4a180a 45%, var(--night) 80%); }
 .arch-shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(14, 8, 5, .78) 0%, rgba(14, 8, 5, .42) 38%, transparent 64%), linear-gradient(0deg, transparent 70%, rgba(14, 8, 5, .5) 100%); }
 .arch-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .arch-lines path { fill: none; stroke: rgba(26, 20, 16, .34); stroke-width: 1; }
@@ -243,7 +243,8 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
   .pill-line span { display: none; }
   .pill-line { padding: 0 13px; }
   .hero { height: 145vh; height: 145svh; }
-  .arch canvas { transform-origin: 50% 100%; }
+  .arch canvas, .arch video { transform-origin: 50% 82%; }
+  #fire { object-position: 50% 100%; }
   .hero-copy { left: calc(var(--ax, 12px) + 22px); right: calc(var(--ax, 12px) + 22px); top: var(--ctop, 200px); bottom: auto; max-width: none; }
   .hero-t { font-size: clamp(3rem, 14.5vw, 5.4rem); margin: 12px 0 16px; }
   .hero-s { font-size: 1rem; }
@@ -251,7 +252,8 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
   .hero-cta { flex-wrap: nowrap; gap: 10px; }
   .hero-cta .btn { min-height: 48px; padding: 0 20px; font-size: .95rem; }
   .hero-cta .lg { display: none; }
-  .arch-shade { background: linear-gradient(180deg, rgba(14, 8, 5, .55) 0%, rgba(14, 8, 5, .4) 55%, transparent 78%); }
+  .promo-float { display: none; }
+  .arch-shade { background: linear-gradient(180deg, rgba(14, 8, 5, .6) 0%, rgba(14, 8, 5, .5) 50%, rgba(14, 8, 5, .2) 70%, transparent 82%); }
   .hero-enter { display: none; }
   .st-grid { grid-template-columns: 1fr; }
   .st-side { position: static; }
