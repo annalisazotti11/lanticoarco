@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="aa-root" content="./">
-<title>Pizzeria L'Antico Arco · Cellamare (BA) · dal 2001</title>
+<title>Pizzeria L'Antico Arco, Cellamare: il fuoco è acceso dal 2001</title>
 <meta name="description" content="Pizzeria a Cellamare dal 2001: forno in pietra a legna d'ulivo, farine biologiche della Murgia, impasti alternativi, laboratorio senza glutine e pizze vegan. Prenotazioni al 080 4656280.">
 <meta name="theme-color" content="#f4ebdf">
 <meta property="og:title" content="Pizzeria L'Antico Arco · Cellamare">
@@ -32,15 +32,8 @@
   "sameAs": ["https://www.facebook.com/869344019766232"]
 }
 </script>
-<script>try{if(!sessionStorage.getItem('aa-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('has-intro')}catch(e){}</script>
 </head>
 <body>
-
-<!-- Ingresso: il logo, poi si entra dall'arco -->
-<div class="intro" id="intro" aria-hidden="true">
-  <div class="intro-fire" id="introFire"></div>
-  <img class="intro-logo" id="introLogo" src="assets/img/logo/logo.webp" alt="" width="1249" height="808">
-</div>
 
 <div class="page" id="page">
 <header class="nav" id="nav">
@@ -60,61 +53,55 @@
 <div class="notice" id="notice" hidden></div>
 
 <main>
-  <!-- 1 · Il fuoco -->
-  <section class="ch ch-fuoco" id="fuoco">
-    <div class="hero-grid">
-      <div class="hero-in">
-        <p class="kicker" data-rv>Pizzeria a Cellamare, dal 2001</p>
-        <h1 class="hero-t" aria-label="Pizza a legna d'ulivo">
-          <span class="ln"><span>Pizza</span></span>
-          <span class="ln"><span>a legna</span></span>
-          <span class="ln"><span>d'ulivo.</span></span>
+  <!-- 1 · Si entra dall'arco -->
+  <section class="hero" id="fuoco">
+    <div class="hero-stick" id="heroStick">
+      <div class="arch" id="arch">
+        <canvas id="fire"></canvas>
+        <canvas id="sparks"></canvas>
+        <div class="arch-shade"></div>
+      </div>
+      <svg class="arch-lines" id="archLines" aria-hidden="true"><path id="archPath"/></svg>
+      <div class="hero-copy" id="heroCopy">
+        <p class="hero-k">Pizzeria a Cellamare</p>
+        <h1 class="hero-t" aria-label="Il fuoco è acceso dal 2001.">
+          <span class="ln"><span>Il fuoco</span></span>
+          <span class="ln"><span>è acceso</span></span>
+          <span class="ln"><span>dal 2001.</span></span>
         </h1>
-        <p class="hero-s" data-rv style="--d:.45s">Forno in pietra, legna d'ulivo, farine bio macinate a pietra. E una famiglia che fa pizza dal 2001.</p>
-        <div class="hero-cta" data-rv style="--d:.6s">
-          <a class="btn btn-ink" href="menu/">Sfoglia il menu</a>
-          <a class="btn btn-line" href="tel:+390804656280" data-tel="phone">Prenota allo <span data-bind="phone">080 4656280</span></a>
+        <p class="hero-s">Legna d'ulivo, forno in pietra, farine bio di un piccolo mulino della Murgia. Il resto lo fanno le mani di Vito, Angela e della loro squadra.</p>
+        <div class="hero-cta">
+          <a class="btn btn-cream" href="menu/">Guarda il menu</a>
+          <a class="btn btn-ghost" href="tel:+390804656280" data-tel="phone">Prenota<span class="lg"> allo <span data-bind="phone">080 4656280</span></span></a>
         </div>
         <p class="hero-status" id="status" hidden></p>
         <aside class="promo-float" id="promoFloat" hidden aria-live="polite"></aside>
       </div>
-      <div class="oven" aria-hidden="true">
-        <div class="oven-mouth"><div class="oven-fire"></div><canvas id="fire"></canvas><canvas id="sparks"></canvas></div>
-        <svg class="oven-stones" viewBox="0 0 100 100"><defs><linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a98c72"/><stop offset="1" stop-color="#6e5444"/></linearGradient></defs><path data-arch-path fill="url(#stone)" stroke="#5a4335" stroke-width=".35"/></svg>
-      </div>
-    </div>
-    <div class="marquee" aria-hidden="true">
-      <div class="mq-track">
-        <span>Forno a legna d'ulivo</span><i></i><span>Farine bio macinate a pietra</span><i></i><span>Senza glutine dal 2011</span><i></i><span>Pizze vegane</span><i></i><span>Pomodoro 100% italiano</span><i></i><span>Sale dello Stagnone di Trapani</span><i></i><span>Olio EVO della Murgia</span><i></i><span>Birre artigianali di Cellamare</span><i></i>
-        <span>Forno a legna d'ulivo</span><i></i><span>Farine bio macinate a pietra</span><i></i><span>Senza glutine dal 2011</span><i></i><span>Pizze vegane</span><i></i><span>Pomodoro 100% italiano</span><i></i><span>Sale dello Stagnone di Trapani</span><i></i><span>Olio EVO della Murgia</span><i></i><span>Birre artigianali di Cellamare</span><i></i>
-      </div>
+      <a class="hero-enter" href="#storia" id="heroEnter"><span>Scorri ed entra</span><i></i></a>
     </div>
   </section>
 
   <!-- 2 · La storia -->
   <section class="ch ch-storia" id="storia">
-    <div class="st-head">
-      <h2 class="h2" data-rv>Il nome viene da un arco.</h2>
-      <p class="lead" data-rv style="--d:.12s">Quello dell'antica porta di Cellamare: nel 2001 Vito Zotti e sua moglie Angela aprono il loro primo locale proprio lì accanto. Da allora la strada è stata lunga. Eccola, in breve.</p>
-    </div>
-    <div class="track-wrap" data-rv style="--d:.2s">
-      <div class="track" id="track" tabindex="0" aria-label="La nostra storia, scorri orizzontalmente">
-        <article class="tc tc-ink"><b>1985</b><p>Vito ha 14 anni e si iscrive all'Alberghiero di Bari. Poi anni di cucine e sale ricevimenti.</p></article>
-        <figure class="tc tc-photo"><img src="assets/img/galleria/panzerotti.webp" alt="Panzerotti al forno e fritti" loading="lazy"><figcaption>Panzerotti, al forno o fritti</figcaption></figure>
-        <article class="tc"><b>2001</b><p>Il 26 ottobre apre L'Antico Arco, accanto alla porta antica del paese. Asporto, domicilio e tanta voglia di fare.</p></article>
-        <article class="tc"><b>2007</b><p>La nuova sede con la saletta da 32 posti. Arrivano farine bio, birre a km 0 e presìdi Slow Food.</p></article>
-        <figure class="tc tc-photo"><img src="assets/img/sala.webp" alt="La sala apparecchiata con fiori gialli" loading="lazy"><figcaption>La sala</figcaption></figure>
-        <article class="tc"><b>2011</b><p>Nasce il laboratorio dedicato al senza glutine: pizze, prodotti e patate fritte in olio EVO.</p></article>
-        <article class="tc tc-ink"><b>2015</b><p>Vito diventa istruttore della Nazionale Italiana Pizzaioli e all'Expo firma il Guinness della pizza più lunga: 1595 metri.</p></article>
-        <figure class="tc tc-photo"><img src="assets/img/galleria/staff.webp" alt="La squadra dell'Antico Arco" loading="lazy"><figcaption>La squadra</figcaption></figure>
-        <article class="tc"><b>Oggi</b><p>Nove impasti, un menu vegano, il pomodoro nickel free. E la stessa voglia di stupirvi.</p></article>
-      </div>
-      <div class="track-ctl">
-        <button type="button" class="round" data-dir="-1" aria-label="Indietro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button type="button" class="round" data-dir="1" aria-label="Avanti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="st-grid">
+      <header class="st-side">
+        <h2 class="h2" data-rv><span data-years>25</span> anni, un arco e un forno.</h2>
+        <p class="lead" data-rv style="--d:.1s">La nostra storia comincia in un'aula dell'Alberghiero di Bari e arriva, per ora, a 1.595 metri di pizza.</p>
+      </header>
+      <div class="st-main">
+      <ol class="tl" id="tl">
+        <li class="tl-ember" aria-hidden="true"></li>
+        <li class="tl-i"><span class="tl-y">1985</span><div class="tl-b"><h3>Un ragazzo di 14 anni</h3><p>Vito si iscrive all'Alberghiero di Bari. Seguono anni di cucine, banchetti e sale ricevimenti.</p></div></li>
+        <li class="tl-i"><span class="tl-y">2001</span><div class="tl-b"><h3>L'arco</h3><p>Il 26 ottobre Vito e sua moglie Angela aprono accanto all'antica porta di Cellamare. Il nome viene da lì. Asporto, domicilio e tanta voglia di fare.</p></div></li>
+        <li class="tl-i"><span class="tl-y">2007</span><div class="tl-b"><h3>La nuova casa</h3><p>Una sede più grande, con la saletta da 32 posti. Arrivano le farine biologiche, le birre artigianali a km 0 e i presìdi Slow Food.</p><figure class="tl-ph"><img src="assets/img/sala.webp" alt="La sala apparecchiata con fiori gialli" loading="lazy"></figure></div></li>
+        <li class="tl-i"><span class="tl-y">2011</span><div class="tl-b"><h3>Senza glutine, sul serio</h3><p>Nasce un laboratorio dedicato: pizze e prodotti senza glutine, patate fritte in olio EVO.</p></div></li>
+        <li class="tl-i tl-big"><span class="tl-y">2015</span><div class="tl-b"><p class="tl-stat">1.595<small>metri</small></p><h3>La pizza più lunga del mondo</h3><p>Vito diventa istruttore della Nazionale Italiana Pizzaioli ed è nella squadra che all'Expo di Milano firma il Guinness.</p></div></li>
+        <li class="tl-i"><span class="tl-y">Oggi</span><div class="tl-b"><h3>La stessa voglia di stupirvi</h3><p>Nove impasti, un menu vegano, il pomodoro nickel free. Il forno, intanto, è sempre acceso.</p><figure class="tl-ph wide"><img src="assets/img/galleria/staff.webp" alt="La squadra dell'Antico Arco nella sala" loading="lazy"><figcaption>La squadra</figcaption></figure></div></li>
+      </ol>
+      <a class="next" href="#impasti" data-rv><span>Ma una pizza comincia dall'impasto.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
       </div>
     </div>
-    <a class="next" href="#impasti" data-rv><span>Ma parliamo di pizza. Si comincia dall'impasto.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
+
   </section>
 
   <!-- 3 · Gli impasti -->
@@ -128,11 +115,18 @@
         <div class="im-photo"><img id="imPhoto" src="assets/img/impasti-grano.webp" alt=""></div>
       </div>
       <div class="im-body">
-        <h2 class="h2" data-rv>Si comincia dall'impasto.</h2>
-        <p class="lead im-lead" data-rv style="--d:.08s"><span id="imCount">Nove</span> impasti, tutti con farine biologiche. Il classico è compreso, gli altri costano un piccolo supplemento. Valgono per pizze, pizzelle, pucce e panzerotti.</p>
-        <ul class="im-list" id="imList" data-rv style="--d:.14s"></ul>
+        <h2 class="h2" data-rv><span id="imCount">Nove</span> impasti. Nessuna scorciatoia.</h2>
+        <p class="lead im-lead" data-rv style="--d:.08s">Farine naturali da un piccolo mulino a km 0 della Murgia: niente enzimi, niente miglioratori. Il classico è compreso, gli altri costano un piccolo supplemento.</p>
+        <dl class="im-spec" data-rv style="--d:.12s">
+          <div><dt>Farina</dt><dd>tipo 1, biologica</dd></div>
+          <div><dt>Sale</dt><dd>integrale dello Stagnone di Trapani</dd></div>
+          <div><dt>Olio</dt><dd>EVO bio della Murgia barese</dd></div>
+          <div><dt>Lievito</dt><dd>di birra, pochissimo</dd></div>
+        </dl>
+        <p class="im-pick" data-rv style="--d:.16s">Scegli il tuo:</p>
+        <ul class="im-list" id="imList" data-rv style="--d:.18s"></ul>
         <div class="im-info" id="imInfo" aria-live="polite"></div>
-        <a class="next" href="#pizze" data-rv style="--d:.2s"><span>Scelto l'impasto? Ora la pizza.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
+        <a class="next" href="#pizze" data-rv style="--d:.2s"><span>Scelto l'impasto? Adesso la pizza.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
       </div>
     </div>
   </section>
