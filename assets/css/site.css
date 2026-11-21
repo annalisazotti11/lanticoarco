@@ -374,7 +374,9 @@ body.locked { overflow: hidden; }
 /* la pizza si prepara mentre scorri: disegno a strati che diventa la foto */
 .build { position: relative; height: 300vh; height: 300svh; margin-top: clamp(6px, 1.5vh, 18px); }
 .build-stick { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(24px, 4vw, 72px); padding-top: 72px; }
-.build-nav { list-style: none; margin: 0 0 clamp(18px, 3vh, 30px); padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.build-nav { list-style: none; margin: 0 0 clamp(18px, 3vh, 30px); padding: 0; display: flex; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.build-nav::-webkit-scrollbar { display: none; }
+.build-nav button { flex: none; }
 .build-nav button { font: inherit; font-size: .84rem; font-weight: 600; color: var(--ink-2); background: transparent; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); cursor: pointer; transition: background .35s, color .35s, border-color .35s; }
 .build-nav button:hover { border-color: var(--ink); color: var(--ink); }
 .build-nav button.done { color: var(--ink); border-color: #cdbba6; }
