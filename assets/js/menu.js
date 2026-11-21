@@ -78,16 +78,34 @@
       return '<li>' + esc(s.label) + ' <b class="num">' + AA.price(s.price, { signed: true }) + '</b></li>';
     }).join('') + '</ul>' : '';
   }
-  function sectionHTML(sec) {
-    var items = sec.items.filter(matches);
-    if (!items.length) return '';
-    var body = sec.layout === 'cards' && !state.q ? cardsHTML(items, sec)
+  var OPEN = {};   // sottocategorie aperte
+  var CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function sectionBody(sec, items) {
+    return sec.layout === 'cards' && !state.q ? cardsHTML(items, sec)
       : sec.layout === 'chips' ? chipsHTML(items)
       : '<ul class="items">' + items.map(function (it) { return itemHTML(it, sec); }).join('') + '</ul>';
-    return '<section class="sec" id="' + esc(sec.id) + '"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
-      (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') +
-      (sec.note && !filtering() ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '') +
-      (filtering() ? '' : suppHTML(sec)) + body + '</section>';
+  }
+  function sectionHTML(sec, accordion, groupId) {
+    var items = sec.items.filter(matches);
+    if (!items.length) return '';
+    var extra = (sec.note && !filtering() ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '') + (filtering() ? '' : suppHTML(sec));
+    if (!accordion) {
+      return '<section class="sec" id="' + esc(sec.id) + '"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
+        (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + extra + sectionBody(sec, items) + '</section>';
+    }
+    var open = filtering() || !!OPEN[sec.id];
+    var ph = items.filter(function (it) { return it.cutout; })[0] || items.filter(function (it) { return it.image; })[0];
+    var prices = items.map(function (it) { return it.prices && it.prices.length ? Number(it.prices[0].price) : Number(it.price); }).filter(function (v) { return isFinite(v) && v > 0; });
+    var min = prices.length ? Math.min.apply(null, prices) : null;
+    var noun = groupId === 'pizze' ? (items.length === 1 ? 'pizza' : 'pizze') : (items.length === 1 ? 'proposta' : 'proposte');
+    var name = sec.name;
+    return '<section class="sec acc' + (open ? ' open' : '') + '" id="' + esc(sec.id) + '">' +
+      '<button type="button" class="acc-h" data-acc="' + esc(sec.id) + '" aria-expanded="' + open + '" aria-controls="' + esc(sec.id) + '-b">' +
+      (ph ? '<span class="acc-ph' + (ph.cutout ? ' cut' : '') + '"><img alt="" loading="lazy" src="' + esc(AA.src(ph.cutout || ph.image)) + '"></span>' : '<span class="acc-ph ph-empty">' + AA.archSVG() + '</span>') +
+      '<span class="acc-tx"><b>' + esc(name) + '</b><small>' + items.length + ' ' + noun + (min ? ' · da ' + AA.price(min) : '') + '</small>' +
+      (sec.subtitle ? '<i>' + esc(sec.subtitle) + '</i>' : '') + '</span>' +
+      '<span class="acc-ch">' + CHEV + '</span></button>' +
+      '<div class="acc-b" id="' + esc(sec.id) + '-b"><div class="acc-in"' + (open ? '' : ' inert') + '>' + extra + sectionBody(sec, items) + '</div></div></section>';
   }
 
   function groupsWithContent() {
@@ -136,8 +154,9 @@
   function render() {
     var html = '', nav = '';
     groupsWithContent().forEach(function (g) {
-      var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible; });
-      var inner = secs.map(sectionHTML).join('');
+      var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
+      var acc = secs.length > 1;
+      var inner = secs.map(function (s) { return sectionHTML(s, acc, g.id); }).join('');
       if (!inner) return;
       html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + inner + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
@@ -471,8 +490,28 @@
     $('footer').innerHTML = f;
   }
 
+  function toggleAcc(id, force) {
+    var el = document.getElementById(id); if (!el || !el.classList.contains('acc')) return;
+    var open = force != null ? force : !el.classList.contains('open');
+    OPEN[id] = open;
+    el.classList.toggle('open', open);
+    el.querySelector('.acc-h').setAttribute('aria-expanded', open);
+    var inn = el.querySelector('.acc-in');
+    if (open) inn.removeAttribute('inert'); else inn.setAttribute('inert', '');
+    if (open) {
+      reveal();
+      setTimeout(function () {
+        var r = el.getBoundingClientRect();
+        if (r.top < 120 || r.top > window.innerHeight * .6) window.scrollTo({ top: window.scrollY + r.top - 130, behavior: 'smooth' });
+      }, 60);
+    }
+  }
   function bind() {
     var t;
+    $('contenuto').addEventListener('click', function (e) {
+      var h = e.target.closest('[data-acc]'); if (!h) return;
+      toggleAcc(h.dataset.acc);
+    });
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
     $('searchBtn').onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { $('q').focus(); }, 300); };
     $('contenuto').addEventListener('click', function (e) {
@@ -504,7 +543,12 @@
     DATA = data;
     renderHeader(); render(); renderFooter(); bind(); bindBuilder();
     if (location.hash === '#crea') { openBuilder(null); return; }
-    if (location.hash) { var el = document.querySelector(location.hash); if (el) el.scrollIntoView(); }
+    if (location.hash) {
+      var el = null;
+      try { el = document.querySelector(location.hash); } catch (e) {}
+      if (el && el.classList.contains('acc')) toggleAcc(el.id, true);
+      else if (el) el.scrollIntoView();
+    }
   }).catch(function () {
     $('contenuto').innerHTML = '<p class="empty">Non riesco a caricare il menu. Controlla la connessione e ricarica la pagina.</p>';
   });

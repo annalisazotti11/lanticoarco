@@ -150,6 +150,68 @@
     if (sparkCtl) { if (vis) sparkCtl.play(); else sparkCtl.pause(); }
   }).observe(stick);
 
+  /* ================= Titoli che entrano parola per parola ================= */
+  function splitWords(el) {
+    var nodes = [].slice.call(el.childNodes), out = document.createDocumentFragment(), i = 0;
+    function word(content) {
+      var w = document.createElement('span'); w.className = 'w';
+      var inner = document.createElement('span'); inner.style.setProperty('--i', i++);
+      if (typeof content === 'string') inner.textContent = content; else inner.appendChild(content);
+      w.appendChild(inner); return w;
+    }
+    nodes.forEach(function (n) {
+      if (n.nodeType === 3) {
+        n.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) out.appendChild(document.createTextNode(' ')); else out.appendChild(word(part));
+        });
+      } else if (n.nodeType === 1 && n.tagName === 'BR') { out.appendChild(n); }
+      else out.appendChild(word(n));
+    });
+    el.innerHTML = ''; el.appendChild(out); el.classList.add('words'); el.removeAttribute('data-rv');
+  }
+  if (!reduce) document.querySelectorAll('.ch .h2').forEach(function (h) { if (h.id !== 'viTitle') splitWords(h); });
+
+  /* ================= Numeri che contano ================= */
+  function countUp(el) {
+    var txt = el.textContent.trim(), dec = txt.indexOf(',') >= 0 ? (txt.split(',')[1] || '').length : 0;
+    var target = parseFloat(txt.replace(/\./g, '').replace(',', '.'));
+    if (!isFinite(target) || reduce) return;
+    var t0 = performance.now(), dur = 1500;
+    (function step(now) {
+      var k = clamp((now - t0) / dur, 0, 1), v = target * easeOut(k);
+      var parts = v.toFixed(dec).split('.');
+      el.textContent = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (dec ? ',' + parts[1] : '');
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  var countIO = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { countIO.unobserve(e.target); countUp(e.target); } });
+  }, { threshold: .6 });
+  function watchCounts() { document.querySelectorAll('[data-count]').forEach(function (el) { countIO.observe(el); }); }
+
+  /* ================= Pizze: la luce segue il puntatore ================= */
+  (function pointerLight() {
+    var sec = $('pizze'), stage = document.querySelector('.pz-stage');
+    if (!sec || reduce || !window.matchMedia('(pointer: fine)').matches) return;
+    var raf2 = 0, mx = .75, my = .5;
+    sec.addEventListener('pointermove', function (e) {
+      var r = sec.getBoundingClientRect();
+      mx = (e.clientX - r.left) / r.width; my = (e.clientY - r.top) / r.height;
+      if (!raf2) raf2 = requestAnimationFrame(function () {
+        raf2 = 0;
+        sec.style.setProperty('--lx', (mx * 100).toFixed(1) + '%');
+        sec.style.setProperty('--ly', (my * 100).toFixed(1) + '%');
+        if (stage) {
+          var sr = stage.getBoundingClientRect(), cx = (sr.left + sr.width / 2 - r.left) / r.width, cy = (sr.top + sr.height / 2 - r.top) / r.height;
+          stage.style.setProperty('--rx', ((cy - my) * 10).toFixed(2) + 'deg');
+          stage.style.setProperty('--ry', ((mx - cx) * 12).toFixed(2) + 'deg');
+        }
+      });
+    });
+    sec.addEventListener('pointerleave', function () { if (stage) { stage.style.setProperty('--rx', '0deg'); stage.style.setProperty('--ry', '0deg'); } });
+  })();
+
   /* ================= Capitoli: comparsa e voce attiva nella barra ================= */
   var chapters = [].slice.call(document.querySelectorAll('.ch'));
   var dots = {};
@@ -169,6 +231,54 @@
   chapters.forEach(function (c) { revealIO.observe(c); spyIO.observe(c); });
 
   /* ================= Storia: la miccia accende gli anni ================= */
+  var sparkTrail = (function () {
+    var tl = $('tl');
+    if (!tl || reduce) return null;
+    var c = document.createElement('canvas');
+    c.className = 'tl-sparks'; c.setAttribute('aria-hidden', 'true');
+    tl.appendChild(c);
+    var ctx = c.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var CW = 200, CH = 260, HX = 100, HY = 150, ps = [], running = false, lastFill = null;
+    c.width = CW * dpr; c.height = CH * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    function emit(n, power) {
+      for (var i = 0; i < n; i++) {
+        var a = -Math.PI / 2 + (Math.random() - .5) * Math.PI * 1.5, sp = (.6 + Math.random() * 1.8) * power;
+        ps.push({ x: HX, y: HY, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 0, max: 30 + Math.random() * 45, r: .6 + Math.random() * 1.5, star: Math.random() < .25, rot: Math.random() * 3 });
+      }
+      if (!running) { running = true; requestAnimationFrame(tick); }
+    }
+    function star(x, y, r, rot) {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.beginPath();
+      for (var k = 0; k < 4; k++) { ctx.rotate(Math.PI / 2); ctx.moveTo(0, 0); ctx.quadraticCurveTo(r * .35, r * .35, r * 3, 0); ctx.quadraticCurveTo(r * .35, -r * .35, 0, 0); }
+      ctx.fill(); ctx.restore();
+    }
+    function tick() {
+      ctx.clearRect(0, 0, CW, CH);
+      for (var i = ps.length - 1; i >= 0; i--) {
+        var p = ps[i];
+        p.life++; p.x += p.vx; p.y += p.vy; p.vx *= .96; p.vy = p.vy * .96 + .035; p.rot += .08;
+        var k = 1 - p.life / p.max;
+        if (k <= 0) { ps.splice(i, 1); continue; }
+        ctx.fillStyle = 'rgba(26,20,16,' + (k * .85).toFixed(3) + ')';
+        if (p.star) star(p.x, p.y, p.r * 1.3, p.rot);
+        else { ctx.beginPath(); ctx.arc(p.x, p.y, p.r * k + .3, 0, 6.283); ctx.fill(); }
+      }
+      if (ps.length) requestAnimationFrame(tick); else { running = false; ctx.clearRect(0, 0, CW, CH); }
+    }
+    setInterval(function () { if (lastFill !== null && document.visibilityState === 'visible' && $('storia').classList.contains('in')) emit(1, .7); }, 380);
+    return {
+      move: function (fill) {
+        if (lastFill !== null) {
+          var d = fill - lastFill;
+          ps.forEach(function (p) { p.y -= d; });         // le scintille restano dove sono nate
+          if (Math.abs(d) > 1) emit(Math.min(6, 1 + Math.round(Math.abs(d) / 14)), 1);
+        }
+        lastFill = fill;
+        c.style.transform = 'translateY(' + (fill - HY + 14) + 'px)';
+      },
+      burst: function (y) { emit(14, 1.6); }
+    };
+  })();
   (function fuse() {
     var tl = $('tl');
     if (!tl) return;
@@ -178,7 +288,12 @@
       var r = tl.getBoundingClientRect(), vh = window.innerHeight;
       var fill = reduce ? r.height : clamp(vh * .62 - r.top, 0, r.height - 14);
       tl.style.setProperty('--fill', fill + 'px');
-      items.forEach(function (li) { li.classList.toggle('lit', li.offsetTop <= fill + 6); });
+      if (sparkTrail) sparkTrail.move(fill);
+      items.forEach(function (li) {
+        var on = li.offsetTop <= fill + 6;
+        if (on && !li.classList.contains('lit') && sparkTrail && fill > 20) sparkTrail.burst();
+        li.classList.toggle('lit', on);
+      });
     }
     window.addEventListener('scroll', function () { if (!pend) pend = requestAnimationFrame(paint); }, { passive: true });
     window.addEventListener('resize', paint);
@@ -351,5 +466,6 @@
     var ann = AA.announcement(data);
     if (ann) { $('notice').hidden = false; $('notice').textContent = ann; }
     doughs(data); pizzas(data); promos(data);
+    watchCounts();
   }).catch(function () {});
 })();

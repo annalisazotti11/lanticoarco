@@ -14,8 +14,8 @@ body { background: var(--bg); color: var(--ink); font-size: 16px; }
 
 /* Apertura */
 .intro { max-width: 860px; margin: 0 auto; padding: 28px 18px 8px; }
-.intro-k { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-2); font-weight: 500; font-size: .9rem; }
-.intro-k.is-open::before, .intro-k.is-closed::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #a99a8d; }
+.intro-k { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 600; font-size: .92rem; }
+.intro-k.is-open::before, .intro-k.is-closed::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c8493d; box-shadow: 0 0 0 4px rgba(200, 73, 61, .14); }
 .intro-k.is-open::before { background: #3f9a52; box-shadow: 0 0 0 4px rgba(63, 154, 82, .16); }
 .intro-t { font-family: var(--font-display); font-weight: 600; letter-spacing: -.045em; font-size: clamp(3.4rem, 15vw, 5.4rem); line-height: .9; margin: 8px 0 20px; }
 .searchbar { display: flex; align-items: center; gap: 10px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 0 14px; transition: border-color .2s, box-shadow .2s; }
@@ -245,3 +245,30 @@ mark { background: #f1d9b5; color: inherit; border-radius: 3px; padding: 0 1px; 
 .b-reset { border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; margin-left: 4px; }
 .bf-p small { font-size: .5em; color: var(--ink-2); }
 .bf-s { max-width: 22ch; }
+
+/* ---------- Sottocategorie da aprire ---------- */
+.acc { margin-top: 12px; scroll-margin-top: 130px; }
+.grp-t + .acc, .bcta + .acc { margin-top: 18px; }
+.acc-h { width: 100%; display: grid; grid-template-columns: 68px 1fr auto; align-items: center; gap: 14px; text-align: left; padding: 10px 14px 10px 10px; border-radius: 22px; background: #fff; border: 1px solid var(--line); color: var(--ink); transition: background .25s, border-color .25s, box-shadow .35s, transform .2s; }
+.acc-h:hover { border-color: rgba(26, 20, 16, .28); }
+.acc-h:active { transform: scale(.99); }
+.acc-ph { width: 68px; height: 68px; border-radius: 18px; overflow: hidden; background: var(--line); display: grid; place-items: center; color: rgba(110, 84, 68, .35); }
+.acc-ph svg { width: 50%; }
+.acc-ph img { width: 100%; height: 100%; object-fit: cover; }
+.acc-ph.cut { background: transparent; border-radius: 50%; overflow: visible; }
+.acc-ph.cut img { object-fit: contain; transform: scale(1.12); filter: drop-shadow(0 8px 10px rgba(60, 40, 25, .3)); animation: accSpin 30s linear infinite; animation-play-state: paused; }
+.acc.open .acc-ph.cut img, .acc-h:hover .acc-ph.cut img { animation-play-state: running; }
+@keyframes accSpin { to { transform: scale(1.12) rotate(360deg); } }
+.acc-tx { min-width: 0; }
+.acc-tx b { display: block; font-family: var(--font-display); font-weight: 600; letter-spacing: -.025em; font-size: 1.3rem; line-height: 1.1; }
+.acc-tx small { display: block; color: var(--ink-2); font-size: .86rem; font-weight: 500; margin-top: 3px; }
+.acc-tx i { display: block; font-style: normal; color: var(--ink-2); font-size: .8rem; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.acc-ch { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; transition: transform .45s var(--ease-out), background .25s, color .25s, border-color .25s; }
+.acc-ch svg { width: 18px; height: 18px; }
+.acc.open .acc-ch { transform: rotate(180deg); background: var(--ink); color: var(--bg-2); border-color: var(--ink); }
+.acc.open .acc-h { background: var(--bg-2); box-shadow: 0 18px 34px -26px rgba(60, 40, 25, .55); }
+.acc-b { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease-out); }
+.acc.open .acc-b { grid-template-rows: 1fr; }
+.acc-in { overflow: hidden; min-height: 0; }
+.acc.open .acc-in { padding: 6px 0 8px; }
+.acc-in > .sec-note:first-child, .acc-in > .suppl:first-child { margin-top: 10px; }
