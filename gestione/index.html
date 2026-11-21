@@ -61,6 +61,7 @@
       <button type="button" data-tab="altro"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18.5" cy="12" r="1.3"/></svg><span>Altro</span></button>
     </nav>
     <div class="ah-r">
+      <div class="hist" role="group" aria-label="Annulla e rifai"><button type="button" class="hb" data-act="undo" title="Annulla l'ultima modifica (Ctrl+Z)" aria-label="Annulla l'ultima modifica" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="hb" data-act="redo" title="Rifai (Ctrl+Y)" aria-label="Rifai la modifica annullata" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button></div>
       <span class="demo-pill" id="demoPill" hidden>Prova</span>
       <a class="b b-ghost b-sm ah-site" href="../" target="_blank" rel="noopener">Vedi il sito</a>
     </div>
@@ -84,6 +85,7 @@
   <section class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetT" tabindex="-1">
     <header class="sheet-h">
       <h2 id="sheetT"></h2>
+      <div class="hist" role="group" aria-label="Annulla e rifai"><button type="button" class="hb" data-act="undo" title="Annulla l'ultima modifica (Ctrl+Z)" aria-label="Annulla l'ultima modifica" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="hb" data-act="redo" title="Rifai (Ctrl+Y)" aria-label="Rifai la modifica annullata" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button></div>
       <button class="b b-main b-sm" type="button" data-act="close">Fatto</button>
     </header>
     <div class="sheet-b" id="sheetB"></div>

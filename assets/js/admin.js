@@ -181,7 +181,7 @@
     document.body.classList.toggle('is-demo', store.mode === 'demo');
     $('demoPill').hidden = store.mode !== 'demo';
     S.published = JSON.parse(S.publishedStr);
-    render(); updateState();
+    histReset(); render(); updateState();
   }
 
   function ensureShape(d) {
@@ -206,51 +206,124 @@
     updateState();
     clearTimeout(draftT);
     draftT = setTimeout(saveDraft, 350);
+    histLater();
   }
   function saveDraft() {
     var ok = AA.writeJSON(AA.DRAFT_KEY, { data: S.data, pending: S.pending, baseSha: S.baseSha, savedAt: new Date().toISOString() });
     if (!ok) toast('Memoria del dispositivo piena: pubblica le modifiche per non perderle.', 6000);
   }
-  function isDirty() { return JSON.stringify(S.data) !== S.publishedStr; }
+  /* confronto che non bada all'ordine delle chiavi */
+  function stable(o) {
+    if (Array.isArray(o)) return '[' + o.map(stable).join(',') + ']';
+    if (o && typeof o === 'object') return '{' + Object.keys(o).filter(function (k) { return o[k] !== undefined; }).sort().map(function (k) { return JSON.stringify(k) + ':' + stable(o[k]); }).join(',') + '}';
+    return JSON.stringify(o);
+  }
+  function pubData() { return S.published || (S.published = JSON.parse(S.publishedStr)); }
+  function isDirty() { return JSON.stringify(S.data) !== S.publishedStr && stable(S.data) !== stable(pubData()); }
   function fmtP(v) { return v == null || v === '' ? 'senza prezzo' : AA.price(v); }
-  /* Elenco leggibile di cosa cambia rispetto a ciò che è online */
-  function changesList() {
-    var pub = S.published || JSON.parse(S.publishedStr), cur = S.data, out = [];
+  function setOrDel(o, k, v) { if (v === undefined) delete o[k]; else o[k] = clone(v); }
+  function idsOf(arr) { return (arr || []).map(function (x) { return x.id; }); }
+
+  /* Differenze leggibili tra due versioni del menu. Ogni voce sa anche come tornare indietro (r). */
+  function diff(pub, cur) {
+    var out = [];
+    function add(t, r) { out.push({ t: t, r: r }); }
     var pi = {}, ci = {};
-    (pub.sections || []).forEach(function (s) { s.items.forEach(function (it) { pi[it.id] = { it: it, sec: s }; }); });
-    cur.sections.forEach(function (s) { s.items.forEach(function (it) { ci[it.id] = { it: it, sec: s }; }); });
+    (pub.sections || []).forEach(function (s) { (s.items || []).forEach(function (it, k) { pi[it.id] = { it: it, sec: s, k: k }; }); });
+    cur.sections.forEach(function (s) { s.items.forEach(function (it, k) { ci[it.id] = { it: it, sec: s, k: k }; }); });
+    function secOf(id) { return cur.sections.filter(function (s) { return s.id === id; })[0]; }
+    function here(id) { var r = null; cur.sections.forEach(function (s) { s.items.forEach(function (it, k) { if (it.id === id) r = { it: it, sec: s, k: k }; }); }); return r; }
+    function putBack(a) {
+      var s = secOf(a.sec.id); if (!s) return;
+      var c = here(a.it.id); if (c) c.sec.items.splice(c.k, 1);
+      s.items.splice(Math.min(a.k, s.items.length), 0, c ? c.it : clone(a.it));
+    }
     Object.keys(ci).forEach(function (id) {
       var a = pi[id], b = ci[id], n = b.it.name || 'Piatto senza nome';
-      if (!a) { out.push('Nuovo in ' + b.sec.name + ': ' + n); return; }
-      if (JSON.stringify(a.it) === JSON.stringify(b.it) && a.sec.id === b.sec.id) return;
+      if (!a) { add('Nuovo in ' + b.sec.name + ': ' + n, function () { var c = here(id); if (c) c.sec.items.splice(c.k, 1); }); return; }
+      if (stable(a.it) === stable(b.it) && a.sec.id === b.sec.id) return;
       var done = false;
-      if (a.it.price !== b.it.price) { out.push(n + ': ' + fmtP(a.it.price) + ' → ' + fmtP(b.it.price)); done = true; }
-      if ((a.it.available !== false) !== (b.it.available !== false)) { out.push(n + ': ' + (b.it.available === false ? 'esaurito' : 'di nuovo disponibile')); done = true; }
-      if (a.sec.id !== b.sec.id) { out.push(n + ': spostato in ' + b.sec.name); done = true; }
+      if (a.it.price !== b.it.price) { add(n + ': ' + fmtP(a.it.price) + ' → ' + fmtP(b.it.price), function () { var c = here(id); if (c) setOrDel(c.it, 'price', a.it.price); }); done = true; }
+      if ((a.it.available !== false) !== (b.it.available !== false)) { add(n + ': ' + (b.it.available === false ? 'esaurito' : 'di nuovo disponibile'), function () { var c = here(id); if (c) setOrDel(c.it, 'available', a.it.available); }); done = true; }
+      if (a.sec.id !== b.sec.id) { add(n + ': spostato in ' + b.sec.name, function () { putBack(a); }); done = true; }
       var ra = Object.assign({}, a.it, { price: 0, available: 0 }), rb = Object.assign({}, b.it, { price: 0, available: 0 });
-      if (JSON.stringify(ra) !== JSON.stringify(rb)) out.push(n + ': scheda modificata');
-      else if (!done) out.push(n + ': modificato');
+      var whole = function () {
+        var c = here(id); if (!c) return;
+        var keep = { price: c.it.price, available: c.it.available };
+        Object.keys(c.it).forEach(function (k) { delete c.it[k]; });
+        Object.assign(c.it, clone(a.it)); setOrDel(c.it, 'price', keep.price); setOrDel(c.it, 'available', keep.available);
+      };
+      if (stable(ra) !== stable(rb)) {
+        var LBL = { name: 'nome', desc: 'ingredienti', image: 'foto', cutout: 'foto', tags: 'etichette', allergens: 'allergeni', prices: 'formati', note: 'nota', featured: 'evidenza', frozen: 'surgelato' }, what = [];
+        Object.keys(Object.assign({}, ra, rb)).forEach(function (k) { var l = LBL[k] || 'altri dettagli'; if (stable(ra[k]) !== stable(rb[k]) && what.indexOf(l) < 0) what.push(l); });
+        var txt = what.length === 1 && what[0] === 'nome' ? (a.it.name || 'Piatto') + ' diventa «' + n + '»'
+          : n + ': ' + (what.length === 1 ? ({ ingredienti: 'cambiano gli ingredienti', foto: 'cambia la foto', etichette: 'cambiano le etichette', allergeni: 'cambiano gli allergeni', formati: 'cambiano i formati', nota: 'cambia la nota', evidenza: 'cambia la voce in evidenza', surgelato: 'cambia la voce surgelato' })[what[0]] || 'cambia la scheda' : 'cambiano ' + what.slice(0, -1).join(', ') + ' e ' + what[what.length - 1]);
+        add(txt, whole);
+      }
+      else if (!done) add(n + ': modificato', whole);
     });
-    Object.keys(pi).forEach(function (id) { if (!ci[id]) out.push('Tolto: ' + (pi[id].it.name || 'piatto')); });
-    var strip = function (arr) { return JSON.stringify((arr || []).map(function (s) { var c = Object.assign({}, s); delete c.items; return c; })); };
-    if (strip(pub.sections) !== strip(cur.sections) || JSON.stringify(pub.groups) !== JSON.stringify(cur.groups)) out.push('Categorie del menu modificate');
-    var pp = {}; (pub.promos || []).forEach(function (p) { pp[p.id] = p; });
+    Object.keys(pi).forEach(function (id) { if (!ci[id]) add('Tolto: ' + (pi[id].it.name || 'piatto'), function () { putBack(pi[id]); }); });
+    // ordine dei piatti dentro la stessa categoria
+    cur.sections.forEach(function (s) {
+      var ps = (pub.sections || []).filter(function (x) { return x.id === s.id; })[0];
+      if (!ps) return;
+      var common = idsOf(s.items).filter(function (id) { return pi[id] && pi[id].sec.id === s.id; });
+      var before = idsOf(ps.items).filter(function (id) { return common.indexOf(id) >= 0; });
+      if (common.join() !== before.join()) add('Ordine cambiato in ' + s.name, function () {
+        var t = secOf(s.id); if (!t) return;
+        var pos = {}; idsOf(ps.items).forEach(function (id, k) { pos[id] = k; });
+        var fixed = t.items.filter(function (x) { return x.id in pos; }).sort(function (x, y) { return pos[x.id] - pos[y.id]; });
+        var j = 0; t.items = t.items.map(function (x) { return x.id in pos ? fixed[j++] : x; });
+      });
+    });
+    var strip = function (arr) { return stable((arr || []).map(function (x) { var c = Object.assign({}, x); delete c.items; return c; })); };
+    if (strip(pub.sections) !== strip(cur.sections) || stable(pub.groups || []) !== stable(cur.groups)) add('Categorie del menu modificate', function () {
+      cur.groups = clone(pub.groups || []);
+      var by = {}; cur.sections.forEach(function (x) { by[x.id] = x; });
+      var next = (pub.sections || []).map(function (ps) {
+        var m = clone(ps);
+        if (by[ps.id]) { m.items = by[ps.id].items; delete by[ps.id]; }
+        return m;
+      });
+      Object.keys(by).forEach(function (id) { if (by[id].items.length) next.push(by[id]); });
+      cur.sections = next;
+    });
+    var pp = {}; (pub.promos || []).forEach(function (p, k) { pp[p.id] = { p: p, k: k }; });
     cur.promos.forEach(function (p) {
-      var o = pp[p.id], t = p.title || 'Novità senza titolo';
-      if (!o) out.push('Nuova novità: ' + t);
-      else if (JSON.stringify(o) !== JSON.stringify(p)) out.push(o.active !== p.active ? t + ': ' + (p.active ? 'attivata' : 'spenta') : 'Novità modificata: ' + t);
-      delete pp[p.id];
+      var o = pp[p.id] && pp[p.id].p, t = p.title || 'Novità senza titolo';
+      if (!o) add('Nuova novità: ' + t, function () { cur.promos = cur.promos.filter(function (x) { return x.id !== p.id; }); });
+      else if (stable(o) !== stable(p)) add(o.active !== p.active ? t + ': ' + (p.active ? 'attivata' : 'spenta') : 'Novità modificata: ' + t, function () {
+        cur.promos = cur.promos.map(function (x) { return x.id === p.id ? clone(o) : x; });
+      });
     });
-    Object.keys(pp).forEach(function (id) { out.push('Novità tolta: ' + (pp[id].title || '')); });
+    Object.keys(pp).forEach(function (id) {
+      if (!cur.promos.some(function (x) { return x.id === id; })) add('Novità tolta: ' + (pp[id].p.title || ''), function () { cur.promos.splice(Math.min(pp[id].k, cur.promos.length), 0, clone(pp[id].p)); });
+    });
+    var pc = idsOf(cur.promos).filter(function (id) { return pp[id]; }), pb = idsOf(pub.promos).filter(function (id) { return pc.indexOf(id) >= 0; });
+    if (pc.join() !== pb.join()) add('Ordine delle novità cambiato', function () {
+      cur.promos.sort(function (x, y) { return (pp[x.id] ? pp[x.id].k : 999) - (pp[y.id] ? pp[y.id].k : 999); });
+    });
     var pa = pub.info || {}, ca = cur.info;
-    if ((pa.announcement || {}).text !== ca.announcement.text) out.push(ca.announcement.text ? 'Avviso: «' + ca.announcement.text + '»' : 'Avviso tolto');
-    if ((pa.closedOn || '') !== (ca.closedOn || '')) out.push(ca.closedOn === AA.todayISO() ? 'Oggi siete chiusi' : 'Di nuovo aperti oggi');
-    if (JSON.stringify([pa.openDays, pa.openFrom, pa.openTo, pa.hours]) !== JSON.stringify([ca.openDays, ca.openFrom, ca.openTo, ca.hours])) out.push('Giorni e orari modificati');
-    var ia = Object.assign({}, pa), ib = Object.assign({}, ca);
-    ['announcement', 'closedOn', 'openDays', 'openFrom', 'openTo', 'hours'].forEach(function (k) { delete ia[k]; delete ib[k]; });
-    if (JSON.stringify(ia) !== JSON.stringify(ib)) out.push('Contatti e informazioni modificati');
-    if (JSON.stringify(pub.settings || {}) !== JSON.stringify(cur.settings)) out.push('Impostazioni modificate');
+    if (stable(pa.announcement || { text: '', until: '' }) !== stable(ca.announcement)) add(ca.announcement.text ? 'Avviso: «' + ca.announcement.text + '»' : 'Avviso tolto', function () { cur.info.announcement = clone(pa.announcement || { text: '', until: '' }); });
+    if ((pa.closedOn || '') !== (ca.closedOn || '')) add(ca.closedOn === AA.todayISO() ? 'Oggi siete chiusi' : 'Di nuovo aperti oggi', function () { setOrDel(cur.info, 'closedOn', pa.closedOn); });
+    var HK = ['openDays', 'openFrom', 'openTo', 'hours'];
+    if (stable(HK.map(function (k) { return pa[k]; })) !== stable(HK.map(function (k) { return ca[k]; }))) add('Giorni e orari modificati', function () { HK.forEach(function (k) { setOrDel(cur.info, k, pa[k]); }); });
+    var skip = ['announcement', 'closedOn'].concat(HK), keys = {};
+    Object.keys(pa).concat(Object.keys(ca)).forEach(function (k) { if (skip.indexOf(k) < 0) keys[k] = 1; });
+    if (Object.keys(keys).some(function (k) { return stable(pa[k]) !== stable(ca[k]); })) add('Contatti e informazioni modificati', function () {
+      Object.keys(keys).forEach(function (k) { setOrDel(cur.info, k, pa[k]); });
+    });
+    if (stable(pub.settings || {}) !== stable(cur.settings)) add('Impostazioni modificate', function () { cur.settings = clone(pub.settings || {}); ensureShape(cur); });
     return out;
+  }
+  function changesList() { return diff(pubData(), S.data).map(function (c) { return c.t; }); }
+  /* dopo un annullamento: ciò che torna uguale all'online riprende la sua forma esatta */
+  function canon() {
+    var pub = pubData();
+    if (stable(S.data) === stable(pub)) { S.data = clone(pub); return; }
+    var pi = {};
+    (pub.sections || []).forEach(function (s) { s.items.forEach(function (it) { pi[it.id] = it; }); });
+    S.data.sections.forEach(function (s) { s.items = s.items.map(function (it) { return pi[it.id] && stable(pi[it.id]) === stable(it) ? clone(pi[it.id]) : it; }); });
   }
   function updateState() {
     var d = isDirty();
@@ -258,8 +331,106 @@
     document.body.classList.toggle('has-pub', d);
     if (d) {
       var n = changesList().length || 1;
-      $('pubN').innerHTML = '<b>' + n + (n === 1 ? ' modifica' : ' modifiche') + '</b> da pubblicare<span>Vedi quali</span>';
+      $('pubN').innerHTML = '<b>' + n + (n === 1 ? ' modifica' : ' modifiche') + '</b> da pubblicare<span>Vedi e annulla</span>';
     }
+    histUI();
+  }
+
+  /* ================= Indietro e avanti (come Ctrl+Z) ================= */
+  var H = { list: [], i: 0, t: 0 };
+  function histReset() { clearTimeout(H.t); H.t = 0; H.list = [JSON.stringify(S.data)]; H.i = 0; histUI(); }
+  function histLater() { clearTimeout(H.t); H.t = setTimeout(histCommit, 700); histUI(); }
+  function histCommit() {
+    clearTimeout(H.t); H.t = 0;
+    if (!S.data) return;
+    var now = JSON.stringify(S.data);
+    if (now === H.list[H.i]) return histUI();
+    H.list = H.list.slice(0, H.i + 1); H.list.push(now);
+    if (H.list.length > 150) H.list.shift();
+    H.i = H.list.length - 1; histUI();
+  }
+  function canUndo() { return H.i > 0 || (H.t && JSON.stringify(S.data) !== H.list[H.i]); }
+  function canRedo() { return !H.t && H.i < H.list.length - 1; }
+  function histUI() {
+    document.querySelectorAll('[data-act="undo"]').forEach(function (b) { b.disabled = !canUndo(); });
+    document.querySelectorAll('[data-act="redo"]').forEach(function (b) { b.disabled = !canRedo(); });
+  }
+  function undo() {
+    histCommit();
+    if (H.i <= 0) { toast('Non c\'è niente da annullare.', 1800); return; }
+    var from = H.list[H.i]; H.i--; applySnap(H.list[H.i], from, false);
+  }
+  function redo() {
+    histCommit();
+    if (H.i >= H.list.length - 1) { toast('Non c\'è niente da rifare.', 1800); return; }
+    var from = H.list[H.i]; H.i++; applySnap(H.list[H.i], from, true);
+  }
+  function applySnap(str, fromStr, forward) {
+    var before = JSON.parse(fromStr), ed = S.ed;
+    var pid = ed && ed.type === 'promo' && S.data.promos[ed.promo] ? S.data.promos[ed.promo].id : null;
+    S.data = JSON.parse(str); ensureShape(S.data);
+    var what = diff(before, S.data);
+    afterDataSwap(pid);
+    var first = what[0] ? what[0].t : 'fatto';
+    toast((forward ? 'Avanti: ' : 'Indietro: ') + first + (what.length > 1 ? ' (e altre ' + (what.length - 1) + ')' : ''), 2600);
+  }
+  /* i dati sono cambiati da sotto: riallinea scheda aperta, vista e bozza */
+  function afterDataSwap(pid) {
+    var ed = S.ed;
+    if (ed && !$('sheet').hidden) {
+      var ok = true;
+      if (ed.type === 'item') {
+        var where = S.data.sections.filter(function (s) { return s.items.some(function (i) { return i.id === ed.item; }); })[0];
+        if (where) ed.sec = where.id; else ok = false;
+      } else if (ed.type === 'sec') ok = !!findSec(ed.sec);
+      else if (ed.type === 'group') ok = S.data.groups.some(function (g) { return g.id === ed.group; });
+      else if (ed.type === 'promo') { var k = S.data.promos.map(function (p) { return p.id; }).indexOf(pid); if (k < 0) ok = false; else ed.promo = k; }
+      if (ok) refreshEditor(); else { closeSheet(); }
+    }
+    saveDraft(); updateState(); render();
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act="undo"], [data-act="redo"]');
+    if (!b || !S.data) return;
+    e.preventDefault(); e.stopPropagation();
+    if (b.dataset.act === 'undo') undo(); else redo();
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    if (!S.data || $('app').hidden || !$('ask').hidden) return;
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+    var k = e.key.toLowerCase(), t = e.target;
+    if (k !== 'z' && k !== 'y') return;
+    if (t && (t.isContentEditable || /^(TEXTAREA|SELECT)$/.test(t.tagName) || (t.tagName === 'INPUT' && !/^(checkbox|radio|button|submit)$/.test(t.type)))) return; // nel campo di testo vale l'annulla del campo
+    e.preventDefault();
+    if (k === 'y' || (k === 'z' && e.shiftKey)) redo(); else undo();
+  });
+
+  /* ================= Modifiche da pubblicare: una a una ================= */
+  function changesEditor() {
+    var list = diff(pubData(), S.data);
+    if (!list.length) return '<p class="muted chg-empty">Nessuna modifica da pubblicare: è tutto come online.</p>';
+    return '<p class="muted chg-lead">Sono salvate su questo dispositivo ma non ancora online. Puoi annullarle una per una.</p>' +
+      '<ul class="chg chg-x">' + list.map(function (c, k) {
+        return '<li><span>' + esc(c.t) + '</span><button type="button" class="b b-ghost b-sm" data-act="revert" data-k="' + k + '">Annulla</button></li>';
+      }).join('') + '</ul>' +
+      '<div class="btns chg-end"><button type="button" class="b b-ghost" data-act="revert-all">Annulla tutte</button><button type="button" class="b b-main" data-act="publish-now">Pubblica</button></div>';
+  }
+  function openChanges() { S.ed = { type: 'changes' }; openSheet('Modifiche da pubblicare', changesEditor()); }
+  async function revertOne(k) {
+    histCommit();
+    var c = diff(pubData(), S.data)[k];
+    if (!c) return;
+    c.r(); canon(); ensureShape(S.data);
+    histCommit(); afterDataSwap(null);
+    toast('Annullato: ' + c.t, 2400);
+  }
+  async function revertAll() {
+    var n = changesList().length;
+    if (!(await ask('Annullare tutte le modifiche?', 'Torni al menu come è online adesso (' + n + (n === 1 ? ' modifica' : ' modifiche') + '). Puoi sempre tornare avanti con la freccia ↷.', 'Annulla tutte', { danger: true, cancel: 'Indietro' }))) return;
+    histCommit();
+    S.data = clone(pubData()); ensureShape(S.data);
+    histCommit(); afterDataSwap(null);
+    toast('Tutto come online.', 2200);
   }
 
   /* ================= Pubblicazione ================= */
@@ -288,6 +459,7 @@
       var res = await S.store.commitFiles(files, 'Menu aggiornato dal gestionale (' + S.user + ')');
       S.baseSha = res.blobs[MENU_PATH] || current;
       S.publishedStr = JSON.stringify(S.data); S.published = JSON.parse(S.publishedStr);
+      if (S.ed && S.ed.type === 'changes') closeSheet();
       try { localStorage.removeItem(AA.DRAFT_KEY); } catch (e) {}
       updateState();
       toast(demo ? 'Salvato in modalità demo.' : 'Pubblicato. Sito, menu e cartellone si aggiornano entro 1–2 minuti.', 6000);
@@ -667,6 +839,7 @@
     else if (S.ed.type === 'sec') b.innerHTML = secEditor();
     else if (S.ed.type === 'group') b.innerHTML = groupEditor();
     else if (S.ed.type === 'promo') b.innerHTML = promoEditor();
+    else if (S.ed.type === 'changes') b.innerHTML = changesEditor();
     b.scrollTop = top;
   }
   function refreshPreview() {
@@ -686,11 +859,7 @@
     if (!a) return;
     if (a.dataset.act === 'publish') publish();
     if (a.dataset.act === 'preview') preview();
-    if (a.dataset.act === 'changes') {
-      var list = changesList();
-      ask('Cosa cambia', '', 'Pubblica ora', { cancel: 'Chiudi', html: '<ul class="chg">' + list.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' })
-        .then(function (ok) { if (ok) publish(); });
-    }
+    if (a.dataset.act === 'changes') openChanges();
   });
   function preview() {
     saveDraft();
@@ -861,6 +1030,12 @@
   sheetB.addEventListener('click', async function (e) {
     var a = e.target.closest('[data-act], [data-tag], [data-alg], [data-where]');
     if (!a || !S.ed) return;
+    if (S.ed.type === 'changes') {
+      if (a.dataset.act === 'revert') revertOne(Number(a.dataset.k));
+      if (a.dataset.act === 'revert-all') revertAll();
+      if (a.dataset.act === 'publish-now') publish();
+      return;
+    }
     var ed = S.ed, it = ed.type === 'item' ? findItem(ed.sec, ed.item) : null, sec = ed.sec ? findSec(ed.sec) : null;
     if (a.dataset.where) {
       var pr = S.data.promos[ed.promo]; pr[a.dataset.where] = !pr[a.dataset.where];

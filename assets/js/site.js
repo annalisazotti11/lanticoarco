@@ -120,7 +120,7 @@
     stick.style.setProperty('--ax', Math.max(0, g.left) + 'px');
     copy.style.opacity = String(clamp(1 - g.p * 2.2, 0, 1));
     stick.style.setProperty('--ctop', g.ctop + 'px');
-    var z = 'scale(' + (1 + g.p * .55).toFixed(4) + ')';
+    var z = 'scale(' + (1 + g.p * .16).toFixed(4) + ')';
     fireC.style.transform = (g.wide ? '' : 'translateY(13%) ') + z; sparkC.style.transform = z;
     copy.style.transform = 'translateY(' + (-g.p * 90) + 'px)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
@@ -220,7 +220,7 @@
   window.addEventListener('scroll', function () { nav.classList.toggle('scrolled', window.scrollY > 20); }, { passive: true });
   var revealIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: .12 });
+  }, { rootMargin: '0px 0px -14% 0px' });
   var spyIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
@@ -229,7 +229,6 @@
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   chapters.forEach(function (c) { revealIO.observe(c); spyIO.observe(c); });
-  if ($('wall')) revealIO.observe($('wall'));
 
   /* ================= Storia: la miccia accende gli anni ================= */
   var sparkTrail = (function () {
@@ -310,7 +309,7 @@
     var list = $('imList'), info = $('imInfo'), photo = $('imPhoto'), cur = -1, timer, user = false;
     $('imCount').textContent = NUM[items.length] || items.length;
     list.innerHTML = items.map(function (it, i) {
-      var label = it.name.replace(/^Impasto\s+/i, '');
+      var label = it.name.replace(/^Impasto\s+/i, '').replace(/\s*\(.*?\)/g, '').replace(/\s*(100%\s*)?bio$/i, '').replace(/\s+da (noi prodotto|cocco)$/i, '').replace(/ e semi di sesamo nero/i, ' e sesamo').trim();
       label = label.charAt(0).toUpperCase() + label.slice(1);
       return '<li><button type="button" data-i="' + i + '" aria-pressed="false">' + esc(label) + '</button></li>';
     }).join('');
@@ -440,20 +439,20 @@
     var nd = document.querySelector('[data-n="impasti"]'), ni = document.querySelector('[data-n="ingredienti"]');
     if (nd && doughs.length) nd.textContent = doughs.length;
     if (ni && extras.length) ni.textContent = extras.length;
-    if (doughs.length) {
-      var names = doughs.map(function (d) { return d.name.replace(/^Impasto\s+/i, '').replace(/\s*(100%\s*)?bio$/i, '').replace(/\s*\(.*?\)/, '').trim().toLowerCase(); });
-      $('prDoughs').textContent = 'Classico, ' + names.filter(function (n) { return n !== 'classico'; }).join(', ') + ': lo scegli tu, su qualunque pizza.';
-    }
     var rows = $('wallRows');
     if (!rows || !extras.length) return;
     var STAR = '<svg viewBox="0 0 24 24"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg>';
-    var list = extras.map(function (it) { return it.name; }).filter(function (n) { return n.length < 34 && !/doppi|salsa|vegano|valsoia|violife|dream|nickel/i.test(n); });
-    var per = Math.ceil(list.length / 3);
+    var seen = {}, list = extras.map(function (it) {
+      return it.name.replace(/\s+(a fette|a julienne|alla julienne|a dadi|all[’']uscita|in cottura|sparsa|spalmata|bio presidio slow)$/i, '').trim();
+    }).filter(function (n) {
+      var k = n.toLowerCase();
+      if (seen[k] || n.length > 30 || /doppi|aggiunt|salsa|crema|vegan|valsoia|violife|dream|nickel|kebab|wurstel|simmenthal|philadelphia|mais|panna|glutine|patate fritte|insalata|formaggio/i.test(n)) return false;
+      return (seen[k] = true);
+    });
     var html = '';
-    [['', 95], ['r o', 120], ['m', 105]].forEach(function (cfg, r) {
-      var part = list.slice(r * per, (r + 1) * per);
-      var seq = part.map(function (n) { return '<span>' + esc(n) + STAR + '</span>'; }).join('');
-      html += '<div class="wall-row ' + cfg[0] + '" style="--dur:' + cfg[1] + 's">' + seq + seq + '</div>';
+    [[list.filter(function (_, i) { return i % 2 === 0; }), ''], [list.filter(function (_, i) { return i % 2 === 1; }), 'r o']].forEach(function (cfg) {
+      var seq = cfg[0].map(function (n) { return '<span>' + esc(n) + STAR + '</span>'; }).join('');
+      html += '<div class="wall-row ' + cfg[1] + '" style="--dur:' + Math.round(cfg[0].length * 3.2) + 's">' + seq + seq + '</div>';
     });
     rows.innerHTML = html;
   }

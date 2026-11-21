@@ -272,3 +272,8 @@ mark { background: #f1d9b5; color: inherit; border-radius: 3px; padding: 0 1px; 
 .acc-in { overflow: hidden; min-height: 0; }
 .acc.open .acc-in { padding: 6px 0 8px; }
 .acc-in > .sec-note:first-child, .acc-in > .suppl:first-child { margin-top: 10px; }
+
+/* PC: tutte le categorie in vista, senza tagli */
+@media (min-width: 1100px) {
+  .gnav-in { max-width: 1240px; justify-content: center; flex-wrap: wrap; }
+}

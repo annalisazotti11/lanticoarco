@@ -39,10 +39,10 @@
 <header class="nav" id="nav">
   <a class="nav-logo" href="#fuoco" aria-label="L'Antico Arco Pizzeria, inizio"><img src="assets/img/logo/logo-600.webp" alt="" width="600" height="388"></a>
   <nav class="nav-links" aria-label="Sezioni">
+    <a href="#storia" data-ch="storia">La storia</a>
     <a href="#prodotto" data-ch="prodotto">Il prodotto</a>
     <a href="#impasti" data-ch="impasti">Gli impasti</a>
     <a href="#pizze" data-ch="pizze">Le pizze</a>
-    <a href="#storia" data-ch="storia">La storia</a>
     <a href="#vieni" data-ch="vieni">Orari e contatti</a>
   </nav>
   <div class="nav-r">
@@ -73,41 +73,66 @@
         <p class="hero-s">Nove impasti con farine bio della Murgia, un laboratorio senza glutine, prodotti a km 0 e presìdi Slow Food. Per noi la qualità è una ricerca che non finisce.</p>
         <div class="hero-cta">
           <a class="btn btn-cream" href="menu/">Guarda il menu</a>
-          <a class="btn btn-ghost" href="tel:+390804656280" data-tel="phone">Prenota<span class="lg"> allo <span data-bind="phone">080 4656280</span></span></a>
+          <a class="btn btn-ghost" href="tel:+390804656280" data-tel="phone">Prenota<span class="lg">allo <span data-bind="phone">080 4656280</span></span></a>
         </div>
         <p class="hero-status" id="status" hidden></p>
         <aside class="promo-float" id="promoFloat" hidden aria-live="polite"></aside>
       </div>
-      <a class="hero-enter" href="#prodotto" id="heroEnter"><span>Scorri ed entra</span><i></i></a>
+      <a class="hero-enter" href="#storia" id="heroEnter"><span>Scorri ed entra</span><i></i></a>
     </div>
   </section>
 
-  <!-- 2 · Il prodotto -->
+  <!-- 2 · La storia -->
+  <section class="ch ch-storia" id="storia">
+    <div class="st-grid">
+      <header class="st-side">
+        <h2 class="h2" data-rv><span data-years data-count>25</span> anni, un arco e un forno.</h2>
+        <p class="lead" data-rv style="--d:.1s">La nostra storia comincia in un'aula dell'Alberghiero di Bari e arriva, per ora, a 1.595 metri di pizza.</p>
+      </header>
+      <div class="st-main">
+      <ol class="tl" id="tl">
+        <li class="tl-ember" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg></li>
+        <li class="tl-i"><span class="tl-y">1985</span><div class="tl-b"><h3>Un ragazzo di 14 anni</h3><p>Vito si iscrive all'Alberghiero di Bari. Seguono anni di cucine, banchetti e sale ricevimenti.</p></div></li>
+        <li class="tl-i"><span class="tl-y">2001</span><div class="tl-b"><h3>L'arco</h3><p>Il 26 ottobre Vito e sua moglie Angela aprono accanto all'antica porta di Cellamare. Il nome viene da lì. Asporto, domicilio e tanta voglia di fare.</p></div></li>
+        <li class="tl-i"><span class="tl-y">2007</span><div class="tl-b"><h3>La nuova casa</h3><p>Una sede più grande, con la saletta da 32 posti. Arrivano le farine biologiche, le birre artigianali a km 0 e i presìdi Slow Food.</p><figure class="tl-ph"><img src="assets/img/sala.webp" alt="La sala apparecchiata con fiori gialli" loading="lazy"></figure></div></li>
+        <li class="tl-i"><span class="tl-y">2011</span><div class="tl-b"><h3>Senza glutine, sul serio</h3><p>Nasce un laboratorio dedicato: pizze e prodotti senza glutine, patate fritte in olio EVO.</p></div></li>
+        <li class="tl-i tl-big"><span class="tl-y">2015</span><div class="tl-b"><p class="tl-stat"><span data-count>1.595</span><small>metri</small></p><h3>La pizza più lunga del mondo</h3><p>Vito diventa istruttore della Nazionale Italiana Pizzaioli ed è nella squadra che all'Expo di Milano firma il Guinness.</p></div></li>
+        <li class="tl-i"><span class="tl-y">Oggi</span><div class="tl-b"><h3>La stessa voglia di stupirvi</h3><p>Nove impasti, un menu vegano, il pomodoro nickel free. Il forno, intanto, è sempre acceso.</p><figure class="tl-ph wide"><img src="assets/img/galleria/staff.webp" alt="La squadra dell'Antico Arco nella sala" loading="lazy"><figcaption>La squadra</figcaption></figure></div></li>
+      </ol>
+      <a class="next" href="#prodotto" data-rv><span>E oggi, cosa mettiamo nella pizza?</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 3 · Il prodotto -->
   <section class="ch ch-prod" id="prodotto">
     <header class="pr-head">
       <h2 class="h2" data-rv>La qualità è una ricerca continua.</h2>
-      <p class="lead" data-rv style="--d:.1s">Da venticinque anni scegliamo gli ingredienti uno per uno, il più vicino possibile a Cellamare. Il risultato si può anche contare.</p>
+      <p class="lead" data-rv style="--d:.1s">Scegliamo gli ingredienti uno per uno, il più vicino possibile a Cellamare. Il risultato si può contare.</p>
     </header>
-    <ol class="pr-list">
-      <li class="pr" data-rv><span class="pr-n"><span data-count data-n="impasti">9</span></span><div class="pr-t"><h3>impasti, tutti con farine biologiche</h3><p id="prDoughs">Dal classico al Senatore Cappelli, dal Kamut al carbone vegetale: lo scegli tu, su qualunque pizza.</p></div></li>
-      <li class="pr" data-rv><span class="pr-n">0</span><div class="pr-t"><h3>enzimi e miglioratori nelle farine</h3><p>Farine naturali e non industriali, da un piccolo mulino a km 0 della Murgia barese. Sale integrale dello Stagnone di Trapani, olio EVO bio, pochissimo lievito.</p></div></li>
-      <li class="pr" data-rv><span class="pr-n pr-w">km 0</span><div class="pr-t"><h3>birre, latticini, formaggi</h3><p>Le birre artigianali del birrificio Caput Ursi di Cellamare, la mozzarella di bufala, il pecorino di Altamura, il provolone di Putignano.</p><ul class="pr-partners" aria-label="Lavoriamo con"><li><img src="assets/img/partner/caput-ursi.webp" alt="Caput Ursi, micro birrificio di Cellamare" loading="lazy"></li><li><img src="assets/img/partner/masseria-la-calcara.webp" alt="Masseria La Calcara" loading="lazy"></li><li><img src="assets/img/partner/tre-pini.webp" alt="Azienda Agricola Tre Pini" loading="lazy"></li></ul></div></li>
-      <li class="pr" data-rv><span class="pr-n"><span data-count data-n="ingredienti">113</span></span><div class="pr-t"><h3>ingredienti per inventare la tua</h3><p>Dalle acciughe di Cetara al tartufo nero estivo, dalla salsiccia pezzente ai pomodorini di Torre Guaceto, presidio Slow Food. Componi la pizza come la vuoi: il prezzo lo vedi subito.</p></div></li>
-      <li class="pr" data-rv><span class="pr-n">2011</span><div class="pr-t"><h3>l'anno del laboratorio senza glutine</h3><p>Pizze, panzerotti, fritti e birre senza glutine, preparati in un laboratorio dedicato. E per chi non mangia derivati animali, un menu vegano completo.</p></div></li>
-    </ol>
-  </section>
-
-  <!-- Il muro degli ingredienti -->
-  <section class="wall" id="wall" aria-label="Alcuni dei nostri ingredienti">
-    <div class="wall-rows" id="wallRows" aria-hidden="true"></div>
-    <div class="wall-cta">
-      <p>Ingredienti quasi infiniti. La pizza la componi tu.</p>
-      <a class="btn btn-ink" href="menu/#crea">Crea la tua pizza</a>
+    <ul class="pr-facts" data-rv style="--d:.12s">
+      <li><p class="pr-n"><span data-count data-n="impasti">9</span></p><h3>impasti con farine bio</h3><p id="prDoughs">Dal Senatore Cappelli al carbone vegetale, su qualunque pizza.</p></li>
+      <li><p class="pr-n">0</p><h3>additivi nelle farine</h3><p>Niente enzimi né miglioratori: le macina un piccolo mulino della Murgia.</p></li>
+      <li><p class="pr-n">km&nbsp;0</p><h3>birre e formaggi</h3><p>La birra Caput Ursi di Cellamare, il pecorino di Altamura, la bufala.</p></li>
+      <li><p class="pr-n"><span data-count data-n="ingredienti">113</span></p><h3>ingredienti a scelta</h3><p>Dalle acciughe di Cetara al tartufo nero, con i presìdi Slow Food.</p></li>
+      <li><p class="pr-n">2011</p><h3>laboratorio senza glutine</h3><p>Pizze, fritti e birre senza glutine. E un menu vegano completo.</p></li>
+    </ul>
+    <div class="wall" id="wall" aria-hidden="true"><div class="wall-rows" id="wallRows"></div></div>
+    <div class="pr-foot" data-rv>
+      <div class="pr-sup">
+        <p>Alcuni dei nostri fornitori</p>
+        <ul class="pr-partners"><li><img src="assets/img/partner/caput-ursi-c.webp" alt="Caput Ursi, micro birrificio di Cellamare" loading="lazy"></li><li><img src="assets/img/partner/masseria-la-calcara-c.webp" alt="Masseria La Calcara" loading="lazy"></li><li><img src="assets/img/partner/tre-pini-c.webp" alt="Azienda Agricola Tre Pini" loading="lazy"></li></ul>
+      </div>
+      <div class="pr-own">
+        <p><b>Ingredienti quasi infiniti.</b> La pizza la componi tu e il prezzo lo vedi subito.</p>
+        <a class="btn btn-ink" href="menu/#crea">Crea la tua pizza</a>
+      </div>
     </div>
-    <a class="next wall-next" href="#impasti" data-rv><span>E tutto comincia dall'impasto.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
+    <a class="next" href="#impasti" data-rv><span>E tutto comincia dall'impasto.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
   </section>
 
-  <!-- 3 · Gli impasti -->
+  <!-- 4 · Gli impasti -->
   <section class="ch ch-impasti" id="impasti">
     <div class="im-grid">
       <div class="im-visual" data-rv>
@@ -119,13 +144,7 @@
       </div>
       <div class="im-body">
         <h2 class="h2" data-rv><span id="imCount">Nove</span> impasti. Nessuna scorciatoia.</h2>
-        <p class="lead im-lead" data-rv style="--d:.08s">Farine naturali da un piccolo mulino a km 0 della Murgia: niente enzimi, niente miglioratori. Il classico è compreso, gli altri costano un piccolo supplemento.</p>
-        <dl class="im-spec" data-rv style="--d:.12s">
-          <div><dt>Farina</dt><dd>tipo 1, biologica</dd></div>
-          <div><dt>Sale</dt><dd>integrale dello Stagnone di Trapani</dd></div>
-          <div><dt>Olio</dt><dd>EVO bio della Murgia barese</dd></div>
-          <div><dt>Lievito</dt><dd>di birra, pochissimo</dd></div>
-        </dl>
+        <p class="lead im-lead" data-rv style="--d:.08s">Farina tipo 1 biologica, sale integrale di Trapani, olio EVO della Murgia e pochissimo lievito. Il classico è compreso, gli altri costano un piccolo supplemento.</p>
         <p class="im-pick" data-rv style="--d:.16s">Scegli il tuo:</p>
         <ul class="im-list" id="imList" data-rv style="--d:.18s"></ul>
         <div class="im-info" id="imInfo" aria-live="polite"></div>
@@ -134,7 +153,7 @@
     </div>
   </section>
 
-  <!-- 4 · Le pizze -->
+  <!-- 5 · Le pizze -->
   <section class="ch ch-pizze" id="pizze">
     <p class="pz-bigname" id="pzBig" aria-hidden="true"></p>
     <div class="pz-grid">
@@ -155,35 +174,12 @@
           <a class="pz-all" id="pzAll" href="menu/">Tutte nel menu</a>
         </div>
         <div class="pz-own" data-rv style="--d:.24s"><p><b>Non trovi quella giusta?</b> Inventala tu: impasto, base e ingredienti, con il prezzo calcolato mentre scegli.</p><a class="btn btn-cream" href="menu/#crea">Crea la tua pizza</a></div>
-        <a class="next" href="#storia" data-rv style="--d:.28s"><span>Chi c'è dietro il forno? Ecco la nostra storia.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
+        <a class="next" href="#vieni" data-rv style="--d:.28s"><span>Hai scelto? Ti teniamo un tavolo.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
       </div>
       <div class="pz-stage" data-rv style="--d:.1s">
         <div class="pz-plate" id="pzPlate"><img id="pzImg" alt="" src="img/scontorni/media-100.webp"></div>
       </div>
     </div>
-  </section>
-
-  <!-- 5 · La storia -->
-  <section class="ch ch-storia" id="storia">
-    <div class="st-grid">
-      <header class="st-side">
-        <h2 class="h2" data-rv><span data-years data-count>25</span> anni, un arco e un forno.</h2>
-        <p class="lead" data-rv style="--d:.1s">La nostra storia comincia in un'aula dell'Alberghiero di Bari e arriva, per ora, a 1.595 metri di pizza.</p>
-      </header>
-      <div class="st-main">
-      <ol class="tl" id="tl">
-        <li class="tl-ember" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg></li>
-        <li class="tl-i"><span class="tl-y">1985</span><div class="tl-b"><h3>Un ragazzo di 14 anni</h3><p>Vito si iscrive all'Alberghiero di Bari. Seguono anni di cucine, banchetti e sale ricevimenti.</p></div></li>
-        <li class="tl-i"><span class="tl-y">2001</span><div class="tl-b"><h3>L'arco</h3><p>Il 26 ottobre Vito e sua moglie Angela aprono accanto all'antica porta di Cellamare. Il nome viene da lì. Asporto, domicilio e tanta voglia di fare.</p></div></li>
-        <li class="tl-i"><span class="tl-y">2007</span><div class="tl-b"><h3>La nuova casa</h3><p>Una sede più grande, con la saletta da 32 posti. Arrivano le farine biologiche, le birre artigianali a km 0 e i presìdi Slow Food.</p><figure class="tl-ph"><img src="assets/img/sala.webp" alt="La sala apparecchiata con fiori gialli" loading="lazy"></figure></div></li>
-        <li class="tl-i"><span class="tl-y">2011</span><div class="tl-b"><h3>Senza glutine, sul serio</h3><p>Nasce un laboratorio dedicato: pizze e prodotti senza glutine, patate fritte in olio EVO.</p></div></li>
-        <li class="tl-i tl-big"><span class="tl-y">2015</span><div class="tl-b"><p class="tl-stat"><span data-count>1.595</span><small>metri</small></p><h3>La pizza più lunga del mondo</h3><p>Vito diventa istruttore della Nazionale Italiana Pizzaioli ed è nella squadra che all'Expo di Milano firma il Guinness.</p></div></li>
-        <li class="tl-i"><span class="tl-y">Oggi</span><div class="tl-b"><h3>La stessa voglia di stupirvi</h3><p>Nove impasti, un menu vegano, il pomodoro nickel free. Il forno, intanto, è sempre acceso.</p><figure class="tl-ph wide"><img src="assets/img/galleria/staff.webp" alt="La squadra dell'Antico Arco nella sala" loading="lazy"><figcaption>La squadra</figcaption></figure></div></li>
-      </ol>
-      <a class="next" href="#vieni" data-rv><span>Hai scelto? Ti teniamo un tavolo.</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
-      </div>
-    </div>
-
   </section>
 
   <!-- 6 · Il tavolo -->
