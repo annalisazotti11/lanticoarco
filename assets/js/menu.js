@@ -310,7 +310,7 @@
     var popular = (cfg.popular || DEF_POPULAR).map(function (n) { return byName[norm(n)]; }).filter(Boolean);
     var doughs = dsec ? AA.visibleItems(dsec) : [];
     var defDough = doughs.filter(function (d) { return !Number(d.price); })[0] || doughs[0] || null;
-    B = { from: itemId ? starts[0] : null, starts: starts, start: starts[0], doughs: doughs, dough: defDough, baseOpt: null, mods: [], extras: extras, sel: [], presets: presets, popular: popular, q: '' };
+    B = { from: itemId ? starts[0] : null, starts: starts, start: starts[0], doughs: doughs, dough: defDough, baseOpt: null, mods: [], extras: extras, sel: [], removed: [], presets: presets, popular: popular, q: '', picking: false };
     renderBuilder();
     openSheet($('builder'));
     try { history.replaceState(null, '', '#crea'); } catch (e) {}
@@ -319,15 +319,50 @@
     return '<button type="button" class="bchip' + (extra || '') + '" data-b="' + group + '" data-v="' + esc(id) + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
       '<span>' + esc(label) + '</span>' + (price ? '<em class="num">' + price + '</em>' : '') + '</button>';
   }
+  /* "pomodoro, mozzarella siero innesto, pecorino romano e pepe" → ['pomodoro', 'mozzarella siero innesto', 'pecorino romano', 'pepe'] */
+  function recipeOf(item) {
+    var out = [];
+    String(item.desc || '').split(/[,;]/).forEach(function (seg) {
+      seg = seg.replace(/\([^)]*\)/g, '').replace(/\*/g, '').replace(/^\s*all[’']uscita:\s*/i, '').replace(/^\s*solo\s+/i, '').trim();
+      if (!seg) return;
+      var parts = seg.split(/\s+e\s+/);
+      if (parts.length === 2 && parts.every(function (x) { return x.split(/\s+/).length <= 4; })) parts.forEach(function (x) { out.push(x.trim()); });
+      else out.push(seg);
+    });
+    return out.filter(function (x, i) { return x && out.indexOf(x) === i; });
+  }
+  function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+  function allPizzas() {
+    var list = [];
+    pizzaSections().forEach(function (sec) { sec.items.forEach(function (it) { if (it.available !== false) list.push({ item: it, sec: sec }); }); });
+    return list;
+  }
+  function pickList(q) {
+    q = norm(q || '');
+    var hits = allPizzas().filter(function (x) { return !q || norm(x.item.name + ' ' + (x.item.desc || '')).indexOf(q) >= 0; }).slice(0, 12);
+    if (!hits.length) return '<p class="b-none">Nessuna pizza con queste parole.</p>';
+    return hits.map(function (x) {
+      return '<button type="button" class="b-pk" data-b="pickit" data-v="' + esc(x.item.id) + '"><b>' + esc(x.item.name) + '</b><span>' + esc(x.item.desc || '') + '</span><em class="num">' + AA.price(unitPrice(x.item)) + '</em></button>';
+    }).join('');
+  }
   function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
   function renderBuilder() {
     var opt = builderOptions(B.start.sec);
     var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '</p>' +
       '<h2 class="b-t" id="bTitle">' + esc(B.from ? B.from.item.name + ', a modo tuo.' : 'La tua pizza, il tuo prezzo.') + '</h2>' +
-      '<p class="b-s">Scegli impasto, base e ingredienti: il totale si aggiorna mentre scegli. <button type="button" class="b-reset" data-b="reset">Ricomincia</button></p></div>';
+      '<p class="b-s">Togli e aggiungi ingredienti, scegli l’impasto: il totale si aggiorna mentre scegli. <button type="button" class="b-reset" data-b="reset">Ricomincia</button></p></div>';
+    var rec = recipeOf(B.start.item);
     h += '<section class="b-step"><h3><b>1</b>Si parte da</h3><div class="bchips">' + B.starts.map(function (st) {
       return chip('start', st.item.id, st.item.name, AA.price(unitPrice(st.item)), st.item.id === B.start.item.id);
-    }).join('') + '</div><p class="b-desc" id="bStartDesc">' + esc(B.start.item.desc || '') + '</p></section>';
+    }).join('') + '<button type="button" class="bchip b-other" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '"><span>Un’altra pizza</span></button></div>' +
+      '<div class="b-pick" id="bPick"' + (B.picking ? '' : ' hidden') + '><label class="b-search"><span class="sr-only">Cerca una pizza</span><input type="search" id="bPickQ" placeholder="Cerca per nome o ingrediente, es. bufala" autocomplete="off"></label><div class="b-pks" id="bPickList">' + (B.picking ? pickList('') : '') + '</div></div>';
+    if (rec.length) {
+      h += '<p class="b-sub">Nella ricetta. Tocca per togliere quello che non vuoi</p><div class="bchips" id="bRec">' + rec.map(function (r) {
+        var off = B.removed.indexOf(r) >= 0;
+        return '<button type="button" class="bchip b-rec' + (off ? ' off' : '') + '" data-b="rm" data-v="' + esc(r) + '" aria-pressed="' + (off ? 'false' : 'true') + '" aria-label="' + esc(cap(r)) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo') + '"><span>' + esc(cap(r)) + '</span><i aria-hidden="true"></i></button>';
+      }).join('') + '</div><p class="b-hint">Se togli un ingrediente il totale non cambia.</p>';
+    }
+    h += '</section>';
     if (B.doughs.length) {
       h += '<section class="b-step"><h3><b>2</b>L’impasto</h3><div class="bchips">' + B.doughs.map(function (d) {
         return chip('dough', d.id, d.name.replace(/^Impasto\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); }), deltaLabel(d.price), B.dough && d.id === B.dough.id);
@@ -344,7 +379,7 @@
       }).join('') + '</div></section>';
     }
     var n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
-    h += '<section class="b-step"><h3><b>' + n + '</b>Gli ingredienti</h3>';
+    h += '<section class="b-step"><h3><b>' + n + '</b>Aggiungi ingredienti</h3><div id="bMine"></div>';
     if (B.presets.length) {
       h += '<p class="b-sub">Idee per cominciare</p><div class="bchips">' + B.presets.map(function (p, i) {
         return '<button type="button" class="bidea" data-b="preset" data-v="' + i + '"><span>' + esc(p.name) + '</span><small>' + p.ids.map(function (id) {
@@ -367,6 +402,8 @@
     });
     h += '</div></section><p class="d-note">Il prezzo è indicativo: lo confermiamo al momento dell’ordine. In caso di allergie chiedete sempre al personale.</p>';
     $('bBody').innerHTML = h;
+    $('bPickQ').addEventListener('input', function (e) { $('bPickList').innerHTML = pickList(e.target.value.trim()); });
+    if (B.picking) setTimeout(function () { var q = $('bPickQ'); if (q) q.focus({ preventScroll: true }); }, 50);
     $('bQ').addEventListener('input', function (e) {
       var q = norm(e.target.value.trim());
       $('bAll').querySelectorAll('.bchip').forEach(function (b) { b.hidden = q && norm(b.textContent).indexOf(q) < 0; });
@@ -391,21 +428,29 @@
     opt.mods.forEach(function (o) { if (B.mods.indexOf(o.id) >= 0) { total += o.price; lines.push(['', o.label, o.price]); } });
     var ing = B.sel.map(function (id) { return B.extras.filter(function (x) { return x.id === id; })[0]; }).filter(Boolean);
     ing.forEach(function (it) { total += unitPrice(it); (it.allergens || []).forEach(function (a) { algs.push(a); }); });
-    return { total: Math.max(0, total), lines: lines, ing: ing, algs: algs.filter(function (a, i) { return algs.indexOf(a) === i; }) };
+    var rec = recipeOf(B.start.item), rem = B.removed.filter(function (r) { return rec.indexOf(r) >= 0; });
+    return { total: Math.max(0, total), lines: lines, ing: ing, rem: rem, algs: algs.filter(function (a, i) { return algs.indexOf(a) === i; }) };
   }
   function updateBuilder() {
     var st = builderState();
+    var parts = [];
+    if (st.rem.length) parts.push('senza ' + st.rem.join(', '));
+    if (st.ing.length) parts.push('+ ' + st.ing.map(function (i) { return i.name.toLowerCase(); }).join(', '));
     $('bFoot').innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Totale indicativo, impasto da chiedere' : 'Totale indicativo') + '</p><p class="bf-p num">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
-      '<p class="bf-s">' + esc(B.start.item.name) + (st.ing.length ? ' + ' + st.ing.length + (st.ing.length === 1 ? ' ingrediente' : ' ingredienti') : '') + '</p></div>' +
+      '<p class="bf-s">' + esc(B.start.item.name) + (parts.length ? ', ' + esc(parts.join('; ')) : '') + '</p></div>' +
       '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
-    var d = $('bStartDesc'); if (d) d.textContent = B.start.item.desc || '';
+    var mine = $('bMine');
+    if (mine) mine.innerHTML = st.ing.length ? '<p class="b-sub">Aggiunti da te. Tocca per togliere</p><div class="bchips">' + st.ing.map(function (it) {
+      return '<button type="button" class="bchip b-mine" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="true" aria-label="' + esc(it.name) + ', tocca per toglierlo"><span>' + esc(it.name) + '</span><em class="num">' + AA.price(unitPrice(it), { signed: true }) + '</em><i aria-hidden="true"></i></button>';
+    }).join('') + '</div>' : '';
   }
   function showWaiter() {
     var st = builderState();
     var algs = AA.allergenNums(st.algs);
-    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + (st.ing.length ? ' +' + st.ing.length : '') + '</h2><dl class="w-l">' +
+    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + (st.ing.length || st.rem.length ? ', a modo mio' : '') + '</h2><dl class="w-l">' +
       st.lines.map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
-      (st.ing.length ? '<div><dt>Ingredienti in più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
+      (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + st.rem.map(function (r) { return esc(r); }).join(', ') + '</dd></div>' : '') +
+      (st.ing.length ? '<div><dt>In più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
       '</dl><p class="w-p num">' + AA.price(st.total) + '<small>prezzo indicativo</small></p>' +
       (algs.length ? '<p class="w-a">Allergeni: ' + algs.map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('') + '</p>' : '') +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
@@ -417,13 +462,30 @@
     $('builder').addEventListener('click', function (e) {
       var b = e.target.closest('[data-b]'); if (!b) return;
       var g = b.dataset.b, v = b.dataset.v;
-      if (g === 'start') { B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; renderBuilder(); return; }
+      if (g === 'start') { B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.removed = []; B.picking = false; renderBuilder(); return; }
+      if (g === 'pick') { B.picking = !B.picking; renderBuilder(); return; }
+      if (g === 'pickit') {
+        var hit = allPizzas().filter(function (x) { return x.item.id === v; })[0];
+        if (hit) {
+          if (!B.starts.some(function (x) { return x.item.id === v; })) B.starts.unshift(hit);
+          B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.removed = []; B.picking = false; renderBuilder();
+          var t = $('bBody'); if (t) t.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+      }
+      if (g === 'rm') {
+        var r = B.removed.indexOf(v); if (r >= 0) B.removed.splice(r, 1); else B.removed.push(v);
+        var off = B.removed.indexOf(v) >= 0;
+        b.classList.toggle('off', off); b.setAttribute('aria-pressed', off ? 'false' : 'true');
+        b.setAttribute('aria-label', cap(v) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo'));
+        updateBuilder(); return;
+      }
       if (g === 'dough') B.dough = B.doughs.filter(function (d) { return d.id === v; })[0];
       if (g === 'base') B.baseOpt = v || null;
       if (g === 'mod') { var k = B.mods.indexOf(v); if (k >= 0) B.mods.splice(k, 1); else B.mods.push(v); }
       if (g === 'extra') { var j = B.sel.indexOf(v); if (j >= 0) B.sel.splice(j, 1); else B.sel.push(v); }
       if (g === 'preset') { B.presets[Number(v)].ids.forEach(function (id) { if (B.sel.indexOf(id) < 0) B.sel.push(id); }); }
-      if (g === 'reset') { var first = B.starts[0]; B.start = first; B.dough = B.doughs.filter(function (d) { return !Number(d.price); })[0] || B.doughs[0] || null; B.baseOpt = null; B.mods = []; B.sel = []; renderBuilder(); return; }
+      if (g === 'reset') { var first = B.starts[0]; B.start = first; B.dough = B.doughs.filter(function (d) { return !Number(d.price); })[0] || B.doughs[0] || null; B.baseOpt = null; B.mods = []; B.sel = []; B.removed = []; B.picking = false; renderBuilder(); return; }
       if (g === 'waiter') { showWaiter(); return; }
       if (g === 'close') return;
       // aggiorna solo gli stati dei pulsanti
