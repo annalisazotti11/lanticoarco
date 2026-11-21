@@ -510,10 +510,15 @@
     var defs = html;
     var draw = document.createElement('div'); draw.className = 'build-draw'; draw.setAttribute('aria-hidden', 'true');
     svg.parentNode.replaceChild(draw, svg); svg = draw;
+    // su telefono si inquadra più stretto: disegno più grande, meno vuoto sopra e sotto
+    var mqM = window.matchMedia('(max-width: 960px)');
+    function vbFor() { return mqM.matches ? { x: 40, y: 40, w: 520, h: 450 } : { x: 0, y: 0, w: 600, h: 560 }; }
+    var VB = vbFor(), SHIFT = 0, svgs = [];
+    function vbStr() { return VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h; }
     function mk(inner) {
       var e = document.createElementNS(NS, 'svg');
-      e.setAttribute('viewBox', '0 0 600 560'); e.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-      e.innerHTML = inner; draw.appendChild(e); return e;
+      e.setAttribute('viewBox', vbStr()); e.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      e.innerHTML = inner; draw.appendChild(e); svgs.push(e); return e;
     }
     var REST = [0, -5, -9, -13], RAD = [R, R - 34, R - 60, R - 40];
     var svDough = mk(dough), flourEl = mk(flour), G2 = [];
@@ -528,7 +533,15 @@
     var N = 5, state = -1;
     var EASE = 'cubic-bezier(.45,0,.2,1)';
     function stop(el) { if (el.getAnimations) el.getAnimations().forEach(function (an) { an.commitStyles && an.commitStyles(); an.cancel(); }); }
-    function ty(v) { return 'translateY(' + (v / 5.6).toFixed(3) + '%)'; }
+    function ty(v) { return 'translateY(' + (v / (VB.h / 100)).toFixed(3) + '%)'; }
+    function geo() {
+      var art = $('buildArt');
+      art.style.aspectRatio = VB.w + ' / ' + VB.h; art.style.setProperty('--arn', (VB.w / VB.h).toFixed(4));
+      photo.style.left = ((CX - R - VB.x) / VB.w * 100).toFixed(3) + '%';
+      photo.style.width = (2 * R / VB.w * 100).toFixed(3) + '%';
+      photo.style.top = ((CY - R - VB.y) / VB.h * 100).toFixed(3) + '%';
+      SHIFT = (VB.y + VB.h / 2 - CY) / (2 * R) * 100;
+    }
     // uno strato arriva sospeso, si ferma un attimo e scende al suo posto
     function drop(k, delay, fast) {
       var el = L[k], d = fast ? 620 : 1050;
@@ -558,7 +571,7 @@
       photo.animate([
         { opacity: 0, transform: 'translateY(0%) scaleY(' + K + ')' },
         { opacity: 1, transform: 'translateY(0%) scaleY(' + K + ')', offset: .35 },
-        { opacity: 1, transform: 'translateY(-10.84%) scaleY(1)' }
+        { opacity: 1, transform: 'translateY(' + SHIFT.toFixed(2) + '%) scaleY(1)' }
       ], { duration: 1500, delay: 380, easing: EASE, fill: 'both' });
     }
     function unbake() {
@@ -597,8 +610,20 @@
     function finalState() {
       setText(4); state = 4;
       for (var j = 1; j <= 3; j++) rest(j, true);
-      photo.style.opacity = 1; photo.style.transform = 'translateY(-10.84%) scaleY(1)'; svg.style.opacity = .06;
+      photo.style.opacity = 1; photo.style.transform = 'translateY(' + SHIFT.toFixed(2) + '%) scaleY(1)'; svg.style.opacity = .06;
     }
+    geo();
+    function reframe() {
+      var nv = vbFor(); if (nv.w === VB.w && nv.h === VB.h) return;
+      VB = nv; svgs.forEach(function (e) { e.setAttribute('viewBox', vbStr()); }); geo();
+      [photo, svg, glow, flourEl].concat(L).forEach(stop);
+      L[0].style.transform = ty(0); L[0].style.opacity = 1;
+      for (var j = 1; j <= 3; j++) { L[j].style.transform = ty(state >= j ? REST[j] : -G); L[j].style.opacity = state >= j ? 1 : 0; }
+      var done = state === 4;
+      photo.style.opacity = done ? 1 : 0; photo.style.transform = done ? 'translateY(' + SHIFT.toFixed(2) + '%) scaleY(1)' : 'scaleY(' + K + ')';
+      svg.style.opacity = done ? .06 : 1; glow.style.opacity = 0;
+    }
+    if (mqM.addEventListener) mqM.addEventListener('change', reframe);
     if (reduce) { wrap.classList.add('static'); finalState(); return; }
     var span = function () { return Math.max(1, wrap.offsetHeight - window.innerHeight); };
     var raf = 0;
@@ -695,8 +720,8 @@
     box.innerHTML = [1, 2, 3, 4, 5, 6, 0].map(function (d) {
       var on = days.indexOf(d) >= 0 && !(d === today && st.closedToday);
       var cls = (on ? '' : 'off') + (d === today ? ' today' + (st.open ? ' live' : '') : '');
-      var txt = on ? hhmm(from) + '–' + hhmm(to) : (d === today && st.closedToday ? 'chiuso' : 'riposo');
-      return '<li class="' + cls.trim() + '" aria-label="' + NAMES[d] + (d === today ? ', oggi' : '') + ': ' + (on ? 'dalle ' + from + ' alle ' + to : txt) + '"><b>' + (d === today ? 'Oggi' : SH[d]) + '</b><span class="bar"><i style="--t:' + top.toFixed(1) + '%;--h:' + h.toFixed(1) + '%"></i></span><small>' + txt + '</small></li>';
+      var txt = on ? '<span>' + hhmm(from) + '–</span><span>' + hhmm(to) + '</span>' : (d === today && st.closedToday ? 'chiuso' : 'riposo');
+      return '<li class="' + cls.trim() + '" aria-label="' + NAMES[d] + (d === today ? ', oggi' : '') + ': ' + (on ? 'dalle ' + from + ' alle ' + to : txt) + '"><b>' + (d === today ? 'Oggi' : SH[d]) + '</b><small>' + txt + '</small></li>';
     }).join('');
   }
 
