@@ -121,7 +121,7 @@
     copy.style.opacity = String(clamp(1 - g.p * 2.2, 0, 1));
     stick.style.setProperty('--ctop', g.ctop + 'px');
     var z = 'scale(' + (1 + g.p * .55).toFixed(4) + ')';
-    fireC.style.transform = (g.wide ? '' : 'translateY(9%) ') + z; sparkC.style.transform = z;
+    fireC.style.transform = (g.wide ? '' : 'translateY(13%) ') + z; sparkC.style.transform = z;
     copy.style.transform = 'translateY(' + (-g.p * 90) + 'px)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
   }

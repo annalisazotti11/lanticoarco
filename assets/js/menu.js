@@ -108,11 +108,11 @@
     var steps = [
       ['g-impasti', 'Scegli l\'impasto', 'Il classico è compreso' + (min ? ', gli altri da ' + AA.price(min) + ' in più' : '') + '.'],
       ['g-pizze', 'Poi la pizza', 'Gourmet, classiche, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
-      hasExtra ? ['g-aggiunte', 'Aggiungi o togli', 'Ogni pizza si può personalizzare: le aggiunte sono in fondo al menu.'] : null
-    ].filter(function (x) { return x && document.getElementById(x[0]); });
+      hasExtra ? ['crea', 'Oppure creala tu', 'Scegli impasto e ingredienti: ti diciamo subito quanto costa.'] : null
+    ].filter(function (x) { return x && (x[0] === 'crea' || document.getElementById(x[0])); });
     if (!steps.length) { box.hidden = true; return; }
     box.innerHTML = '<div class="guide-in"><div class="guide-h"><h2 id="guideT">Prima volta da noi?</h2><button type="button" class="guide-x" id="guideX">Ho capito</button></div><ol>' +
-      steps.map(function (st) { return '<li><a href="#' + st[0] + '"><b>' + esc(st[1]) + '</b><span>' + esc(st[2]) + '</span></a></li>'; }).join('') +
+      steps.map(function (st) { return '<li><a href="#' + st[0] + '"' + (st[0] === 'crea' ? ' data-open-builder' : '') + '><b>' + esc(st[1]) + '</b><span>' + esc(st[2]) + '</span></a></li>'; }).join('') +
       '</ol><p class="guide-f">Allergie o intolleranze? Usa i <button type="button" id="guideF">filtri</button> o chiedi a noi: molte pizze si possono preparare senza glutine o senza lattosio.</p></div>';
     box.hidden = false;
     $('guideX').onclick = function () { try { localStorage.setItem('aa-guida', '1'); } catch (e) {} box.hidden = true; };
@@ -139,7 +139,7 @@
       var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible; });
       var inner = secs.map(sectionHTML).join('');
       if (!inner) return;
-      html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + inner + '</section>';
+      html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + inner + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
     });
     $('contenuto').innerHTML = html || '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
@@ -203,7 +203,10 @@
     el.querySelector('.sheet-card').scrollTop = 0;
     el.querySelector('.sheet-card').focus();
   }
-  function closeSheet(el) { el.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
+  function closeSheet(el) {
+    el.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus();
+    if (el.id === 'builder' && location.hash === '#crea') { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+  }
 
   function detailHTML(it, sec) {
     var price = priceHTML(it, sec);
@@ -219,9 +222,201 @@
       (algs.length ? '<h3 class="d-h">Allergeni</h3><ul class="d-algs">' + algs.map(function (a) {
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
       }).join('') + '</ul>' : '') +
+      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza e calcola il prezzo</button>' : '') +
       ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
       '<p class="d-note">' + esc(DATA.info.allergenNote) + '</p></div>';
+  }
+
+
+  /* ================= Crea la tua pizza ================= */
+  var DEF_PRESETS = [
+    { name: 'Pugliese', items: ['Rape stufate', 'Salsiccia pezzente', 'Provolone Murgiano Putignano'] },
+    { name: 'Bufala e pomodorini', items: ['Bufala all’uscita', 'Pomodorini Torre Guaceto bio presidio slow'] },
+    { name: 'Mortadella e pistacchio', items: ['Mortadella a fette', 'Stracciatella all’uscita', 'Granella di pistacchio'] },
+    { name: 'Piccante', items: ['Nduja', 'Salsiccia piccante', 'Cipolla rossa'] },
+    { name: 'Funghi e tartufo', items: ['Funghi porcini', 'Crema di tartufo spalmata'] },
+    { name: 'Cetara', items: ['Acciughe di Cetara', 'Pomodorini confit', 'Capperi'] }
+  ];
+  var DEF_POPULAR = ['Bufala all’uscita', 'Stracciatella all’uscita', 'Funghi freschi champignon', 'Salsiccia di Norcia', 'Prosciutto crudo a dadi', 'Nduja', 'Olive leccine', 'Rape stufate', 'Pomodorini confit', 'Acciughe di Cetara', 'Granella di pistacchio', 'Patate fritte'];
+  var B = null;
+  function pizzaSections() { return DATA.sections.filter(function (s) { return s.group === 'pizze' && s.visible; }); }
+  function extrasSection() { return DATA.sections.filter(function (s) { return s.group === 'aggiunte' && s.visible; })[0]; }
+  function doughSection() { return DATA.sections.filter(function (s) { return s.group === 'impasti' && s.visible; })[0]; }
+  function unitPrice(it) {
+    if (it.prices && it.prices.length) return Number(it.prices[0].price) || 0;
+    return Number(it.price) || 0;
+  }
+  function findByName(name, sections) {
+    var n = norm(name);
+    for (var i = 0; i < sections.length; i++) {
+      var hit = sections[i].items.filter(function (it) { return norm(it.name) === n && it.available !== false; })[0];
+      if (hit) return { item: hit, sec: sections[i] };
+    }
+    return null;
+  }
+  function builderOptions(sec) {
+    var base = [], mods = [];
+    var dsec = doughSection();
+    var gfDough = dsec && dsec.items.some(function (d) { return /senza glutine/i.test(d.name) && d.available !== false; });
+    (sec.supplements || []).forEach(function (sp, i) {
+      if (gfDough && /senza glutine/i.test(sp.label)) return;
+      var o = { id: 'o' + i, label: sp.label, price: Number(sp.price) || 0 };
+      if (/^base\s|doppio pomodoro/i.test(sp.label)) base.push(o); else mods.push(o);
+    });
+    return { base: base, mods: mods };
+  }
+  function bCfg() { return (DATA.settings && DATA.settings.builder) || {}; }
+  function openBuilder(itemId) {
+    var secs = pizzaSections();
+    var starts = [];
+    if (itemId) { var f = findItem(itemId); if (f) starts.push(f); }
+    ['Margherita', 'Marinara'].forEach(function (n) {
+      var f = findByName(n, secs);
+      if (f && !starts.some(function (x) { return x.item.id === f.item.id; })) starts.push(f);
+    });
+    if (!starts.length && secs[0] && secs[0].items[0]) starts.push({ item: secs[0].items[0], sec: secs[0] });
+    if (!starts.length) return;
+    var ex = extrasSection(), dsec = doughSection();
+    var extras = ex ? ex.items.filter(function (it) { return it.available !== false; }) : [];
+    var byName = {};
+    extras.forEach(function (it) { byName[norm(it.name)] = it; });
+    var cfg = bCfg();
+    var presets = (cfg.presets || DEF_PRESETS).map(function (p) {
+      var ids = p.items.map(function (n) { var it = byName[norm(n)]; return it ? it.id : null; });
+      return ids.every(Boolean) ? { name: p.name, ids: ids } : null;
+    }).filter(Boolean);
+    var popular = (cfg.popular || DEF_POPULAR).map(function (n) { return byName[norm(n)]; }).filter(Boolean);
+    var doughs = dsec ? AA.visibleItems(dsec) : [];
+    var defDough = doughs.filter(function (d) { return !Number(d.price); })[0] || doughs[0] || null;
+    B = { from: itemId ? starts[0] : null, starts: starts, start: starts[0], doughs: doughs, dough: defDough, baseOpt: null, mods: [], extras: extras, sel: [], presets: presets, popular: popular, q: '' };
+    renderBuilder();
+    openSheet($('builder'));
+    try { history.replaceState(null, '', '#crea'); } catch (e) {}
+  }
+  function chip(group, id, label, price, on, extra) {
+    return '<button type="button" class="bchip' + (extra || '') + '" data-b="' + group + '" data-v="' + esc(id) + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+      '<span>' + esc(label) + '</span>' + (price ? '<em class="num">' + price + '</em>' : '') + '</button>';
+  }
+  function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
+  function renderBuilder() {
+    var opt = builderOptions(B.start.sec);
+    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '</p>' +
+      '<h2 class="b-t" id="bTitle">' + esc(B.from ? B.from.item.name + ', a modo tuo.' : 'La tua pizza, il tuo prezzo.') + '</h2>' +
+      '<p class="b-s">Scegli impasto, base e ingredienti: il totale si aggiorna mentre scegli. <button type="button" class="b-reset" data-b="reset">Ricomincia</button></p></div>';
+    h += '<section class="b-step"><h3><b>1</b>Si parte da</h3><div class="bchips">' + B.starts.map(function (st) {
+      return chip('start', st.item.id, st.item.name, AA.price(unitPrice(st.item)), st.item.id === B.start.item.id);
+    }).join('') + '</div><p class="b-desc" id="bStartDesc">' + esc(B.start.item.desc || '') + '</p></section>';
+    if (B.doughs.length) {
+      h += '<section class="b-step"><h3><b>2</b>L’impasto</h3><div class="bchips">' + B.doughs.map(function (d) {
+        return chip('dough', d.id, d.name.replace(/^Impasto\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); }), deltaLabel(d.price), B.dough && d.id === B.dough.id);
+      }).join('') + '</div></section>';
+    }
+    if (opt.base.length) {
+      h += '<section class="b-step"><h3><b>3</b>La base</h3><div class="bchips">' + chip('base', '', 'Come da ricetta', '', !B.baseOpt) + opt.base.map(function (o) {
+        return chip('base', o.id, o.label, AA.price(o.price, { signed: true }), B.baseOpt === o.id);
+      }).join('') + '</div></section>';
+    }
+    if (opt.mods.length) {
+      h += '<section class="b-step"><h3><b>' + (opt.base.length ? 4 : 3) + '</b>Formato e intolleranze</h3><div class="bchips">' + opt.mods.map(function (o) {
+        return chip('mod', o.id, o.label, AA.price(o.price, { signed: true }), B.mods.indexOf(o.id) >= 0);
+      }).join('') + '</div></section>';
+    }
+    var n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
+    h += '<section class="b-step"><h3><b>' + n + '</b>Gli ingredienti</h3>';
+    if (B.presets.length) {
+      h += '<p class="b-sub">Idee per cominciare</p><div class="bchips">' + B.presets.map(function (p, i) {
+        return '<button type="button" class="bidea" data-b="preset" data-v="' + i + '"><span>' + esc(p.name) + '</span><small>' + p.ids.map(function (id) {
+          return esc(B.extras.filter(function (x) { return x.id === id; })[0].name);
+        }).join(', ') + '</small></button>';
+      }).join('') + '</div>';
+    }
+    if (B.popular.length) {
+      h += '<p class="b-sub">I più scelti</p><div class="bchips">' + B.popular.map(function (it) {
+        return chip('extra', it.id, it.name, AA.price(it.price, { signed: true }), B.sel.indexOf(it.id) >= 0);
+      }).join('') + '</div>';
+    }
+    h += '<p class="b-sub">Tutti gli ingredienti</p><label class="b-search"><span class="sr-only">Cerca un ingrediente</span><input type="search" id="bQ" placeholder="Cerca un ingrediente" autocomplete="off"></label><div id="bAll">';
+    var by = {};
+    B.extras.forEach(function (it) { var k = String(unitPrice(it)); (by[k] = by[k] || []).push(it); });
+    Object.keys(by).sort(function (a, b) { return Number(a) - Number(b); }).forEach(function (k) {
+      h += '<div class="b-grp" data-grp><h4 class="num">' + AA.price(Number(k), { signed: true }) + '</h4><div class="bchips">' + by[k].map(function (it) {
+        return chip('extra', it.id, it.name, '', B.sel.indexOf(it.id) >= 0, ' small');
+      }).join('') + '</div></div>';
+    });
+    h += '</div></section><p class="d-note">Il prezzo è indicativo: lo confermiamo al momento dell’ordine. In caso di allergie chiedete sempre al personale.</p>';
+    $('bBody').innerHTML = h;
+    $('bQ').addEventListener('input', function (e) {
+      var q = norm(e.target.value.trim());
+      $('bAll').querySelectorAll('.bchip').forEach(function (b) { b.hidden = q && norm(b.textContent).indexOf(q) < 0; });
+      $('bAll').querySelectorAll('[data-grp]').forEach(function (g) { g.hidden = ![].some.call(g.querySelectorAll('.bchip'), function (b) { return !b.hidden; }); });
+    });
+    updateBuilder();
+  }
+  function builderState() {
+    var opt = builderOptions(B.start.sec);
+    B.tbc = false;
+    var lines = [], total = unitPrice(B.start.item);
+    var algs = (B.start.item.allergens || []).slice();
+    lines.push(['Si parte da', B.start.item.name, unitPrice(B.start.item)]);
+    if (B.dough) {
+      var dp = Number(B.dough.price) || 0; total += dp;
+      if (B.dough.price == null || B.dough.price === '') B.tbc = true;
+      lines.push(['Impasto', B.dough.name.replace(/^Impasto\s+/i, ''), dp]);
+      (B.dough.allergens || []).forEach(function (a) { algs.push(a); });
+    }
+    var bo = opt.base.filter(function (o) { return o.id === B.baseOpt; })[0];
+    if (bo) { total += bo.price; lines.push(['Base', bo.label, bo.price]); }
+    opt.mods.forEach(function (o) { if (B.mods.indexOf(o.id) >= 0) { total += o.price; lines.push(['', o.label, o.price]); } });
+    var ing = B.sel.map(function (id) { return B.extras.filter(function (x) { return x.id === id; })[0]; }).filter(Boolean);
+    ing.forEach(function (it) { total += unitPrice(it); (it.allergens || []).forEach(function (a) { algs.push(a); }); });
+    return { total: Math.max(0, total), lines: lines, ing: ing, algs: algs.filter(function (a, i) { return algs.indexOf(a) === i; }) };
+  }
+  function updateBuilder() {
+    var st = builderState();
+    $('bFoot').innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Totale indicativo, impasto da chiedere' : 'Totale indicativo') + '</p><p class="bf-p num">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
+      '<p class="bf-s">' + esc(B.start.item.name) + (st.ing.length ? ' + ' + st.ing.length + (st.ing.length === 1 ? ' ingrediente' : ' ingredienti') : '') + '</p></div>' +
+      '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
+    var d = $('bStartDesc'); if (d) d.textContent = B.start.item.desc || '';
+  }
+  function showWaiter() {
+    var st = builderState();
+    var algs = AA.allergenNums(st.algs);
+    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + (st.ing.length ? ' +' + st.ing.length : '') + '</h2><dl class="w-l">' +
+      st.lines.map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
+      (st.ing.length ? '<div><dt>Ingredienti in più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
+      '</dl><p class="w-p num">' + AA.price(st.total) + '<small>prezzo indicativo</small></p>' +
+      (algs.length ? '<p class="w-a">Allergeni: ' + algs.map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('') + '</p>' : '') +
+      '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
+    $('waiter').hidden = false;
+    $('wBack').onclick = function () { $('waiter').hidden = true; };
+    $('wBack').focus();
+  }
+  function bindBuilder() {
+    $('builder').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-b]'); if (!b) return;
+      var g = b.dataset.b, v = b.dataset.v;
+      if (g === 'start') { B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; renderBuilder(); return; }
+      if (g === 'dough') B.dough = B.doughs.filter(function (d) { return d.id === v; })[0];
+      if (g === 'base') B.baseOpt = v || null;
+      if (g === 'mod') { var k = B.mods.indexOf(v); if (k >= 0) B.mods.splice(k, 1); else B.mods.push(v); }
+      if (g === 'extra') { var j = B.sel.indexOf(v); if (j >= 0) B.sel.splice(j, 1); else B.sel.push(v); }
+      if (g === 'preset') { B.presets[Number(v)].ids.forEach(function (id) { if (B.sel.indexOf(id) < 0) B.sel.push(id); }); }
+      if (g === 'reset') { var first = B.starts[0]; B.start = first; B.dough = B.doughs.filter(function (d) { return !Number(d.price); })[0] || B.doughs[0] || null; B.baseOpt = null; B.mods = []; B.sel = []; renderBuilder(); return; }
+      if (g === 'waiter') { showWaiter(); return; }
+      if (g === 'close') return;
+      // aggiorna solo gli stati dei pulsanti
+      $('bBody').querySelectorAll('[data-b="dough"]').forEach(function (x) { x.setAttribute('aria-pressed', B.dough && x.dataset.v === B.dough.id); });
+      $('bBody').querySelectorAll('[data-b="base"]').forEach(function (x) { x.setAttribute('aria-pressed', (x.dataset.v || null) === B.baseOpt); });
+      $('bBody').querySelectorAll('[data-b="mod"]').forEach(function (x) { x.setAttribute('aria-pressed', B.mods.indexOf(x.dataset.v) >= 0); });
+      $('bBody').querySelectorAll('[data-b="extra"]').forEach(function (x) { x.setAttribute('aria-pressed', B.sel.indexOf(x.dataset.v) >= 0); });
+      updateBuilder();
+      if (g === 'preset' || g === 'extra') { var f = $('bFoot'); f.classList.remove('bump'); void f.offsetWidth; f.classList.add('bump'); }
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('waiter').hidden) $('waiter').hidden = true; });
+  }
+  function builderCTA() {
+    return '<button type="button" class="bcta" data-open-builder><span class="bcta-t">Crea la tua pizza</span><span class="bcta-s">Scegli impasto, base e ingredienti. Il prezzo lo vedi subito.</span><span class="bcta-i" aria-hidden="true">+</span></button>';
   }
 
   /* Filtri */
@@ -299,9 +494,16 @@
     $('fApply').onclick = function () { closeSheet($('filters')); updateFilterUI(); render(); window.scrollTo({ top: $('gnav').offsetTop - 70, behavior: 'smooth' }); };
   }
 
+  document.addEventListener('click', function (e) {
+    var o = e.target.closest('[data-open-builder]'); if (!o || !DATA) return;
+    e.preventDefault();
+    if (!$('sheet').hidden) closeSheet($('sheet'));
+    openBuilder(o.getAttribute('data-open-builder') || null);
+  });
   AA.loadMenu().then(function (data) {
     DATA = data;
-    renderHeader(); render(); renderFooter(); bind();
+    renderHeader(); render(); renderFooter(); bind(); bindBuilder();
+    if (location.hash === '#crea') { openBuilder(null); return; }
     if (location.hash) { var el = document.querySelector(location.hash); if (el) el.scrollIntoView(); }
   }).catch(function () {
     $('contenuto').innerHTML = '<p class="empty">Non riesco a caricare il menu. Controlla la connessione e ricarica la pagina.</p>';
