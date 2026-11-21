@@ -17,7 +17,7 @@
       promoEvery: t.promoEvery == null ? 4 : Number(t.promoEvery),
       showPhotos: t.showPhotos !== false,
       showQr: t.showQr !== false,
-      theme: params.get('tema') || t.theme || 'scuro'
+      theme: params.get('tema') || t.theme || 'chiaro'
     };
   }
 
@@ -180,7 +180,7 @@
   function renderChrome() {
     var info = DATA.info, c = cfg();
     $('tvSub').textContent = 'Cellamare, dal ' + (info.since || 2001);
-    document.body.classList.toggle('tema-chiaro', c.theme === 'chiaro');
+    document.body.classList.toggle('tema-scuro', c.theme === 'scuro');
     var url = (DATA.settings && DATA.settings.menuUrl) || new URL('../menu/', location.href).href;
     if (c.showQr && url && window.qrcode) {
       $('tvQrCode').innerHTML = AA.qrSVG(url, { margin: 1 });
@@ -315,7 +315,7 @@
     size(); for (var i = 0; i < 46; i++) ps.push(spawn(true));
     window.addEventListener('resize', size);
     (function tick() {
-      if (!document.hidden && !document.body.classList.contains('tema-chiaro')) {
+      if (!document.hidden && document.body.classList.contains('tema-scuro')) {
         ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
         for (var i = 0; i < ps.length; i++) {
           var p = ps[i]; p.life++; p.y -= p.vy; p.ph += .03; p.x += Math.sin(p.ph) * .3;
@@ -353,7 +353,7 @@
     DATA = d; SIG = JSON.stringify(d);
     var ready = Promise.resolve();
     if (document.fonts && document.fonts.load) {
-      ready = Promise.all(['500 20px Manrope', '700 20px Manrope', '800 20px Manrope', '800 20px Bricolage'].map(function (f) {
+      ready = Promise.all(['400 20px Inter', '500 20px Inter', '600 20px Inter', '600 20px "Inter Tight"'].map(function (f) {
         return document.fonts.load(f).catch(function () {});
       })).then(function () { return document.fonts.ready; });
     }

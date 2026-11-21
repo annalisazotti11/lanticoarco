@@ -44,6 +44,8 @@
   }
   intro();
 
+  document.querySelectorAll('[data-arch-path]').forEach(function (p) { p.setAttribute('d', AA.ARCH_PATH); });
+
   /* ================= Scintille che salgono dal forno ================= */
   (function sparks() {
     var c = $('sparks');
@@ -52,12 +54,12 @@
     function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
     function spawn(initial) {
       return {
-        x: Math.random() * W * 1.1 - W * .05, y: initial ? Math.random() * H : H + 10 + Math.random() * 40,
-        vy: .4 + Math.random() * 1.3, vx: (Math.random() - .5) * .4, r: .5 + Math.random() * 1.8,
+        x: W * .15 + Math.random() * W * .7, y: initial ? Math.random() * H * .6 : H * .5 + Math.random() * H * .1,
+        vy: .35 + Math.random() * 1.1, vx: (Math.random() - .5) * .3, r: .5 + Math.random() * 1.6,
         life: 0, max: 220 + Math.random() * 380, ph: Math.random() * 6.28, hue: 20 + Math.random() * 24
       };
     }
-    function init() { size(); var n = Math.min(110, Math.round(W / 14)); ps = []; for (var i = 0; i < n; i++) ps.push(spawn(true)); }
+    function init() { size(); var n = Math.min(90, Math.round(W / 3)); ps = []; for (var i = 0; i < n; i++) ps.push(spawn(true)); }
     function tick() {
       if (!running) return;
       ctx.clearRect(0, 0, W, H);
@@ -96,7 +98,9 @@
   /* ================= Capitoli: comparsa, pallini, colore della barra ================= */
   var chapters = [].slice.call(document.querySelectorAll('.ch'));
   var dots = {};
-  document.querySelectorAll('#dots a').forEach(function (a) { dots[a.dataset.ch] = a; });
+  document.querySelectorAll('.nav-links a').forEach(function (a) { dots[a.dataset.ch] = a; });
+  var nav = $('nav');
+  window.addEventListener('scroll', function () { nav.classList.toggle('scrolled', window.scrollY > 20); }, { passive: true });
   var revealIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting && e.target.id !== 'fuoco') e.target.classList.add('in'); });
   }, { threshold: .18 });
@@ -105,7 +109,6 @@
       if (!e.isIntersecting) return;
       var id = e.target.id;
       Object.keys(dots).forEach(function (k) { dots[k].setAttribute('aria-current', k === id ? 'true' : 'false'); });
-      document.body.dataset.tone = e.target.dataset.tone;
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   chapters.forEach(function (c) { revealIO.observe(c); spyIO.observe(c); });
@@ -207,8 +210,9 @@
     var k = 0;
     function paint() {
       var p = list[k];
-      box.innerHTML = '<div>' + (p.kicker ? '<p class="pf-k">' + esc(p.kicker) + '</p>' : '') + '<p class="pf-t">' + esc(p.title) + '</p>' +
-        (p.price ? '<p class="pf-p">' + esc(p.price) + '</p>' : '') + '</div>' + (p.image ? '<img alt="" src="' + esc(AA.src(p.image)) + '">' : '');
+      box.classList.toggle('no-img', !p.image);
+      box.innerHTML = (p.image ? '<img alt="" src="' + esc(AA.src(p.image)) + '">' : '') + '<div>' + (p.kicker ? '<p class="pf-k">' + esc(p.kicker) + '</p>' : '') +
+        '<p class="pf-t">' + esc(p.title) + '</p>' + (p.price ? '<p class="pf-p">' + esc(p.price) + '</p>' : '') + '</div>';
       box.classList.remove('swap'); void box.offsetWidth; box.classList.add('swap');
     }
     box.hidden = false; paint();
