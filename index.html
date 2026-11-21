@@ -15,7 +15,7 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="assets/css/site.css?v=c86ecec9">
+<link rel="stylesheet" href="assets/css/site.css?v=4b8bab3e">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -135,9 +135,11 @@
       <p class="lead" data-rv style="--d:.1s">Scendi piano: la prepariamo davanti a te, uno strato alla volta.</p>
     </header>
     <div class="build" id="build">
+      <i class="build-snap" style="--f:.1"></i><i class="build-snap" style="--f:.3"></i><i class="build-snap" style="--f:.5"></i><i class="build-snap" style="--f:.7"></i><i class="build-snap" style="--f:.9"></i>
       <div class="build-stick">
         <div class="build-text">
-          <ol class="build-nav" id="buildNav" aria-hidden="true"><li>Impasto</li><li>Pomodoro</li><li>Latticini</li><li>Ingredienti</li><li>Forno</li></ol>
+          <div class="build-nav" id="buildNav" role="group" aria-label="Passaggi"><button type="button">Impasto</button><button type="button">Pomodoro</button><button type="button">Latticini</button><button type="button">Ingredienti</button><button type="button">Forno</button></div>
+          <div class="build-prog" aria-hidden="true"><i id="buildBar"></i></div>
           <ol class="build-steps" id="buildSteps" aria-live="polite"><li data-i="0"><h3>Impasto</h3><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</p><a href="#impasti">Gli impasti</a></li><li data-i="1"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></li><li data-i="2"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></li><li data-i="3"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p><a href="menu/#crea">Crea la tua pizza</a></li><li data-i="4"><h3>Forno</h3><p>In pietra, a legna d'ulivo. Pochi minuti ed è pronta.</p><a href="menu/">Guarda il menu</a></li></ol>
         </div>
         <div class="build-art" id="buildArt">
@@ -266,6 +268,6 @@
 </div>
 
 <script src="assets/js/core.js?v=e001f4eb"></script>
-<script src="assets/js/site.js?v=70c40a59"></script>
+<script src="assets/js/site.js?v=eb53a4ca"></script>
 </body>
 </html>

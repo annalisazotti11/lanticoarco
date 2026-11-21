@@ -519,59 +519,114 @@
     svg.innerHTML = html;
     var L = [$('bL0'), $('bL1'), $('bL2'), $('bL3')], flourEl = $('bFlour'), guides = $('bG');
     var REST = [0, -5, -9, -13], RAD = [R, R - 34, R - 60, R - 40];
-    var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), nav = [].slice.call(document.querySelectorAll('#buildNav li'));
-    var photo = $('buildPhoto'), glow = $('buildGlow'), art = $('buildArt');
-    var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
-    var ease = function (t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
-    var cur = -1;
-    function setStep(i) {
-      if (i === cur) return; cur = i;
+    var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), pills = [].slice.call(document.querySelectorAll('#buildNav button'));
+    var photo = $('buildPhoto'), glow = $('buildGlow'), bar = $('buildBar');
+    var N = 5, state = -1;
+    // linee tratteggiate: dove scende ogni strato
+    var G2 = [];
+    for (var gk = 1; gk <= 3; gk++) {
+      var gr = RAD[gk], y0 = CY - G, y1 = CY + REST[gk];
+      var gp = document.createElementNS(NS, 'path');
+      gp.setAttribute('class', 'guide'); gp.style.opacity = 0;
+      gp.setAttribute('d', 'M' + (CX - gr) + ',' + y0 + 'L' + (CX - gr) + ',' + y1 + 'M' + (CX + gr) + ',' + y0 + 'L' + (CX + gr) + ',' + y1);
+      guides.appendChild(gp); G2[gk] = gp;
+    }
+    var EASE = 'cubic-bezier(.45,0,.2,1)';
+    function stop(el) { if (el.getAnimations) el.getAnimations().forEach(function (an) { an.commitStyles && an.commitStyles(); an.cancel(); }); }
+    function ty(v) { return 'translate(0px,' + v + 'px)'; }
+    // uno strato arriva sospeso, si ferma un attimo e scende al suo posto
+    function drop(k, delay, fast) {
+      var el = L[k], d = fast ? 620 : 1050;
+      stop(el); stop(G2[k]);
+      el.animate([
+        { transform: ty(-G - 46), opacity: 0 },
+        { transform: ty(-G), opacity: 1, offset: .32 },
+        { transform: ty(-G), opacity: 1, offset: .42 },
+        { transform: ty(REST[k] + 3), opacity: 1, offset: .9 },
+        { transform: ty(REST[k]), opacity: 1 }
+      ], { duration: d, delay: delay, easing: EASE, fill: 'both' });
+      G2[k].animate([{ opacity: 0 }, { opacity: .55, offset: .35 }, { opacity: .55, offset: .8 }, { opacity: 0 }], { duration: d, delay: delay, fill: 'both' });
+    }
+    function lift(k) {
+      var el = L[k]; stop(el); stop(G2[k]);
+      el.animate([{ transform: ty(-G * .6), opacity: 0 }], { duration: 420, easing: 'cubic-bezier(.4,0,1,1)', fill: 'both' });
+    }
+    function rest(k, on) { var el = L[k]; stop(el); el.animate([{ transform: ty(on ? REST[k] : -G), opacity: on ? 1 : 0 }], { duration: 1, fill: 'both' }); }
+    function flourPuff() {
+      [].forEach.call(flourEl.children, function (c, i) {
+        var v = Number(c.getAttribute('data-v')) || .5;
+        c.animate([{ transform: 'translate(0,24px)', opacity: 0 }, { opacity: .5, offset: .3 }, { transform: 'translate(' + ((v - .5) * 30).toFixed(1) + 'px,-' + (40 + v * 50).toFixed(0) + 'px)', opacity: 0 }],
+          { duration: 1500 + v * 900, delay: v * 500, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'both' });
+      });
+    }
+    function bake() {
+      [glow, photo, svg].forEach(stop);
+      glow.animate([{ opacity: 0 }, { opacity: .95, offset: .35 }, { opacity: 0 }], { duration: 1700, fill: 'both' });
+      svg.animate([{ opacity: 1 }, { opacity: .06 }], { duration: 650, delay: 500, fill: 'both' });
+      photo.animate([
+        { opacity: 0, transform: 'translateY(0%) scaleY(' + K + ')' },
+        { opacity: 1, transform: 'translateY(0%) scaleY(' + K + ')', offset: .35 },
+        { opacity: 1, transform: 'translateY(-10.84%) scaleY(1)' }
+      ], { duration: 1500, delay: 380, easing: EASE, fill: 'both' });
+    }
+    function unbake() {
+      [glow, photo, svg].forEach(stop);
+      glow.animate([{ opacity: 0 }], { duration: 1, fill: 'both' });
+      photo.animate([{ opacity: 0, transform: 'translateY(0%) scaleY(' + K + ')' }], { duration: 380, fill: 'both' });
+      svg.animate([{ opacity: 1 }], { duration: 380, fill: 'both' });
+    }
+    function setText(i) {
       steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
-      nav.forEach(function (li, k) { li.classList.toggle('on', k === i); li.classList.toggle('done', k < i); });
-      var nb = nav[i] && nav[i].parentNode;
-      if (nb && nb.scrollWidth > nb.clientWidth) nb.scrollTo({ left: Math.max(0, nav[i].offsetLeft - 20), behavior: 'smooth' });
+      pills.forEach(function (b, k) { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
+      var nb = pills[i] && pills[i].parentNode;
+      if (nb && nb.scrollWidth > nb.clientWidth) nb.scrollTo({ left: Math.max(0, pills[i].offsetLeft - 20), behavior: 'smooth' });
     }
-    function paint(p) {
-      var s = Math.min(5, p * 5.35);
-      setStep(Math.min(4, Math.floor(s)));
-      // impasto: sale leggermente all'inizio
-      var a0 = clamp01(s * 2.2);
-      L[0].setAttribute('transform', 'translate(0,' + ((1 - ease(a0)) * 26).toFixed(1) + ')');
-      L[0].setAttribute('opacity', (.25 + .75 * a0).toFixed(3));
-      // farina: sale e svanisce durante il primo passaggio
-      var fl = clamp01(s / 1.1);
-      flourEl.setAttribute('opacity', (1 - fl).toFixed(3));
-      flourEl.setAttribute('transform', 'translate(0,' + (-fl * 40).toFixed(1) + ')');
-      var gd = '';
-      for (var k = 1; k <= 3; k++) {
-        var t = clamp01(s - k + .35), y, o;   // ogni strato: compare sospeso, poi scende
-        if (t <= 0) { o = 0; y = -G; }
-        else if (t < .4) { o = t / .4; y = -G - (1 - t / .4) * 30; }
-        else { var d = ease(clamp01((t - .4) / .6)); o = 1; y = -G + (G + REST[k]) * d; if (d < 1) { var r = RAD[k], yy = (CY + y).toFixed(1), yb = (CY + REST[k]).toFixed(1); gd += '<path class="guide" d="M' + (CX - r) + ',' + yy + 'L' + (CX - r) + ',' + yb + 'M' + (CX + r) + ',' + yy + 'L' + (CX + r) + ',' + yb + '"/>'; } }
-        L[k].setAttribute('opacity', o.toFixed(3));
-        L[k].setAttribute('transform', 'translate(0,' + y.toFixed(1) + ')');
+    // lo scorrimento sceglie il passaggio; le animazioni hanno tempi propri, così niente salti
+    function go(k) {
+      if (k === state) return;
+      var prev = state; state = k; setText(k);
+      if (prev < 0) {
+        L[0].animate([{ transform: ty(26), opacity: .2 }, { transform: ty(0), opacity: 1 }], { duration: 900, easing: EASE, fill: 'both' });
+        flourPuff();
       }
-      guides.innerHTML = gd;
-      // forno: bagliore, poi il disegno diventa la foto e si alza verso di te
-      var f = clamp01(s - 4);
-      var gl = f < .45 ? f / .45 : 1 - (f - .45) / .55;
-      glow.style.opacity = (Math.max(0, gl) * .95).toFixed(3);
-      var ph = clamp01((f - .18) / .32), up = ease(clamp01((f - .5) / .5));
-      photo.style.opacity = ph.toFixed(3);
-      photo.style.transform = 'translateY(' + (-8.9 * up * 1.218).toFixed(2) + '%) scaleY(' + (K + (1 - K) * up).toFixed(4) + ')';
-      svg.style.opacity = (1 - ph * .92).toFixed(3);
+      var newly = [];
+      for (var j = 1; j <= 3; j++) {
+        if (k >= j && prev < j) newly.push(j);
+        if (k < j && prev >= j) lift(j);
+      }
+      newly.forEach(function (j, n) { drop(j, n * 260, newly.length > 1); });
+      if (k === 4 && prev !== 4) bake();
+      if (k < 4 && prev === 4) unbake();
     }
-    if (reduce) { wrap.classList.add('static'); paint(1); return; }
+    function finalState() {
+      setText(4); state = 4;
+      for (var j = 1; j <= 3; j++) rest(j, true);
+      photo.style.opacity = 1; photo.style.transform = 'translateY(-10.84%) scaleY(1)'; svg.style.opacity = .06;
+    }
+    if (reduce) { wrap.classList.add('static'); finalState(); return; }
+    var span = function () { return Math.max(1, wrap.offsetHeight - window.innerHeight); };
     var raf = 0;
     function onScroll() {
       raf = 0;
-      var r = wrap.getBoundingClientRect(), span = r.height - window.innerHeight;
-      if (r.bottom < -50 || r.top > window.innerHeight + 50) return;
-      paint(clamp01(-r.top / Math.max(1, span)));
+      var r = wrap.getBoundingClientRect();
+      if (r.top > window.innerHeight * .75 || r.bottom < 0) return;
+      var p = Math.min(1, Math.max(0, -r.top / span()));
+      if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      go(Math.min(N - 1, Math.floor(p * N)));
     }
     window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
     window.addEventListener('resize', onScroll);
-    paint(0); onScroll();
+    // le etichette portano al passaggio
+    pills.forEach(function (b, k) {
+      b.addEventListener('click', function () {
+        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .5) / N * span();
+        window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
+      });
+    });
+    L.slice(1).forEach(function (el) { el.removeAttribute('opacity'); el.style.opacity = 0; });
+    L[0].style.opacity = .2; L[0].style.transform = ty(26);
+    [].forEach.call(flourEl.children, function (c) { c.style.opacity = 0; });
+    onScroll();
   }
 
   /* ================= Dati vivi ================= */

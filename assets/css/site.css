@@ -372,15 +372,23 @@ body.locked { overflow: hidden; }
 .pr-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px clamp(32px, 6vw, 100px); align-items: end; }
 .pr-head .lead { margin-bottom: .3em; }
 /* la pizza si prepara mentre scorri: disegno a strati che diventa la foto */
-.build { position: relative; height: 240vh; height: 240svh; margin-top: clamp(6px, 1.5vh, 18px); }
+.build { position: relative; height: 300vh; height: 300svh; margin-top: clamp(6px, 1.5vh, 18px); }
 .build-stick { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(24px, 4vw, 72px); padding-top: 72px; }
 .build-nav { list-style: none; margin: 0 0 clamp(18px, 3vh, 30px); padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.build-nav li { font-size: .84rem; font-weight: 600; color: var(--ink-2); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); transition: background .35s, color .35s, border-color .35s; }
-.build-nav li.done { color: var(--ink); border-color: #cdbba6; }
-.build-nav li.on { background: var(--ink); color: var(--bg-2); border-color: var(--ink); }
+.build-nav button { font: inherit; font-size: .84rem; font-weight: 600; color: var(--ink-2); background: transparent; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); cursor: pointer; transition: background .35s, color .35s, border-color .35s; }
+.build-nav button:hover { border-color: var(--ink); color: var(--ink); }
+.build-nav button.done { color: var(--ink); border-color: #cdbba6; }
+.build-nav button.on { background: var(--ink); color: var(--bg-2); border-color: var(--ink); }
+.build-prog { height: 2px; max-width: 440px; margin: calc(-1 * clamp(8px, 1.6vh, 16px)) 0 clamp(18px, 3vh, 28px); background: var(--line); border-radius: 2px; overflow: hidden; }
+.build-prog i { display: block; height: 100%; background: var(--ink); transform-origin: 0 50%; transform: scaleX(0); transition: transform .25s linear; }
+.build-snap { position: absolute; left: 0; width: 1px; height: 1px; top: calc((100% - 100vh) * var(--f)); top: calc((100% - 100svh) * var(--f)); pointer-events: none; }
+@media (pointer: coarse) {
+  html { scroll-snap-type: y proximity; }
+  .build-snap { scroll-snap-align: start; }
+}
 .build-steps { list-style: none; margin: 0; padding: 0; position: relative; min-height: 11.5em; }
-.build-steps li { position: absolute; left: 0; right: 0; top: 0; opacity: 0; visibility: hidden; transform: translateY(16px); transition: opacity .5s var(--ease-out), transform .5s var(--ease-out), visibility 0s .5s; }
-.build-steps li.on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.build-steps li { position: absolute; left: 0; right: 0; top: 0; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .2s ease, transform .2s ease, visibility 0s .2s; }
+.build-steps li.on { opacity: 1; visibility: visible; transform: none; transition: opacity .5s var(--ease-out) .14s, transform .5s var(--ease-out) .14s, visibility 0s 0s; }
 .build-steps h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.045em; line-height: .95; font-size: clamp(2.3rem, 4vw, 3.8rem); }
 .build-steps p { margin-top: 14px; color: var(--ink-2); font-size: 1.1rem; line-height: 1.55; max-width: 34ch; }
 .build-steps a { display: inline-block; margin-top: 14px; font-weight: 600; color: var(--ink); text-underline-offset: 4px; }
@@ -428,7 +436,8 @@ body.locked { overflow: hidden; }
   .build-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 6px calc(-1 * var(--pad)) 12px; padding: 0 var(--pad); }
   .build-nav::-webkit-scrollbar { display: none; }
   .build-nav { gap: 4px; }
-  .build-nav li { white-space: nowrap; font-size: .76rem; padding: 5px 9px; }
+  .build-nav button { white-space: nowrap; font-size: .76rem; padding: 5px 9px; flex: none; }
+  .build-prog { margin: -6px 0 12px; }
   .build-steps { min-height: 9em; }
   .build-steps h3 { font-size: 1.9rem; }
   .build-steps p { font-size: 1rem; margin-top: 8px; }
@@ -451,7 +460,7 @@ body.locked { overflow: hidden; }
   .ch { padding-top: 76px; padding-bottom: 76px; }
   .ch-vieni { padding-bottom: 24px; }
   .hero { height: 128vh; height: 128svh; }
-  .build { height: 200svh; }
+  .build { height: 270svh; }
   .tl-i { padding-bottom: 30px; }
   .tl-y { font-size: clamp(2.5rem, 12vw, 3.4rem); }
   .tl-ph { max-width: 260px; margin-top: 12px; }
