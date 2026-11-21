@@ -452,68 +452,127 @@
     var extras = [];
     data.sections.forEach(function (x) { if (x.group === 'aggiunte' && x.visible !== false) extras = extras.concat(AA.visibleItems(x)); });
     document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
-    anatomy();
+    buildScene();
   }
-  function anatomy() {
-    var box = $('anat'), svg = $('anatLines'), pizza = $('anatPizza');
-    if (!box || box.dataset.ready) return;
-    box.dataset.ready = '1';
-    var items = [].slice.call(box.querySelectorAll('.anat-col li')), dots = [].slice.call(box.querySelectorAll('.anat-dot'));
-    var keys = items.map(function (li) { return li.dataset.k; });
-    var card = document.createElement('div'); card.className = 'anat-card'; card.setAttribute('aria-live', 'polite'); box.appendChild(card);
-    var cur = null, user = false, timer = null, NS = 'http://www.w3.org/2000/svg';
-    function draw() {
-      if (getComputedStyle(svg).display === 'none') return;
-      var br = box.getBoundingClientRect(), pr = pizza.getBoundingClientRect();
-      svg.setAttribute('viewBox', '0 0 ' + br.width + ' ' + br.height);
-      svg.innerHTML = '';
-      items.forEach(function (li) {
-        var k = li.dataset.k, h = li.querySelector('h3').getBoundingClientRect(), dot = box.querySelector('.anat-dot[data-k="' + k + '"]');
-        if (!dot) return;
-        var dr = dot.getBoundingClientRect(), left = li.parentNode.classList.contains('l');
-        var ax = (left ? h.right + 14 : h.left - 14) - br.left, ay = h.top + h.height / 2 - br.top;
-        var ex = (left ? pr.left - 6 : pr.right + 6) - br.left, dx = dr.left + dr.width / 2 - br.left, dy = dr.top + dr.height / 2 - br.top;
-        if (left ? ax > ex : ax < ex) ex = ax;
-        var d = 'M' + ax.toFixed(1) + ',' + ay.toFixed(1) + 'H' + ex.toFixed(1) + 'L' + dx.toFixed(1) + ',' + dy.toFixed(1);
-        var g = document.createElementNS(NS, 'g'); g.setAttribute('data-k', k); if (k === cur) g.setAttribute('class', 'on');
-        g.innerHTML = '<path class="halo" d="' + d + '"/><path class="ln" d="' + d + '"/><circle cx="' + ax.toFixed(1) + '" cy="' + ay.toFixed(1) + '" r="2.6"/>';
-        svg.appendChild(g);
-      });
-    }
-    function set(k, fromUser) {
-      if (fromUser) { user = true; clearInterval(timer); }
-      if (k === cur) return;
-      cur = k;
-      items.forEach(function (li) { li.classList.toggle('on', li.dataset.k === k); });
-      dots.forEach(function (d) { d.classList.toggle('on', d.dataset.k === k); });
-      svg.querySelectorAll('g').forEach(function (g) { g.classList.toggle('on', g.getAttribute('data-k') === k); });
-      var li = items[keys.indexOf(k)];
-      if (li) {
-        var go = li.querySelector('.anat-go');
-        card.innerHTML = '<h3>' + li.querySelector('h3').innerHTML + '</h3><p>' + li.querySelector('p').innerHTML + '</p>' + (go ? '<a href="' + go.getAttribute('href') + '">' + go.textContent + '</a>' : '');
-        card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+  /* La pizza si prepara mentre scorri: strati disegnati a linee che scendono uno sull'altro,
+     poi il forno e la foto vera. Proiezione ortogonale: un disco di raggio r diventa un'ellisse r × r·K. */
+  function buildScene() {
+    var wrap = $('build'), svg = $('buildSvg');
+    if (!wrap || !svg || wrap.dataset.ready) return;
+    wrap.dataset.ready = '1';
+    var CX = 300, CY = 330, R = 230, K = 0.4, G = 150, NS = 'http://www.w3.org/2000/svg';
+    var seed = 11;
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    function proj(x, y) { return [CX + x, CY + y * K]; }
+    function smooth(pts) {
+      var n = pts.length, d = '', m = function (a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; };
+      for (var i = 0; i < n; i++) {
+        var p1 = pts[(i + 1) % n], mid = m(pts[i], p1), mid2 = m(p1, pts[(i + 2) % n]);
+        if (!i) d = 'M' + mid[0].toFixed(1) + ',' + mid[1].toFixed(1);
+        d += 'Q' + p1[0].toFixed(1) + ',' + p1[1].toFixed(1) + ' ' + mid2[0].toFixed(1) + ',' + mid2[1].toFixed(1);
       }
+      return d + 'Z';
     }
-    box.addEventListener('click', function (e) {
-      var b = e.target.closest('.anat-b, .anat-dot'); if (b) set(b.dataset.k, true);
+    function blob(x, y, r, wob, n, rot) {
+      var pts = [];
+      for (var i = 0; i < n; i++) {
+        var a = i / n * Math.PI * 2 + (rot || 0), rr = r + (rnd() - .5) * wob;
+        pts.push(proj(x + rr * Math.cos(a), y + rr * Math.sin(a)));
+      }
+      return smooth(pts);
+    }
+    function ell(r, y0) { return 'M' + (CX - r) + ',' + (CY + (y0 || 0)) + 'A' + r + ',' + (r * K) + ' 0 1 0 ' + (CX + r) + ',' + (CY + (y0 || 0)) + 'A' + r + ',' + (r * K) + ' 0 1 0 ' + (CX - r) + ',' + (CY + (y0 || 0)) + 'Z'; }
+    function leaf(x, y, len, ang) {
+      var pts = [], w = len * .42;
+      for (var i = 0; i <= 10; i++) { var t = i / 10, u = t * len - len / 2, v = Math.sin(t * Math.PI) * w * (1 - t * .25); pts.push([u, v]); }
+      for (var j = 9; j > 0; j--) { var t2 = j / 10, u2 = t2 * len - len / 2, v2 = -Math.sin(t2 * Math.PI) * w * (1 - t2 * .25); pts.push([u2, v2]); }
+      var c = Math.cos(ang), sn = Math.sin(ang);
+      var P = pts.map(function (q) { return proj(x + q[0] * c - q[1] * sn, y + q[0] * sn + q[1] * c); });
+      var a0 = proj(x - len / 2 * c, y - len / 2 * sn), a1 = proj(x + len / 2 * .8 * c, y + len / 2 * .8 * sn);
+      return { body: 'M' + P.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join('L') + 'Z', vein: 'M' + a0[0].toFixed(1) + ',' + a0[1].toFixed(1) + 'L' + a1[0].toFixed(1) + ',' + a1[1].toFixed(1) };
+    }
+    var T = 16; // spessore del disco
+    var html = '<defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="7" stroke="#1a1410" stroke-width="1" opacity=".38"/></pattern></defs>';
+    // 0 · impasto: disco con spessore, cornicione, un po' di farina
+    var dough = '<path d="M' + (CX - R) + ',' + CY + 'L' + (CX - R) + ',' + (CY + T) + 'A' + R + ',' + (R * K) + ' 0 0 0 ' + (CX + R) + ',' + (CY + T) + 'L' + (CX + R) + ',' + CY + 'Z" fill="#e8d4ad" class="ink"/>' +
+      '<path d="' + ell(R) + '" fill="#f6ebd4" class="ink"/><path d="' + ell(R - 26) + '" class="ink thin"/>';
+    for (var f = 0; f < 70; f++) { var fa = rnd() * 6.283, fr = Math.sqrt(rnd()) * (R - 34), fp = proj(fr * Math.cos(fa), fr * Math.sin(fa)); dough += '<circle cx="' + fp[0].toFixed(1) + '" cy="' + fp[1].toFixed(1) + '" r="' + (.6 + rnd() * .9).toFixed(2) + '" fill="#1a1410" opacity=".28"/>'; }
+    var flour = '';
+    for (var q = 0; q < 46; q++) { var qa = rnd() * 6.283, qr = R * (.5 + rnd() * .75); var qp = proj(qr * Math.cos(qa), qr * Math.sin(qa)); flour += '<circle data-v="' + (rnd() * 1).toFixed(2) + '" cx="' + qp[0].toFixed(1) + '" cy="' + (qp[1] - 10 - rnd() * 80).toFixed(1) + '" r="' + (.8 + rnd() * 1.6).toFixed(2) + '" fill="#1a1410" opacity=".35"/>'; }
+    // 1 · pomodoro: steso fino al cornicione, bordo irregolare
+    seed = 23; var sauceD = blob(0, 0, R - 34, 12, 30);
+    var sauce = '<path d="' + sauceD + '" fill="rgba(150,40,25,.07)" class="ink"/><path d="' + sauceD + '" fill="url(#hatch)" stroke="none"/>';
+    // 2 · latticini: pezzi di mozzarella
+    var mozz = '', MZ = [[-110, -60, 34], [-30, -120, 30], [70, -90, 36], [140, -10, 30], [60, 40, 38], [-60, 50, 34], [-140, 20, 28], [10, 120, 30], [110, 110, 26], [-100, 120, 24], [0, -30, 26]];
+    MZ.forEach(function (m) { mozz += '<path d="' + blob(m[0], m[1], m[2], m[2] * .35, 12, rnd()) + '" fill="#fffdf8" class="ink"/>'; });
+    // 3 · ingredienti: pomodorini a metà e basilico
+    var top = '', TM = [[-150, -30], [-80, -140], [20, -70], [120, -120], [165, 50], [80, 70], [-20, 150], [-120, 90], [40, 10]];
+    TM.forEach(function (m) {
+      var r = 22 + rnd() * 8;
+      top += '<path d="' + blob(m[0], m[1], r, 3, 14) + '" fill="rgba(150,40,25,.12)" class="ink"/><path d="' + blob(m[0], m[1], r * .55, 2, 10) + '" class="ink thin"/>';
     });
-    if (window.matchMedia('(hover: hover)').matches) box.addEventListener('pointerover', function (e) {
-      var b = e.target.closest('.anat-b, .anat-dot'); if (b) set(b.dataset.k, true);
+    [[-40, -150, 66, .6], [150, -60, 60, 2.2], [-110, 10, 64, 4.1], [60, 140, 62, 1.1], [-10, 60, 58, 5.3]].forEach(function (l) {
+      var lf = leaf(l[0], l[1], l[2], l[3]); top += '<path d="' + lf.body + '" fill="rgba(70,90,40,.10)" class="ink"/><path d="' + lf.vein + '" class="ink thin"/>';
     });
-    box.addEventListener('focusin', function (e) { var b = e.target.closest('.anat-b, .anat-dot'); if (b) set(b.dataset.k, true); });
-    set('impasto');
-    var img = pizza.querySelector('img');
-    if (img.complete) draw(); else img.addEventListener('load', draw);
-    window.addEventListener('resize', function () { clearTimeout(box._rt); box._rt = setTimeout(draw, 120); });
-    // al primo ingresso: disegna e poi gira da solo finché non lo tocchi
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) { clearInterval(timer); timer = null; return; }
-        setTimeout(draw, 1050);
-        if (!user && !reduce && !timer) timer = setInterval(function () { set(keys[(keys.indexOf(cur) + 1) % keys.length]); }, 3400);
-      });
-    }, { threshold: .35 });
-    io.observe(box);
+    html += '<g id="bG" class="guides"></g>' +
+      '<g id="bL0">' + dough + '</g><g id="bFlour">' + flour + '</g>' +
+      '<g id="bL1" opacity="0">' + sauce + '</g><g id="bL2" opacity="0">' + mozz + '</g><g id="bL3" opacity="0">' + top + '</g>';
+    svg.innerHTML = html;
+    var L = [$('bL0'), $('bL1'), $('bL2'), $('bL3')], flourEl = $('bFlour'), guides = $('bG');
+    var REST = [0, -5, -9, -13], RAD = [R, R - 34, R - 60, R - 40];
+    var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), nav = [].slice.call(document.querySelectorAll('#buildNav li'));
+    var photo = $('buildPhoto'), glow = $('buildGlow'), art = $('buildArt');
+    var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+    var ease = function (t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+    var cur = -1;
+    function setStep(i) {
+      if (i === cur) return; cur = i;
+      steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
+      nav.forEach(function (li, k) { li.classList.toggle('on', k === i); li.classList.toggle('done', k < i); });
+      var nb = nav[i] && nav[i].parentNode;
+      if (nb && nb.scrollWidth > nb.clientWidth) nb.scrollTo({ left: Math.max(0, nav[i].offsetLeft - 20), behavior: 'smooth' });
+    }
+    function paint(p) {
+      var s = Math.min(5, p * 5.35);
+      setStep(Math.min(4, Math.floor(s)));
+      // impasto: sale leggermente all'inizio
+      var a0 = clamp01(s * 2.2);
+      L[0].setAttribute('transform', 'translate(0,' + ((1 - ease(a0)) * 26).toFixed(1) + ')');
+      L[0].setAttribute('opacity', (.25 + .75 * a0).toFixed(3));
+      // farina: sale e svanisce durante il primo passaggio
+      var fl = clamp01(s / 1.1);
+      flourEl.setAttribute('opacity', (1 - fl).toFixed(3));
+      flourEl.setAttribute('transform', 'translate(0,' + (-fl * 40).toFixed(1) + ')');
+      var gd = '';
+      for (var k = 1; k <= 3; k++) {
+        var t = clamp01(s - k + .35), y, o;   // ogni strato: compare sospeso, poi scende
+        if (t <= 0) { o = 0; y = -G; }
+        else if (t < .4) { o = t / .4; y = -G - (1 - t / .4) * 30; }
+        else { var d = ease(clamp01((t - .4) / .6)); o = 1; y = -G + (G + REST[k]) * d; if (d < 1) { var r = RAD[k], yy = (CY + y).toFixed(1), yb = (CY + REST[k]).toFixed(1); gd += '<path class="guide" d="M' + (CX - r) + ',' + yy + 'L' + (CX - r) + ',' + yb + 'M' + (CX + r) + ',' + yy + 'L' + (CX + r) + ',' + yb + '"/>'; } }
+        L[k].setAttribute('opacity', o.toFixed(3));
+        L[k].setAttribute('transform', 'translate(0,' + y.toFixed(1) + ')');
+      }
+      guides.innerHTML = gd;
+      // forno: bagliore, poi il disegno diventa la foto e si alza verso di te
+      var f = clamp01(s - 4);
+      var gl = f < .45 ? f / .45 : 1 - (f - .45) / .55;
+      glow.style.opacity = (Math.max(0, gl) * .95).toFixed(3);
+      var ph = clamp01((f - .18) / .32), up = ease(clamp01((f - .5) / .5));
+      photo.style.opacity = ph.toFixed(3);
+      photo.style.transform = 'translateY(' + (-8.9 * up * 1.218).toFixed(2) + '%) scaleY(' + (K + (1 - K) * up).toFixed(4) + ')';
+      svg.style.opacity = (1 - ph * .92).toFixed(3);
+    }
+    if (reduce) { wrap.classList.add('static'); paint(1); return; }
+    var raf = 0;
+    function onScroll() {
+      raf = 0;
+      var r = wrap.getBoundingClientRect(), span = r.height - window.innerHeight;
+      if (r.bottom < -50 || r.top > window.innerHeight + 50) return;
+      paint(clamp01(-r.top / Math.max(1, span)));
+    }
+    window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
+    window.addEventListener('resize', onScroll);
+    paint(0); onScroll();
   }
 
   /* ================= Dati vivi ================= */

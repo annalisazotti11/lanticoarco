@@ -15,7 +15,7 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="assets/css/site.css?v=72549c73">
+<link rel="stylesheet" href="assets/css/site.css?v=793b4ffb">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -104,17 +104,24 @@
     </div>
   </section>
 
-  <!-- 3 · Il prodotto: com'è fatta la nostra pizza -->
+  <!-- 3 · Il prodotto: la pizza si prepara mentre scorri -->
   <section class="ch ch-prod" id="prodotto">
     <header class="pr-head">
       <h2 class="h2" data-rv>La qualità è una ricerca continua.</h2>
-      <p class="lead" data-rv style="--d:.1s"><span class="fine">Passa sopra la pizza</span><span class="coarse">Tocca la pizza</span>: ogni parte ha la sua storia.</p>
+      <p class="lead" data-rv style="--d:.1s">Scendi piano: la prepariamo davanti a te, uno strato alla volta.</p>
     </header>
-    <div class="anat" id="anat" data-rv style="--d:.12s">
-      <svg class="anat-lines" id="anatLines" aria-hidden="true"></svg>
-      <ul class="anat-col l"><li data-k="latticini"><button type="button" class="anat-b" data-k="latticini"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></button></li><li data-k="impasto"><button type="button" class="anat-b" data-k="impasto"><h3>Impasto</h3><p>Nove impasti con farine bio di un piccolo mulino della Murgia. Niente enzimi, niente miglioratori.</p></button><a class="anat-go" href="#impasti">Gli impasti</a></li><li data-k="pomodoro"><button type="button" class="anat-b" data-k="pomodoro"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></button></li></ul>
-      <figure class="anat-pizza" id="anatPizza"><img src="img/scontorni/media-159.webp" alt="Una pizza con pomodorini, bufala e basilico, vista dall'alto" width="760" height="760"><button type="button" class="anat-dot" data-k="latticini" style="--x:22%;--y:27%" aria-label="latticini"><span></span></button><button type="button" class="anat-dot" data-k="impasto" style="--x:6%;--y:50%" aria-label="impasto"><span></span></button><button type="button" class="anat-dot" data-k="pomodoro" style="--x:27%;--y:64%" aria-label="pomodoro"><span></span></button><button type="button" class="anat-dot" data-k="ingredienti" style="--x:73%;--y:21%" aria-label="ingredienti"><span></span></button><button type="button" class="anat-dot" data-k="cottura" style="--x:95%;--y:47%" aria-label="cottura"><span></span></button><button type="button" class="anat-dot" data-k="olio" style="--x:61%;--y:59%" aria-label="olio"><span></span></button></figure>
-      <ul class="anat-col r"><li data-k="ingredienti"><button type="button" class="anat-b" data-k="ingredienti"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p></button><a class="anat-go" href="menu/#crea">Crea la tua pizza</a></li><li data-k="cottura"><button type="button" class="anat-b" data-k="cottura"><h3>Cottura</h3><p>Forno in pietra, a legna d'ulivo.</p></button></li><li data-k="olio"><button type="button" class="anat-b" data-k="olio"><h3>Olio e sale</h3><p>Olio extravergine bio della Murgia barese, sale marino integrale di Trapani.</p></button></li></ul>
+    <div class="build" id="build">
+      <div class="build-stick">
+        <div class="build-text">
+          <ol class="build-nav" id="buildNav" aria-hidden="true"><li>Impasto</li><li>Pomodoro</li><li>Latticini</li><li>Ingredienti</li><li>Forno</li></ol>
+          <ol class="build-steps" id="buildSteps" aria-live="polite"><li data-i="0"><h3>Impasto</h3><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</p><a href="#impasti">Gli impasti</a></li><li data-i="1"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></li><li data-i="2"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></li><li data-i="3"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p><a href="menu/#crea">Crea la tua pizza</a></li><li data-i="4"><h3>Forno</h3><p>In pietra, a legna d'ulivo. Pochi minuti ed è pronta.</p><a href="menu/">Guarda il menu</a></li></ol>
+        </div>
+        <div class="build-art" id="buildArt">
+          <div class="build-glow" id="buildGlow"></div>
+          <svg id="buildSvg" viewBox="0 0 600 560" aria-hidden="true"></svg>
+          <img class="build-photo" id="buildPhoto" src="img/scontorni/media-159.webp" alt="La pizza finita, con pomodorini, bufala e basilico" width="760" height="760" loading="lazy">
+        </div>
+      </div>
     </div>
     <div class="pr-foot" data-rv>
       <p class="pr-gf"><b>Senza glutine dal 2011.</b> Pizze, fritti e birre, dal laboratorio dedicato.</p>
@@ -178,8 +185,8 @@
   <section class="ch ch-vieni" id="vieni">
     <div class="strip" aria-hidden="true">
       <div class="strip-track">
-        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
-        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
+        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/galleria/ospiti.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
+        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/galleria/ospiti.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
       </div>
     </div>
     <div class="vi-grid">
@@ -222,6 +229,6 @@
 </div>
 
 <script src="assets/js/core.js?v=e001f4eb"></script>
-<script src="assets/js/site.js?v=be5223e6"></script>
+<script src="assets/js/site.js?v=7f1f0950"></script>
 </body>
 </html>

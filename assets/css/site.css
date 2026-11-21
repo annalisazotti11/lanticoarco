@@ -263,7 +263,7 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .legal { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 
 /* Le liste scorrevoli non devono allargare le colonne */
-.st-grid > *, .pr-head > *, .anat > *, .im-grid > *, .pz-grid > *, .vi-grid > *, .im-body { min-width: 0; }
+.st-grid > *, .pr-head > *, .build-stick > *, .im-grid > *, .pz-grid > *, .vi-grid > *, .im-body { min-width: 0; }
 
 /* ---------- Portatili piccoli ---------- */
 @media (max-width: 1240px) and (min-width: 961px) {
@@ -271,7 +271,6 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
   .tl-y { font-size: clamp(3rem, 5vw, 4.2rem); }
   .tl-b h3 { padding-top: 8px; }
   .pz-tabs button { padding: 10px 14px; font-size: .9rem; }
-  .anat-b p { font-size: .9rem; }
 }
 
 /* ---------- Telefono e tablet ---------- */
@@ -341,37 +340,34 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .tl-stat span { font-variant-numeric: tabular-nums; }
 
 /* ---------- 3 · Il prodotto: com'è fatta la nostra pizza ---------- */
-.ch-prod { background: var(--bg-2) url(../img/grana.png); border-top: 1px solid var(--line); padding-top: clamp(80px, 11vh, 130px); padding-bottom: clamp(56px, 8vh, 90px); overflow: hidden; }
+.ch-prod { background: var(--bg-2) url(../img/grana.png); border-top: 1px solid var(--line); padding-top: clamp(80px, 11vh, 130px); padding-bottom: clamp(56px, 8vh, 90px); overflow-x: clip; }
 .pr-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px clamp(32px, 6vw, 100px); align-items: end; }
 .pr-head .lead { margin-bottom: .3em; }
-.coarse { display: none; }
-@media (pointer: coarse) { .coarse { display: inline; } .fine { display: none; } }
-.anat { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, min(40vw, 540px)) minmax(0, 1fr); align-items: center; gap: 0 clamp(28px, 4vw, 72px); margin-top: clamp(24px, 4vh, 48px); }
-.anat-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; z-index: 2; }
-.anat-lines path { fill: none; stroke-linecap: round; stroke-linejoin: round; transition: opacity .35s; }
-.anat-lines .halo { stroke: var(--bg-2); stroke-width: 4; opacity: .85; }
-.anat-lines .ln { stroke: var(--ink); stroke-width: 1.2; }
-.anat-lines g { opacity: .22; transition: opacity .35s; }
-.anat-lines g.on { opacity: 1; }
-.anat-lines circle { fill: var(--ink); }
-.anat-col { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(14px, 3.4vh, 40px); position: relative; z-index: 1; }
-.anat-col.l { text-align: right; }
-.anat-b { display: block; width: 100%; border: 0; background: none; color: inherit; padding: 8px 0; text-align: inherit; cursor: pointer; font: inherit; }
-.anat-b h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.03em; font-size: clamp(1.3rem, 1.8vw, 1.75rem); line-height: 1.05; color: var(--ink); opacity: .55; transition: opacity .35s; }
-.anat-b p { margin-top: 6px; color: var(--ink-2); font-size: .95rem; line-height: 1.5; max-width: 30ch; opacity: .7; transition: opacity .35s; }
-.anat-col.l .anat-b p { margin-left: auto; }
-.anat-col li.on .anat-b h3, .anat-col li.on .anat-b p { opacity: 1; }
-.anat-go { display: inline-block; margin-top: 4px; font-weight: 600; font-size: .92rem; color: var(--ink); text-underline-offset: 4px; visibility: hidden; opacity: 0; transition: opacity .3s; }
-.anat-col li.on .anat-go { visibility: visible; opacity: 1; }
-.anat-pizza { position: relative; margin: 0; aspect-ratio: 1; z-index: 1; }
-.anat-pizza img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 34px 44px rgba(60, 40, 25, .38)); }
-.anat-dot { position: absolute; left: var(--x); top: var(--y); width: 36px; height: 36px; transform: translate(-50%, -50%); border: 0; background: none; padding: 0; cursor: pointer; z-index: 3; }
-.anat-dot span { position: absolute; inset: 11px; border-radius: 50%; background: var(--bg-2); box-shadow: 0 0 0 2px var(--ink), 0 3px 10px rgba(0, 0, 0, .35); transition: transform .3s var(--ease-out), background .3s; }
-.anat-dot::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; border: 2px solid var(--bg-2); opacity: 0; }
-.anat-dot.on span { background: var(--ink); box-shadow: 0 0 0 2px var(--bg-2), 0 3px 12px rgba(0, 0, 0, .45); transform: scale(1.2); }
-.anat-dot.on::before { animation: ping 1.8s ease-out infinite; }
-@keyframes ping { 0% { opacity: .9; transform: scale(.5); } 100% { opacity: 0; transform: scale(1.7); } }
-.anat-card { display: none; }
+/* la pizza si prepara mentre scorri: disegno a strati che diventa la foto */
+.build { position: relative; height: 330vh; height: 330svh; margin-top: clamp(6px, 1.5vh, 18px); }
+.build-stick { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(24px, 4vw, 72px); padding-top: 72px; }
+.build-nav { list-style: none; margin: 0 0 clamp(18px, 3vh, 30px); padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.build-nav li { font-size: .84rem; font-weight: 600; color: var(--ink-2); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); transition: background .35s, color .35s, border-color .35s; }
+.build-nav li.done { color: var(--ink); border-color: #cdbba6; }
+.build-nav li.on { background: var(--ink); color: var(--bg-2); border-color: var(--ink); }
+.build-steps { list-style: none; margin: 0; padding: 0; position: relative; min-height: 11.5em; }
+.build-steps li { position: absolute; left: 0; right: 0; top: 0; opacity: 0; visibility: hidden; transform: translateY(16px); transition: opacity .5s var(--ease-out), transform .5s var(--ease-out), visibility 0s .5s; }
+.build-steps li.on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.build-steps h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.045em; line-height: .95; font-size: clamp(2.3rem, 4vw, 3.8rem); }
+.build-steps p { margin-top: 14px; color: var(--ink-2); font-size: 1.1rem; line-height: 1.55; max-width: 34ch; }
+.build-steps a { display: inline-block; margin-top: 14px; font-weight: 600; color: var(--ink); text-underline-offset: 4px; }
+.build-art { position: relative; width: 100%; max-width: min(700px, calc((100svh - 110px) * 600 / 560)); aspect-ratio: 600 / 560; justify-self: center; }
+.build-art svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.build-art svg .ink { stroke: var(--ink); stroke-width: 1.3; stroke-linejoin: round; stroke-linecap: round; }
+.build-art svg .thin { fill: none; stroke-width: .9; opacity: .55; }
+.build-art svg .guide { fill: none; stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 5; opacity: .45; }
+.build-photo { position: absolute; left: 11.667%; top: 17.86%; width: 76.667%; height: auto; aspect-ratio: 1; opacity: 0; transform-origin: 50% 50%; will-change: transform, opacity; filter: drop-shadow(0 30px 40px rgba(60, 40, 25, .35)); }
+.build-glow { position: absolute; left: 4%; right: 4%; top: 22%; bottom: -4%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 170, 80, .55), rgba(232, 96, 30, .22) 55%, transparent 78%); filter: blur(14px); opacity: 0; pointer-events: none; }
+.build.static { height: auto; }
+.build.static .build-stick { position: static; height: auto; padding-top: 0; }
+.build.static .build-steps li { position: static; opacity: 1; visibility: visible; transform: none; margin-bottom: 18px; }
+.build.static .build-steps { min-height: 0; }
+.build.static .build-nav { display: none; }
 
 .pr-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px clamp(24px, 4vw, 60px); margin-top: clamp(26px, 4vh, 44px); padding-top: clamp(18px, 3vh, 26px); border-top: 1px solid var(--line); }
 .pr-gf { color: var(--ink-2); max-width: 46ch; line-height: 1.45; }
@@ -390,21 +386,17 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 
 @media (max-width: 960px) {
   .pr-head { grid-template-columns: 1fr; }
-  .anat { grid-template-columns: 1fr 1fr; gap: 0 14px; margin-top: 18px; }
-  .anat-lines { display: none; }
-  .anat-pizza { grid-column: 1 / -1; grid-row: 1; width: min(84vw, 420px); justify-self: center; margin-bottom: 8px; }
-  .anat-col { gap: 6px; align-content: start; }
-  .anat-col.l { text-align: left; }
-  .anat-b { padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); }
-  .anat-b h3 { font-size: 1.05rem; opacity: .75; }
-  .anat-b p, .anat-go { display: none; }
-  .anat-col li.on .anat-b { background: var(--ink); border-color: var(--ink); }
-  .anat-col li.on .anat-b h3 { color: var(--bg-2); opacity: 1; }
-  .anat-card { display: block; grid-column: 1 / -1; margin-top: 12px; padding: 16px 18px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); min-height: 7.4em; }
-  .anat-card h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.03em; font-size: 1.35rem; }
-  .anat-card p { margin-top: 6px; color: var(--ink-2); line-height: 1.5; }
-  .anat-card a { display: inline-block; margin-top: 8px; font-weight: 600; color: var(--ink); text-underline-offset: 4px; }
-  .anat-card.swap > * { animation: fadeUp .45s var(--ease-out) both; }
+  .build { height: 310svh; }
+  .build-stick { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; gap: 4px; padding-top: 64px; }
+  .build-art { order: -1; width: min(96vw, calc((100svh - 320px) * 600 / 560)); }
+  .build-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 6px calc(-1 * var(--pad)) 12px; padding: 0 var(--pad); }
+  .build-nav::-webkit-scrollbar { display: none; }
+  .build-nav { gap: 4px; }
+  .build-nav li { white-space: nowrap; font-size: .76rem; padding: 5px 9px; }
+  .build-steps { min-height: 9em; }
+  .build-steps h3 { font-size: 1.9rem; }
+  .build-steps p { font-size: 1rem; margin-top: 8px; }
+  .build-steps a { margin-top: 8px; }
   .pr-foot { flex-direction: column; align-items: flex-start; }
   .pr-sup { flex-wrap: wrap; gap: 10px; }
   .pr-sup > p { max-width: none; width: 100%; }
