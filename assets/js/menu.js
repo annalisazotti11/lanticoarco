@@ -486,7 +486,7 @@
     f += '</div><div class="mf-card"><h2>Allergeni</h2><p style="margin-bottom:12px">' + esc(i.allergenNote) + ' I numeri accanto ai piatti indicano gli allergeni (Reg. UE 1169/2011).</p><ul class="alg-legend">' +
       AA.ALLERGENS.map(function (a) { return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ul>' +
       '<p style="margin-top:12px"><span class="frz">*</span> ' + esc(i.frozenLegend) + '</p></div>';
-    f += '<p style="text-align:center;padding:8px 0"><a href="../">Scopri L\'Antico Arco</a></p></div>';
+    f += '<p style="text-align:center;padding:8px 0"><a href="../">Scopri L\'Antico Arco</a> · <a href="../privacy/">Privacy e cookie</a></p></div>';
     $('footer').innerHTML = f;
   }
 

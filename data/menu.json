@@ -148,7 +148,7 @@
     {
      "id": "i406",
      "name": "Impasto classico",
-     "desc": "Preparato con farina tipo 0 bio 0,90%, farina di grano tenero integrale bio 0,10%, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata",
+     "desc": "Farina di grano tenero tipo 0 bio (90%) e farina integrale bio (10%), lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata.",
      "price": 0,
      "prices": [],
      "note": "",
@@ -164,12 +164,13 @@
      "image": "",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Il nostro di sempre: farina tipo 0 bio con un 10% di integrale."
     },
     {
      "id": "i407",
      "name": "Impasto Canapa sativa",
-     "desc": "Impasto realizzato con mix di farine bio: farina tipo 0 bio 0,65%, semola rimacinata bio 0,20%, farina di grano tenero integrale bio 0,5%, semi di canapa sativa 0,5%, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. I semi di canapa sono riconosciuti dal Ministero della Salute per i loro benefici: supporto nella prevenzione delle malattie cardiovascolari, riduzione del colesterolo LDL e rafforzamento del sistema immunitario. Contengono naturalmente Omega-6 e Omega-3 nel rapporto ideale 3:1, per offrirvi un prodotto sano",
+     "desc": "Farina tipo 0 bio, semola rimacinata bio e farina integrale bio, con semi di canapa sativa. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. I semi danno un colore più scuro e un gusto che ricorda la nocciola.",
      "price": 2,
      "prices": [],
      "note": "",
@@ -185,12 +186,13 @@
      "image": "img/menu/media-16.webp",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Con semi di canapa sativa: più scuro, con un gusto che ricorda la nocciola."
     },
     {
      "id": "i408",
      "name": "Impasto Carbone Vegetale da cocco",
-     "desc": "Impasto realizzato con mix di farine bio: farina tipo 0 bio 0,65%, semola rimacinata bio 0,20%, farina di grano tenero integrale bio 0,5%, carbone vegetale 0,05%, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. Il carbone vegetale è un alleato naturale grazie al suo elevato potere adsorbente, utile per ridurre gonfiore addominale e gas intestinali, favorire la digestione, contrastare reflusso e acidità, supportare l’eliminazione delle tossine, alleviare nausea e diarrea, combattere l’alitosi e purificare naturalmente l’organismo",
+     "desc": "Farina tipo 0 bio, semola rimacinata bio e farina integrale bio, con carbone vegetale di cocco (E153) che colora l’impasto di nero. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata.",
      "price": null,
      "prices": [],
      "note": "",
@@ -206,12 +208,13 @@
      "image": "",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Nero intenso: lo colora il carbone vegetale di cocco."
     },
     {
      "id": "i409",
      "name": "Impasto cereali misti da noi prodotto",
-     "desc": "Prodotto da noi con farine biologiche: farina 0 bio 60%, semola rimacinata bio 20%, farina integrale di grano tenero bio 0,5%, farina di grano khorasan (Kamut) 0,5%, farina integrale di Senatore Cappelli bio 0,5%, farina integrale di farro bio 5%, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. Arricchito con cinque semi biologici: sesamo bianco e nero, lino giallo e marrone, e papavero. Un prodotto genuino, preparato con cura direttamente da noi",
+     "desc": "Lo prepariamo noi con farine biologiche: tipo 0, semola rimacinata, integrale di grano tenero, grano khorasan, Senatore Cappelli integrale e farro integrale. Con cinque semi bio: sesamo bianco e nero, lino giallo e marrone, papavero. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata.",
      "price": 2,
      "prices": [],
      "note": "",
@@ -222,17 +225,19 @@
       "glutine",
       "pesce",
       "soia",
-      "uova"
+      "uova",
+      "sesamo"
      ],
      "image": "img/menu/media-33.webp",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Sei farine e cinque semi: sesamo, lino e papavero."
     },
     {
      "id": "i410",
      "name": "Impasto Curcuma, zenzero e semi di sesamo nero",
-     "desc": "Impasto realizzato con mix di farine bio: farina tipo 0 bio 0,65%, semola rimacinata bio 0,20%, farina di grano tenero integrale bio 0,5%, curcuma 0,04%, zenzero 0,05%, semi di papavero 0,05%, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. Questa combinazione conferisce un gusto unico e apporta benefici per la salute: lo zenzero ha proprietà antiossidanti e antitumorali, con effetti protettivi sul colon retto; la curcuma è nota per le sue proprietà antinfiammatorie, analgesiche e antiossidanti, utili contro infiammazioni, dolori articolari, artrite e artrosi; i semi di papavero, ricchi di acidi oleici, aiutano a controllare il colesterolo LDL e, grazie alla vitamina B e al ferro, favoriscono la rigenerazione cellulare e contrastano l’invecchiamento. Un impasto che unisce tradizione, benessere e sapore.",
+     "desc": "Farina tipo 0 bio, semola rimacinata bio e farina integrale bio, con curcuma, zenzero e semi. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. La curcuma dà all’impasto un colore dorato, lo zenzero un profumo speziato.",
      "price": 2,
      "prices": [],
      "note": "",
@@ -243,17 +248,19 @@
       "glutine",
       "pesce",
       "soia",
-      "uova"
+      "uova",
+      "sesamo"
      ],
      "image": "img/menu/media-43.webp",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Dorato e profumato: curcuma e zenzero nell’impasto."
     },
     {
      "id": "i411",
      "name": "Impasto Farro integrale 100% bio",
-     "desc": "Preparato con farro integrale mono varietà bio (Triticum Dicoccum / Triticum Monococcum), lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. Cereale molto amato dagli antichi Romani, il farro è ricco di minerali, altamente energetico e con proprietà anti-invecchiamento; aiuta nelle diete grazie al forte potere saziante. Il nostro impasto è composto al 100% da farro integrale bio mono varietà",
+     "desc": "100% farina integrale di farro bio, lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. Il farro è uno dei primi cereali coltivati dall’uomo: dal suo nome latino, far, viene la parola farina.",
      "price": 2,
      "prices": [],
      "note": "",
@@ -269,12 +276,13 @@
      "image": "img/menu/media-25.webp",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "100% farro integrale. Dal suo nome latino, far, viene la parola farina."
     },
     {
      "id": "i412",
-     "name": "Impasto Kamut (Khorasan) Bio",
-     "desc": "Preparato con antico grano Khorasan Kamut mono varietà da agricoltura biologica, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. Questo cereale, con oltre 10.000 anni di storia, presenta un contenuto più elevato di proteine e sali minerali rispetto al grano moderno, in particolare selenio, zinco e magnesio, risultando ideale anche per gli sportivi. Produciamo pizze con questo antico grano grazie alla licenza ottenuta dopo un apposito corso di formazione. Il nostro impasto è composto da farina di grano Khorasan Kamut puro al 100%",
+     "name": "Impasto KAMUT® (grano khorasan)",
+     "desc": "100% farina di grano khorasan KAMUT®, lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. KAMUT® è il marchio che garantisce un grano khorasan antico, mai incrociato con varietà moderne e sempre coltivato con metodo biologico. Lo usiamo con regolare licenza.",
      "price": 2,
      "prices": [],
      "note": "",
@@ -290,12 +298,13 @@
      "image": "img/menu/media-155.webp",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "100% grano khorasan KAMUT®: antico, mai incrociato, sempre biologico."
     },
     {
      "id": "i413",
      "name": "Impasto Senatore Cappelli integrale 100% Bio",
-     "desc": "Preparato con farina di mono varietà Senatore Cappelli bio, lievito di birra, sale integrale dello Stagnone di Trapani (Riserva Naturale WWF), olio EVO bio e acqua microfiltrata. Questa storica varietà, definita “razza eletta” negli anni ’30-’40, era ampiamente consumata in Puglia e Lucania; prende il nome dal senatore Raffaele Cappelli, promotore della riforma agraria che distinse i grani duri dai teneri. È un grano duro ricco di lipidi, aminoacidi, vitamine e minerali, noto per l’alta digeribilità. Il nostro impasto è realizzato con farina di grano Senatore Cappelli bio mono varietà al 100%",
+     "desc": "100% farina integrale di grano duro Senatore Cappelli bio, lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. È la varietà selezionata nel 1915 da Nazareno Strampelli vicino a Foggia e dedicata al senatore Raffaele Cappelli, che gli aveva messo a disposizione i campi: per decenni è stato il grano duro più coltivato in Italia.",
      "price": 2,
      "prices": [],
      "note": "",
@@ -311,12 +320,13 @@
      "image": "img/menu/media-124.webp",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Grano duro selezionato nel 1915 vicino a Foggia. Per decenni, il più coltivato d’Italia."
     },
     {
      "id": "i414",
      "name": "Impasto senza glutine",
-     "desc": "",
+     "desc": "Preparato nel nostro laboratorio dedicato, separato dal resto della cucina.",
      "price": 2.5,
      "prices": [],
      "note": "",
@@ -327,7 +337,8 @@
      "image": "",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "short": "Dal laboratorio dedicato, separato dal resto della cucina."
     }
    ]
   },
@@ -8117,7 +8128,7 @@
     {
      "id": "i770",
      "name": "Del Colle",
-     "desc": "Amaro/digestivo alle erbe, gusto deciso",
+     "desc": "Amaro alle erbe, gusto deciso",
      "price": 3,
      "prices": [],
      "note": "",
@@ -8229,7 +8240,7 @@
     {
      "id": "i778",
      "name": "Padre Peppe",
-     "desc": "Amaro/digestivo alle erbe, gusto tradizionale",
+     "desc": "Amaro alle erbe, gusto tradizionale",
      "price": 3,
      "prices": [],
      "note": "",
@@ -8243,7 +8254,7 @@
     {
      "id": "i779",
      "name": "Petrus",
-     "desc": "Amaro/digestivo alle erbe, deciso",
+     "desc": "Amaro alle erbe, deciso",
      "price": 4,
      "prices": [],
      "note": "",
@@ -10100,7 +10111,7 @@
    "active": true,
    "title": "Pomodoro Nickel free",
    "kicker": "Novità assoluta",
-   "text": "Disponibile per chi è intollerante ai metalli pesanti.",
+   "text": "Su richiesta, al posto del pomodoro classico.",
    "price": "+ € 3,00",
    "image": "",
    "from": "",

@@ -308,22 +308,45 @@
     var items = AA.visibleItems(sec);
     var list = $('imList'), info = $('imInfo'), photo = $('imPhoto'), cur = -1, timer, user = false;
     $('imCount').textContent = NUM[items.length] || items.length;
+    var LOOK = [
+      [/carbone/i, ['#3b3532', '#121010'], '#5b524c'],
+      [/canapa/i, ['#c6b48c', '#8d7c58'], '#4e4232'],
+      [/cereali/i, ['#d2ae7c', '#9c7647'], '#3d2c1c'],
+      [/curcuma/i, ['#f3c95a', '#d39a23'], '#2a2016'],
+      [/farro/i, ['#cfa476', '#9a6f45']],
+      [/khorasan|kamut/i, ['#ecc479', '#c2903e']],
+      [/cappelli/i, ['#f2d690', '#d2ab55']],
+      [/glutine/i, ['#f6ecd6', '#e1cda5']],
+      [/./, ['#f1e2c3', '#d9bf8e']]
+    ];
+    function look(it) { for (var k = 0; k < LOOK.length; k++) if (LOOK[k][0].test(it.name)) return LOOK[k]; }
+    function swStyle(lk) { return '--c1:' + lk[1][0] + ';--c2:' + lk[1][1] + (lk[2] ? ';--sd:' + lk[2] : ''); }
     list.innerHTML = items.map(function (it, i) {
       var label = it.name.replace(/^Impasto\s+/i, '').replace(/\s*\(.*?\)/g, '').replace(/\s*(100%\s*)?bio$/i, '').replace(/\s+da (noi prodotto|cocco)$/i, '').replace(/ e semi di sesamo nero/i, ' e sesamo').trim();
       label = label.charAt(0).toUpperCase() + label.slice(1);
-      return '<li><button type="button" data-i="' + i + '" aria-pressed="false">' + esc(label) + '</button></li>';
+      var lk = look(it);
+      return '<li><button type="button" data-i="' + i + '" aria-pressed="false"><i class="sw' + (lk[2] ? ' seeds' : '') + '" style="' + swStyle(lk) + '" aria-hidden="true"></i>' + esc(label) + '</button></li>';
     }).join('');
+    function shortOf(it) {
+      if (it.short) return it.short;
+      var d = String(it.desc || ''), m = d.match(/^[^.]{10,140}\./);
+      return m ? m[0] : d.slice(0, 140);
+    }
     function show(i) {
       if (i === cur) return;
       cur = i;
       var it = items[i];
       list.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', Number(b.dataset.i) === i); });
-      var p = it.price == null ? '' : (Number(it.price) === 0 ? 'Compreso nel prezzo della pizza' : AA.price(it.price, { signed: true }) + ' sul prezzo della pizza');
+      var p = it.price == null ? 'Supplemento da chiedere in sala' : (Number(it.price) === 0 ? 'Compreso nel prezzo della pizza' : AA.price(it.price, { signed: true }) + ' sul prezzo della pizza');
       info.classList.remove('swap'); void info.offsetWidth; info.classList.add('swap');
-      info.innerHTML = '<h3>' + esc(it.name) + '</h3>' + (it.desc ? '<p>' + esc(it.desc) + '</p>' : '') + (p ? '<span class="im-price">' + p + '</span>' : '');
-      var src = it.image ? AA.src(it.image) : AA.ROOT + 'assets/img/impasti-grano.webp';
+      var lk = look(it), name = it.name.replace(/^Impasto\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); });
+      info.innerHTML = '<h3>' + esc(name) + '</h3><p>' + esc(shortOf(it)) + '</p>' + (p ? '<span class="im-price">' + p + '</span>' : '');
+      var frame = photo.parentNode;
+      frame.className = 'im-photo' + (it.image ? '' : ' dough' + (lk[2] ? ' seeds' : ''));
+      frame.setAttribute('style', swStyle(lk));
       photo.classList.remove('swap'); void photo.offsetWidth;
-      photo.src = src; photo.classList.add('swap');
+      if (it.image) photo.src = AA.src(it.image);
+      photo.classList.add('swap');
     }
     list.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
@@ -356,15 +379,11 @@
       tabs.push({ sec: s, items: list, total: all.length, hint: hint, label: s.name.replace(/^Pizze\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); }) });
     });
     if (!tabs.length) return;
-    var tabBox = $('pzTabs'), plate = $('pzPlate'), card = $('pzCard'), big = $('pzBig');
+    var tabBox = $('pzTabs'), plate = $('pzPlate'), card = $('pzCard');
     var t = 0, i = 0, timer = null;
     tabBox.innerHTML = tabs.map(function (tb, k) {
       return '<button type="button" role="tab" data-k="' + k + '" aria-selected="' + (k === 0) + '">' + esc(tb.label) + '</button>';
     }).join('');
-    function fitBig() {
-      var n = (big.textContent || '').length || 1;
-      big.style.setProperty('--bn', Math.min(22, 150 / n).toFixed(2) + 'vw');
-    }
     function paint() {
       var tb = tabs[t], it = tb.items[i];
       $('pzName').textContent = it.name;
@@ -374,7 +393,6 @@
       $('pzPrice').textContent = pr != null && isFinite(pr) ? (it.prices && it.prices.length ? 'da ' : '') + AA.price(pr) : '';
       $('pzTags').innerHTML = (it.tags || []).map(function (c) { var tg = AA.TAG_BY_CODE[c]; return tg ? '<span>' + esc(tg.short) + '</span>' : ''; }).join('') + (it.featured ? '<span>Preferita</span>' : '');
       $('pzCount').textContent = (i + 1) + ' / ' + tb.items.length;
-      big.textContent = it.name; fitBig();
       var img = $('pzImg');
       plate.classList.toggle('photo', !it.cutout);
       img.src = AA.src(it.cutout || it.image);
@@ -409,7 +427,6 @@
       if (Math.abs(dx) > 40) (dx < 0 ? $('pzNext') : $('pzPrev')).click();
     });
     setTab(0); paint();
-    window.addEventListener('resize', fitBig);
     if (!reduce) timer = setInterval(function () { if ($('pizze').classList.contains('in')) swapTo(function () { i = (i + 1) % tabs[t].items.length; }); }, 6000);
   }
 
@@ -430,31 +447,73 @@
     if (list.length > 1 && !reduce) setInterval(function () { k = (k + 1) % list.length; paint(); }, 5000);
   }
 
-  /* ================= Il prodotto: numeri veri e muro degli ingredienti ================= */
+  /* ================= Il prodotto: com'è fatta la nostra pizza ================= */
   function product(data) {
-    var vis = function (g) { return data.sections.filter(function (x) { return x.group === g && x.visible !== false; }); };
-    var doughs = [], extras = [];
-    vis('impasti').forEach(function (x) { doughs = doughs.concat(AA.visibleItems(x)); });
-    vis('aggiunte').forEach(function (x) { extras = extras.concat(AA.visibleItems(x)); });
-    var nd = document.querySelector('[data-n="impasti"]'), ni = document.querySelector('[data-n="ingredienti"]');
-    if (nd && doughs.length) nd.textContent = doughs.length;
-    if (ni && extras.length) ni.textContent = extras.length;
-    var rows = $('wallRows');
-    if (!rows || !extras.length) return;
-    var STAR = '<svg viewBox="0 0 24 24"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg>';
-    var seen = {}, list = extras.map(function (it) {
-      return it.name.replace(/\s+(a fette|a julienne|alla julienne|a dadi|all[’']uscita|in cottura|sparsa|spalmata|bio presidio slow)$/i, '').trim();
-    }).filter(function (n) {
-      var k = n.toLowerCase();
-      if (seen[k] || n.length > 30 || /doppi|aggiunt|salsa|crema|vegan|valsoia|violife|dream|nickel|kebab|wurstel|simmenthal|philadelphia|mais|panna|glutine|patate fritte|insalata|formaggio/i.test(n)) return false;
-      return (seen[k] = true);
+    var extras = [];
+    data.sections.forEach(function (x) { if (x.group === 'aggiunte' && x.visible !== false) extras = extras.concat(AA.visibleItems(x)); });
+    document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
+    anatomy();
+  }
+  function anatomy() {
+    var box = $('anat'), svg = $('anatLines'), pizza = $('anatPizza');
+    if (!box || box.dataset.ready) return;
+    box.dataset.ready = '1';
+    var items = [].slice.call(box.querySelectorAll('.anat-col li')), dots = [].slice.call(box.querySelectorAll('.anat-dot'));
+    var keys = items.map(function (li) { return li.dataset.k; });
+    var card = document.createElement('div'); card.className = 'anat-card'; card.setAttribute('aria-live', 'polite'); box.appendChild(card);
+    var cur = null, user = false, timer = null, NS = 'http://www.w3.org/2000/svg';
+    function draw() {
+      if (getComputedStyle(svg).display === 'none') return;
+      var br = box.getBoundingClientRect(), pr = pizza.getBoundingClientRect();
+      svg.setAttribute('viewBox', '0 0 ' + br.width + ' ' + br.height);
+      svg.innerHTML = '';
+      items.forEach(function (li) {
+        var k = li.dataset.k, h = li.querySelector('h3').getBoundingClientRect(), dot = box.querySelector('.anat-dot[data-k="' + k + '"]');
+        if (!dot) return;
+        var dr = dot.getBoundingClientRect(), left = li.parentNode.classList.contains('l');
+        var ax = (left ? h.right + 14 : h.left - 14) - br.left, ay = h.top + h.height / 2 - br.top;
+        var ex = (left ? pr.left - 6 : pr.right + 6) - br.left, dx = dr.left + dr.width / 2 - br.left, dy = dr.top + dr.height / 2 - br.top;
+        if (left ? ax > ex : ax < ex) ex = ax;
+        var d = 'M' + ax.toFixed(1) + ',' + ay.toFixed(1) + 'H' + ex.toFixed(1) + 'L' + dx.toFixed(1) + ',' + dy.toFixed(1);
+        var g = document.createElementNS(NS, 'g'); g.setAttribute('data-k', k); if (k === cur) g.setAttribute('class', 'on');
+        g.innerHTML = '<path class="halo" d="' + d + '"/><path class="ln" d="' + d + '"/><circle cx="' + ax.toFixed(1) + '" cy="' + ay.toFixed(1) + '" r="2.6"/>';
+        svg.appendChild(g);
+      });
+    }
+    function set(k, fromUser) {
+      if (fromUser) { user = true; clearInterval(timer); }
+      if (k === cur) return;
+      cur = k;
+      items.forEach(function (li) { li.classList.toggle('on', li.dataset.k === k); });
+      dots.forEach(function (d) { d.classList.toggle('on', d.dataset.k === k); });
+      svg.querySelectorAll('g').forEach(function (g) { g.classList.toggle('on', g.getAttribute('data-k') === k); });
+      var li = items[keys.indexOf(k)];
+      if (li) {
+        var go = li.querySelector('.anat-go');
+        card.innerHTML = '<h3>' + li.querySelector('h3').innerHTML + '</h3><p>' + li.querySelector('p').innerHTML + '</p>' + (go ? '<a href="' + go.getAttribute('href') + '">' + go.textContent + '</a>' : '');
+        card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+      }
+    }
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('.anat-b, .anat-dot'); if (b) set(b.dataset.k, true);
     });
-    var html = '';
-    [[list.filter(function (_, i) { return i % 2 === 0; }), ''], [list.filter(function (_, i) { return i % 2 === 1; }), 'r o']].forEach(function (cfg) {
-      var seq = cfg[0].map(function (n) { return '<span>' + esc(n) + STAR + '</span>'; }).join('');
-      html += '<div class="wall-row ' + cfg[1] + '" style="--dur:' + Math.round(cfg[0].length * 3.2) + 's">' + seq + seq + '</div>';
+    if (window.matchMedia('(hover: hover)').matches) box.addEventListener('pointerover', function (e) {
+      var b = e.target.closest('.anat-b, .anat-dot'); if (b) set(b.dataset.k, true);
     });
-    rows.innerHTML = html;
+    box.addEventListener('focusin', function (e) { var b = e.target.closest('.anat-b, .anat-dot'); if (b) set(b.dataset.k, true); });
+    set('impasto');
+    var img = pizza.querySelector('img');
+    if (img.complete) draw(); else img.addEventListener('load', draw);
+    window.addEventListener('resize', function () { clearTimeout(box._rt); box._rt = setTimeout(draw, 120); });
+    // al primo ingresso: disegna e poi gira da solo finché non lo tocchi
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) { clearInterval(timer); timer = null; return; }
+        setTimeout(draw, 1050);
+        if (!user && !reduce && !timer) timer = setInterval(function () { set(keys[(keys.indexOf(cur) + 1) % keys.length]); }, 3400);
+      });
+    }, { threshold: .35 });
+    io.observe(box);
   }
 
   /* ================= Dati vivi ================= */
@@ -470,6 +529,7 @@
     if (info.hours && info.hours.length) {
       $('hours').innerHTML = info.hours.map(function (h) { return '<div><dt>' + esc(h.days) + '</dt><dd>' + esc(h.time) + '</dd></div>'; }).join('');
     }
+    week(info);
     if (info.legal) {
       var l = [];
       if (info.legal.vat) l.push('<span>P.IVA ' + esc(info.legal.vat) + '</span>');
@@ -477,6 +537,24 @@
       if (info.legal.rea) l.push('<span>REA ' + esc(info.legal.rea) + '</span>');
       $('legal').innerHTML = l.join('');
     }
+  }
+
+  function week(info) {
+    var box = $('week'); if (!box) return;
+    var days = info.openDays || [], from = info.openFrom, to = info.openTo;
+    if (!from || !to) { box.hidden = true; $('hours').hidden = false; return; }
+    var NAMES = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'], SH = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+    var mins = function (x) { var q = String(x).split(':'); return Number(q[0]) * 60 + Number(q[1] || 0); };
+    var a = mins(from), b = mins(to); if (b <= a) b += 1440;
+    var top = Math.max(0, (a - 720) / 720 * 100), h = Math.min(100 - top, (b - a) / 720 * 100);
+    var st = AA.openStatus(info) || {}, today = new Date().getDay();
+    var hhmm = function (x) { return String(x).replace(/^0/, '').replace(/:00$/, ''); };
+    box.innerHTML = [1, 2, 3, 4, 5, 6, 0].map(function (d) {
+      var on = days.indexOf(d) >= 0 && !(d === today && st.closedToday);
+      var cls = (on ? '' : 'off') + (d === today ? ' today' + (st.open ? ' live' : '') : '');
+      var txt = on ? hhmm(from) + '–' + hhmm(to) : (d === today && st.closedToday ? 'chiuso' : 'riposo');
+      return '<li class="' + cls.trim() + '" aria-label="' + NAMES[d] + (d === today ? ', oggi' : '') + ': ' + (on ? 'dalle ' + from + ' alle ' + to : txt) + '"><b>' + (d === today ? 'Oggi' : SH[d]) + '</b><span class="bar"><i style="--t:' + top.toFixed(1) + '%;--h:' + h.toFixed(1) + '%"></i></span><small>' + txt + '</small></li>';
+    }).join('');
   }
 
   AA.loadMenu().then(function (data) {
