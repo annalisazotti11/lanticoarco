@@ -7,7 +7,7 @@
 
   var S = {
     cfg: null, store: null, user: '', data: null, publishedStr: '', baseSha: null,
-    pending: {}, tab: 'menu', open: {}, q: '', ed: null
+    pending: {}, tab: 'oggi', open: {}, q: '', ed: null, oq: ''
   };
   window.AA_PENDING_IMAGES = S.pending;
 
@@ -45,7 +45,8 @@
   function ask(title, text, okLabel, opts) {
     opts = opts || {};
     return new Promise(function (resolve) {
-      $('askT').textContent = title; $('askX').textContent = text || '';
+      $('askT').textContent = title;
+      if (opts.html) $('askX').innerHTML = opts.html; else $('askX').innerHTML = text ? '<p>' + esc(text) + '</p>' : '';
       $('askOk').textContent = okLabel || 'Conferma';
       $('askOk').className = 'b ' + (opts.danger ? 'b-danger' : 'b-main');
       $('askNo').textContent = opts.cancel || 'Annulla';
@@ -90,6 +91,7 @@
     $('setupForm').hidden = !!hasCfg;
     var local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /[?&]demo\b/.test(location.search);
     $('demoBtn').hidden = !(local || !hasCfg);
+    $('gateS').textContent = hasCfg ? 'Menu, orari e novità del sito.' : 'Prima configurazione';
     if (!hasCfg) {
       $('setupForm').repo.value = guessRepo();
       var url = 'https://github.com/settings/personal-access-tokens/new?name=' + encodeURIComponent('Gestione menu Antico Arco') +
@@ -157,10 +159,12 @@
     S.store = store; S.user = user;
     var file = await store.readFile(MENU_PATH);
     var published = JSON.parse(file.text);
+    ensureShape(published);
     S.publishedStr = JSON.stringify(published);
     S.baseSha = file.sha;
     var draft = AA.readJSON(AA.DRAFT_KEY);
-    S.data = published;
+    if (draft && draft.data) ensureShape(draft.data);
+    S.data = JSON.parse(S.publishedStr);
     if (draft && draft.data && JSON.stringify(draft.data) !== S.publishedStr) {
       if (draft.baseSha === file.sha) {
         S.data = draft.data; Object.assign(S.pending, draft.pending || {});
@@ -175,6 +179,8 @@
     ensureShape(S.data);
     $('gate').hidden = true; $('app').hidden = false;
     document.body.classList.toggle('is-demo', store.mode === 'demo');
+    $('demoPill').hidden = store.mode !== 'demo';
+    S.published = JSON.parse(S.publishedStr);
     render(); updateState();
   }
 
@@ -183,6 +189,15 @@
     d.settings = d.settings || {}; d.settings.totem = d.settings.totem || {};
     d.info.hours = d.info.hours || []; d.info.notes = d.info.notes || []; d.info.announcement = d.info.announcement || { text: '', until: '' };
     d.info.wifi = d.info.wifi || {}; d.info.legal = d.info.legal || {}; d.info.openDays = d.info.openDays || [];
+    d.settings.builder = d.settings.builder || {};
+    if (!d.settings.builder.presets) d.settings.builder.presets = [
+      { name: 'Pugliese', items: ['Rape stufate', 'Salsiccia pezzente', 'Provolone Murgiano Putignano'] },
+      { name: 'Bufala e pomodorini', items: ['Bufala all’uscita', 'Pomodorini Torre Guaceto bio presidio slow'] },
+      { name: 'Mortadella e pistacchio', items: ['Mortadella a fette', 'Stracciatella all’uscita', 'Granella di pistacchio'] },
+      { name: 'Piccante', items: ['Nduja', 'Salsiccia piccante', 'Cipolla rossa'] },
+      { name: 'Funghi e tartufo', items: ['Funghi porcini', 'Crema di tartufo spalmata'] },
+      { name: 'Cetara', items: ['Acciughe di Cetara', 'Pomodorini confit', 'Capperi'] }];
+    if (!d.settings.builder.popular) d.settings.builder.popular = ['Bufala all’uscita', 'Stracciatella all’uscita', 'Funghi freschi champignon', 'Salsiccia di Norcia', 'Prosciutto crudo a dadi', 'Nduja', 'Olive leccine', 'Rape stufate', 'Pomodorini confit', 'Acciughe di Cetara', 'Granella di pistacchio', 'Patate fritte'];
   }
 
   /* ================= Bozza e stato ================= */
@@ -197,21 +212,67 @@
     if (!ok) toast('Memoria del dispositivo piena: pubblica le modifiche per non perderle.', 6000);
   }
   function isDirty() { return JSON.stringify(S.data) !== S.publishedStr; }
+  function fmtP(v) { return v == null || v === '' ? 'senza prezzo' : AA.price(v); }
+  /* Elenco leggibile di cosa cambia rispetto a ciò che è online */
+  function changesList() {
+    var pub = S.published || JSON.parse(S.publishedStr), cur = S.data, out = [];
+    var pi = {}, ci = {};
+    (pub.sections || []).forEach(function (s) { s.items.forEach(function (it) { pi[it.id] = { it: it, sec: s }; }); });
+    cur.sections.forEach(function (s) { s.items.forEach(function (it) { ci[it.id] = { it: it, sec: s }; }); });
+    Object.keys(ci).forEach(function (id) {
+      var a = pi[id], b = ci[id], n = b.it.name || 'Piatto senza nome';
+      if (!a) { out.push('Nuovo in ' + b.sec.name + ': ' + n); return; }
+      if (JSON.stringify(a.it) === JSON.stringify(b.it) && a.sec.id === b.sec.id) return;
+      var done = false;
+      if (a.it.price !== b.it.price) { out.push(n + ': ' + fmtP(a.it.price) + ' → ' + fmtP(b.it.price)); done = true; }
+      if ((a.it.available !== false) !== (b.it.available !== false)) { out.push(n + ': ' + (b.it.available === false ? 'esaurito' : 'di nuovo disponibile')); done = true; }
+      if (a.sec.id !== b.sec.id) { out.push(n + ': spostato in ' + b.sec.name); done = true; }
+      var ra = Object.assign({}, a.it, { price: 0, available: 0 }), rb = Object.assign({}, b.it, { price: 0, available: 0 });
+      if (JSON.stringify(ra) !== JSON.stringify(rb)) out.push(n + ': scheda modificata');
+      else if (!done) out.push(n + ': modificato');
+    });
+    Object.keys(pi).forEach(function (id) { if (!ci[id]) out.push('Tolto: ' + (pi[id].it.name || 'piatto')); });
+    var strip = function (arr) { return JSON.stringify((arr || []).map(function (s) { var c = Object.assign({}, s); delete c.items; return c; })); };
+    if (strip(pub.sections) !== strip(cur.sections) || JSON.stringify(pub.groups) !== JSON.stringify(cur.groups)) out.push('Categorie del menu modificate');
+    var pp = {}; (pub.promos || []).forEach(function (p) { pp[p.id] = p; });
+    cur.promos.forEach(function (p) {
+      var o = pp[p.id], t = p.title || 'Novità senza titolo';
+      if (!o) out.push('Nuova novità: ' + t);
+      else if (JSON.stringify(o) !== JSON.stringify(p)) out.push(o.active !== p.active ? t + ': ' + (p.active ? 'attivata' : 'spenta') : 'Novità modificata: ' + t);
+      delete pp[p.id];
+    });
+    Object.keys(pp).forEach(function (id) { out.push('Novità tolta: ' + (pp[id].title || '')); });
+    var pa = pub.info || {}, ca = cur.info;
+    if ((pa.announcement || {}).text !== ca.announcement.text) out.push(ca.announcement.text ? 'Avviso: «' + ca.announcement.text + '»' : 'Avviso tolto');
+    if ((pa.closedOn || '') !== (ca.closedOn || '')) out.push(ca.closedOn === AA.todayISO() ? 'Oggi siete chiusi' : 'Di nuovo aperti oggi');
+    if (JSON.stringify([pa.openDays, pa.openFrom, pa.openTo, pa.hours]) !== JSON.stringify([ca.openDays, ca.openFrom, ca.openTo, ca.hours])) out.push('Giorni e orari modificati');
+    var ia = Object.assign({}, pa), ib = Object.assign({}, ca);
+    ['announcement', 'closedOn', 'openDays', 'openFrom', 'openTo', 'hours'].forEach(function (k) { delete ia[k]; delete ib[k]; });
+    if (JSON.stringify(ia) !== JSON.stringify(ib)) out.push('Contatti e informazioni modificati');
+    if (JSON.stringify(pub.settings || {}) !== JSON.stringify(cur.settings)) out.push('Impostazioni modificate');
+    return out;
+  }
   function updateState() {
     var d = isDirty();
-    $('publishBtn').disabled = !d;
-    $('state').classList.toggle('is-dirty', d);
-    $('stateTxt').textContent = d ? 'Modifiche da pubblicare' : (S.store && S.store.mode === 'demo' ? 'Modalità demo' : 'Tutto pubblicato');
+    $('pub').hidden = !d;
+    document.body.classList.toggle('has-pub', d);
+    if (d) {
+      var n = changesList().length || 1;
+      $('pubN').innerHTML = '<b>' + n + (n === 1 ? ' modifica' : ' modifiche') + '</b> da pubblicare<span>Vedi quali</span>';
+    }
   }
 
   /* ================= Pubblicazione ================= */
   async function publish() {
     if (!isDirty()) return;
     var demo = S.store.mode === 'demo';
-    var ok = await ask('Pubblicare le modifiche?',
-      demo ? 'In modalità demo le modifiche restano solo su questo dispositivo.' : 'Saranno visibili su sito, menu e totem entro un paio di minuti.', 'Pubblica');
+    var list = changesList();
+    var ok = await ask('Pubblicare ' + (list.length === 1 ? 'questa modifica?' : 'queste ' + list.length + ' modifiche?'), '', 'Pubblica', {
+      html: '<ul class="chg">' + list.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul><p>' +
+        (demo ? 'Sei in prova: le modifiche restano solo su questo dispositivo.' : 'Le vedranno i clienti su sito, menu e cartellone entro un paio di minuti.') + '</p>' });
     if (!ok) return;
     var btn = $('publishBtn'); btn.disabled = true; btn.textContent = 'Pubblico…';
+    try { window.scrollTo(0, window.scrollY); } catch (e) {}
     try {
       var current = await S.store.fileSha(MENU_PATH);
       if (current && S.baseSha && current !== S.baseSha) {
@@ -226,13 +287,13 @@
       });
       var res = await S.store.commitFiles(files, 'Menu aggiornato dal gestionale (' + S.user + ')');
       S.baseSha = res.blobs[MENU_PATH] || current;
-      S.publishedStr = JSON.stringify(S.data);
+      S.publishedStr = JSON.stringify(S.data); S.published = JSON.parse(S.publishedStr);
       try { localStorage.removeItem(AA.DRAFT_KEY); } catch (e) {}
       updateState();
-      toast(demo ? 'Salvato in modalità demo.' : 'Pubblicato. Sito, menu e totem si aggiornano entro 1–2 minuti.', 6000);
+      toast(demo ? 'Salvato in modalità demo.' : 'Pubblicato. Sito, menu e cartellone si aggiornano entro 1–2 minuti.', 6000);
     } catch (ex) {
       toast('Pubblicazione non riuscita: ' + errText(ex), 8000);
-    } finally { btn.textContent = 'Pubblica'; updateState(); }
+    } finally { btn.textContent = 'Pubblica'; btn.disabled = false; updateState(); }
   }
 
   /* ================= Foto ================= */
@@ -280,238 +341,325 @@
   }
 
   /* ================= Viste ================= */
+  var ICON_EDIT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  var CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function render() {
-    document.querySelectorAll('#tabs [data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.tab === S.tab); });
+    document.querySelectorAll('#tabs [data-tab]').forEach(function (b) { b.setAttribute('aria-current', b.dataset.tab === S.tab ? 'page' : 'false'); });
     var v = $('view');
-    if (S.tab === 'menu') v.innerHTML = viewMenu();
-    else if (S.tab === 'promo') v.innerHTML = viewPromos();
-    else if (S.tab === 'locale') v.innerHTML = viewLocale();
-    else v.innerHTML = viewAltro();
+    v.innerHTML = S.tab === 'oggi' ? viewOggi() : S.tab === 'menu' ? viewMenu() : S.tab === 'novita' ? viewPromos() : S.tab === 'orari' ? viewOrari() : viewAltro();
     if (S.tab === 'menu' && S.q) { var q = $('q'); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
+    if (S.tab === 'oggi' && S.oq) { var oq = $('oq'); if (oq) { oq.focus(); oq.setSelectionRange(oq.value.length, oq.value.length); } }
   }
-
+  function pageHead(title, sub) {
+    return '<header class="ph"><h1>' + esc(title) + '</h1>' + (sub ? '<p>' + sub + '</p>' : '') + '</header>';
+  }
   function thumb(src, cls) {
     return src ? '<img class="' + (cls || 'th') + '" alt="" loading="lazy" src="' + esc(AA.src(src)) + '">'
       : '<span class="' + (cls || 'th') + ' th-empty">' + AA.archSVG() + '</span>';
   }
+  function allItems() {
+    var out = [];
+    S.data.sections.forEach(function (s) { s.items.forEach(function (it) { out.push({ it: it, sec: s }); }); });
+    return out;
+  }
+  function sw(act, on, label, extra) {
+    return '<label class="sw" title="' + esc(label) + '"><input type="checkbox" data-act="' + act + '"' + (on ? ' checked' : '') + (extra || '') + '><span aria-hidden="true"></span><em class="sr-only">' + esc(label) + '</em></label>';
+  }
 
+  /* ---------- Oggi ---------- */
+  function viewOggi() {
+    var i = S.data.info, today = AA.todayISO();
+    var st = AA.openStatus(i) || { open: false, text: '' };
+    var hr = new Date().getHours();
+    var hello = (hr < 13 ? 'Buongiorno' : hr < 18 ? 'Buon pomeriggio' : 'Buonasera') + (S.user && S.user !== 'demo' ? ', ' + S.user.charAt(0).toUpperCase() + S.user.slice(1) : '');
+    var dateTxt = new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+    var h = pageHead(hello + '.', esc(dateTxt.charAt(0).toUpperCase() + dateTxt.slice(1)));
+    h += '<section class="card status' + (st.open ? ' is-open' : '') + '"><div class="st-row"><span class="st-dot"></span><b>' + esc(st.text || 'Orari non impostati') + '</b></div>' +
+      '<label class="line"><span><b>Oggi siamo chiusi</b><small>Per una chiusura straordinaria: sito e menu mostrano "Oggi siamo chiusi".</small></span>' + sw('closed-today', i.closedOn === today, 'Oggi siamo chiusi') + '</label></section>';
+    var ann = i.announcement || {};
+    h += '<section class="card"><h2>Avviso per i clienti</h2><p class="muted">Compare in alto su sito, menu e cartellone. Lascia vuoto per non mostrare nulla.</p>' +
+      '<label class="fld"><span class="sr-only">Testo dell\'avviso</span><input data-path="info.announcement.text" value="' + esc(ann.text || '') + '" placeholder="es. Domenica 14 siamo chiusi per ferie"></label>' +
+      '<label class="fld">Mostralo fino al<input type="date" data-path="info.announcement.until" value="' + esc(ann.until || '') + '"><small>Il giorno dopo sparisce da solo.</small></label></section>';
+    var off = allItems().filter(function (x) { return x.it.available === false; });
+    h += '<section class="card"><h2>Piatti esauriti</h2><p class="muted">Un piatto esaurito non compare su sito, menu e cartellone finché non lo rimetti.</p>';
+    if (off.length) {
+      h += '<ul class="mini">' + off.map(function (x) {
+        return '<li data-sec="' + esc(x.sec.id) + '" data-item="' + esc(x.it.id) + '"><span><b>' + esc(x.it.name) + '</b><small>' + esc(x.sec.name) + '</small></span>' +
+          '<button type="button" class="b b-ghost b-sm" data-act="back-on">Rimetti</button></li>';
+      }).join('') + '</ul>';
+      if (off.length > 1) h += '<button type="button" class="b b-ghost b-sm" data-act="all-on">Rimetti tutti</button>';
+    } else h += '<p class="empty-ok">Nessun piatto esaurito.</p>';
+    h += '<label class="fld">Segna un piatto come esaurito<input id="oq" type="search" placeholder="Scrivi il nome, es. bufala" value="' + esc(S.oq) + '" autocomplete="off"></label>';
+    if (S.oq.trim().length > 1) {
+      var w = norm(S.oq).split(/\s+/).filter(Boolean);
+      var hits = allItems().filter(function (x) { var hay = norm(x.it.name + ' ' + x.sec.name); return x.it.available !== false && w.every(function (k) { return hay.indexOf(k) >= 0; }); }).slice(0, 8);
+      h += '<ul class="mini">' + (hits.length ? hits.map(function (x) {
+        return '<li data-sec="' + esc(x.sec.id) + '" data-item="' + esc(x.it.id) + '"><span><b>' + esc(x.it.name) + '</b><small>' + esc(x.sec.name) + '</small></span>' +
+          '<button type="button" class="b b-main b-sm" data-act="set-off">Esaurito</button></li>';
+      }).join('') : '<li class="muted">Nessun piatto trovato.</li>') + '</ul>';
+    }
+    h += '</section>';
+    var act = AA.activePromos(S.data, null);
+    h += '<section class="card"><h2>Novità in vetrina</h2><p class="muted">' + (act.length ? act.length + (act.length === 1 ? ' novità attiva' : ' novità attive') + ': ' + act.map(function (p) { return esc(p.title); }).join(', ') + '.' : 'Nessuna novità attiva.') + '</p>' +
+      '<button type="button" class="b b-ghost b-sm" data-go="novita">Gestisci le novità</button></section>';
+    h += '<section class="card"><h2>Collegamenti</h2><div class="links">' +
+      '<a href="../" target="_blank" rel="noopener">Sito</a><a href="../menu/" target="_blank" rel="noopener">Menu</a><a href="../totem/" target="_blank" rel="noopener">Cartellone</a>' +
+      '<button type="button" data-act="qr">QR per i tavoli</button></div></section>';
+    return h;
+  }
+
+  /* ---------- Menu ---------- */
   function rowHTML(it, sec, showSec) {
     var multi = it.prices && it.prices.length;
     return '<li class="row' + (it.available === false ? ' is-off' : '') + '" data-sec="' + esc(sec.id) + '" data-item="' + esc(it.id) + '">' +
-      '<button type="button" class="row-main" data-act="edit-item">' + thumb(it.image) +
-      '<span class="row-txt"><span class="row-n">' + esc(it.name || 'Senza nome') + (it.featured ? ' <i class="badge">In evidenza</i>' : '') + '</span>' +
+      '<button type="button" class="row-main" data-act="edit-item">' + thumb(it.cutout || it.image) +
+      '<span class="row-txt"><span class="row-n">' + esc(it.name || 'Senza nome') + (it.featured ? ' <i class="badge">Preferita</i>' : '') + (it.available === false ? ' <i class="badge badge-off">Esaurito</i>' : '') + '</span>' +
       '<span class="row-d">' + esc(showSec ? sec.name + (it.desc ? ': ' + it.desc : '') : (it.desc || '')) + '</span></span></button>' +
       (multi ? '<button type="button" class="row-fmt" data-act="edit-item">' + it.prices.length + ' formati</button>'
         : '<label class="row-price"><span class="sr-only">Prezzo di ' + esc(it.name) + '</span>€<input inputmode="decimal" data-act="price" value="' + priceInput(it.price) + '" placeholder="—"></label>') +
-      '<label class="sw" title="Disponibile"><input type="checkbox" data-act="avail"' + (it.available !== false ? ' checked' : '') + '><span aria-hidden="true"></span><em class="sr-only">Disponibile</em></label>' +
-      '</li>';
+      sw('avail', it.available !== false, 'Disponibile') + '</li>';
   }
-
   function viewMenu() {
-    var h = '<div class="bar"><label class="search"><span class="sr-only">Cerca</span><input id="q" type="search" placeholder="Cerca un piatto o un ingrediente" value="' + esc(S.q) + '"></label></div>';
+    var h = pageHead('Menu', 'Prezzo e disponibilità si cambiano dalla lista. Tocca un piatto per la scheda completa.');
+    h += '<div class="bar"><label class="search"><span class="sr-only">Cerca</span><input id="q" type="search" placeholder="Cerca un piatto o un ingrediente" value="' + esc(S.q) + '"></label></div>';
     if (S.q) {
-      var words = norm(S.q).split(/\s+/).filter(Boolean), rows = '';
-      var n = 0;
+      var words = norm(S.q).split(/\s+/).filter(Boolean), rows = '', n = 0;
       S.data.sections.forEach(function (sec) {
         sec.items.forEach(function (it) {
           var hay = norm(it.name + ' ' + it.desc + ' ' + sec.name);
           if (words.every(function (w) { return hay.indexOf(w) >= 0; })) { rows += rowHTML(it, sec, true); n++; }
         });
       });
-      return h + '<p class="muted">' + n + ' risultati</p><ul class="rows">' + rows + '</ul>';
+      return h + '<p class="muted">' + n + (n === 1 ? ' risultato' : ' risultati') + '</p><ul class="rows solo">' + rows + '</ul>';
     }
-    h += '<p class="muted">Tocca un piatto per modificarlo. Il prezzo e l\'interruttore "disponibile" si cambiano direttamente dalla lista; un piatto spento non compare né nel menu né sul totem.</p>';
-    S.data.groups.forEach(function (g, gi) {
+    S.data.groups.forEach(function (g) {
       var secs = S.data.sections.filter(function (s) { return s.group === g.id; });
-      h += '<section class="grp"><header class="grp-h"><h2>' + esc(g.name) + '</h2>' +
-        '<button type="button" class="b b-ghost b-sm" data-act="edit-group" data-g="' + esc(g.id) + '">Modifica gruppo</button></header>';
+      h += '<section class="grp"><header class="grp-h"><h2>' + esc(g.name) + '</h2><button type="button" class="icon-b" data-act="edit-group" data-g="' + esc(g.id) + '" aria-label="Modifica il gruppo ' + esc(g.name) + '">' + ICON_EDIT + '</button></header>';
       secs.forEach(function (sec) {
         var off = sec.items.filter(function (i) { return i.available === false; }).length;
-        h += '<details class="sec" data-sec="' + esc(sec.id) + '"' + (S.open[sec.id] ? ' open' : '') + '><summary>' +
-          '<span class="sec-n">' + esc(sec.name) + '</span><span class="sec-c">' + sec.items.length + ' voci' + (off ? ', ' + off + ' spente' : '') + '</span>' +
-          (sec.visible === false ? '<i class="badge badge-off">Nascosta</i>' : '') + (sec.totem === false ? '<i class="badge">Non sul totem</i>' : '') +
-          '</summary><div class="sec-tools"><button type="button" class="b b-ghost b-sm" data-act="edit-sec">Modifica categoria</button>' +
-          '<button type="button" class="b b-main b-sm" data-act="add-item">Aggiungi piatto</button></div>' +
-          '<ul class="rows">' + sec.items.map(function (it) { return rowHTML(it, sec); }).join('') + '</ul></details>';
+        var open = !!S.open[sec.id];
+        var ph = sec.items.filter(function (i) { return i.cutout; })[0] || sec.items.filter(function (i) { return i.image; })[0];
+        h += '<div class="acc' + (open ? ' open' : '') + '" data-sec="' + esc(sec.id) + '">' +
+          '<button type="button" class="acc-h" data-act="toggle-sec" aria-expanded="' + open + '">' + thumb(ph ? (ph.cutout || ph.image) : '', 'acc-ph' + (ph && ph.cutout ? ' cut' : '')) +
+          '<span class="acc-tx"><b>' + esc(sec.name) + '</b><small>' + sec.items.length + ' piatti' + (off ? ' · <em>' + off + ' esauriti</em>' : '') +
+          (sec.visible === false ? ' · <em>nascosta</em>' : '') + '</small></span><span class="acc-ch">' + CHEV + '</span></button>' +
+          (open ? '<div class="acc-b"><div class="sec-tools"><button type="button" class="b b-main b-sm" data-act="add-item">+ Aggiungi un piatto</button><button type="button" class="b b-ghost b-sm" data-act="edit-sec">Impostazioni della sottocategoria</button></div>' +
+            '<ul class="rows">' + sec.items.map(function (it) { return rowHTML(it, sec); }).join('') + '</ul></div>' : '') + '</div>';
       });
-      h += '<button type="button" class="b b-dash" data-act="add-sec" data-g="' + esc(g.id) + '">Nuova categoria in ' + esc(g.name) + '</button></section>';
+      h += '<button type="button" class="b b-dash" data-act="add-sec" data-g="' + esc(g.id) + '">+ Nuova sottocategoria in ' + esc(g.name) + '</button></section>';
     });
-    h += '<button type="button" class="b b-dash" data-act="add-group">Nuovo gruppo</button>';
+    h += '<button type="button" class="b b-dash" data-act="add-group">+ Nuova categoria</button>';
     return h;
   }
 
+  /* ---------- Novità ---------- */
+  function promoCard(p) {
+    return '<div class="pv-promo' + (p.image ? '' : ' no-ph') + '">' + (p.image ? '<img alt="" src="' + esc(AA.src(p.image)) + '">' : '') +
+      '<div>' + (p.kicker ? '<span class="pv-k">' + esc(p.kicker) + '</span>' : '') + '<p class="pv-t">' + esc(p.title || 'Titolo della novità') + '</p>' +
+      (p.text ? '<p class="pv-x">' + esc(p.text) + '</p>' : '') + (p.price ? '<p class="pv-p">' + esc(p.price) + '</p>' : '') + '</div></div>';
+  }
   function viewPromos() {
-    var h = '<p class="muted">Le inserzioni sono gli annunci in evidenza: compaiono a tutto schermo sul totem tra una pagina e l\'altra, in alto nel menu e sul sito, secondo dove le attivi.</p>';
-    h += '<ul class="cards">' + S.data.promos.map(function (p, i) {
-      var where = ['totem', 'menu', 'site'].filter(function (k) { return p[k]; }).map(function (k) { return { totem: 'Totem', menu: 'Menu', site: 'Sito' }[k]; }).join(', ');
-      return '<li class="pcard' + (p.active ? '' : ' is-off') + '" data-promo="' + i + '">' +
-        '<button type="button" class="row-main" data-act="edit-promo">' + thumb(p.image) +
-        '<span class="row-txt"><span class="row-n">' + esc(p.title || 'Senza titolo') + '</span><span class="row-d">' + esc(p.kicker || '') +
-        (where ? ' — ' + where : ' — non visibile') + (p.until ? ', fino al ' + esc(p.until.split('-').reverse().join('/')) : '') + '</span></span></button>' +
-        '<label class="sw" title="Attiva"><input type="checkbox" data-act="promo-active"' + (p.active ? ' checked' : '') + '><span aria-hidden="true"></span><em class="sr-only">Attiva</em></label></li>';
+    var h = pageHead('Novità', 'Gli annunci in vetrina: in alto nel menu, sul sito e a tutto schermo sul cartellone in sala.');
+    h += '<button type="button" class="b b-main" data-act="add-promo">+ Nuova novità</button>';
+    h += '<ul class="pgrid">' + S.data.promos.map(function (p, i) {
+      var where = ['site', 'menu', 'totem'].filter(function (k) { return p[k]; }).map(function (k) { return { totem: 'cartellone', menu: 'menu', site: 'sito' }[k]; }).join(', ');
+      return '<li class="pitem' + (p.active ? '' : ' is-off') + '" data-promo="' + i + '"><button type="button" class="pv-btn" data-act="edit-promo">' + promoCard(p) + '</button>' +
+        '<div class="pmeta"><span>' + (p.active ? (where ? 'Su ' + where : 'Attiva ma non mostrata da nessuna parte') : 'Spenta') + (p.until ? ' · fino al ' + esc(p.until.split('-').reverse().join('/')) : '') + '</span>' + sw('promo-active', p.active, 'Attiva') + '</div></li>';
     }).join('') + '</ul>';
-    return h + '<button type="button" class="b b-dash" data-act="add-promo">Nuova inserzione</button>';
+    return h;
   }
 
+  /* ---------- Orari e contatti ---------- */
+  var DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function hoursFromWeek(i) {
+    var open = DAY_ORDER.map(function (d) { return i.openDays.indexOf(d) >= 0; });
+    var time = (i.openFrom || '') + ' – ' + (i.openTo || ''), rows = [], k = 0;
+    while (k < 7) {
+      if (!open[k]) { k++; continue; }
+      var j = k; while (j + 1 < 7 && open[j + 1]) j++;
+      var a = cap(AA.DAYS[DAY_ORDER[k]]), b = cap(AA.DAYS[DAY_ORDER[j]]);
+      rows.push({ days: k === j ? a : (j === k + 1 ? a + ' e ' + b : a + ' – ' + b), time: time });
+      k = j + 1;
+    }
+    var closed = DAY_ORDER.filter(function (d, x) { return !open[x]; }).map(function (d) { return cap(AA.DAYS[d]); });
+    if (closed.length && closed.length < 7) rows.push({ days: closed.join(', '), time: closed.length === 1 ? 'Riposo settimanale' : 'Chiuso' });
+    return rows;
+  }
   function field(label, path, opts) {
     opts = opts || {};
     var v = getPath(S.data, path);
     if (opts.price) v = priceInput(v);
-    var tag = opts.area ? '<textarea data-path="' + path + '"' + (opts.price ? ' data-price' : '') + ' rows="' + (opts.rows || 3) + '">' + esc(v == null ? '' : v) + '</textarea>'
+    var tag = opts.area ? '<textarea data-path="' + path + '" rows="' + (opts.rows || 3) + '">' + esc(v == null ? '' : v) + '</textarea>'
       : '<input data-path="' + path + '"' + (opts.price ? ' data-price inputmode="decimal"' : '') + ' type="' + (opts.type || 'text') + '" value="' + esc(v == null ? '' : v) + '"' + (opts.ph ? ' placeholder="' + esc(opts.ph) + '"' : '') + '>';
     return '<label class="fld">' + esc(label) + tag + (opts.hint ? '<small>' + esc(opts.hint) + '</small>' : '') + '</label>';
   }
-
-  function viewLocale() {
+  function viewOrari() {
     var i = S.data.info;
-    var h = '<section class="card"><h2>Avviso in evidenza</h2><p class="muted">Una riga ben visibile in cima a sito, menu e totem. Per esempio: "Domenica 14 siamo chiusi".</p>' +
-      field('Testo dell\'avviso', 'info.announcement.text', { ph: 'Lascia vuoto per non mostrare nulla' }) +
-      field('Mostra fino al (compreso)', 'info.announcement.until', { type: 'date', hint: 'Dopo questa data l\'avviso sparisce da solo.' }) + '</section>';
-    h += '<section class="card"><h2>Contatti</h2>' + field('Nome', 'info.name') + field('Frase di presentazione', 'info.tagline', { area: true, rows: 2 }) +
-      field('Indirizzo', 'info.address') + '<div class="two">' + field('Telefono prenotazioni', 'info.phone', { type: 'tel' }) + field('Cellulare', 'info.mobile', { type: 'tel' }) + '</div>' +
-      field('Email', 'info.email', { type: 'email' }) + '<div class="two">' + field('Pagina Facebook', 'info.facebook', { type: 'url' }) + field('Instagram', 'info.instagram', { type: 'url' }) + '</div></section>';
-    h += '<section class="card"><h2>Orari</h2><p class="muted">Come appaiono sul sito.</p><div class="list">' + (i.hours || []).map(function (r, k) {
-      return '<div class="lrow"><input data-list="hours" data-k="' + k + '" data-f="days" value="' + esc(r.days) + '" aria-label="Giorni">' +
-        '<input data-list="hours" data-k="' + k + '" data-f="time" value="' + esc(r.time) + '" aria-label="Orario">' +
-        '<button type="button" class="b b-x" data-act="list-del" data-list="hours" data-k="' + k + '" aria-label="Elimina riga">×</button></div>';
-    }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="list-add" data-list="hours">Aggiungi riga</button>' +
-      '<h3>Aperto ora / chiuso</h3><p class="muted">Serve per la scritta "Aperto ora" su sito e menu.</p><div class="days">' +
-      [1, 2, 3, 4, 5, 6, 0].map(function (d) {
-        return '<label class="chip-ck"><input type="checkbox" data-act="day" value="' + d + '"' + (i.openDays.indexOf(d) >= 0 ? ' checked' : '') + '><span>' + AA.DAYS[d].slice(0, 3) + '</span></label>';
-      }).join('') + '</div><div class="two">' + field('Dalle', 'info.openFrom', { type: 'time' }) + field('Alle', 'info.openTo', { type: 'time' }) + '</div></section>';
+    var h = pageHead('Orari e contatti', 'Quello che scrivi qui compare su sito, menu e cartellone.');
+    h += '<section class="card"><h2>Giorni di apertura</h2><div class="week">' + DAY_ORDER.map(function (d) {
+      var on = i.openDays.indexOf(d) >= 0;
+      return '<label class="day' + (on ? ' on' : '') + '"><input type="checkbox" data-act="day" value="' + d + '"' + (on ? ' checked' : '') + '><span>' + cap(AA.DAYS[d]).slice(0, 3) + '</span><small>' + (on ? 'aperto' : 'chiuso') + '</small></label>';
+    }).join('') + '</div><div class="two">' + field('Apriamo alle', 'info.openFrom', { type: 'time' }) + field('Chiudiamo alle', 'info.openTo', { type: 'time' }) + '</div>' +
+      '<p class="muted">Sul sito apparirà così:</p><dl class="hours-pv">' + (i.hours || []).map(function (r) { return '<div><dt>' + esc(r.days) + '</dt><dd>' + esc(r.time) + '</dd></div>'; }).join('') + '</dl></section>';
+    h += '<section class="card"><h2>Contatti</h2>' + '<div class="two">' + field('Telefono per prenotare', 'info.phone', { type: 'tel' }) + field('Cellulare', 'info.mobile', { type: 'tel' }) + '</div>' +
+      field('Indirizzo', 'info.address') + field('Email', 'info.email', { type: 'email' }) +
+      '<div class="two">' + field('Pagina Facebook', 'info.facebook', { type: 'url' }) + field('Instagram', 'info.instagram', { type: 'url', ph: 'https://instagram.com/…' }) + '</div></section>';
     h += '<section class="card"><h2>In sala</h2><div class="two">' + field('Coperto (€)', 'info.coverCharge', { price: true }) + '<span></span></div>' +
       '<div class="two">' + field('Wi‑Fi: nome rete', 'info.wifi.network') + field('Wi‑Fi: password', 'info.wifi.password') + '</div></section>';
     h += '<section class="card"><h2>Note per i clienti</h2><p class="muted">Prenotazioni, asporto, domicilio… Compaiono in fondo al menu.</p><div class="list">' + (i.notes || []).map(function (n, k) {
-      return '<div class="lnote"><input data-list="notes" data-k="' + k + '" data-f="title" value="' + esc(n.title) + '" aria-label="Titolo">' +
+      return '<div class="lnote"><input data-list="notes" data-k="' + k + '" data-f="title" value="' + esc(n.title) + '" aria-label="Titolo" placeholder="Titolo">' +
         '<textarea data-list="notes" data-k="' + k + '" data-f="text" rows="3" aria-label="Testo">' + esc(n.text) + '</textarea>' +
         '<button type="button" class="b b-x" data-act="list-del" data-list="notes" data-k="' + k + '" aria-label="Elimina nota">×</button></div>';
-    }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="list-add" data-list="notes">Aggiungi nota</button></section>';
-    h += '<section class="card"><h2>Testi del menu</h2>' + field('I nostri prodotti (sito, sezione impasti)', 'info.products', { area: true, rows: 5 }) +
-      field('Legenda asterisco *', 'info.frozenLegend') + field('Nota allergeni', 'info.allergenNote', { area: true, rows: 2 }) + '</section>';
-    h += '<section class="card"><h2>Dati fiscali (piè di pagina del sito)</h2><div class="two">' + field('Partita IVA', 'info.legal.vat') + field('Codice fiscale', 'info.legal.cf') + '</div>' + field('REA', 'info.legal.rea') + '</section>';
+    }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="list-add" data-list="notes">+ Aggiungi nota</button></section>';
+    h += '<details class="card more"><summary>Testi del menu e dati fiscali</summary>' + field('Legenda dell\'asterisco *', 'info.frozenLegend') + field('Nota sugli allergeni', 'info.allergenNote', { area: true, rows: 2 }) +
+      '<div class="two">' + field('Partita IVA', 'info.legal.vat') + field('Codice fiscale', 'info.legal.cf') + '</div>' + field('REA', 'info.legal.rea') + '</details>';
     return h;
   }
 
+  /* ---------- Altro ---------- */
+  function extrasList() {
+    var s = S.data.sections.filter(function (x) { return x.group === 'aggiunte'; })[0];
+    return s ? s.items.map(function (it) { return it.name; }) : [];
+  }
   function viewAltro() {
-    var t = S.data.settings.totem, demo = S.store.mode === 'demo';
-    var h = '<section class="card"><h2>Totem in sala</h2>' +
-      '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Inserzione ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
-      '<label class="ck"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '> Mostra le foto dei piatti</label>' +
-      '<label class="ck"><input type="checkbox" data-ck="settings.totem.showQr"' + (t.showQr !== false ? ' checked' : '') + '> Mostra il QR per aprire il menu sul telefono</label>' +
-      '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="chiaro"' + (t.theme !== 'scuro' ? ' selected' : '') + '>Chiaro, come il sito (consigliato)</option><option value="scuro"' + (t.theme === 'scuro' ? ' selected' : '') + '>Scuro con scintille</option></select></label>' +
-      field('Indirizzo del menu (per i QR)', 'settings.menuUrl', { type: 'url', hint: 'Lascia vuoto per usare l\'indirizzo di questo sito + /menu/' }) +
-      '<p class="muted">Per scegliere quali categorie scorrono sul totem: Menu → categoria → Modifica categoria.</p>' +
-      '<div class="btns"><a class="b b-ghost" href="../totem/" target="_blank" rel="noopener">Apri il totem</a><a class="b b-ghost" href="../menu/" target="_blank" rel="noopener">Apri il menu</a><button type="button" class="b b-ghost" data-act="qr">Stampa i QR per i tavoli</button></div></section>';
-    h += '<section class="card"><h2>Cronologia</h2><p class="muted">Ogni pubblicazione viene conservata. Puoi ricaricare una versione precedente e ripubblicarla.</p>' +
-      '<div id="hist"></div><button type="button" class="b b-ghost" data-act="history"' + (demo ? ' disabled' : '') + '>Mostra le ultime pubblicazioni</button></section>';
-    h += '<section class="card"><h2>Copia di sicurezza</h2><p class="muted">Scarica tutto il menu in un file da conservare, oppure ricaricalo.</p>' +
-      '<div class="btns"><button type="button" class="b b-ghost" data-act="backup">Scarica la copia</button><button type="button" class="b b-ghost" data-act="restore">Carica una copia</button></div></section>';
+    var t = S.data.settings.totem, demo = S.store.mode === 'demo', b = S.data.settings.builder, ex = extrasList();
+    var opts = function (sel) { return '<option value="">+ aggiungi ingrediente</option>' + ex.filter(function (n) { return sel.indexOf(n) < 0; }).map(function (n) { return '<option>' + esc(n) + '</option>'; }).join(''); };
+    var h = pageHead('Altro', '');
+    h += '<section class="card"><h2>Crea la tua pizza</h2><p class="muted">Le "idee per cominciare" e gli ingredienti "più scelti" che il cliente vede nel menu.</p>' +
+      '<h3>Idee per cominciare</h3><div class="ideas">' + b.presets.map(function (p, k) {
+        return '<div class="idea" data-k="' + k + '"><div class="idea-h"><input data-idea="name" value="' + esc(p.name) + '" aria-label="Nome dell\'idea"><button type="button" class="b b-x" data-act="idea-del" aria-label="Elimina idea">×</button></div>' +
+          '<div class="tagl">' + p.items.map(function (n, j) { return '<span class="tg">' + esc(n) + '<button type="button" data-act="idea-rm" data-j="' + j + '" aria-label="Togli ' + esc(n) + '">×</button></span>'; }).join('') + '</div>' +
+          '<select data-act="idea-add" aria-label="Aggiungi ingrediente">' + opts(p.items) + '</select></div>';
+      }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="idea-new">+ Nuova idea</button>' +
+      '<h3>I più scelti</h3><div class="tagl">' + b.popular.map(function (n, j) { return '<span class="tg">' + esc(n) + '<button type="button" data-act="pop-rm" data-j="' + j + '" aria-label="Togli ' + esc(n) + '">×</button></span>'; }).join('') + '</div>' +
+      '<select data-act="pop-add" aria-label="Aggiungi ingrediente">' + opts(b.popular) + '</select></section>';
+    h += '<section class="card"><h2>Cartellone in sala</h2>' +
+      '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Una novità ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
+      '<label class="line"><span><b>Foto dei piatti</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '><span></span></label></label>' +
+      '<label class="line"><span><b>QR per aprire il menu sul telefono</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showQr"' + (t.showQr !== false ? ' checked' : '') + '><span></span></label></label>' +
+      '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="chiaro"' + (t.theme !== 'scuro' ? ' selected' : '') + '>Chiari, come il sito</option><option value="scuro"' + (t.theme === 'scuro' ? ' selected' : '') + '>Scuri con scintille</option></select></label>' +
+      '<div class="btns"><a class="b b-ghost b-sm" href="../totem/" target="_blank" rel="noopener">Apri il cartellone</a><button type="button" class="b b-ghost b-sm" data-act="qr">Stampa i QR per i tavoli</button></div>' +
+      '<details class="more-in"><summary>Indirizzo del menu nei QR</summary>' + field('Indirizzo', 'settings.menuUrl', { type: 'url', hint: 'Lascia vuoto per usare quello del sito.' }) + '</details></section>';
+    h += '<section class="card"><h2>Cronologia</h2><p class="muted">Ogni pubblicazione viene conservata: puoi ricaricarne una e ripubblicarla.</p>' +
+      '<div id="hist"></div><button type="button" class="b b-ghost b-sm" data-act="history"' + (demo ? ' disabled' : '') + '>Mostra le ultime pubblicazioni</button></section>';
+    h += '<section class="card"><h2>Copia di sicurezza</h2><p class="muted">Scarica tutto il menu in un file, oppure ricaricalo.</p>' +
+      '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="backup">Scarica la copia</button><button type="button" class="b b-ghost b-sm" data-act="restore">Carica una copia</button></div></section>';
     if (!demo) {
       h += '<section class="card"><h2>Accesso</h2><p class="muted">Sei collegato come <b>' + esc(S.user) + '</b>.</p>' +
-        '<h3>Cambia la tua password</h3><div class="two"><label class="fld">Nuova password<input type="password" id="np1" autocomplete="new-password" minlength="10"></label><label class="fld">Ripeti<input type="password" id="np2" autocomplete="new-password" minlength="10"></label></div>' +
-        '<button type="button" class="b b-ghost b-sm" data-act="pass">Cambia password</button>' +
-        '<h3>Utenti</h3><ul class="users">' + S.cfg.users.map(function (u) {
+        '<details class="more-in"><summary>Cambia la tua password</summary><div class="two"><label class="fld">Nuova password<input type="password" id="np1" autocomplete="new-password" minlength="10"></label><label class="fld">Ripeti<input type="password" id="np2" autocomplete="new-password" minlength="10"></label></div>' +
+        '<button type="button" class="b b-ghost b-sm" data-act="pass">Cambia password</button></details>' +
+        '<details class="more-in"><summary>Persone che possono entrare</summary><ul class="users">' + S.cfg.users.map(function (u) {
           return '<li>' + esc(u.user) + (u.user === S.user ? ' (tu)' : ' <button type="button" class="b b-x" data-act="user-del" data-u="' + esc(u.user) + '" aria-label="Rimuovi">×</button>') + '</li>';
         }).join('') + '</ul><div class="two"><label class="fld">Nuovo utente<input id="nu" autocapitalize="none"></label><label class="fld">Sua password<input type="password" id="nup" autocomplete="new-password" minlength="10"></label></div>' +
-        '<button type="button" class="b b-ghost b-sm" data-act="user-add">Aggiungi utente</button></section>';
+        '<button type="button" class="b b-ghost b-sm" data-act="user-add">Aggiungi</button></details></section>';
     }
-    h += '<section class="card"><button type="button" class="b b-ghost" data-act="logout">Esci</button></section>';
+    h += '<button type="button" class="b b-ghost b-wide" data-act="logout">Esci</button>';
     return h;
   }
 
-  /* ================= Editor (finestra laterale) ================= */
+  /* ================= Schede di modifica ================= */
   function openSheet(title, html) {
     $('sheetT').textContent = title; $('sheetB').innerHTML = html;
     $('sheet').hidden = false; document.body.classList.add('locked');
     $('sheet').querySelector('.sheet-card').focus();
   }
   function closeSheet() { $('sheet').hidden = true; document.body.classList.remove('locked'); S.ed = null; render(); }
-
   function chips(list, selected, attr) {
     return '<div class="chips">' + list.map(function (x) {
       var on = selected.indexOf(x.code) >= 0;
-      return '<button type="button" class="chip" ' + attr + '="' + x.code + '" aria-pressed="' + on + '">' + (x.n ? x.n + '. ' : '') + esc(x.label) + '</button>';
+      return '<button type="button" class="chip" ' + attr + '="' + x.code + '" aria-pressed="' + on + '">' + (x.n ? '<i>' + x.n + '</i>' : '') + esc(x.label) + '</button>';
     }).join('') + '</div>';
   }
-
+  /* anteprima come nel menu dei clienti */
+  function itemPreview(it, sec) {
+    var price = it.prices && it.prices.length ? AA.itemPriceHTML(it, '') : (it.price == null || it.price === '' ? '<span class="tbc">Prezzo da confermare</span>' : (sec.deltaPrices ? (Number(it.price) === 0 ? 'Compreso' : AA.price(it.price, { signed: true })) : AA.price(it.price)));
+    var tags = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + (it.tags || []).map(function (t) { var d = AA.TAG_BY_CODE[t]; return d ? '<span class="tag">' + esc(d.short) + '</span>' : ''; }).join('');
+    var algs = AA.allergenNums(it.allergens).map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('');
+    return '<div class="pv"><p class="pv-lbl">Così lo vedono i clienti</p><div class="pv-item' + (it.available === false ? ' is-off' : '') + '"><div class="pv-main"><p class="pv-n">' + esc(it.name || 'Nome del piatto') + (it.frozen ? '<span class="frz">*</span>' : '') + '</p>' +
+      (it.desc ? '<p class="pv-d">' + esc(it.desc) + '</p>' : '') + (tags || algs ? '<p class="pv-m">' + tags + algs + '</p>' : '') + '<p class="pv-pr">' + price + '</p></div>' +
+      (it.image ? '<img alt="" src="' + esc(AA.src(it.image)) + '">' : '') + '</div>' + (it.available === false ? '<p class="pv-off">Esaurito: ora i clienti non lo vedono.</p>' : '') + '</div>';
+  }
   function itemEditor() {
     var sec = findSec(S.ed.sec), it = findItem(S.ed.sec, S.ed.item);
     var multi = it.prices && it.prices.length;
-    var h = '<div class="ph-edit">' + thumb(it.image, 'ph-big') + '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="img-up">' + (it.image ? 'Cambia foto' : 'Carica foto') + '</button>' +
+    var h = '<div id="pvBox">' + itemPreview(it, sec) + '</div>';
+    h += '<div class="ph-edit">' + thumb(it.image, 'ph-big') + '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="img-up">' + (it.image ? 'Cambia foto' : 'Aggiungi una foto') + '</button>' +
       (it.image ? '<button type="button" class="b b-ghost b-sm" data-act="img-del">Togli foto</button>' : '') + '</div></div>';
-    h += '<label class="fld">Nome<input data-f="name" value="' + esc(it.name) + '"></label>';
-    h += '<label class="fld">Ingredienti / descrizione<textarea data-f="desc" rows="3">' + esc(it.desc) + '</textarea></label>';
-    h += '<fieldset class="fld"><legend>Prezzo</legend><div class="seg"><button type="button" data-act="pmode" data-v="1" aria-pressed="' + !multi + '">Prezzo unico</button><button type="button" data-act="pmode" data-v="n" aria-pressed="' + !!multi + '">Più formati</button></div>';
+    h += '<label class="fld">Nome<input data-f="name" value="' + esc(it.name) + '" placeholder="es. Margherita"></label>';
+    h += '<label class="fld">Ingredienti<textarea data-f="desc" rows="3" placeholder="es. pomodoro, mozzarella, basilico">' + esc(it.desc) + '</textarea></label>';
+    h += '<fieldset class="fld"><legend>Prezzo</legend>';
     if (multi) {
       h += '<div class="list">' + it.prices.map(function (p, k) {
-        return '<div class="lrow"><input data-pf="label" data-k="' + k + '" value="' + esc(p.label) + '" placeholder="es. 33 cl" aria-label="Formato">' +
+        return '<div class="lrow"><input data-pf="label" data-k="' + k + '" value="' + esc(p.label) + '" placeholder="es. Piccola" aria-label="Formato">' +
           '<label class="row-price">€<input inputmode="decimal" data-pf="price" data-k="' + k + '" value="' + priceInput(p.price) + '" aria-label="Prezzo"></label>' +
           '<button type="button" class="b b-x" data-act="pf-del" data-k="' + k + '" aria-label="Togli formato">×</button></div>';
-      }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="pf-add">Aggiungi formato</button>';
+      }).join('') + '</div><div class="btns"><button type="button" class="b b-ghost b-sm" data-act="pf-add">+ Altro formato</button><button type="button" class="b b-ghost b-sm" data-act="pmode" data-v="1">Torna a prezzo unico</button></div>';
     } else {
-      h += '<label class="row-price big">€<input inputmode="decimal" data-f="price" value="' + priceInput(it.price) + '" placeholder="vuoto = prezzo da confermare"></label>';
-      if (sec.deltaPrices) h += '<small class="muted">In questa categoria il prezzo è un supplemento (es. +2,00).</small>';
+      h += '<label class="row-price big">€<input inputmode="decimal" data-f="price" value="' + priceInput(it.price) + '" placeholder="vuoto = da confermare"></label>';
+      if (sec.deltaPrices) h += '<small class="muted">Qui il prezzo è un supplemento sulla pizza (es. 2,00 = + € 2,00).</small>';
+      h += '<button type="button" class="b b-link" data-act="pmode" data-v="n">Ha più formati? (es. piccola e grande)</button>';
     }
     h += '</fieldset>';
-    h += '<label class="fld">Nota breve<input data-f="note" value="' + esc(it.note) + '" placeholder="es. Senza glutine + € 2,50"></label>';
-    h += '<div class="fld"><span>Caratteristiche</span>' + chips(AA.TAGS, it.tags || [], 'data-tag') + '</div>';
-    h += '<div class="fld"><span>Allergeni</span>' + chips(AA.ALLERGENS, it.allergens || [], 'data-alg') + '</div>';
-    h += '<label class="ck"><input type="checkbox" data-fb="available"' + (it.available !== false ? ' checked' : '') + '> Disponibile (spento = non compare)</label>';
-    h += '<label class="ck"><input type="checkbox" data-fb="frozen"' + (it.frozen ? ' checked' : '') + '> Prodotto surgelato (mostra l\'asterisco *)</label>';
-    h += '<label class="ck"><input type="checkbox" data-fb="featured"' + (it.featured ? ' checked' : '') + '> In evidenza sul sito</label>';
-    h += '<label class="fld">Categoria<select data-act="move-sec">' + S.data.groups.map(function (g) {
-      var opts = S.data.sections.filter(function (s) { return s.group === g.id; }).map(function (s) {
-        return '<option value="' + esc(s.id) + '"' + (s.id === sec.id ? ' selected' : '') + '>' + esc(s.name) + '</option>';
-      }).join('');
-      return opts ? '<optgroup label="' + esc(g.name) + '">' + opts + '</optgroup>' : '';
-    }).join('') + '</select></label>';
-    h += '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="down">Sposta giù</button>' +
-      '<button type="button" class="b b-ghost b-sm" data-act="dup">Duplica</button><button type="button" class="b b-danger b-sm" data-act="del-item">Elimina</button></div>';
+    h += '<label class="line"><span><b>Disponibile</b><small>Spento = esaurito, non compare</small></span><label class="sw"><input type="checkbox" data-fb="available"' + (it.available !== false ? ' checked' : '') + '><span></span></label></label>';
+    h += '<label class="line"><span><b>Tra le preferite</b><small>Segnata nel menu e mostrata in home</small></span><label class="sw"><input type="checkbox" data-fb="featured"' + (it.featured ? ' checked' : '') + '><span></span></label></label>';
+    h += '<div class="fld"><span>Caratteristiche</span>' + chips(AA.TAGS.filter(function (t) { return t.code !== 'della-casa'; }), it.tags || [], 'data-tag') + '</div>';
+    var na = (it.allergens || []).length;
+    h += '<details class="more-in"' + (na ? '' : ' open') + '><summary>Allergeni' + (na ? ' (' + na + ')' : '') + '</summary>' + chips(AA.ALLERGENS, it.allergens || [], 'data-alg') + '</details>';
+    h += '<details class="more-in"><summary>Altre opzioni</summary>' +
+      '<label class="fld">Nota breve<input data-f="note" value="' + esc(it.note) + '" placeholder="es. Disponibile anche senza glutine"></label>' +
+      '<label class="line"><span><b>Prodotto surgelato</b><small>Mostra l\'asterisco *</small></span><label class="sw"><input type="checkbox" data-fb="frozen"' + (it.frozen ? ' checked' : '') + '><span></span></label></label>' +
+      '<label class="fld">Sottocategoria<select data-act="move-sec">' + S.data.groups.map(function (g) {
+        var o = S.data.sections.filter(function (s) { return s.group === g.id; }).map(function (s) {
+          return '<option value="' + esc(s.id) + '"' + (s.id === sec.id ? ' selected' : '') + '>' + esc(s.name) + '</option>';
+        }).join('');
+        return o ? '<optgroup label="' + esc(g.name) + '">' + o + '</optgroup>' : '';
+      }).join('') + '</select></label>' +
+      '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="down">Sposta giù</button>' +
+      '<button type="button" class="b b-ghost b-sm" data-act="dup">Duplica</button><button type="button" class="b b-danger b-sm" data-act="del-item">Elimina</button></div></details>';
     return h;
   }
-
   function secEditor() {
     var sec = findSec(S.ed.sec);
     var h = '<label class="fld">Nome<input data-s="name" value="' + esc(sec.name) + '"></label>' +
-      '<label class="fld">Sottotitolo<input data-s="subtitle" value="' + esc(sec.subtitle) + '"></label>' +
-      '<label class="fld">Nota (es. "Non disponibili il sabato")<textarea data-s="note" rows="3">' + esc(sec.note) + '</textarea></label>';
-    h += '<fieldset class="fld"><legend>Varianti e supplementi della categoria</legend><div class="list">' + (sec.supplements || []).map(function (s, k) {
+      '<label class="fld">Sottotitolo<input data-s="subtitle" value="' + esc(sec.subtitle) + '" placeholder="es. Fritti o al forno"></label>' +
+      '<label class="fld">Nota (es. "Non disponibili il sabato")<textarea data-s="note" rows="2">' + esc(sec.note) + '</textarea></label>';
+    h += '<label class="line"><span><b>Visibile</b><small>Spenta = nascosta ovunque</small></span><label class="sw"><input type="checkbox" data-sb="visible"' + (sec.visible !== false ? ' checked' : '') + '><span></span></label></label>';
+    h += '<label class="line"><span><b>Sul cartellone in sala</b></span><label class="sw"><input type="checkbox" data-sb="totem"' + (sec.totem !== false ? ' checked' : '') + '><span></span></label></label>';
+    h += '<fieldset class="fld"><legend>Varianti con prezzo (es. Pizzella −1,00, Senza lattosio +1,50)</legend><div class="list">' + (sec.supplements || []).map(function (s, k) {
       return '<div class="lrow"><input data-sup="label" data-k="' + k + '" value="' + esc(s.label) + '" aria-label="Variante">' +
         '<label class="row-price">€<input inputmode="decimal" data-sup="price" data-k="' + k + '" value="' + priceInput(s.price) + '" aria-label="Differenza di prezzo"></label>' +
         '<button type="button" class="b b-x" data-act="sup-del" data-k="' + k + '" aria-label="Togli">×</button></div>';
-    }).join('') + '</div><small class="muted">Usa il meno per gli sconti, es. Pizzella −1,00.</small><button type="button" class="b b-ghost b-sm" data-act="sup-add">Aggiungi variante</button></fieldset>';
-    h += '<label class="fld">Aspetto<select data-s="layout"><option value="list"' + (sec.layout === 'list' ? ' selected' : '') + '>Lista (piatti)</option><option value="cards"' + (sec.layout === 'cards' ? ' selected' : '') + '>Schede con foto (impasti)</option><option value="chips"' + (sec.layout === 'chips' ? ' selected' : '') + '>Compatto per prezzo (aggiunte)</option></select></label>';
-    h += '<label class="ck"><input type="checkbox" data-sb="deltaPrices"' + (sec.deltaPrices ? ' checked' : '') + '> I prezzi sono supplementi (+ € …)</label>';
-    h += '<label class="ck"><input type="checkbox" data-sb="visible"' + (sec.visible !== false ? ' checked' : '') + '> Visibile nel menu e sul sito</label>';
-    h += '<label class="ck"><input type="checkbox" data-sb="totem"' + (sec.totem !== false ? ' checked' : '') + '> Mostra sul totem</label>';
-    h += '<label class="fld">Gruppo<select data-s="group">' + S.data.groups.map(function (g) { return '<option value="' + esc(g.id) + '"' + (g.id === sec.group ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select></label>';
-    h += '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="sec-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="sec-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-sec">Elimina categoria</button></div>';
+    }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="sup-add">+ Aggiungi variante</button></fieldset>';
+    h += '<details class="more-in"><summary>Altre opzioni</summary>' +
+      '<label class="fld">Aspetto<select data-s="layout"><option value="list"' + (sec.layout === 'list' ? ' selected' : '') + '>Lista di piatti</option><option value="cards"' + (sec.layout === 'cards' ? ' selected' : '') + '>Schede con foto (come gli impasti)</option><option value="chips"' + (sec.layout === 'chips' ? ' selected' : '') + '>Compatto per prezzo (come le aggiunte)</option></select></label>' +
+      '<label class="line"><span><b>I prezzi sono supplementi</b><small>Mostrati come + € …</small></span><label class="sw"><input type="checkbox" data-sb="deltaPrices"' + (sec.deltaPrices ? ' checked' : '') + '><span></span></label></label>' +
+      '<label class="fld">Categoria<select data-s="group">' + S.data.groups.map(function (g) { return '<option value="' + esc(g.id) + '"' + (g.id === sec.group ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select></label>' +
+      '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="sec-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="sec-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-sec">Elimina sottocategoria</button></div></details>';
     return h;
   }
-
   function groupEditor() {
     var g = S.data.groups.filter(function (x) { return x.id === S.ed.group; })[0];
-    return '<label class="fld">Nome<input data-g="name" value="' + esc(g.name) + '"></label>' +
-      '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="grp-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="grp-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-group">Elimina gruppo</button></div>';
+    return '<label class="fld">Nome della categoria<input data-g="name" value="' + esc(g.name) + '"></label>' +
+      '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="grp-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="grp-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-group">Elimina categoria</button></div>';
   }
-
   function promoEditor() {
     var p = S.data.promos[S.ed.promo];
-    var h = '<div class="ph-edit">' + thumb(p.image, 'ph-big') + '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="img-up">' + (p.image ? 'Cambia foto' : 'Carica foto') + '</button>' +
-      (p.image ? '<button type="button" class="b b-ghost b-sm" data-act="img-del">Togli foto</button>' : '') + '</div></div>';
-    h += '<label class="fld">Etichetta (piccola, sopra il titolo)<input data-p="kicker" value="' + esc(p.kicker) + '" placeholder="es. Novità"></label>';
-    h += '<label class="fld">Titolo<input data-p="title" value="' + esc(p.title) + '"></label>';
+    var h = '<div id="pvBox"><p class="pv-lbl">Così la vedono i clienti</p>' + promoCard(p) + '</div>';
+    h += '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="img-up">' + (p.image ? 'Cambia foto' : 'Aggiungi una foto') + '</button>' +
+      (p.image ? '<button type="button" class="b b-ghost b-sm" data-act="img-del">Togli foto</button>' : '') + '</div>';
+    h += '<label class="fld">Titolo<input data-p="title" value="' + esc(p.title) + '" placeholder="es. Pomodoro nickel free"></label>';
+    h += '<label class="fld">Etichetta piccola<input data-p="kicker" value="' + esc(p.kicker) + '" placeholder="es. Novità, Da provare"></label>';
     h += '<label class="fld">Testo<textarea data-p="text" rows="3">' + esc(p.text) + '</textarea></label>';
-    h += '<label class="fld">Prezzo (testo libero)<input data-p="price" value="' + esc(p.price) + '" placeholder="es. € 9,00 oppure + € 3,00"></label>';
-    h += '<label class="ck"><input type="checkbox" data-pb="active"' + (p.active ? ' checked' : '') + '> Attiva</label>';
-    h += '<div class="two"><label class="fld">Dal<input type="date" data-p="from" value="' + esc(p.from) + '"></label><label class="fld">Al<input type="date" data-p="until" value="' + esc(p.until) + '"></label></div>';
-    h += '<div class="fld"><span>Dove mostrarla</span><label class="ck"><input type="checkbox" data-pb="totem"' + (p.totem ? ' checked' : '') + '> Totem</label>' +
-      '<label class="ck"><input type="checkbox" data-pb="menu"' + (p.menu ? ' checked' : '') + '> Menu sul telefono</label>' +
-      '<label class="ck"><input type="checkbox" data-pb="site"' + (p.site ? ' checked' : '') + '> Sito</label></div>';
-    h += '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="promo-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="promo-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-promo">Elimina</button></div>';
+    h += '<label class="fld">Prezzo<input data-p="price" value="' + esc(p.price) + '" placeholder="es. € 9,00 oppure + € 3,00"></label>';
+    h += '<label class="line"><span><b>Attiva</b></span><label class="sw"><input type="checkbox" data-pb="active"' + (p.active ? ' checked' : '') + '><span></span></label></label>';
+    h += '<div class="fld"><span>Dove mostrarla</span><div class="chips">' + [['site', 'Sito'], ['menu', 'Menu'], ['totem', 'Cartellone']].map(function (w) {
+      return '<button type="button" class="chip" data-where="' + w[0] + '" aria-pressed="' + !!p[w[0]] + '">' + w[1] + '</button>';
+    }).join('') + '</div></div>';
+    h += '<div class="two"><label class="fld">Dal<input type="date" data-p="from" value="' + esc(p.from) + '"></label><label class="fld">Al<input type="date" data-p="until" value="' + esc(p.until) + '"></label></div><small class="muted">Date facoltative: fuori da queste date non compare.</small>';
+    h += '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="promo-up">Sposta prima</button><button type="button" class="b b-ghost b-sm" data-act="promo-down">Sposta dopo</button><button type="button" class="b b-danger b-sm" data-act="del-promo">Elimina</button></div>';
     return h;
   }
-
   function refreshEditor() {
     var b = $('sheetB'), top = b.scrollTop;
     if (!S.ed) return;
@@ -521,18 +669,28 @@
     else if (S.ed.type === 'promo') b.innerHTML = promoEditor();
     b.scrollTop = top;
   }
+  function refreshPreview() {
+    var box = $('pvBox'); if (!box || !S.ed) return;
+    if (S.ed.type === 'item') box.innerHTML = itemPreview(findItem(S.ed.sec, S.ed.item), findSec(S.ed.sec));
+    if (S.ed.type === 'promo') box.innerHTML = '<p class="pv-lbl">Così la vedono i clienti</p>' + promoCard(S.data.promos[S.ed.promo]);
+  }
 
-  /* ================= Eventi: lista ================= */
+  /* ================= Eventi ================= */
   document.getElementById('tabs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-tab]');
     if (!b) return;
     S.tab = b.dataset.tab; render(); window.scrollTo(0, 0);
   });
-  document.querySelector('.ah-actions').addEventListener('click', function (e) {
+  $('pub').addEventListener('click', function (e) {
     var a = e.target.closest('[data-act]');
     if (!a) return;
     if (a.dataset.act === 'publish') publish();
     if (a.dataset.act === 'preview') preview();
+    if (a.dataset.act === 'changes') {
+      var list = changesList();
+      ask('Cosa cambia', '', 'Pubblica ora', { cancel: 'Chiudi', html: '<ul class="chg">' + list.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' })
+        .then(function (ok) { if (ok) publish(); });
+    }
   });
   function preview() {
     saveDraft();
@@ -540,25 +698,21 @@
   }
 
   var view = $('view');
-  view.addEventListener('toggle', function (e) {
-    var d = e.target;
-    if (d.matches && d.matches('details.sec')) S.open[d.dataset.sec] = d.open;
-  }, true);
-
   view.addEventListener('input', function (e) {
     var t = e.target;
     if (t.id === 'q') { S.q = t.value; clearTimeout(view._qt); view._qt = setTimeout(render, 220); return; }
+    if (t.id === 'oq') { S.oq = t.value; clearTimeout(view._qt); view._qt = setTimeout(render, 200); return; }
+    if (t.dataset.idea === 'name') { S.data.settings.builder.presets[Number(t.closest('.idea').dataset.k)].name = t.value; changed(); return; }
     if (t.dataset.path) {
       var v = t.value;
       if (t.hasAttribute('data-price')) { v = parsePrice(v); if (v === undefined) return; }
       else if (t.type === 'number') v = t.value === '' ? null : Number(t.value);
-      setPath(S.data, t.dataset.path, v); changed(); return;
+      setPath(S.data, t.dataset.path, v);
+      if (/^info\.open(From|To)$/.test(t.dataset.path)) { S.data.info.hours = hoursFromWeek(S.data.info); }
+      changed(); return;
     }
-    if (t.dataset.list) {
-      S.data.info[t.dataset.list][Number(t.dataset.k)][t.dataset.f] = t.value; changed();
-    }
+    if (t.dataset.list) { S.data.info[t.dataset.list][Number(t.dataset.k)][t.dataset.f] = t.value; changed(); }
   });
-
   view.addEventListener('change', function (e) {
     var t = e.target, row = t.closest('.row');
     if (t.dataset.act === 'price' && row) {
@@ -568,31 +722,47 @@
     }
     if (t.dataset.act === 'avail' && row) {
       var it2 = findItem(row.dataset.sec, row.dataset.item);
-      it2.available = t.checked; row.classList.toggle('is-off', !t.checked); changed(); return;
+      it2.available = t.checked; changed(); render(); toast(t.checked ? it2.name + ': di nuovo disponibile' : it2.name + ': esaurito', 1800); return;
     }
     if (t.dataset.act === 'promo-active') {
       var i = Number(t.closest('[data-promo]').dataset.promo);
-      S.data.promos[i].active = t.checked; t.closest('.pcard').classList.toggle('is-off', !t.checked); changed(); return;
+      S.data.promos[i].active = t.checked; changed(); render(); return;
+    }
+    if (t.dataset.act === 'closed-today') {
+      S.data.info.closedOn = t.checked ? AA.todayISO() : ''; changed(); render(); return;
     }
     if (t.dataset.act === 'day') {
       var d = Number(t.value), days = S.data.info.openDays, k = days.indexOf(d);
       if (t.checked && k < 0) days.push(d); if (!t.checked && k >= 0) days.splice(k, 1);
-      changed(); return;
+      S.data.info.hours = hoursFromWeek(S.data.info); changed(); render(); return;
     }
+    if (t.dataset.act === 'idea-add' && t.value) {
+      S.data.settings.builder.presets[Number(t.closest('.idea').dataset.k)].items.push(t.value); changed(); render(); return;
+    }
+    if (t.dataset.act === 'pop-add' && t.value) { S.data.settings.builder.popular.push(t.value); changed(); render(); return; }
     if (t.dataset.ck) { setPath(S.data, t.dataset.ck, t.checked); changed(); return; }
     if (t.tagName === 'SELECT' && t.dataset.path) { setPath(S.data, t.dataset.path, t.value); changed(); }
   });
-
   view.addEventListener('click', async function (e) {
+    var go = e.target.closest('[data-go]');
+    if (go) { S.tab = go.dataset.go; render(); window.scrollTo(0, 0); return; }
     var a = e.target.closest('[data-act]');
     if (!a) return;
-    var act = a.dataset.act, row = a.closest('.row'), secEl = a.closest('[data-sec]');
-    if (act === 'edit-item' && row) {
+    var act = a.dataset.act, row = a.closest('.row'), secEl = a.closest('[data-sec]'), li = a.closest('li[data-item]');
+    if (act === 'toggle-sec' && secEl) {
+      S.open[secEl.dataset.sec] = !S.open[secEl.dataset.sec]; render();
+    } else if (act === 'edit-item' && row) {
       S.ed = { type: 'item', sec: row.dataset.sec, item: row.dataset.item };
-      openSheet('Modifica piatto', itemEditor());
+      openSheet('Piatto', itemEditor());
+    } else if ((act === 'back-on' || act === 'set-off') && li) {
+      var x = findItem(li.dataset.sec, li.dataset.item);
+      x.available = act === 'back-on'; if (act === 'set-off') S.oq = '';
+      changed(); render(); toast(x.name + (act === 'back-on' ? ': di nuovo disponibile' : ': esaurito'), 1800);
+    } else if (act === 'all-on') {
+      allItems().forEach(function (y) { if (y.it.available === false) y.it.available = true; }); changed(); render();
     } else if (act === 'edit-sec' && secEl) {
       S.ed = { type: 'sec', sec: secEl.dataset.sec };
-      openSheet('Modifica categoria', secEditor());
+      openSheet('Sottocategoria', secEditor());
     } else if (act === 'add-item' && secEl) {
       var sec = findSec(secEl.dataset.sec);
       var it = { id: uid('i'), name: '', desc: '', price: null, prices: [], note: '', tags: [], allergens: [], image: '', frozen: false, available: true, featured: false };
@@ -601,26 +771,34 @@
       openSheet('Nuovo piatto', itemEditor());
       setTimeout(function () { var n = document.querySelector('#sheetB [data-f="name"]'); if (n) n.focus(); }, 60);
     } else if (act === 'edit-group') {
-      S.ed = { type: 'group', group: a.dataset.g }; openSheet('Modifica gruppo', groupEditor());
+      S.ed = { type: 'group', group: a.dataset.g }; openSheet('Categoria', groupEditor());
     } else if (act === 'add-sec') {
-      var ns = { id: uid('s'), group: a.dataset.g, name: 'Nuova categoria', subtitle: '', note: '', supplements: [], layout: 'list', deltaPrices: false, visible: true, totem: true, items: [] };
+      var ns = { id: uid('s'), group: a.dataset.g, name: 'Nuova sottocategoria', subtitle: '', note: '', supplements: [], layout: 'list', deltaPrices: false, visible: true, totem: true, items: [] };
       var last = -1;
       S.data.sections.forEach(function (s, k) { if (s.group === a.dataset.g) last = k; });
       S.data.sections.splice(last + 1, 0, ns); S.open[ns.id] = true; changed();
-      S.ed = { type: 'sec', sec: ns.id }; openSheet('Nuova categoria', secEditor());
+      S.ed = { type: 'sec', sec: ns.id }; openSheet('Nuova sottocategoria', secEditor());
     } else if (act === 'add-group') {
-      var ng = { id: uid('g'), name: 'Nuovo gruppo', icon: '' };
+      var ng = { id: uid('g'), name: 'Nuova categoria', icon: '' };
       S.data.groups.push(ng); changed();
-      S.ed = { type: 'group', group: ng.id }; openSheet('Nuovo gruppo', groupEditor());
+      S.ed = { type: 'group', group: ng.id }; openSheet('Nuova categoria', groupEditor());
     } else if (act === 'edit-promo') {
-      S.ed = { type: 'promo', promo: Number(a.closest('[data-promo]').dataset.promo) }; openSheet('Modifica inserzione', promoEditor());
+      S.ed = { type: 'promo', promo: Number(a.closest('[data-promo]').dataset.promo) }; openSheet('Novità', promoEditor());
     } else if (act === 'add-promo') {
-      S.data.promos.unshift({ id: uid('p'), active: true, title: '', kicker: '', text: '', price: '', image: '', from: '', until: '', totem: true, menu: true, site: false });
-      changed(); S.ed = { type: 'promo', promo: 0 }; openSheet('Nuova inserzione', promoEditor());
+      S.data.promos.unshift({ id: uid('p'), active: true, title: '', kicker: 'Novità', text: '', price: '', image: '', from: '', until: '', totem: true, menu: true, site: true });
+      changed(); S.ed = { type: 'promo', promo: 0 }; openSheet('Nuova novità', promoEditor());
     } else if (act === 'list-add') {
-      S.data.info[a.dataset.list].push(a.dataset.list === 'hours' ? { days: '', time: '' } : { title: '', text: '' }); changed(); render();
+      S.data.info[a.dataset.list].push({ title: '', text: '' }); changed(); render();
     } else if (act === 'list-del') {
       S.data.info[a.dataset.list].splice(Number(a.dataset.k), 1); changed(); render();
+    } else if (act === 'idea-del') {
+      S.data.settings.builder.presets.splice(Number(a.closest('.idea').dataset.k), 1); changed(); render();
+    } else if (act === 'idea-rm') {
+      S.data.settings.builder.presets[Number(a.closest('.idea').dataset.k)].items.splice(Number(a.dataset.j), 1); changed(); render();
+    } else if (act === 'idea-new') {
+      S.data.settings.builder.presets.push({ name: 'Nuova idea', items: [] }); changed(); render();
+    } else if (act === 'pop-rm') {
+      S.data.settings.builder.popular.splice(Number(a.dataset.j), 1); changed(); render();
     } else if (act === 'qr') printQr();
     else if (act === 'history') showHistory(a);
     else if (act === 'restore-ver') restoreVersion(a.dataset.sha);
@@ -632,7 +810,6 @@
     else if (act === 'logout') logout();
   });
 
-  /* ================= Eventi: editor ================= */
   var sheetB = $('sheetB');
   sheetB.addEventListener('input', function (e) {
     var t = e.target, ed = S.ed;
@@ -658,7 +835,7 @@
     } else if (ed.type === 'promo') {
       if (t.dataset.p) S.data.promos[ed.promo][t.dataset.p] = t.value;
     }
-    changed();
+    changed(); refreshPreview();
   });
   sheetB.addEventListener('change', function (e) {
     var t = e.target, ed = S.ed;
@@ -679,17 +856,21 @@
     } else if (ed.type === 'promo') {
       if (t.dataset.pb) S.data.promos[ed.promo][t.dataset.pb] = t.checked;
     }
-    changed();
+    changed(); refreshPreview();
   });
   sheetB.addEventListener('click', async function (e) {
-    var a = e.target.closest('[data-act], [data-tag], [data-alg]');
+    var a = e.target.closest('[data-act], [data-tag], [data-alg], [data-where]');
     if (!a || !S.ed) return;
     var ed = S.ed, it = ed.type === 'item' ? findItem(ed.sec, ed.item) : null, sec = ed.sec ? findSec(ed.sec) : null;
+    if (a.dataset.where) {
+      var pr = S.data.promos[ed.promo]; pr[a.dataset.where] = !pr[a.dataset.where];
+      a.setAttribute('aria-pressed', pr[a.dataset.where]); changed(); return;
+    }
     if (a.dataset.tag || a.dataset.alg) {
       var list = a.dataset.tag ? (it.tags = it.tags || []) : (it.allergens = it.allergens || []);
       var v = a.dataset.tag || a.dataset.alg, k = list.indexOf(v);
       if (k >= 0) list.splice(k, 1); else list.push(v);
-      a.setAttribute('aria-pressed', k < 0); changed(); return;
+      a.setAttribute('aria-pressed', k < 0); changed(); refreshPreview(); return;
     }
     var act = a.dataset.act;
     if (act === 'img-up') {
@@ -699,7 +880,7 @@
       var tgt = ed.type === 'promo' ? S.data.promos[ed.promo] : it;
       tgt.image = ''; delete tgt.cutout; changed(); refreshEditor();
     } else if (act === 'pmode') {
-      if (a.dataset.v === 'n' && !(it.prices && it.prices.length)) it.prices = [{ label: '', price: it.price }, { label: '', price: null }];
+      if (a.dataset.v === 'n' && !(it.prices && it.prices.length)) it.prices = [{ label: 'Piccola', price: it.price }, { label: 'Grande', price: null }];
       if (a.dataset.v === '1' && it.prices && it.prices.length) { it.price = it.prices[0].price; it.prices = []; }
       changed(); refreshEditor();
     } else if (act === 'pf-add') { it.prices.push({ label: '', price: null }); changed(); refreshEditor(); }
@@ -710,7 +891,7 @@
       sec.items.splice(sec.items.indexOf(it) + 1, 0, c); changed();
       S.ed = { type: 'item', sec: sec.id, item: c.id }; refreshEditor(); toast('Duplicato: ora stai modificando la copia.');
     } else if (act === 'del-item') {
-      if (await ask('Eliminare "' + (it.name || 'piatto') + '"?', 'Se vuoi solo toglierlo per un po\', usa l\'interruttore "Disponibile".', 'Elimina', { danger: true })) {
+      if (await ask('Eliminare "' + (it.name || 'piatto') + '"?', 'Se è solo finito, meglio spegnere "Disponibile": così lo rimetti con un tocco.', 'Elimina', { danger: true })) {
         sec.items.splice(sec.items.indexOf(it), 1); changed(); closeSheet();
       }
     } else if (act === 'sup-add') { sec.supplements = sec.supplements || []; sec.supplements.push({ label: '', price: 0 }); changed(); refreshEditor(); }
@@ -720,20 +901,20 @@
       while (j >= 0 && j < arr.length && arr[j].group !== sec.group) j += step;
       if (j >= 0 && j < arr.length) { arr.splice(idx, 1); arr.splice(j, 0, sec); changed(); toast('Spostata', 1200); }
     } else if (act === 'del-sec') {
-      if (await ask('Eliminare la categoria "' + sec.name + '"?', 'Verranno eliminati anche i suoi ' + sec.items.length + ' piatti. Per nasconderla e basta, togli la spunta "Visibile".', 'Elimina', { danger: true })) {
+      if (await ask('Eliminare "' + sec.name + '"?', 'Verranno eliminati anche i suoi ' + sec.items.length + ' piatti. Per nasconderla e basta, spegni "Visibile".', 'Elimina', { danger: true })) {
         S.data.sections.splice(S.data.sections.indexOf(sec), 1); changed(); closeSheet();
       }
     } else if (act === 'grp-up' || act === 'grp-down') {
       var gi = S.data.groups.findIndex(function (g) { return g.id === ed.group; });
-      if (move(S.data.groups, gi, act === 'grp-up' ? -1 : 1)) { changed(); toast('Spostato', 1200); }
+      if (move(S.data.groups, gi, act === 'grp-up' ? -1 : 1)) { changed(); toast('Spostata', 1200); }
     } else if (act === 'del-group') {
       var n = S.data.sections.filter(function (s) { return s.group === ed.group; }).length;
-      if (n) { toast('Il gruppo contiene ' + n + ' categorie: spostale o eliminale prima.'); return; }
+      if (n) { toast('Contiene ' + n + ' sottocategorie: spostale o eliminale prima.'); return; }
       S.data.groups = S.data.groups.filter(function (g) { return g.id !== ed.group; }); changed(); closeSheet();
     } else if (act === 'promo-up' || act === 'promo-down') {
       if (move(S.data.promos, ed.promo, act === 'promo-up' ? -1 : 1)) { ed.promo += act === 'promo-up' ? -1 : 1; changed(); toast('Spostata', 1200); }
     } else if (act === 'del-promo') {
-      if (await ask('Eliminare questa inserzione?', 'Per toglierla solo per un po\', spegni "Attiva".', 'Elimina', { danger: true })) {
+      if (await ask('Eliminare questa novità?', 'Per toglierla solo per un po\', spegni "Attiva".', 'Elimina', { danger: true })) {
         S.data.promos.splice(ed.promo, 1); changed(); closeSheet();
       }
     }
@@ -776,7 +957,7 @@
     if (!(await ask('Ricaricare questa versione?', 'Sostituisce le modifiche attuali nella bozza. Diventerà visibile ai clienti solo quando premi Pubblica.', 'Ricarica'))) return;
     try {
       var f = await S.store.readFile(MENU_PATH, sha);
-      S.data = JSON.parse(f.text); ensureShape(S.data); changed(); S.tab = 'menu'; render();
+      S.data = JSON.parse(f.text); ensureShape(S.data); changed(); S.tab = 'oggi'; render();
       toast('Versione ricaricata. Controlla e premi Pubblica per rimetterla online.', 6000);
     } catch (ex) { toast(errText(ex)); }
   }

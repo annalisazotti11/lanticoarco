@@ -459,7 +459,7 @@
     if (st) {
       var s = $('status'); s.hidden = false; s.textContent = st.text; s.classList.toggle('is-open', st.open);
       var vs = $('viStatus'); vs.hidden = false; vs.textContent = st.text; vs.classList.toggle('is-open', st.open);
-      var now = new Date(), d = now.getDay(), open = (info.openDays || []).indexOf(d) >= 0;
+      var now = new Date(), d = now.getDay(), open = (info.openDays || []).indexOf(d) >= 0 && !st.closedToday;
       var late = info.openTo && (now.getHours() * 60 + now.getMinutes()) >= (function (x) { var p = x.split(':'); return p[0] * 60 + Number(p[1]); })(info.openTo);
       $('viTitle').textContent = st.open ? 'Ti teniamo un tavolo?' : (open && !late ? 'Ci vediamo stasera?' : 'Ti teniamo un tavolo?');
     }

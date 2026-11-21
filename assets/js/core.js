@@ -140,6 +140,14 @@
     if (!days.length || from === null || to === null) return null;
     var m = now.getHours() * 60 + now.getMinutes();
     var d = now.getDay();
+    var iso = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    if (info.closedOn === iso) {
+      for (var q = 1; q <= 7; q++) {
+        var qd = (d + q) % 7;
+        if (days.indexOf(qd) >= 0) return { open: false, closedToday: true, text: 'Oggi siamo chiusi. Riapriamo ' + (q === 1 ? 'domani' : DAYS[qd]) + ' alle ' + info.openFrom };
+      }
+      return { open: false, closedToday: true, text: 'Oggi siamo chiusi' };
+    }
     if (days.indexOf(d) >= 0 && m >= from && m < to) {
       return { open: true, text: 'Aperto ora, fino alle ' + info.openTo };
     }
