@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="aa-root" content="../">
+<meta name="robots" content="noindex, nofollow">
+<title>Gestione menu · L'Antico Arco</title>
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<!-- Accesso -->
+<main class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <img class="gate-logo" src="../assets/img/logo/logo-600.webp" alt="L'Antico Arco Pizzeria" width="600" height="388">
+    <h1 class="gate-t">Gestione menu</h1>
+
+    <form id="loginForm" class="form" hidden>
+      <label>Nome utente<input name="user" autocomplete="username" autocapitalize="none" required></label>
+      <label>Password<input name="pass" type="password" autocomplete="current-password" required></label>
+      <label class="check"><input type="checkbox" name="remember"> Resta collegato su questo dispositivo</label>
+      <p class="form-err" id="loginErr" hidden></p>
+      <button class="b b-main" type="submit">Entra</button>
+    </form>
+
+    <form id="setupForm" class="form" hidden>
+      <p class="hint">Configurazione iniziale, da fare una sola volta. Serve una chiave GitHub con permesso di scrittura sul repository del sito: verrà salvata cifrata con la password che scegli qui.</p>
+      <label>Repository GitHub<input name="repo" placeholder="utente/repository" autocapitalize="none" required></label>
+      <label>Chiave GitHub (token)<input name="token" type="password" autocomplete="off" required></label>
+      <p class="hint"><a id="tokenLink" target="_blank" rel="noopener">Crea la chiave su GitHub</a>: scegli solo questo repository e il permesso <b>Contents: Read and write</b>.</p>
+      <label>Nome utente per il gestore<input name="user" autocapitalize="none" required></label>
+      <label>Password (almeno 10 caratteri)<input name="pass" type="password" autocomplete="new-password" minlength="10" required></label>
+      <label>Ripeti la password<input name="pass2" type="password" autocomplete="new-password" minlength="10" required></label>
+      <p class="form-err" id="setupErr" hidden></p>
+      <button class="b b-main" type="submit">Salva e entra</button>
+    </form>
+
+    <button class="b b-ghost" id="demoBtn" type="button" hidden>Prova senza pubblicare (modalità demo)</button>
+  </div>
+</main>
+
+<!-- Applicazione -->
+<div class="app" id="app" hidden>
+  <header class="ah">
+    <img class="ah-logo" src="../assets/img/logo/logo-600.webp" alt="L'Antico Arco" width="600" height="388">
+    <div class="ah-state" id="state"><span class="dot"></span><span id="stateTxt">Tutto pubblicato</span></div>
+    <div class="ah-actions">
+      <button class="b b-ghost" type="button" data-act="preview">Anteprima</button>
+      <button class="b b-main" type="button" data-act="publish" id="publishBtn" disabled>Pubblica</button>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="menu" aria-selected="true">Menu</button>
+    <button type="button" role="tab" data-tab="promo">Inserzioni</button>
+    <button type="button" role="tab" data-tab="locale">Locale</button>
+    <button type="button" role="tab" data-tab="altro">Altro</button>
+  </nav>
+  <main class="view" id="view"></main>
+</div>
+
+<!-- Finestra di modifica -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-bg" data-act="close"></div>
+  <section class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetT" tabindex="-1">
+    <header class="sheet-h">
+      <h2 id="sheetT"></h2>
+      <button class="b b-main b-sm" type="button" data-act="close">Fatto</button>
+    </header>
+    <div class="sheet-b" id="sheetB"></div>
+  </section>
+</div>
+
+<!-- Conferme -->
+<div class="sheet" id="ask" hidden>
+  <div class="sheet-bg"></div>
+  <section class="sheet-card ask-card" role="alertdialog" aria-modal="true" aria-labelledby="askT">
+    <h2 id="askT"></h2>
+    <p id="askX"></p>
+    <div class="ask-actions"><button class="b b-ghost" type="button" id="askNo">Annulla</button><button class="b b-main" type="button" id="askOk">Conferma</button></div>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="fileImg" accept="image/*" hidden>
+<input type="file" id="fileJson" accept="application/json,.json" hidden>
+
+<script src="../assets/vendor/qrcode.js"></script>
+<script src="../assets/js/core.js"></script>
+<script src="../assets/js/store.js"></script>
+<script src="../assets/js/admin.js"></script>
+</body>
+</html>
