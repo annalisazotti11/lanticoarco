@@ -579,7 +579,11 @@
       steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
       pills.forEach(function (b, k) { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
       var nb = pills[i] && pills[i].parentNode;
-      if (nb && nb.scrollWidth > nb.clientWidth) nb.scrollTo({ left: Math.max(0, pills[i].offsetLeft - 20), behavior: 'smooth' });
+      if (nb && nb.scrollWidth > nb.clientWidth) {
+        var pl = pills[i].offsetLeft - nb.offsetLeft, pr = pl + pills[i].offsetWidth;
+        if (pl < nb.scrollLeft) nb.scrollTo({ left: Math.max(0, pl - 12), behavior: 'smooth' });
+        else if (pr > nb.scrollLeft + nb.clientWidth) nb.scrollTo({ left: pr - nb.clientWidth + 12, behavior: 'smooth' });
+      }
     }
     // lo scorrimento sceglie il passaggio; le animazioni hanno tempi propri, così niente salti
     function go(k) {
