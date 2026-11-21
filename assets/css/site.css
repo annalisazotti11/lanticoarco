@@ -191,8 +191,6 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .ch-pizze .round:hover { background: var(--cream); color: var(--ink); }
 .pz-count { font-weight: 600; font-variant-numeric: tabular-nums; min-width: 3.5em; text-align: center; }
 .pz-all { margin-left: 8px; font-weight: 600; color: var(--cream); text-underline-offset: 4px; }
-.pz-own { margin-top: 18px; color: rgba(248, 237, 220, .66); max-width: 44ch; }
-.pz-own a { color: var(--cream); font-weight: 600; text-underline-offset: 4px; }
 .pz-card.swap > * { animation: fadeUp .55s var(--ease-out) both; }
 .pz-card.swap > :nth-child(2) { animation-delay: .04s; } .pz-card.swap > :nth-child(3) { animation-delay: .08s; } .pz-card.swap > :nth-child(4) { animation-delay: .12s; }
 .pz-stage { position: relative; width: min(100%, 580px); aspect-ratio: 1; justify-self: center; transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .8s var(--ease-out); }
@@ -243,7 +241,7 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .legal { display: flex; flex-wrap: wrap; gap: 4px 16px; }
 
 /* Le liste scorrevoli non devono allargare le colonne */
-.st-grid > *, .im-grid > *, .pz-grid > *, .vi-grid > *, .im-body { min-width: 0; }
+.st-grid > *, .pr-head > *, .pr > *, .im-grid > *, .pz-grid > *, .vi-grid > *, .im-body { min-width: 0; }
 
 /* ---------- Telefono e tablet ---------- */
 @media (max-width: 960px) {
@@ -311,3 +309,48 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 /* scintille della miccia */
 .tl-sparks { position: absolute; left: -92px; top: 0; width: 200px; height: 260px; pointer-events: none; z-index: 2; }
 .tl-stat span { font-variant-numeric: tabular-nums; }
+
+/* ---------- 2 · Il prodotto: una ricerca continua ---------- */
+.ch-prod { padding-bottom: clamp(40px, 6vh, 70px); }
+.pr-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px clamp(32px, 6vw, 100px); align-items: end; }
+.pr-list { list-style: none; margin: clamp(36px, 6vh, 64px) 0 0; padding: 0; border-top: 1px solid var(--ink); }
+.pr { display: grid; grid-template-columns: minmax(150px, 330px) minmax(0, 1fr); gap: 10px clamp(24px, 5vw, 80px); align-items: baseline; padding: clamp(22px, 3.6vh, 36px) 0; border-bottom: 1px solid var(--line); }
+.pr-n { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.06em; line-height: .8; font-size: clamp(4.4rem, 10vw, 9rem); font-variant-numeric: tabular-nums; }
+.pr-n.pr-w { font-size: clamp(3.6rem, 8vw, 7.4rem); }
+.pr:nth-child(even) .pr-n { color: transparent; -webkit-text-stroke: 1.4px var(--ink); }
+.pr-t h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.035em; font-size: clamp(1.5rem, 2.6vw, 2.3rem); line-height: 1.02; text-wrap: balance; }
+.pr-t p { margin-top: 12px; color: var(--ink-2); line-height: 1.6; max-width: 56ch; }
+.pr-partners { list-style: none; padding: 0; margin: 16px 0 0; display: flex; gap: 10px; flex-wrap: wrap; }
+.pr-partners li { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 8px 14px; display: grid; place-items: center; }
+.pr-partners img { height: 48px; width: auto; object-fit: contain; }
+
+/* il muro degli ingredienti */
+.wall { position: relative; padding: clamp(30px, 6vh, 60px) 0 clamp(70px, 10vh, 120px); overflow: hidden; background: var(--bg-2) url(../img/grana.png); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.wall-rows { display: grid; gap: clamp(4px, 1vh, 12px); }
+.wall-row { display: flex; width: max-content; animation: wallL var(--dur, 90s) linear infinite; will-change: transform; }
+.wall-row.r { animation-name: wallR; }
+.wall-row span { display: inline-flex; align-items: center; gap: clamp(14px, 2vw, 30px); padding-right: clamp(14px, 2vw, 30px); white-space: nowrap; font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.04em; line-height: 1.05; font-size: clamp(2.2rem, 5.6vw, 5.2rem); }
+.wall-row.o span { color: transparent; -webkit-text-stroke: 1.2px var(--ink); }
+.wall-row.m span { color: var(--ink-2); }
+.wall-row svg { width: .32em; height: .32em; flex: none; fill: var(--ink); opacity: .55; }
+.wall:hover .wall-row { animation-play-state: paused; }
+@keyframes wallL { to { transform: translateX(-50%); } }
+@keyframes wallR { from { transform: translateX(-50%); } to { transform: none; } }
+.wall-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin: clamp(26px, 5vh, 50px) var(--pad) 0; padding-top: clamp(20px, 3vh, 30px); border-top: 1px solid var(--line); }
+.wall-cta p { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.035em; font-size: clamp(1.6rem, 3vw, 2.6rem); line-height: 1.02; text-wrap: balance; max-width: 22ch; }
+.wall-next { margin-left: var(--pad); }
+
+/* pizze: invito a crearla */
+.pz-own { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; padding: 16px 16px 16px 20px; border-radius: 22px; border: 1px solid rgba(248, 237, 220, .18); background: rgba(248, 237, 220, .05); max-width: 560px; color: rgba(248, 237, 220, .8); }
+.pz-own p { flex: 1 1 240px; line-height: 1.45; }
+.pz-own b { color: var(--cream); }
+
+@media (max-width: 960px) {
+  .pr-head { grid-template-columns: 1fr; }
+  .pr { grid-template-columns: 1fr; gap: 6px; }
+  .pr-n { font-size: clamp(4.2rem, 22vw, 6.4rem); }
+  .pr-n.pr-w { font-size: clamp(3.6rem, 18vw, 5.4rem); }
+  .wall-row span { font-size: clamp(2rem, 10vw, 3.2rem); }
+  .wall-cta { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) { .wall-row { animation: none; } }

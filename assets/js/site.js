@@ -229,6 +229,7 @@
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   chapters.forEach(function (c) { revealIO.observe(c); spyIO.observe(c); });
+  if ($('wall')) revealIO.observe($('wall'));
 
   /* ================= Storia: la miccia accende gli anni ================= */
   var sparkTrail = (function () {
@@ -430,6 +431,33 @@
     if (list.length > 1 && !reduce) setInterval(function () { k = (k + 1) % list.length; paint(); }, 5000);
   }
 
+  /* ================= Il prodotto: numeri veri e muro degli ingredienti ================= */
+  function product(data) {
+    var vis = function (g) { return data.sections.filter(function (x) { return x.group === g && x.visible !== false; }); };
+    var doughs = [], extras = [];
+    vis('impasti').forEach(function (x) { doughs = doughs.concat(AA.visibleItems(x)); });
+    vis('aggiunte').forEach(function (x) { extras = extras.concat(AA.visibleItems(x)); });
+    var nd = document.querySelector('[data-n="impasti"]'), ni = document.querySelector('[data-n="ingredienti"]');
+    if (nd && doughs.length) nd.textContent = doughs.length;
+    if (ni && extras.length) ni.textContent = extras.length;
+    if (doughs.length) {
+      var names = doughs.map(function (d) { return d.name.replace(/^Impasto\s+/i, '').replace(/\s*(100%\s*)?bio$/i, '').replace(/\s*\(.*?\)/, '').trim().toLowerCase(); });
+      $('prDoughs').textContent = 'Classico, ' + names.filter(function (n) { return n !== 'classico'; }).join(', ') + ': lo scegli tu, su qualunque pizza.';
+    }
+    var rows = $('wallRows');
+    if (!rows || !extras.length) return;
+    var STAR = '<svg viewBox="0 0 24 24"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg>';
+    var list = extras.map(function (it) { return it.name; }).filter(function (n) { return n.length < 34 && !/doppi|salsa|vegano|valsoia|violife|dream|nickel/i.test(n); });
+    var per = Math.ceil(list.length / 3);
+    var html = '';
+    [['', 95], ['r o', 120], ['m', 105]].forEach(function (cfg, r) {
+      var part = list.slice(r * per, (r + 1) * per);
+      var seq = part.map(function (n) { return '<span>' + esc(n) + STAR + '</span>'; }).join('');
+      html += '<div class="wall-row ' + cfg[0] + '" style="--dur:' + cfg[1] + 's">' + seq + seq + '</div>';
+    });
+    rows.innerHTML = html;
+  }
+
   /* ================= Dati vivi ================= */
   function bind(info) {
     document.querySelectorAll('[data-bind]').forEach(function (el) {
@@ -465,7 +493,7 @@
     }
     var ann = AA.announcement(data);
     if (ann) { $('notice').hidden = false; $('notice').textContent = ann; }
-    doughs(data); pizzas(data); promos(data);
+    doughs(data); pizzas(data); promos(data); product(data);
     watchCounts();
   }).catch(function () {});
 })();
