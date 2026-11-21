@@ -170,7 +170,6 @@
     });
     el.innerHTML = ''; el.appendChild(out); el.classList.add('words'); el.removeAttribute('data-rv');
   }
-  if (!reduce) document.querySelectorAll('.ch .h2').forEach(function (h) { if (h.id !== 'viTitle') splitWords(h); });
 
   /* ================= Numeri che contano ================= */
   function countUp(el) {
@@ -309,7 +308,7 @@
     var list = $('imList'), info = $('imInfo'), photo = $('imPhoto'), cur = -1, timer, user = false;
     $('imCount').textContent = NUM[items.length] || items.length;
     var LOOK = [
-      [/carbone/i, ['#3b3532', '#121010'], '#5b524c'],
+      [/carbone/i, ['#3b3532', '#121010']],
       [/canapa/i, ['#c6b48c', '#8d7c58'], '#4e4232'],
       [/cereali/i, ['#d2ae7c', '#9c7647'], '#3d2c1c'],
       [/curcuma/i, ['#f3c95a', '#d39a23'], '#2a2016'],
@@ -589,6 +588,7 @@
       $('hours').innerHTML = info.hours.map(function (h) { return '<div><dt>' + esc(h.days) + '</dt><dd>' + esc(h.time) + '</dd></div>'; }).join('');
     }
     week(info);
+    if (info.hours && info.hours.length && $('nsHours')) $('nsHours').textContent = info.hours.map(function (h) { return h.days + ' ' + h.time; }).join(' · ');
     if (info.legal) {
       var l = [];
       if (info.legal.vat) l.push('<span>P.IVA ' + esc(info.legal.vat) + '</span>');
@@ -597,6 +597,19 @@
       $('legal').innerHTML = l.join('');
     }
   }
+
+  (function navSheet() {
+    var sh = $('navSheet'), btn = $('navMore');
+    if (!sh || !btn) return;
+    function open(v) {
+      sh.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+      document.body.classList.toggle('locked', v);
+      if (v) { var c = sh.querySelector('.ns-card'); c.setAttribute('tabindex', '-1'); c.focus({ preventScroll: true }); }
+    }
+    btn.addEventListener('click', function () { open(sh.hidden); });
+    sh.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) open(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sh.hidden) open(false); });
+  })();
 
   function week(info) {
     var box = $('week'); if (!box) return;
@@ -623,6 +636,7 @@
     if (st) {
       var s = $('status'); s.hidden = false; s.textContent = st.text; s.classList.toggle('is-open', st.open);
       var vs = $('viStatus'); vs.hidden = false; vs.textContent = st.text; vs.classList.toggle('is-open', st.open);
+      var ns = $('nsStatus'); if (ns) { ns.textContent = st.text; ns.classList.toggle('is-open', st.open); }
       var now = new Date(), d = now.getDay(), open = (info.openDays || []).indexOf(d) >= 0 && !st.closedToday;
       var late = info.openTo && (now.getHours() * 60 + now.getMinutes()) >= (function (x) { var p = x.split(':'); return p[0] * 60 + Number(p[1]); })(info.openTo);
       $('viTitle').textContent = st.open ? 'Ti teniamo un tavolo?' : (open && !late ? 'Ci vediamo stasera?' : 'Ti teniamo un tavolo?');

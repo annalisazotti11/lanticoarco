@@ -9,9 +9,11 @@
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
   function filtering() { return !!(state.q || state.tags.length || state.noAllergens.length); }
 
+  var CAN_GF = {}; // piatti che si possono fare con l'impasto senza glutine (variante della sottocategoria)
+  function hasTag(item, t) { return (item.tags || []).indexOf(t) >= 0 || (t === 'senza-glutine' && CAN_GF[item.id]); }
   function matches(item) {
     if (item.available === false) return false;
-    if (state.tags.length && !state.tags.every(function (t) { return (item.tags || []).indexOf(t) >= 0; })) return false;
+    if (state.tags.length && !state.tags.every(function (t) { return hasTag(item, t); })) return false;
     if (state.noAllergens.length && (item.allergens || []).some(function (a) { return state.noAllergens.indexOf(a) >= 0; })) return false;
     if (state.q) {
       var hay = norm(item.name + ' ' + item.desc + ' ' + item.note);
@@ -455,7 +457,8 @@
     var count = 0;
     DATA.sections.forEach(function (s) { if (s.visible) count += s.items.filter(matches).length; });
     box.hidden = false;
-    box.innerHTML = '<span>' + count + ' piatti con i filtri attivi</span><button type="button" id="clearF">Azzera filtri</button>';
+    var gfNote = state.tags.indexOf('senza-glutine') >= 0 && Object.keys(CAN_GF).length ? ' · pizze e panzerotti con impasto senza glutine, con supplemento' : '';
+    box.innerHTML = '<span>' + count + ' piatti con i filtri attivi' + gfNote + '</span><button type="button" id="clearF">Azzera filtri</button>';
     $('clearF').onclick = function () { state.tags = []; state.noAllergens = []; renderFilters(); updateFilterUI(); render(); };
   }
 
@@ -541,7 +544,13 @@
   });
   AA.loadMenu().then(function (data) {
     DATA = data;
+    data.sections.forEach(function (sec) {
+      if ((sec.supplements || []).some(function (sp) { return /senza glutine/i.test(sp.label || ''); })) sec.items.forEach(function (it) { CAN_GF[it.id] = true; });
+    });
+    var tagHash = location.hash.slice(1);
+    if (tagHash && AA.TAG_BY_CODE[tagHash]) { state.tags = [tagHash]; }
     renderHeader(); render(); renderFooter(); bind(); bindBuilder();
+    if (state.tags.length) { updateFilterUI(); return; }
     if (location.hash === '#crea') { openBuilder(null); return; }
     if (location.hash) {
       var el = null;

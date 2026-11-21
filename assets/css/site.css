@@ -23,7 +23,7 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .nav-logo { display: block; height: 62px; }
 .nav-logo img { height: 100%; width: auto; }
 .nav-links { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 34px); font-weight: 600; font-size: .95rem; }
-.nav-links a { text-decoration: none; color: var(--ink-2); transition: color .2s; }
+.nav-links a { text-decoration: none; color: var(--ink-2); transition: color .2s; white-space: nowrap; }
 .nav-links a:hover, .nav-links a[aria-current="true"] { color: var(--ink); }
 .nav-r { display: flex; align-items: center; gap: 10px; }
 .pill { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 22px; border-radius: 999px; font-weight: 600; text-decoration: none; font-size: .95rem; transition: transform .2s var(--ease-out), background .2s, color .2s; }
@@ -33,6 +33,27 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .pill-ink { background: var(--ink); color: var(--bg-2); }
 .pill-ink:hover { transform: translateY(-2px); }
 .notice { position: fixed; z-index: 49; top: 92px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg-2); font-weight: 600; padding: 10px 20px; border-radius: 999px; max-width: calc(100% - 28px); text-align: center; box-shadow: 0 14px 34px -14px rgba(26, 20, 16, .5); }
+
+a.hero-status { text-decoration: none; }
+a.hero-status::after { content: ""; width: 7px; height: 7px; margin-left: 2px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(-45deg); opacity: .7; }
+.nav-more { display: none; }
+body.locked { overflow: hidden; }
+.navsheet { position: fixed; inset: 0; z-index: 60; }
+.ns-bg { position: absolute; inset: 0; background: rgba(26, 20, 16, .45); }
+.ns-card { position: absolute; left: 10px; right: 10px; margin-left: auto; max-width: 440px; top: max(10px, env(safe-area-inset-top)); max-height: calc(100% - 20px); overflow-y: auto; background: var(--bg-2); border-radius: 28px; padding: 14px 18px 20px; box-shadow: 0 30px 60px -20px rgba(26, 20, 16, .5); animation: fadeUp .35s var(--ease-out); outline: none; }
+.ns-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ns-st { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.ns-st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c8493d; flex: none; }
+.ns-st.is-open::before { background: #3f9a52; }
+.ns-top .round { width: 46px; height: 46px; border-color: var(--line); }
+.ns-links { list-style: none; margin: 10px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.ns-links a { display: block; padding: 13px 2px; border-bottom: 1px solid var(--line); font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.03em; font-size: 1.45rem; color: var(--ink); text-decoration: none; }
+.ns-info { margin-top: 16px; color: var(--ink-2); line-height: 1.45; }
+.ns-info > p:first-child { color: var(--ink); font-weight: 600; }
+.ns-h { margin-top: 4px; font-size: .95rem; }
+.ns-cta { display: flex; gap: 10px; margin-top: 14px; }
+.ns-cta .btn { flex: 1; min-height: 50px; }
+.ns-n { margin-top: 10px; font-size: .88rem; }
 
 /* ---------- Elementi comuni ---------- */
 .ch { position: relative; padding: clamp(96px, 14vh, 160px) var(--pad); }
@@ -146,7 +167,7 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .ch-impasti { background: var(--bg) url(../img/grana.png); border-top: 1px solid var(--line); }
 .im-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 6vw, 100px); align-items: center; }
 .im-visual { position: relative; width: min(100%, 540px); aspect-ratio: 1; justify-self: center; }
-.ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: spinR 40s linear infinite; }
+.ring { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ring text { font-family: var(--ft); font-weight: 600; font-size: 10.5px; text-transform: uppercase; fill: var(--ink-2); }
 .im-photo { position: absolute; inset: 14%; border-radius: 50%; overflow: hidden; background: var(--line); box-shadow: 0 40px 70px -30px rgba(60, 40, 25, .55); }
 .im-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -199,10 +220,10 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .pz-card.swap > * { animation: fadeUp .55s var(--ease-out) both; }
 .pz-card.swap > :nth-child(2) { animation-delay: .04s; } .pz-card.swap > :nth-child(3) { animation-delay: .08s; } .pz-card.swap > :nth-child(4) { animation-delay: .12s; }
 .pz-stage { position: relative; width: min(100%, 580px); aspect-ratio: 1; justify-self: center; transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .8s var(--ease-out); }
-.pz-stage::before { content: ""; position: absolute; inset: -5%; border-radius: 50%; border: 1px dashed rgba(248, 237, 220, .16); animation: spinR 80s linear infinite reverse; }
+.pz-stage::before { content: ""; position: absolute; inset: -5%; border-radius: 50%; border: 1px dashed rgba(248, 237, 220, .16); }
 .pz-stage::after { content: ""; position: absolute; left: 10%; right: 10%; bottom: -5%; height: 14%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .55), transparent); z-index: 0; }
 .pz-plate { position: absolute; inset: 0; z-index: 1; }
-.pz-plate img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .55)); animation: spin 90s linear infinite; }
+.pz-plate img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .55)); }
 .pz-plate.photo { inset: 6% 10%; border-radius: var(--arch); overflow: hidden; box-shadow: 0 40px 70px -30px rgba(0, 0, 0, .7); }
 .pz-plate.photo img { object-fit: cover; filter: none; animation: none; }
 .pz-plate.out { animation: plateOut .45s ease-in forwards; }
@@ -213,10 +234,9 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 /* ---------- 5 · Il tavolo ---------- */
 .ch-vieni { display: flex; flex-direction: column; gap: clamp(28px, 5vh, 56px); padding-bottom: 28px; }
 .strip { overflow: hidden; margin: 0 calc(-1 * var(--pad)); }
-.strip-track { display: flex; gap: 14px; width: max-content; animation: mq 70s linear infinite; }
+.strip-track { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; padding: 0 var(--pad); }
 @keyframes mq { to { transform: translateX(-50%); } }
-.strip img { height: clamp(130px, 20vh, 210px); aspect-ratio: 4 / 3; width: auto; object-fit: cover; border-radius: 20px; }
-.strip img:nth-child(3n + 1) { border-radius: var(--arch); aspect-ratio: 3 / 3.4; }
+.strip img { width: 100%; height: clamp(120px, 17vh, 190px); object-fit: cover; border-radius: 18px; }
 .vi-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(28px, 5vw, 80px); align-items: start; }
 .vi-status { margin-top: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
 .vi-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c8493d; box-shadow: 0 0 0 4px rgba(200, 73, 61, .14); }
@@ -229,6 +249,9 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .vi-hours dd { margin: 0; font-weight: 600; }
 .vi-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 .vi-note { margin-top: 14px; color: var(--ink-2); font-size: .92rem; }
+.vi-take { margin-top: 18px; max-width: 540px; padding: 14px 18px; border-radius: 18px; background: var(--bg-2); border: 1px solid var(--line); line-height: 1.45; }
+.vi-take b { font-weight: 600; }
+.vi-take-s { margin-top: 6px; color: var(--ink-2); font-size: .9rem; }
 .vi-serv { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .vi-serv li { font-size: .9rem; font-weight: 500; padding: 7px 14px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); }
 .vi-side { display: grid; gap: 16px; }
@@ -276,6 +299,11 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 /* ---------- Telefono e tablet ---------- */
 @media (max-width: 960px) {
   .nav-links { display: none; }
+  .nav-more { display: inline-flex; padding: 0 13px; }
+  .strip-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .strip-track::-webkit-scrollbar { display: none; }
+  .strip img { flex: none; width: 62vw; height: 170px; scroll-snap-align: start; }
+
   .nav-logo { height: 50px; }
   .pill { height: 42px; padding: 0 16px; }
   .pill-line span { display: none; }
@@ -344,7 +372,7 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .pr-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px clamp(32px, 6vw, 100px); align-items: end; }
 .pr-head .lead { margin-bottom: .3em; }
 /* la pizza si prepara mentre scorri: disegno a strati che diventa la foto */
-.build { position: relative; height: 330vh; height: 330svh; margin-top: clamp(6px, 1.5vh, 18px); }
+.build { position: relative; height: 240vh; height: 240svh; margin-top: clamp(6px, 1.5vh, 18px); }
 .build-stick { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(24px, 4vw, 72px); padding-top: 72px; }
 .build-nav { list-style: none; margin: 0 0 clamp(18px, 3vh, 30px); padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .build-nav li { font-size: .84rem; font-weight: 600; color: var(--ink-2); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); transition: background .35s, color .35s, border-color .35s; }
@@ -378,6 +406,14 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 .pr-partners li { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 7px 14px; display: grid; place-items: center; height: 60px; min-width: 84px; }
 .pr-partners img { height: 44px; width: auto; max-width: 90px; object-fit: contain; }
 .ch-prod > .next { margin-top: clamp(22px, 3.4vh, 36px); }
+.gf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) auto; align-items: center; gap: 22px clamp(24px, 4vw, 60px); margin-top: clamp(26px, 5vh, 56px); padding: clamp(22px, 3vw, 34px); border-radius: 28px; background: var(--bg); border: 1px solid var(--line); scroll-margin-top: 96px; }
+.gf h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.04em; line-height: .98; font-size: clamp(1.9rem, 3vw, 2.8rem); }
+.gf-t p { margin-top: 10px; color: var(--ink-2); line-height: 1.5; max-width: 40ch; }
+.gf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.gf-list li { display: grid; gap: 2px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.gf-list b { font-weight: 600; }
+.gf-list span { color: var(--ink-2); font-size: .94rem; }
+.gf-b { white-space: nowrap; }
 
 /* pizze: invito a crearla */
 .pz-own { margin-top: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; padding: 16px 16px 16px 20px; border-radius: 22px; border: 1px solid rgba(248, 237, 220, .18); background: rgba(248, 237, 220, .05); max-width: 560px; color: rgba(248, 237, 220, .8); }
@@ -386,7 +422,7 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 
 @media (max-width: 960px) {
   .pr-head { grid-template-columns: 1fr; }
-  .build { height: 310svh; }
+  .build { height: 230svh; }
   .build-stick { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; gap: 4px; padding-top: 64px; }
   .build-art { order: -1; width: min(96vw, calc((100svh - 320px) * 600 / 560)); }
   .build-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 6px calc(-1 * var(--pad)) 12px; padding: 0 var(--pad); }
@@ -404,3 +440,29 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
   .pr-partners img { height: 36px; }
 }
 
+
+@media (max-width: 960px) {
+  .gf { grid-template-columns: 1fr; gap: 16px; }
+  .gf-b { justify-self: start; }
+}
+
+/* telefono: più corto */
+@media (max-width: 960px) {
+  .ch { padding-top: 76px; padding-bottom: 76px; }
+  .ch-vieni { padding-bottom: 24px; }
+  .hero { height: 128vh; height: 128svh; }
+  .build { height: 200svh; }
+  .tl-i { padding-bottom: 30px; }
+  .tl-y { font-size: clamp(2.5rem, 12vw, 3.4rem); }
+  .tl-ph { max-width: 260px; margin-top: 12px; }
+  .strip { display: none; }
+}
+
+/* portatili stretti: le sezioni nel menu a comparsa */
+@media (max-width: 1180px) and (min-width: 961px) {
+  .nav-links { display: none; }
+  .nav-more { display: inline-flex; padding: 0 15px; }
+}
+@media (max-width: 1360px) and (min-width: 1181px) {
+  .nav-links { gap: 20px; font-size: .9rem; }
+}
