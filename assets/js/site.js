@@ -213,21 +213,12 @@
 
   /* ================= Capitoli: comparsa e voce attiva nella barra ================= */
   var chapters = [].slice.call(document.querySelectorAll('.ch'));
-  var dots = {};
-  document.querySelectorAll('.nav-links a').forEach(function (a) { dots[a.dataset.ch] = a; });
   var nav = $('nav');
   window.addEventListener('scroll', function () { nav.classList.toggle('scrolled', window.scrollY > 20); }, { passive: true });
   var revealIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { rootMargin: '0px 0px -14% 0px' });
-  var spyIO = new IntersectionObserver(function (es) {
-    es.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      var id = e.target.id;
-      Object.keys(dots).forEach(function (k) { dots[k].setAttribute('aria-current', k === id ? 'true' : 'false'); });
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  chapters.forEach(function (c) { revealIO.observe(c); spyIO.observe(c); });
+  chapters.forEach(function (c) { revealIO.observe(c); });
 
   /* ================= Storia: la miccia accende gli anni ================= */
   var sparkTrail = (function () {
@@ -264,7 +255,9 @@
       }
       if (ps.length) requestAnimationFrame(tick); else { running = false; ctx.clearRect(0, 0, CW, CH); }
     }
-    setInterval(function () { if (lastFill !== null && document.visibilityState === 'visible' && $('storia').classList.contains('in')) emit(1, .7); }, 380);
+    var tlSeen = false;
+    new IntersectionObserver(function (es) { tlSeen = es[0].isIntersecting; }).observe(tl);
+    setInterval(function () { if (tlSeen && lastFill !== null && document.visibilityState === 'visible') emit(1, .7); }, 380);
     return {
       move: function (fill) {
         if (lastFill !== null) {
@@ -513,27 +506,29 @@
     [[-40, -150, 66, .6], [150, -60, 60, 2.2], [-110, 10, 64, 4.1], [60, 140, 62, 1.1], [-10, 60, 58, 5.3]].forEach(function (l) {
       var lf = leaf(l[0], l[1], l[2], l[3]); top += '<path d="' + lf.body + '" fill="rgba(70,90,40,.10)" class="ink"/><path d="' + lf.vein + '" class="ink thin"/>';
     });
-    html += '<g id="bG" class="guides"></g>' +
-      '<g id="bL0">' + dough + '</g><g id="bFlour">' + flour + '</g>' +
-      '<g id="bL1" opacity="0">' + sauce + '</g><g id="bL2" opacity="0">' + mozz + '</g><g id="bL3" opacity="0">' + top + '</g>';
-    svg.innerHTML = html;
-    var L = [$('bL0'), $('bL1'), $('bL2'), $('bL3')], flourEl = $('bFlour'), guides = $('bG');
+    // ogni strato è un disegno a sé: si muove intero e il browser lo anima senza ridisegnarlo (niente scatti)
+    var defs = html;
+    var draw = document.createElement('div'); draw.className = 'build-draw'; draw.setAttribute('aria-hidden', 'true');
+    svg.parentNode.replaceChild(draw, svg); svg = draw;
+    function mk(inner) {
+      var e = document.createElementNS(NS, 'svg');
+      e.setAttribute('viewBox', '0 0 600 560'); e.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      e.innerHTML = inner; draw.appendChild(e); return e;
+    }
     var REST = [0, -5, -9, -13], RAD = [R, R - 34, R - 60, R - 40];
+    var svDough = mk(dough), flourEl = mk(flour), G2 = [];
+    for (var gk = 1; gk <= 3; gk++) {
+      var gr = RAD[gk], y0 = CY - G, y1 = CY + REST[gk];
+      G2[gk] = mk('<path class="guide" d="M' + (CX - gr) + ',' + y0 + 'L' + (CX - gr) + ',' + y1 + 'M' + (CX + gr) + ',' + y0 + 'L' + (CX + gr) + ',' + y1 + '"/>');
+      G2[gk].style.opacity = 0;
+    }
+    var L = [svDough, mk(defs + sauce), mk(mozz), mk(top)];
     var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), pills = [].slice.call(document.querySelectorAll('#buildNav button'));
     var photo = $('buildPhoto'), glow = $('buildGlow'), bar = $('buildBar');
     var N = 5, state = -1;
-    // linee tratteggiate: dove scende ogni strato
-    var G2 = [];
-    for (var gk = 1; gk <= 3; gk++) {
-      var gr = RAD[gk], y0 = CY - G, y1 = CY + REST[gk];
-      var gp = document.createElementNS(NS, 'path');
-      gp.setAttribute('class', 'guide'); gp.style.opacity = 0;
-      gp.setAttribute('d', 'M' + (CX - gr) + ',' + y0 + 'L' + (CX - gr) + ',' + y1 + 'M' + (CX + gr) + ',' + y0 + 'L' + (CX + gr) + ',' + y1);
-      guides.appendChild(gp); G2[gk] = gp;
-    }
     var EASE = 'cubic-bezier(.45,0,.2,1)';
     function stop(el) { if (el.getAnimations) el.getAnimations().forEach(function (an) { an.commitStyles && an.commitStyles(); an.cancel(); }); }
-    function ty(v) { return 'translate(0px,' + v + 'px)'; }
+    function ty(v) { return 'translateY(' + (v / 5.6).toFixed(3) + '%)'; }
     // uno strato arriva sospeso, si ferma un attimo e scende al suo posto
     function drop(k, delay, fast) {
       var el = L[k], d = fast ? 620 : 1050;
@@ -553,11 +548,8 @@
     }
     function rest(k, on) { var el = L[k]; stop(el); el.animate([{ transform: ty(on ? REST[k] : -G), opacity: on ? 1 : 0 }], { duration: 1, fill: 'both' }); }
     function flourPuff() {
-      [].forEach.call(flourEl.children, function (c, i) {
-        var v = Number(c.getAttribute('data-v')) || .5;
-        c.animate([{ transform: 'translate(0,24px)', opacity: 0 }, { opacity: .5, offset: .3 }, { transform: 'translate(' + ((v - .5) * 30).toFixed(1) + 'px,-' + (40 + v * 50).toFixed(0) + 'px)', opacity: 0 }],
-          { duration: 1500 + v * 900, delay: v * 500, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'both' });
-      });
+      stop(flourEl);
+      flourEl.animate([{ transform: ty(24), opacity: 0 }, { transform: ty(0), opacity: 1, offset: .3 }, { transform: ty(-70), opacity: 0 }], { duration: 2000, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'both' });
     }
     function bake() {
       [glow, photo, svg].forEach(stop);
@@ -616,7 +608,9 @@
       if (r.top > window.innerHeight * .75 || r.bottom < 0) return;
       var p = Math.min(1, Math.max(0, -r.top / span()));
       if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
-      go(Math.min(N - 1, Math.floor(p * N)));
+      var raw = p * N, k = state < 0 ? Math.floor(raw) : state;
+      if (raw >= state + 1.06 || raw < state - .06) k = Math.floor(raw);
+      go(Math.max(0, Math.min(N - 1, k)));
     }
     window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
     window.addEventListener('resize', onScroll);
@@ -627,9 +621,9 @@
         window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
       });
     });
-    L.slice(1).forEach(function (el) { el.removeAttribute('opacity'); el.style.opacity = 0; });
+    L.slice(1).forEach(function (el) { el.style.opacity = 0; });
     L[0].style.opacity = .2; L[0].style.transform = ty(26);
-    [].forEach.call(flourEl.children, function (c) { c.style.opacity = 0; });
+    flourEl.style.opacity = 0;
     onScroll();
   }
 
@@ -657,17 +651,35 @@
     }
   }
 
-  (function navSheet() {
-    var sh = $('navSheet'), btn = $('navMore');
-    if (!sh || !btn) return;
-    function open(v) {
-      sh.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false');
-      document.body.classList.toggle('locked', v);
-      if (v) { var c = sh.querySelector('.ns-card'); c.setAttribute('tabindex', '-1'); c.focus({ preventScroll: true }); }
+  /* ================= Capitoli in alto: dove sei e quanto manca ================= */
+  (function chapters() {
+    var ids = ['storia', 'prodotto', 'senza-glutine', 'impasti', 'pizze', 'vieni'];
+    var els = ids.map(function (id) { return $(id); });
+    if (els.some(function (e) { return !e; })) return;
+    var links = {};
+    document.querySelectorAll('.nav-links a[data-ch], .chap a[data-ch]').forEach(function (a) { (links[a.dataset.ch] = links[a.dataset.ch] || []).push(a); });
+    var bar = $('chap'), inner = bar.querySelector('.chap-in'), hero = $('fuoco'), navEl = $('nav');
+    var cur = null, raf = 0;
+    function setH() { document.documentElement.style.setProperty('--navh', navEl.offsetHeight + 'px'); }
+    function upd() {
+      raf = 0;
+      var line = window.innerHeight * .38, act = null, prog = 0;
+      for (var i = 0; i < els.length; i++) {
+        var r = els[i].getBoundingClientRect(), end = i + 1 < els.length ? els[i + 1].getBoundingClientRect().top : r.bottom;
+        if (r.top <= line) { act = ids[i]; prog = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, end - r.top))); }
+      }
+      bar.classList.toggle('on', hero.getBoundingClientRect().bottom < navEl.offsetHeight + 40);
+      if (act !== cur) {
+        cur = act;
+        Object.keys(links).forEach(function (k) { links[k].forEach(function (a) { a.setAttribute('aria-current', k === act ? 'true' : 'false'); }); });
+        var on = act && bar.querySelector('a[data-ch="' + act + '"]');
+        if (on && inner.scrollWidth > inner.clientWidth) inner.scrollTo({ left: Math.max(0, on.offsetLeft - (inner.clientWidth - on.offsetWidth) / 2), behavior: 'smooth' });
+      }
+      if (act) links[act].forEach(function (a) { a.style.setProperty('--p', prog.toFixed(3)); });
     }
-    btn.addEventListener('click', function () { open(sh.hidden); });
-    sh.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) open(false); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sh.hidden) open(false); });
+    window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(upd); }, { passive: true });
+    window.addEventListener('resize', function () { setH(); upd(); });
+    setH(); upd();
   })();
 
   function week(info) {

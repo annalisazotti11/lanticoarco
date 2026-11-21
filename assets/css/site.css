@@ -36,7 +36,6 @@ body { background: var(--bg) url(../img/grana.png); color: var(--ink); font-fami
 
 a.hero-status { text-decoration: none; }
 a.hero-status::after { content: ""; width: 7px; height: 7px; margin-left: 2px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(-45deg); opacity: .7; }
-.nav-more { display: none; }
 body.locked { overflow: hidden; }
 .navsheet { position: fixed; inset: 0; z-index: 60; }
 .ns-bg { position: absolute; inset: 0; background: rgba(26, 20, 16, .45); }
@@ -299,7 +298,6 @@ body.locked { overflow: hidden; }
 /* ---------- Telefono e tablet ---------- */
 @media (max-width: 960px) {
   .nav-links { display: none; }
-  .nav-more { display: inline-flex; padding: 0 13px; }
   .strip-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .strip-track::-webkit-scrollbar { display: none; }
   .strip img { flex: none; width: 62vw; height: 170px; scroll-snap-align: start; }
@@ -383,11 +381,8 @@ body.locked { overflow: hidden; }
 .build-nav button.on { background: var(--ink); color: var(--bg-2); border-color: var(--ink); }
 .build-prog { height: 2px; max-width: 440px; margin: calc(-1 * clamp(8px, 1.6vh, 16px)) 0 clamp(18px, 3vh, 28px); background: var(--line); border-radius: 2px; overflow: hidden; }
 .build-prog i { display: block; height: 100%; background: var(--ink); transform-origin: 0 50%; transform: scaleX(0); transition: transform .25s linear; }
-.build-snap { position: absolute; left: 0; width: 1px; height: 1px; top: calc((100% - 100vh) * var(--f)); top: calc((100% - 100svh) * var(--f)); pointer-events: none; }
-@media (pointer: coarse) {
-  html { scroll-snap-type: y proximity; }
-  .build-snap { scroll-snap-align: start; }
-}
+.build-draw { position: absolute; inset: 0; }
+.build-draw svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; will-change: transform, opacity; }
 .build-steps { list-style: none; margin: 0; padding: 0; position: relative; min-height: 11.5em; }
 .build-steps li { position: absolute; left: 0; right: 0; top: 0; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .2s ease, transform .2s ease, visibility 0s .2s; }
 .build-steps li.on { opacity: 1; visibility: visible; transform: none; transition: opacity .5s var(--ease-out) .14s, transform .5s var(--ease-out) .14s, visibility 0s 0s; }
@@ -395,12 +390,11 @@ body.locked { overflow: hidden; }
 .build-steps p { margin-top: 14px; color: var(--ink-2); font-size: 1.1rem; line-height: 1.55; max-width: 34ch; }
 .build-steps a { display: inline-block; margin-top: 14px; font-weight: 600; color: var(--ink); text-underline-offset: 4px; }
 .build-art { position: relative; width: 100%; max-width: min(700px, calc((100svh - 110px) * 600 / 560)); aspect-ratio: 600 / 560; justify-self: center; }
-.build-art svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .build-art svg .ink { stroke: var(--ink); stroke-width: 1.3; stroke-linejoin: round; stroke-linecap: round; }
 .build-art svg .thin { fill: none; stroke-width: .9; opacity: .55; }
 .build-art svg .guide { fill: none; stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 5; opacity: .45; }
 .build-photo { position: absolute; left: 11.667%; top: 17.86%; width: 76.667%; height: auto; aspect-ratio: 1; opacity: 0; transform-origin: 50% 50%; will-change: transform, opacity; filter: drop-shadow(0 30px 40px rgba(60, 40, 25, .35)); }
-.build-glow { position: absolute; left: 4%; right: 4%; top: 22%; bottom: -4%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 170, 80, .55), rgba(232, 96, 30, .22) 55%, transparent 78%); filter: blur(14px); opacity: 0; pointer-events: none; }
+.build-glow { position: absolute; left: 4%; right: 4%; top: 22%; bottom: -4%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 170, 80, .55), rgba(232, 96, 30, .22) 55%, transparent 78%); filter: blur(14px); opacity: 0; pointer-events: none; will-change: opacity; }
 .build.static { height: auto; }
 .build.static .build-stick { position: static; height: auto; padding-top: 0; }
 .build.static .build-steps li { position: static; opacity: 1; visibility: visible; transform: none; margin-bottom: 18px; }
@@ -472,8 +466,30 @@ body.locked { overflow: hidden; }
 /* portatili stretti: le sezioni nel menu a comparsa */
 @media (max-width: 1180px) and (min-width: 961px) {
   .nav-links { display: none; }
-  .nav-more { display: inline-flex; padding: 0 15px; }
 }
 @media (max-width: 1360px) and (min-width: 1181px) {
   .nav-links { gap: 20px; font-size: .9rem; }
+}
+
+/* ---------- Capitoli in alto ---------- */
+.nav-links a { position: relative; }
+.nav-links a i { position: absolute; left: 0; right: 0; bottom: -9px; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; opacity: 0; transition: opacity .3s; }
+.nav-links a[aria-current="true"] i { opacity: 1; }
+.nav-links a i::after, .chap a i::after { content: ""; position: absolute; inset: 0; background: var(--ink); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.chap { display: none; position: fixed; left: 0; right: 0; top: var(--navh, 70px); z-index: 48; background: rgba(246, 238, 227, .96); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); border-bottom: 1px solid var(--line); transform: translateY(-120%); opacity: 0; pointer-events: none; transition: transform .35s var(--ease-out), opacity .25s; }
+.chap.on { transform: none; opacity: 1; pointer-events: auto; }
+.chap-in { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; padding: 2px calc(var(--pad) - 12px) 0; }
+.chap-in::-webkit-scrollbar { display: none; }
+.chap a { position: relative; flex: none; padding: 10px 12px 12px; font-weight: 600; font-size: .9rem; color: var(--ink-2); text-decoration: none; white-space: nowrap; transition: color .25s; }
+.chap a[aria-current="true"] { color: var(--ink); }
+.chap a i { position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; border-radius: 2px; background: var(--line); overflow: hidden; opacity: 0; transition: opacity .3s; }
+.chap a[aria-current="true"] i { opacity: 1; }
+@media (max-width: 1180px) {
+  .chap { display: block; }
+  .ch { scroll-margin-top: 40px; }
+  .gf { scroll-margin-top: 136px; }
+  .build-stick { padding-top: 118px; }
+}
+@media (max-width: 960px) {
+  .build-stick { padding-top: 112px; }
 }
