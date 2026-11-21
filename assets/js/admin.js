@@ -397,7 +397,7 @@
       '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Inserzione ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
       '<label class="ck"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '> Mostra le foto dei piatti</label>' +
       '<label class="ck"><input type="checkbox" data-ck="settings.totem.showQr"' + (t.showQr !== false ? ' checked' : '') + '> Mostra il QR per aprire il menu sul telefono</label>' +
-      '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="chiaro"' + (t.theme !== 'scuro' ? ' selected' : '') + '>Chiaro (come il logo)</option><option value="scuro"' + (t.theme === 'scuro' ? ' selected' : '') + '>Scuro (sala in penombra)</option></select></label>' +
+      '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="scuro"' + (t.theme !== 'chiaro' ? ' selected' : '') + '>Scuro con scintille (consigliato)</option><option value="chiaro"' + (t.theme === 'chiaro' ? ' selected' : '') + '>Chiaro</option></select></label>' +
       field('Indirizzo del menu (per i QR)', 'settings.menuUrl', { type: 'url', hint: 'Lascia vuoto per usare l\'indirizzo di questo sito + /menu/' }) +
       '<p class="muted">Per scegliere quali categorie scorrono sul totem: Menu → categoria → Modifica categoria.</p>' +
       '<div class="btns"><a class="b b-ghost" href="../totem/" target="_blank" rel="noopener">Apri il totem</a><a class="b b-ghost" href="../menu/" target="_blank" rel="noopener">Apri il menu</a><button type="button" class="b b-ghost" data-act="qr">Stampa i QR per i tavoli</button></div></section>';

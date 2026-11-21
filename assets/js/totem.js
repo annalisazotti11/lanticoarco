@@ -17,7 +17,7 @@
       promoEvery: t.promoEvery == null ? 4 : Number(t.promoEvery),
       showPhotos: t.showPhotos !== false,
       showQr: t.showQr !== false,
-      theme: params.get('tema') || t.theme || 'chiaro'
+      theme: params.get('tema') || t.theme || 'scuro'
     };
   }
 
@@ -80,8 +80,14 @@
     return items.map(function (it) { return rowHTML(it, sec, usePh); });
   }
 
+  function heroFor(sec, group) {
+    if (sec.image) return sec.image;
+    var secs = AA.sectionsOf(DATA, group.id, 'totem');
+    return secs[0] && secs[0].id === sec.id ? (group.image || '') : '';
+  }
   function headHTML(sec, group, first) {
-    var h = '<div class="pg-top"><p class="pg-group">' + esc(group.name) + '</p><p class="pg-count" data-count></p></div>';
+    var hero = first ? heroFor(sec, group) : '';
+    var h = (hero ? '<div class="pg-hero"><img alt="" src="' + esc(AA.src(hero)) + '"></div>' : '') + '<div class="pg-top"><p class="pg-group">' + esc(group.name) + '</p><p class="pg-count" data-count></p></div>';
     h += '<h2 class="pg-title' + (first ? '' : ' cont') + '">' + esc(sec.name) + '</h2>';
     if (first) {
       if (sec.subtitle) h += '<p class="pg-sub">' + esc(sec.subtitle) + '</p>';
@@ -96,7 +102,7 @@
   }
 
   function promoHTML(p) {
-    return '<div class="promo">' +
+    return '<div class="promo' + (p.image ? '' : ' no-ph') + '">' +
       (p.image ? '<img class="promo-ph" alt="" src="' + esc(AA.src(p.image)) + '">' : '<img class="promo-logo" alt="" src="' + AA.ROOT + 'assets/img/logo/logo-600.webp">') +
       (p.kicker ? '<p class="promo-k">' + esc(p.kicker) + '</p>' : '') +
       '<h2 class="promo-t">' + esc(p.title) + '</h2>' +
@@ -174,7 +180,7 @@
   function renderChrome() {
     var info = DATA.info, c = cfg();
     $('tvSub').textContent = 'Cellamare, dal ' + (info.since || 2001);
-    document.body.classList.toggle('tema-scuro', c.theme === 'scuro');
+    document.body.classList.toggle('tema-chiaro', c.theme === 'chiaro');
     var url = (DATA.settings && DATA.settings.menuUrl) || new URL('../menu/', location.href).href;
     if (c.showQr && url && window.qrcode) {
       $('tvQrCode').innerHTML = AA.qrSVG(url, { margin: 1 });
@@ -299,6 +305,29 @@
     curTimer = setTimeout(function () { document.body.classList.add('no-cursor'); }, 4000);
   });
 
+  /* Scintille leggere sul fondo (solo tema scuro) */
+  (function sparks() {
+    var c = document.getElementById('tvSparks');
+    if (!c || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ctx = c.getContext('2d'), W, H, ps = [];
+    function size() { W = c.width = c.clientWidth; H = c.height = c.clientHeight; }
+    function spawn(init) { return { x: Math.random() * W, y: init ? H * (.55 + Math.random() * .45) : H + 10, vy: .3 + Math.random() * .9, r: .6 + Math.random() * 1.6, life: 0, max: 260 + Math.random() * 300, ph: Math.random() * 6.28 }; }
+    size(); for (var i = 0; i < 46; i++) ps.push(spawn(true));
+    window.addEventListener('resize', size);
+    (function tick() {
+      if (!document.hidden && !document.body.classList.contains('tema-chiaro')) {
+        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
+        for (var i = 0; i < ps.length; i++) {
+          var p = ps[i]; p.life++; p.y -= p.vy; p.ph += .03; p.x += Math.sin(p.ph) * .3;
+          var k = 1 - p.life / p.max; if (k <= 0) { ps[i] = spawn(false); continue; }
+          ctx.fillStyle = 'hsla(28,100%,62%,' + (k * .12) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 5, 0, 6.283); ctx.fill();
+          ctx.fillStyle = 'hsla(40,100%,75%,' + (k * .8) + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+        }
+      }
+      requestAnimationFrame(tick);
+    })();
+  })();
+
   /* Ricarica ogni notte alle 4:30 per prendere eventuali aggiornamenti del sito */
   (function nightly() {
     var now = new Date(), t = new Date(now);
@@ -324,7 +353,7 @@
     DATA = d; SIG = JSON.stringify(d);
     var ready = Promise.resolve();
     if (document.fonts && document.fonts.load) {
-      ready = Promise.all(['400 20px Atkinson', '700 20px Atkinson', '800 20px Atkinson', '20px Marcellus'].map(function (f) {
+      ready = Promise.all(['500 20px Manrope', '700 20px Manrope', '800 20px Manrope', '800 20px Bricolage'].map(function (f) {
         return document.fonts.load(f).catch(function () {});
       })).then(function () { return document.fonts.ready; });
     }

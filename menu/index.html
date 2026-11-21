@@ -6,40 +6,39 @@
 <meta name="aa-root" content="../">
 <title>Menu · Pizzeria L'Antico Arco, Cellamare</title>
 <meta name="description" content="Il menu della Pizzeria L'Antico Arco di Cellamare: pizze gourmet e classiche, impasti bio alternativi, senza glutine e vegan, birre artigianali.">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#140d09">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="../assets/fonts/marcellus-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/css/base.css">
 <link rel="stylesheet" href="../assets/css/menu.css">
 </head>
 <body>
 <a class="sr-only" href="#contenuto">Vai al menu</a>
 
-<header class="mh">
-  <div class="mh-in">
-    <a class="mh-brand" href="../" aria-label="L'Antico Arco Pizzeria, vai al sito">
-      <img class="mh-logo" src="../assets/img/logo/logo-600.webp" alt="L'Antico Arco Pizzeria" width="600" height="388">
-    </a>
-    <p class="mh-status" id="status" hidden></p>
+<header class="top" id="top">
+  <a class="medal top-logo" href="../" aria-label="L'Antico Arco Pizzeria, vai al sito"><img src="../assets/img/logo/logo-600.webp" alt="" width="600" height="388"></a>
+  <div class="top-r">
+    <button class="ico" type="button" id="searchBtn" aria-label="Cerca nel menu"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    <button class="ico" type="button" id="filterBtn" aria-label="Filtri" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg><span class="ico-n" id="filterCount" hidden></span></button>
   </div>
 </header>
 
 <div class="notice" id="notice" hidden></div>
 
+<section class="intro">
+  <p class="intro-k" id="status">Pizzeria L'Antico Arco, Cellamare</p>
+  <h1 class="intro-t">Il menu</h1>
+  <div class="searchbar" id="searchbar">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    <label class="sr-only" for="q">Cerca nel menu</label>
+    <input id="q" type="search" placeholder="Cerca un piatto o un ingrediente" autocomplete="off" enterkeyhint="search">
+  </div>
+</section>
+
 <section class="promos" id="promos" aria-label="In evidenza" hidden></section>
 
-<div class="tools" id="tools">
-  <label class="search">
-    <span class="sr-only">Cerca nel menu</span>
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <input id="q" type="search" placeholder="Cerca un piatto o un ingrediente" autocomplete="off" enterkeyhint="search">
-  </label>
-  <button class="filter-btn" id="filterBtn" type="button" aria-haspopup="dialog">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
-    <span>Filtri</span><span class="filter-count" id="filterCount" hidden></span>
-  </button>
-</div>
+<section class="tiles" id="tiles" aria-label="Categorie"></section>
 
 <nav class="gnav" id="gnav" aria-label="Categorie"><div class="gnav-in" id="gnavIn"></div></nav>
 
@@ -55,9 +54,7 @@
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
   <div class="sheet-bg" data-close></div>
   <div class="sheet-card" tabindex="-1">
-    <button class="sheet-x" type="button" data-close aria-label="Chiudi">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-    </button>
+    <button class="sheet-x" type="button" data-close aria-label="Chiudi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     <div id="sheetBody"></div>
   </div>
 </div>
@@ -65,10 +62,8 @@
 <!-- Filtri -->
 <div class="sheet" id="filters" role="dialog" aria-modal="true" aria-labelledby="filtersTitle" hidden>
   <div class="sheet-bg" data-close></div>
-  <div class="sheet-card" tabindex="-1">
-    <button class="sheet-x" type="button" data-close aria-label="Chiudi">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-    </button>
+  <div class="sheet-card pad" tabindex="-1">
+    <button class="sheet-x" type="button" data-close aria-label="Chiudi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     <h2 class="sheet-title" id="filtersTitle">Filtri</h2>
     <h3 class="f-h">Mostra solo</h3>
     <div class="chips" id="fTags"></div>
@@ -76,8 +71,8 @@
     <div class="chips" id="fAllergens"></div>
     <p class="f-warn">Il filtro allergeni si basa sulle schede del menu: in caso di allergia chiedete sempre conferma al personale. Molte pizze si possono preparare senza glutine o senza lattosio.</p>
     <div class="f-actions">
-      <button type="button" class="btn-ghost" id="fReset">Azzera filtri</button>
-      <button type="button" class="btn-solid" id="fApply">Mostra risultati</button>
+      <button type="button" class="b-ghost" id="fReset">Azzera</button>
+      <button type="button" class="b-fire" id="fApply">Mostra i piatti</button>
     </div>
   </div>
 </div>

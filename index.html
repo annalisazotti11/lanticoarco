@@ -6,14 +6,15 @@
 <meta name="aa-root" content="./">
 <title>Pizzeria L'Antico Arco · Cellamare (BA) · dal 2001</title>
 <meta name="description" content="Pizzeria a Cellamare dal 2001: forno in pietra a legna d'ulivo, farine biologiche della Murgia, impasti alternativi, laboratorio senza glutine e pizze vegan. Prenotazioni al 080 4656280.">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#140d09">
 <meta property="og:title" content="Pizzeria L'Antico Arco · Cellamare">
-<meta property="og:description" content="Forno in pietra a legna d'ulivo, farine biologiche e impasti alternativi, dal 2001.">
+<meta property="og:description" content="Pizza a legna d'ulivo, farine bio e impasti alternativi, dal 2001.">
 <meta property="og:image" content="assets/img/logo/logo-originale.jpg">
 <meta property="og:type" content="restaurant">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/marcellus-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/img/galleria/crudo-rucola.webp" as="image">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/site.css">
 <script type="application/ld+json">
@@ -32,187 +33,181 @@
   "sameAs": ["https://www.facebook.com/869344019766232"]
 }
 </script>
+<script>try{if(!sessionStorage.getItem('aa-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('has-intro')}catch(e){}</script>
 </head>
 <body>
-<a class="sr-only" href="#storia">Vai ai contenuti</a>
 
-<header class="top" id="top">
-  <a class="top-brand" href="#top"><img src="assets/img/logo/logo-600.webp" alt="L'Antico Arco Pizzeria, inizio pagina" width="600" height="388"></a>
-  <nav class="top-nav" aria-label="Sezioni">
-    <a href="#storia">Storia</a>
-    <a href="#impasti">Impasti</a>
-    <a href="#galleria">Foto</a>
-    <a href="#dove">Dove siamo</a>
-    <a class="top-call" href="tel:+390804656280" data-tel="phone" aria-label="Chiama per prenotare">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span>Prenota</span></a>
-    <a class="top-menu" href="menu/">Menu</a>
-  </nav>
+<!-- Ingresso: il logo, poi si entra dall'arco -->
+<div class="intro" id="intro" aria-hidden="true">
+  <img class="intro-logo" id="introLogo" src="assets/img/logo/logo.webp" alt="" width="1249" height="808">
+</div>
+
+<div class="page" id="page">
+<header class="nav" id="nav">
+  <a class="medal nav-logo" href="#fuoco" aria-label="L'Antico Arco Pizzeria, inizio"><img src="assets/img/logo/logo-600.webp" alt="" width="600" height="388"></a>
+  <div class="nav-r">
+    <p class="chip-status" id="status" hidden></p>
+    <a class="pill pill-glass" href="tel:+390804656280" data-tel="phone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z" fill="currentColor"/></svg><span>Prenota</span></a>
+    <a class="pill pill-fire" href="menu/">Menu</a>
+  </div>
 </header>
+
+<nav class="dots" id="dots" aria-label="Capitoli">
+  <a href="#fuoco" data-ch="fuoco"><span>Il forno</span></a>
+  <a href="#storia" data-ch="storia"><span>La storia</span></a>
+  <a href="#impasti" data-ch="impasti"><span>Gli impasti</span></a>
+  <a href="#pizze" data-ch="pizze"><span>Le pizze</span></a>
+  <a href="#vieni" data-ch="vieni"><span>Vieni a trovarci</span></a>
+</nav>
 
 <div class="notice" id="notice" hidden></div>
 
-<section class="hero">
-  <div class="hero-text">
-    <img class="hero-logo" src="assets/img/logo/logo.webp" alt="L'Antico Arco Pizzeria" width="1249" height="808">
-    <h1 class="hero-title">Pizzeria a Cellamare, dal 2001</h1>
-    <p class="hero-lead" data-bind="tagline">Forno in pietra a legna d'ulivo, farine biologiche e prodotti made in Italy.</p>
-    <div class="hero-cta">
-      <a class="btn btn-marca" href="menu/">Sfoglia il menu</a>
-      <a class="btn btn-line" href="tel:+390804656280" data-tel="phone">Prenota allo <span data-bind="phone">080 4656280</span></a>
+<main>
+  <!-- 1 · Il forno -->
+  <section class="ch ch-fuoco" id="fuoco" data-tone="dark">
+    <div class="hero-bg" aria-hidden="true">
+      <img class="hero-photo" src="assets/img/galleria/crudo-rucola.webp" alt="">
+      <canvas id="sparks"></canvas>
+      <div class="hero-glow" id="glow"></div>
     </div>
-    <p class="hero-status" id="status" hidden></p>
-  </div>
-  <div class="hero-photos" aria-hidden="true">
-    <img class="hero-img is-on" src="assets/img/impasti-grano.webp" alt="">
-    <img class="hero-img" src="assets/img/galleria/crudo-rucola.webp" alt="">
-    <img class="hero-img" src="assets/img/galleria/pizza-cime.webp" alt="">
-  </div>
-</section>
-
-<section class="claim">
-  <p class="claim-text">Il nome viene dalla vecchia porta d'ingresso di Cellamare: il primo locale era proprio lì accanto. Da allora cuociamo nel forno in pietra, a legna d'ulivo, come si faceva una volta.</p>
-  <ul class="claim-facts">
-    <li><b>Forno a legna d'ulivo</b>Un forno in pietra che dà alla pizza i profumi della nostra terra</li>
-    <li><b>Farine bio a km 0</b>Da un piccolo mulino della Murgia barese, senza additivi né miglioratori</li>
-    <li><b>Tanti impasti</b>Canapa, farro, kamut, Senatore Cappelli, cereali, curcuma e altri ancora</li>
-    <li><b>Senza glutine e vegan</b>Laboratorio dedicato dal 2011 e un menu vegano completo</li>
-  </ul>
-</section>
-
-<section class="story" id="storia">
-  <div class="story-head">
-    <h2 class="h2">La nostra storia</h2>
-    <p class="story-intro">Vito e Angela, una famiglia e un forno. Da oltre vent'anni la stessa idea: ingredienti semplici, scelti uno per uno.</p>
-  </div>
-  <div class="story-grid">
-    <ol class="timeline">
-      <li><span class="tl-year">1985</span><p>A 14 anni Vito si iscrive all'Istituto Alberghiero A. Perotti di Bari. Poi la gavetta nei ristoranti e nelle sale ricevimenti di Bari e provincia, dove impara a scegliere le materie prime: dalle farine a tutto il resto.</p></li>
-      <li><span class="tl-year">2001</span><p>Il 26 ottobre, con la moglie Angela, apre L'Antico Arco: un piccolo locale accanto alla vecchia porta di Cellamare, nato come pizzeria e rosticceria d'asporto con servizio a domicilio.</p></li>
-      <li><span class="tl-year">2007</span><p>Il trasferimento nella nuova sede, con una saletta climatizzata da 32 posti. Arrivano le farine biologiche, le birre artigianali a km 0 e i presìdi Slow Food.</p></li>
-      <li><span class="tl-year">2011</span><p>Nasce il laboratorio dedicato al senza glutine: pizze classiche e speciali, prodotti e patate fritte in olio extravergine d'oliva.</p></li>
-      <li><span class="tl-year">2015</span><p>Vito entra nella N.I.P., la Nazionale Italiana Pizzaioli, come istruttore. All'Expo partecipa con altri 69 colleghi al Guinness World Record della pizza più lunga del mondo: 1595,45 metri.</p></li>
-      <li><span class="tl-year">2024</span><p>Arrivano gli spaghetti all'assassina, le pucce e le piadine autoprodotte, accanto alle pizze vegane e senza glutine.</p></li>
-      <li><span class="tl-year">Oggi</span><p>Dodici impasti diversi, un menu vegano, il pomodoro nickel free per chi è intollerante ai metalli pesanti. E la stessa voglia di stupirvi.</p></li>
-    </ol>
-    <div class="story-photos">
-      <img class="arch-frame" src="assets/img/sala.webp" alt="La sala dell'Antico Arco apparecchiata con fiori gialli" loading="lazy" width="1100" height="1467">
-      <figure>
-        <img src="assets/img/galleria/staff.webp" alt="Lo staff dell'Antico Arco in pizzeria" loading="lazy" width="960" height="720">
-        <figcaption>La squadra dell'Antico Arco</figcaption>
-      </figure>
-      <blockquote class="quote">
-        <p>«Il buon cibo è il fondamento della vera felicità.»</p>
-        <cite>Auguste Escoffier, la frase che ci accompagna</cite>
-      </blockquote>
+    <div class="hero-in">
+      <p class="hero-k" data-rv>Cellamare, dal 2001</p>
+      <h1 class="hero-t" aria-label="Pizza a legna d'ulivo">
+        <span class="ln"><span>Pizza</span></span>
+        <span class="ln"><span>a legna</span></span>
+        <span class="ln"><span>d'ulivo.</span></span>
+      </h1>
+      <p class="hero-s" data-rv style="--d:.5s">Forno in pietra, farine biologiche della Murgia e impasti che non trovi altrove. Da Vito e Angela, dal 2001.</p>
+      <div class="hero-cta" data-rv style="--d:.65s">
+        <a class="btn btn-fire" href="menu/">Sfoglia il menu</a>
+        <a class="btn btn-glass" href="tel:+390804656280" data-tel="phone">Chiama <span data-bind="phone">080 4656280</span></a>
+      </div>
     </div>
-  </div>
-</section>
+    <aside class="promo-float" id="promoFloat" hidden aria-live="polite"></aside>
+    <div class="marquee" aria-hidden="true">
+      <div class="mq-track">
+        <span>Forno a legna d'ulivo</span><i></i><span>Farine bio macinate a pietra</span><i></i><span>Senza glutine dal 2011</span><i></i><span>Pizze vegane</span><i></i><span>Pomodoro 100% italiano</span><i></i><span>Sale dello Stagnone di Trapani</span><i></i><span>Olio EVO della Murgia</span><i></i><span>Birre artigianali di Cellamare</span><i></i>
+        <span>Forno a legna d'ulivo</span><i></i><span>Farine bio macinate a pietra</span><i></i><span>Senza glutine dal 2011</span><i></i><span>Pizze vegane</span><i></i><span>Pomodoro 100% italiano</span><i></i><span>Sale dello Stagnone di Trapani</span><i></i><span>Olio EVO della Murgia</span><i></i><span>Birre artigianali di Cellamare</span><i></i>
+      </div>
+    </div>
+  </section>
 
-<section class="doughs" id="impasti">
-  <div class="doughs-media">
-    <img src="assets/img/impasti-grano.webp" alt="Panetti di impasti diversi con spighe di grano" loading="lazy" width="1800" height="1201">
-  </div>
-  <div class="doughs-body">
-    <h2 class="h2">I nostri impasti</h2>
-    <p class="lead" data-bind="products">Le farine vengono da un piccolo mulino a km 0 della Murgia barese: farine biologiche, naturali, senza additivi né miglioratori. Sale integrale dello Stagnone di Trapani, olio EVO bio della Murgia, pochissimo lievito.</p>
-    <ul class="dough-list" id="doughList"></ul>
-    <p class="small">Ogni impasto è disponibile per pizze, pizzelle, pucce e panzerotti.</p>
-  </div>
-</section>
+  <!-- 2 · La storia -->
+  <section class="ch ch-storia" id="storia" data-tone="light">
+    <div class="st-head">
+      <h2 class="h2" data-rv>Tutto è nato accanto a un arco.</h2>
+      <p class="st-lead" data-rv style="--d:.12s">Nel 2001 Vito e Angela aprono un piccolo locale vicino alla vecchia porta d'ingresso di Cellamare. Il nome viene da lì. Il fuoco, da un forno in pietra a legna d'ulivo.</p>
+    </div>
+    <div class="track-wrap" data-rv style="--d:.2s">
+      <div class="track" id="track" tabindex="0" aria-label="La nostra storia, scorri orizzontalmente">
+        <figure class="tc tc-photo"><img src="assets/img/sala.webp" alt="La sala apparecchiata con fiori gialli" loading="lazy"></figure>
+        <article class="tc tc-red"><b>1985</b><p>Vito ha 14 anni e si iscrive all'Alberghiero di Bari. Poi anni di cucine e sale ricevimenti.</p></article>
+        <article class="tc tc-gold"><b>2001</b><p>Il 26 ottobre apre L'Antico Arco, accanto alla porta antica del paese. Asporto, domicilio e tanta voglia di fare.</p></article>
+        <figure class="tc tc-photo"><img src="assets/img/galleria/staff.webp" alt="La squadra dell'Antico Arco" loading="lazy"><figcaption>La nostra squadra</figcaption></figure>
+        <article class="tc tc-green"><b>2007</b><p>La nuova sede con la saletta da 32 posti. Arrivano farine bio, birre a km 0 e presìdi Slow Food.</p></article>
+        <article class="tc tc-red"><b>2011</b><p>Nasce il laboratorio dedicato al senza glutine: pizze, prodotti e patate fritte in olio EVO.</p></article>
+        <article class="tc tc-dark"><b>2015</b><p>Vito diventa istruttore della Nazionale Italiana Pizzaioli e all'Expo firma il Guinness della pizza più lunga: 1595 metri.</p></article>
+        <figure class="tc tc-photo"><img src="assets/img/galleria/panzerotti.webp" alt="Panzerotti al forno e fritti" loading="lazy"></figure>
+        <article class="tc tc-gold"><b>Oggi</b><p>Impasti alternativi, menu vegano, pomodoro nickel free. E la stessa voglia di stupirvi.</p></article>
+      </div>
+      <div class="track-ctl">
+        <button type="button" class="round" data-dir="-1" aria-label="Indietro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="round" data-dir="1" aria-label="Avanti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+  </section>
 
-<section class="featured">
-  <div class="featured-head">
-    <h2 class="h2">Dal nostro menu</h2>
-    <a class="btn btn-marca" href="menu/">Tutto il menu</a>
-  </div>
-  <ul class="feat-grid" id="featGrid"></ul>
-  <div class="promos" id="promos" hidden></div>
-</section>
+  <!-- 3 · Gli impasti -->
+  <section class="ch ch-impasti" id="impasti" data-tone="dark">
+    <div class="im-grid">
+      <div class="im-visual" data-rv>
+        <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="circ" d="M100,100 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs>
+          <text><textPath href="#circ">farine bio ✺ macinate a pietra ✺ mulino a km 0 ✺ farine bio ✺ macinate a pietra ✺ mulino a km 0 ✺</textPath></text>
+        </svg>
+        <div class="im-photo"><img id="imPhoto" src="assets/img/impasti-grano.webp" alt=""></div>
+      </div>
+      <div class="im-body">
+        <h2 class="h2" data-rv><span id="imCount">Nove</span> impasti.<br>Tutti bio.</h2>
+        <ul class="im-list" id="imList" data-rv style="--d:.1s"></ul>
+        <div class="im-info" id="imInfo" aria-live="polite"></div>
+        <ul class="im-chips" data-rv style="--d:.2s">
+          <li>Laboratorio senza glutine dal 2011</li>
+          <li>Menu vegano</li>
+          <li>Pomodoro nickel free</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-<section class="sources">
-  <div class="sources-body">
-    <h2 class="h2">Materie prime e amici</h2>
-    <p class="lead">Pomodoro 100% italiano, pomodori secchi pugliesi, mozzarella a siero innesto, provolone e ricotta forte della Murgia. Birre classiche, artigianali e biologiche, anche vegane e senza glutine, scelte da noi.</p>
-    <p class="lead">Lavoriamo con produttori del territorio che conosciamo di persona:</p>
-    <ul class="partners">
-      <li><img src="assets/img/partner/caput-ursi.webp" alt="Caput Ursi Craft Brewery" width="200" height="125" loading="lazy"><span>Caput Ursi, il micro birrificio di Cellamare</span></li>
-      <li><img src="assets/img/partner/masseria-la-calcara.webp" alt="Masseria La Calcara" width="200" height="125" loading="lazy"><span>Masseria La Calcara</span></li>
-      <li><img src="assets/img/partner/tre-pini.webp" alt="Azienda Agricola Tre Pini" width="200" height="125" loading="lazy"><span>Azienda Agricola Tre Pini</span></li>
-    </ul>
-  </div>
-  <img class="sources-img arch-frame" src="assets/img/pomodori-secchi.webp" alt="Barattolo di pomodori secchi, origine Italia, regione Puglia" loading="lazy" width="768" height="960">
-</section>
+  <!-- 4 · Le pizze -->
+  <section class="ch ch-pizze" id="pizze" data-tone="light">
+    <p class="pz-bigname" id="pzBig" aria-hidden="true">Pizza</p>
+    <div class="pz-grid">
+      <div class="pz-text">
+        <p class="pz-k" data-rv>Le preferite di casa</p>
+        <h2 class="pz-name" id="pzName" data-rv style="--d:.08s">&nbsp;</h2>
+        <p class="pz-desc" id="pzDesc" data-rv style="--d:.14s"></p>
+        <p class="pz-price" id="pzPrice" data-rv style="--d:.2s"></p>
+        <div class="pz-ctl" data-rv style="--d:.26s">
+          <button type="button" class="round" id="pzPrev" aria-label="Pizza precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="pz-count" id="pzCount"></span>
+          <button type="button" class="round" id="pzNext" aria-label="Pizza successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <a class="btn btn-dark" href="menu/">Tutto il menu</a>
+        </div>
+      </div>
+      <div class="pz-stage" data-rv style="--d:.1s">
+        <div class="pz-plate"><img id="pzImg" alt="" src="assets/img/galleria/pizza-cime.webp"></div>
+      </div>
+    </div>
+  </section>
 
-<section class="gallery" id="galleria">
-  <h2 class="h2">Dal forno alla tavola</h2>
-  <div class="gal">
-    <img class="g-wide" src="assets/img/galleria/crudo-rucola.webp" alt="Pizza con crudo, rucola e mozzarella" loading="lazy">
-    <img src="assets/img/galleria/pizza-cipolla.webp" alt="Pizza con cipolla rossa e gamberi" loading="lazy">
-    <img src="assets/img/galleria/pizza-cime.webp" alt="Pizza con cime di rapa" loading="lazy">
-    <img src="assets/img/galleria/panzerotti.webp" alt="Panzerotti al forno e fritti" loading="lazy">
-    <img src="assets/img/galleria/pizza-patate.webp" alt="Pizza con patate e scaglie di formaggio" loading="lazy">
-    <img class="g-wide" src="assets/img/galleria/crudo-rucola-2.webp" alt="Dettaglio di pizza con prosciutto crudo e rucola" loading="lazy">
-    <img src="assets/img/galleria/ospiti.webp" alt="Due ospiti a tavola all'Antico Arco" loading="lazy">
-  </div>
-</section>
-
-<section class="reviews">
-  <div class="rating">
-    <p class="rating-num" data-bind="rating">4,6</p>
-    <p class="rating-txt">media su <span data-bind="ratingCount">72</span> recensioni su Facebook</p>
-  </div>
-  <ul class="rev">
-    <li><p>«Ottima pizza. Croccante al punto giusto e l'impasto molto leggera. Complimenti a Zotti e Schiavone. Alla prossima 😘»</p></li>
-    <li><p>«Grande passione, ottimo cibo… Sono FELICE. Cibo senza glutine veramente ottimo.»</p></li>
-    <li><p>«Antipasti con materia di primissima qualità, vasta scelta di impasti per pizze superlative e dolci buonissimi. Consigliatissimo!»</p></li>
-  </ul>
-</section>
-
-<section class="services">
-  <h2 class="h2">Al tavolo, da asporto, a casa vostra</h2>
-  <dl class="svc">
-    <div><dt>In sala</dt><dd>32 posti in una saletta climatizzata. Wi‑Fi gratuito.</dd></div>
-    <div><dt>Asporto</dt><dd>Ordinate per telefono e passate a ritirare. Il sabato, dalle 21:00 alle 22:15 circa, diamo priorità ai tavoli e agli asporti già programmati.</dd></div>
-    <div><dt>Domicilio <span class="num">€ 3,00</span></dt><dd>Consegna al vostro indirizzo, al civico.</dd></div>
-    <div><dt>Buffet e catering</dt><dd>Brioche, cornetti salati e pan brioche farciti, panzerottini, focaccine, rustici, puccette fritte e al forno, frittura mista.</dd></div>
-  </dl>
-</section>
-
-<section class="visit" id="dove">
-  <div class="visit-info">
-    <h2 class="h2">Dove siamo</h2>
-    <p class="addr" data-bind="address">Corso Roma 31, 70010 Cellamare (BA)</p>
-    <dl class="hours" id="hours">
-      <div><dt>Martedì – Domenica</dt><dd>19:00 – 23:00</dd></div>
-      <div><dt>Lunedì</dt><dd>Riposo settimanale</dd></div>
-    </dl>
-    <ul class="contacts">
-      <li><span>Prenotazioni</span><a href="tel:+390804656280" data-tel="phone" data-bind="phone">080 4656280</a></li>
-      <li><span>Cellulare</span><a href="tel:+393934141299" data-tel="mobile" data-bind="mobile">393 4141299</a></li>
-      <li><span>Email</span><a href="mailto:vito.zotti@libero.it" data-bind="email" data-mail>vito.zotti@libero.it</a></li>
-      <li><span>Facebook</span><a href="https://www.facebook.com/869344019766232" target="_blank" rel="noopener">L'Antico Arco</a></li>
-    </ul>
-    <p class="small">Le prenotazioni si accettano solo per telefono: le richieste via email o WhatsApp potrebbero non essere confermate.</p>
-    <div class="hero-cta"><a class="btn btn-marca" href="tel:+390804656280" data-tel="phone">Chiama e prenota</a><a class="btn btn-ghost" href="menu/">Guarda il menu</a></div>
-  </div>
-  <div class="map" id="map">
-    <button type="button" class="map-btn" id="mapBtn">
-      <svg class="map-pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg>
-      <span>Mostra la mappa</span>
-      <small>Si apre Google Maps, che usa i suoi cookie</small>
-    </button>
-    <a class="map-link" href="https://www.google.com/maps/place/Pizzeria+L%27Antico+Arco/@41.0211525,16.9287426,19z" target="_blank" rel="noopener">Apri in Google Maps</a>
-  </div>
-</section>
-
-<footer class="foot">
-  <div class="foot-in">
-    <p class="foot-brand">L'Antico Arco</p>
-    <p>Pizzeria L'Antico Arco, <span data-bind="address">Corso Roma 31, 70010 Cellamare (BA)</span></p>
-    <p class="small legal" id="legal"><span>P.IVA 05721510724</span><span>C.F. SCHNGL4M53L425A</span><span>REA BA - 439204</span></p>
-    <p class="small">Questo sito non usa cookie di profilazione né statistiche. <a href="gestione/">Area riservata</a></p>
-  </div>
-</footer>
+  <!-- 5 · Vieni a trovarci -->
+  <section class="ch ch-vieni" id="vieni" data-tone="dark">
+    <div class="strip" aria-hidden="true">
+      <div class="strip-track">
+        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/pomodori-secchi.webp" alt="" loading="lazy"><img src="assets/img/galleria/ospiti.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
+        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/pomodori-secchi.webp" alt="" loading="lazy"><img src="assets/img/galleria/ospiti.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
+      </div>
+    </div>
+    <div class="vi-grid">
+      <div>
+        <h2 class="h2" data-rv>Vieni a trovarci.</h2>
+        <p class="vi-addr" data-rv style="--d:.08s"><span data-bind="address">Corso Roma 31, 70010 Cellamare (BA)</span></p>
+        <dl class="vi-hours" id="hours" data-rv style="--d:.14s">
+          <div><dt>Martedì – Domenica</dt><dd>19:00 – 23:00</dd></div>
+          <div><dt>Lunedì</dt><dd>Riposo settimanale</dd></div>
+        </dl>
+        <div class="vi-cta" data-rv style="--d:.2s">
+          <a class="btn btn-fire" href="tel:+390804656280" data-tel="phone">Prenota: <span data-bind="phone">080 4656280</span></a>
+          <a class="btn btn-glass" href="https://www.google.com/maps/place/Pizzeria+L%27Antico+Arco/@41.0211525,16.9287426,19z" target="_blank" rel="noopener">Indicazioni</a>
+        </div>
+        <p class="vi-note" data-rv style="--d:.26s">Prenotazioni solo per telefono. Asporto e domicilio (€ 3,00) su ordinazione telefonica.</p>
+      </div>
+      <div class="vi-side">
+        <div class="rate" data-rv>
+          <p class="rate-n"><span data-bind="rating">4,6</span><small>/5</small></p>
+          <p class="rate-t">su <span data-bind="ratingCount">72</span> recensioni Facebook</p>
+          <blockquote>«Antipasti con materia di primissima qualità, vasta scelta di impasti per pizze superlative e dolci buonissimi. Consigliatissimo!»</blockquote>
+        </div>
+        <div class="vi-partners" data-rv style="--d:.1s">
+          <p>Lavoriamo con</p>
+          <ul>
+            <li><img src="assets/img/partner/caput-ursi.webp" alt="Caput Ursi, micro birrificio di Cellamare" loading="lazy"></li>
+            <li><img src="assets/img/partner/masseria-la-calcara.webp" alt="Masseria La Calcara" loading="lazy"></li>
+            <li><img src="assets/img/partner/tre-pini.webp" alt="Azienda Agricola Tre Pini" loading="lazy"></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <footer class="foot">
+      <p><span data-bind="name">Pizzeria L'Antico Arco</span>, <span data-bind="address">Corso Roma 31, 70010 Cellamare (BA)</span></p>
+      <p class="legal" id="legal"><span>P.IVA 05721510724</span><span>C.F. SCHNGL4M53L425A</span><span>REA BA - 439204</span></p>
+      <p><a href="https://www.facebook.com/869344019766232" target="_blank" rel="noopener">Facebook</a><a href="mailto:vito.zotti@libero.it" data-mail>Email</a><a href="gestione/">Area riservata</a></p>
+    </footer>
+  </section>
+</main>
+</div>
 
 <script src="assets/js/core.js"></script>
 <script src="assets/js/site.js"></script>

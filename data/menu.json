@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-21T14:34:09+00:00",
+ "updatedAt": "2026-11-21T14:55:22+00:00",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -80,47 +80,56 @@
   {
    "id": "impasti",
    "name": "Impasti",
-   "icon": "🌾"
+   "icon": "🌾",
+   "image": "assets/img/impasti-grano.webp"
   },
   {
    "id": "antipasti",
    "name": "Antipasti e fritti",
-   "icon": "🧀"
+   "icon": "🧀",
+   "image": "img/menu/media-95.webp"
   },
   {
    "id": "pizze",
    "name": "Pizze",
-   "icon": "🍕"
+   "icon": "🍕",
+   "image": "assets/img/galleria/crudo-rucola.webp"
   },
   {
    "id": "cicci",
    "name": "Cicci e skattate",
-   "icon": "🫓"
+   "icon": "🫓",
+   "image": "img/menu/media-98.webp"
   },
   {
    "id": "piadine",
    "name": "Piadine, pucce e insalate",
-   "icon": "🥙"
+   "icon": "🥙",
+   "image": "img/menu/media-120.webp"
   },
   {
    "id": "primi",
    "name": "Primi e secondi",
-   "icon": "🍝"
+   "icon": "🍝",
+   "image": "img/menu/media-52.webp"
   },
   {
    "id": "dessert",
    "name": "Dessert",
-   "icon": "🍰"
+   "icon": "🍰",
+   "image": "img/menu/media-20.webp"
   },
   {
    "id": "bevande",
    "name": "Bevande",
-   "icon": "🍺"
+   "icon": "🍺",
+   "image": "img/menu/media-41.webp"
   },
   {
    "id": "aggiunte",
    "name": "Aggiunte",
-   "icon": "➕"
+   "icon": "➕",
+   "image": ""
   }
  ],
  "sections": [
