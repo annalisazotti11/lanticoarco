@@ -15,7 +15,7 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="assets/css/site.css?v=0c0a337f">
+<link rel="stylesheet" href="assets/css/site.css?v=e7279408">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -76,7 +76,7 @@
       </div>
       <svg class="arch-lines" id="archLines" aria-hidden="true"><path id="archPath"/></svg>
       <div class="hero-copy" id="heroCopy">
-        <p class="hero-k"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg>Pizzeria a Cellamare</p>
+        <p class="hero-k"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.7 5.6 4.9 9.8 10.5 10.5-5.6.7-9.8 4.9-10.5 10.5C11.3 16.9 7.1 12.7 1.5 12 7.1 11.3 11.3 7.1 12 1.5z"/></svg>Forno a legna d’ulivo, a Cellamare</p>
         <h1 class="hero-t" aria-label="Il fuoco è acceso dal 2001.">
           <span class="ln"><span>Il fuoco</span></span>
           <span class="ln"><span>è acceso</span></span>
@@ -137,15 +137,20 @@
             <div class="build-frame" id="buildFrame">
               <div class="build-pic">
                 <img class="build-photo" id="buildPhoto" src="assets/img/pizza-giro.webp" alt="Una pizza appena uscita dal forno: cornicione, pomodoro, mozzarella e cime di rapa" width="1440" height="1080" loading="lazy" decoding="async">
-                <div class="build-oven" id="buildOven" aria-hidden="true"><video id="buildFire" muted loop playsinline preload="none" disablepictureinpicture></video></div>
               </div>
               <div class="build-lens" id="buildLens" aria-hidden="true"><img src="assets/img/pizza-giro.webp" alt="" width="1440" height="1080" loading="lazy" decoding="async"></div>
               <span class="build-tag" id="buildTag" aria-hidden="true"></span>
             </div>
           </div>
-          <div class="build-text">
-            <div class="build-nav" id="buildNav" role="group" aria-label="Passaggi"><button type="button">Impasto</button><button type="button">Pomodoro</button><button type="button">Latticini</button><button type="button">Ingredienti</button><button type="button">Forno</button></div>
-            <ol class="build-steps" id="buildSteps" aria-live="polite"><li data-i="0"><h3>Impasto</h3><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</p><a href="#impasti">Gli impasti</a></li><li data-i="1"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></li><li data-i="2"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></li><li data-i="3"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p><a href="menu/#crea">Crea la tua pizza</a></li><li data-i="4"><h3>Forno</h3><p>In pietra, a legna d'ulivo. Pochi minuti ed è pronta.</p><a href="menu/">Guarda il menu</a></li></ol>
+          <div class="build-text" id="buildText">
+            <h3 class="build-h">Com’è fatta la nostra pizza</h3>
+            <ol class="build-list" id="buildSteps">
+              <li><b>Impasto</b><span>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</span></li>
+              <li><b>Pomodoro</b><span>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</span></li>
+              <li><b>Latticini</b><span>Mozzarella a siero innesto, bufala aggiunta all’uscita dal forno, provolone della Murgia.</span></li>
+              <li><b>Ingredienti</b><span><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</span></li>
+            </ol>
+            <p class="build-cta"><a class="btn btn-cream" href="menu/">Guarda il menu</a><a class="build-own" href="menu/#crea">Crea la tua pizza</a></p>
           </div>
           <p class="build-hint" id="buildHint" aria-hidden="true">Scorri piano: la guardiamo da vicino</p>
           <div class="build-prog" aria-hidden="true"><i id="buildBar"></i></div>
@@ -277,6 +282,6 @@
 
 <script src="assets/vendor/lenis.min.js"></script>
 <script src="assets/js/core.js?v=e001f4eb"></script>
-<script src="assets/js/site.js?v=7fd0630d"></script>
+<script src="assets/js/site.js?v=6fd9521c"></script>
 </body>
 </html>

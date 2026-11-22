@@ -476,44 +476,40 @@
     document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
     buildScene();
   }
-  /* La pizza vista da vicino, su un palco scuro: la foto intera resta in vista e una lente ci scorre sopra,
-     da un dettaglio all'altro; al forno la pizza entra nel fuoco e ne esce cotta.
+  /* La pizza vista da vicino, su un palco scuro: la foto intera resta in vista e una lente ci scorre sopra.
+     Accanto, un elenco fisso: si accende la riga del dettaglio sotto la lente, il testo non si muove mai.
      Lo scroll dà il ritmo, ma la scena lo segue con una molla: niente scatti quando cambia il tipo di scroll. */
   function buildScene() {
-    var wrap = $('build'), stage = $('buildStage'), frame = $('buildFrame'), img = $('buildPhoto'), lens = $('buildLens'), tag = $('buildTag'), oven = $('buildOven'), fireV = $('buildFire'), hint = $('buildHint');
+    var wrap = $('build'), stage = $('buildStage'), frame = $('buildFrame'), img = $('buildPhoto'), lens = $('buildLens'), tag = $('buildTag'), hint = $('buildHint'), text = $('buildText');
     if (!wrap || !frame || !img || wrap.dataset.ready) return;
     wrap.dataset.ready = '1';
     var lensImg = lens.querySelector('img');
-    var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), pills = [].slice.call(document.querySelectorAll('#buildNav button'));
-    var names = pills.map(function (b) { return b.textContent.trim(); });
-    var bar = $('buildBar'), N = steps.length, state = -1;
+    var rows = [].slice.call(document.querySelectorAll('#buildSteps li'));
+    var names = rows.map(function (li) { return li.querySelector('b').textContent.trim(); });
+    var bar = $('buildBar'), N = rows.length, END = N + .6, state = -2;
     var PTS = [{ x: .43, y: .84 }, { x: .2, y: .5 }, { x: .41, y: .53 }, { x: .57, y: .28 }]; // Impasto, Pomodoro, Latticini, Ingredienti
     var M = 2.5, IW = 1440, IH = 1080;
     function ease(u) { u = clamp(u, 0, 1); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
     function focusAt(t) {
-      if (t >= 3) return PTS[3];
-      var i = clamp(Math.floor(t), 0, 2), k = ease((t - i - .55) / .45);
+      if (t >= N - 1) return PTS[N - 1];
+      var i = clamp(Math.floor(t), 0, N - 2), k = ease((t - i - .55) / .45);
       return { x: PTS[i].x + (PTS[i + 1].x - PTS[i].x) * k, y: PTS[i].y + (PTS[i + 1].y - PTS[i].y) * k };
     }
-    // la foto copre la cornice (come object-fit: cover), calcolata a mano per sapere dove cade ogni punto
     var W = 0, H = 0, D = 0, dW = 0, dH = 0, ox = 0, oy = 0, tagW = 0, last = -1;
     function measure() {
       W = frame.clientWidth; H = frame.clientHeight;
       var c = Math.max(W / IW, H / IH); dW = IW * c; dH = IH * c;
-      var wide = W > 600;
-      ox = (W - dW) * (wide ? .62 : .5); oy = (H - dH) * .5;
+      ox = (W - dW) * (W > 600 ? .62 : .5); oy = (H - dH) * .5;
       img.style.width = dW + 'px'; img.style.height = dH + 'px'; img.style.left = ox + 'px'; img.style.top = oy + 'px';
-      D = Math.round(clamp(Math.min(W, H) * .44, 128, 300));
+      D = Math.round(clamp(Math.min(W, H) * .44, 120, 300));
       lens.style.width = lens.style.height = D + 'px';
       lensImg.style.width = (dW * M) + 'px'; lensImg.style.height = (dH * M) + 'px';
       if (tag.textContent) tagW = tag.offsetWidth;
     }
     function render(t) {
-      var vis = ease((t - .1) / .32) * (1 - ease((t - 3.8) / .3));
+      var vis = ease((t - .1) / .32) * (1 - ease((t - (N - .1)) / .35)); // la lente si apre all'inizio e si chiude alla fine: resta la pizza intera
       var f = focusAt(t);
-      var inO = ease((t - 3.92) / .3), outO = ease((t - 4.38) / .32), ov = inO * (1 - outO);
-      var z = 1 + .08 * vis + .06 * ov;
-      // si avvicina al dettaglio senza scoprire i bordi della cornice
+      var z = 1 + .08 * vis;
       var cx0 = -(dW * (z - 1)) / 2, cy0 = -(dH * (z - 1)) / 2;
       var px = (W / 2 - (ox + cx0 + f.x * dW * z)) * .45 * vis, py = (H / 2 - (oy + cy0 + f.y * dH * z)) * .45 * vis;
       var tx = clamp(cx0 + px, W - ox - dW * z, -ox), ty = clamp(cy0 + py, H - oy - dH * z, -oy);
@@ -525,38 +521,23 @@
       var below = sy + D / 2 + 46 < H, ty2 = below ? sy + D / 2 + 12 : sy - D / 2 - 44;
       tag.style.transform = 'translate3d(' + (sx - tagW / 2).toFixed(1) + 'px,' + ty2.toFixed(1) + 'px,0)';
       tag.style.opacity = (vis * vis).toFixed(3);
-      oven.style.opacity = ov.toFixed(3);
-      fireV.style.transform = 'scale(' + (1.15 + .12 * inO - .08 * outO).toFixed(4) + ')';
-      if (ov > .01) playFire(); else stopFire();
-      frame.classList.toggle('cooked', outO > .5);
-      if (bar) bar.style.transform = 'scaleX(' + (t / N).toFixed(4) + ')';
+      if (bar) bar.style.transform = 'scaleX(' + clamp(t / END, 0, 1).toFixed(4) + ')';
       if (hint) hint.style.opacity = (1 - ease(t / .35)).toFixed(3);
     }
-    var fireOn = false, fireSet = false;
-    function prepFire() {
-      if (fireSet) return; fireSet = true;
-      var base = AA.ROOT + 'assets/video/forno-16x9';
-      fireV.poster = base + '.jpg'; fireV.preload = 'auto';
-      fireV.innerHTML = '<source src="' + base + '.webm" type="video/webm"><source src="' + base + '.mp4" type="video/mp4">'; fireV.load();
-    }
-    function playFire() { if (fireOn) return; fireOn = true; prepFire(); var pr = fireV.play(); if (pr && pr.catch) pr.catch(function () {}); }
-    function stopFire() { if (!fireOn) return; fireOn = false; fireV.pause(); }
-    function setText(i) {
-      if (i >= 3) prepFire();
-      steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
-      pills.forEach(function (b, k) { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
-      if (i < 4) { tag.textContent = names[i]; tagW = tag.offsetWidth; }
+    // i = riga accesa; N = finito: tutte le righe accese, la pizza intera
+    function setState(i) {
+      rows.forEach(function (li, k) { li.classList.toggle('on', k === i); li.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      text.classList.toggle('done', i >= N);
+      if (i < N) { tag.textContent = names[i]; tagW = tag.offsetWidth; }
     }
     measure();
-    if (reduce) { wrap.classList.add('static'); setText(N - 1); steps.forEach(function (li) { li.classList.add('on'); }); render(N); return; }
+    if (reduce) { wrap.classList.add('static'); setState(N); render(END); return; }
     var span = function () { return Math.max(1, wrap.offsetHeight - window.innerHeight); };
-    // la scena insegue lo scroll con una molla smorzata
     var target = 0, cur = 0, running = false, lt = 0;
     function apply(t) {
-      var k = state < 0 ? Math.floor(t) : state;
-      if (t >= state + 1.04 || t < state - .04) k = Math.floor(t);
-      k = clamp(k, 0, N - 1);
-      if (k !== state) { state = k; setText(k); }
+      var k = t >= N - .05 ? N : clamp(Math.floor(t), 0, N - 1);
+      if (state >= 0 && state < N && k !== state && Math.abs(t - (state + (k > state ? 1 : 0))) < .04) k = state; // isteresi: niente sfarfallii sul confine
+      if (k !== state) { state = k; setState(k); }
       if (Math.abs(t - last) > .0003) { last = t; render(t); }
     }
     function tick(now) {
@@ -570,26 +551,24 @@
     function onScroll() {
       var r = wrap.getBoundingClientRect(), vh = window.innerHeight;
       if (r.top > vh * 1.2 || r.bottom < -vh * .2) return;
-      // il palco arriva: si allarga mentre la sezione entra, così si sente che qui lo scroll cambia
       var e = ease(clamp(1 - r.top / (vh * .85), 0, 1));
       if (Math.abs(e - lastE) > .001 || (e === 1 && lastE !== 1)) {
         lastE = e;
         stage.style.transform = e >= 1 ? '' : 'translate3d(0,' + ((1 - e) * 40).toFixed(1) + 'px,0) scale(' + (.92 + .08 * e).toFixed(4) + ')';
       }
-      target = clamp(-r.top / span(), 0, 1) * N;
+      target = clamp(-r.top / span(), 0, 1) * END;
       if (!running) { running = true; lt = performance.now(); requestAnimationFrame(tick); }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', function () { measure(); last = -1; apply(cur); onScroll(); });
     if (!img.complete) img.addEventListener('load', function () { measure(); last = -1; apply(cur); });
-    // le etichette portano al dettaglio, quando la lente è ferma
-    pills.forEach(function (b, k) {
-      b.addEventListener('click', function () {
-        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .3) / N * span();
+    // toccare una riga porta la lente su quel dettaglio
+    rows.forEach(function (li, k) {
+      li.addEventListener('click', function () {
+        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .7) / END * span();
         scrollToY(Math.round(top));
       });
     });
-    setText(0); state = 0;
     onScroll(); cur = target; apply(cur);
   }
 
