@@ -77,6 +77,7 @@
   /* ================= Si entra dall'arco ================= */
   var fireC = $('fire'), sparkC = $('sparks');
   var hero = $('fuoco'), arch = $('arch'), archPath = $('archPath'), copy = $('heroCopy'), enter = $('heroEnter');
+  var beatW = [].slice.call(document.querySelectorAll('#heroBeat span')), fade = $('heroFade');
   var openT = reduce ? 1 : 0, prog = 0;
   function archShape() {
     var W = stick.clientWidth, H = stick.clientHeight, wide = W >= 960;
@@ -84,7 +85,7 @@
     var top = wide ? 96 : 74;
     var aw = W - mx * 2, ah = H - top;
     var ry = wide ? Math.min(aw * .2, ah * .34) : Math.min(aw * .5, ah * .3);
-    var o = easeOut(openT), p = easeOut(prog);
+    var o = openT >= 1 ? 1 : 1 - Math.pow(2, -10 * openT), p = easeOut(clamp(prog / .55, 0, 1));
     var w = lerp(aw * .3, aw, o), h = lerp(ah * .28, ah, o);
     var s = 1 + p * 1.25;
     w *= s; h *= s;
@@ -124,6 +125,14 @@
     fireC.style.transform = (g.wide ? '' : 'translateY(13%) ') + z; sparkC.style.transform = z;
     copy.style.transform = 'translateY(' + (-g.p * 90) + 'px)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
+    // dentro l'arco: un saluto, poi la luce della sala
+    var b1 = clamp((prog - .42) / .2, 0, 1), b2 = clamp((prog - .8) / .14, 0, 1);
+    for (var i = 0; i < beatW.length; i++) {
+      var bi = easeOut(clamp(b1 * 1.6 - i * .3, 0, 1));
+      beatW[i].style.opacity = (bi * (1 - b2)).toFixed(3);
+      beatW[i].style.transform = 'translate3d(0,' + ((1 - bi) * 60 - b2 * 30).toFixed(1) + 'px,0)';
+    }
+    fade.style.opacity = easeOut(clamp((prog - .86) / .14, 0, 1)).toFixed(3);
   }
   function queueHero() { if (!raf) raf = requestAnimationFrame(paintHero); }
   function onScrollHero() {
@@ -137,11 +146,12 @@
   else {
     var t0 = performance.now();
     (function openArch(now) {
-      openT = clamp((now - t0) / 1500, 0, 1);
+      openT = clamp((now - t0) / 1700, 0, 1);
       paintHero();
       if (openT < 1) requestAnimationFrame(openArch);
     })(t0);
-    setTimeout(function () { hero.classList.add('on'); }, 550);
+    if (fireC.animate) fireC.animate([{ filter: 'brightness(.12) saturate(.5)' }, { filter: 'brightness(.5) saturate(.8)', offset: .45 }, { filter: 'brightness(1) saturate(1)' }], { duration: 1900, delay: 150, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'backwards' });
+    setTimeout(function () { hero.classList.add('on'); }, 700);
   }
   onScrollHero();
   new IntersectionObserver(function (es) {
@@ -446,70 +456,88 @@
     document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
     buildScene();
   }
-  /* La pizza vista da vicino: una sola foto vera, l'inquadratura scorre da un dettaglio all'altro.
-     Il movimento segue lo scroll in modo continuo (solo transform su un livello composto: niente scatti). */
+  /* La pizza vista da vicino: la foto intera resta sempre in vista e una lente ci scorre sopra,
+     da un dettaglio all'altro; al forno la lente si chiude e la pizza si scalda.
+     Tutto segue lo scroll in modo continuo e muove solo transform e opacity (livelli composti). */
   function buildScene() {
-    var wrap = $('build'), frame = $('buildFrame'), img = $('buildPhoto');
+    var wrap = $('build'), frame = $('buildFrame'), img = $('buildPhoto'), lens = $('buildLens'), tag = $('buildTag'), heat = $('buildHeat');
     if (!wrap || !frame || !img || wrap.dataset.ready) return;
     wrap.dataset.ready = '1';
+    var lensImg = lens.querySelector('img');
     var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), pills = [].slice.call(document.querySelectorAll('#buildNav button'));
+    var names = pills.map(function (b) { return b.textContent.trim(); });
     var bar = $('buildBar'), N = steps.length, state = -1;
-    // punto a fuoco (frazione della foto) e ingrandimento per ogni passaggio; l'ultimo torna alla pizza intera
-    var WHOLE = { x: .5, y: .5, z: 1 };
-    var SHOT = [{ x: .44, y: .84, z: 2.3 }, { x: .2, y: .55, z: 2.4 }, { x: .4, y: .5, z: 2.1 }, { x: .66, y: .38, z: 2.2 }, WHOLE];
-    // tappe lungo lo scroll (0…N): si parte dalla pizza intera, ogni dettaglio resta fermo per un tratto
-    var STOPS = [{ t: 0, c: WHOLE }];
-    SHOT.forEach(function (c, i) { STOPS.push({ t: i + .42, c: c }, { t: i + .9, c: c }); });
-    function ease(u) { return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
-    function cam(t) {
-      if (t <= 0) return WHOLE;
-      for (var i = 1; i < STOPS.length; i++) {
-        var A = STOPS[i - 1], B = STOPS[i];
-        if (t <= B.t) {
-          var u = ease((t - A.t) / Math.max(.0001, B.t - A.t));
-          var lz = Math.log(A.c.z) + (Math.log(B.c.z) - Math.log(A.c.z)) * u;
-          return { x: A.c.x + (B.c.x - A.c.x) * u, y: A.c.y + (B.c.y - A.c.y) * u, z: Math.exp(lz) };
-        }
-      }
-      return STOPS[STOPS.length - 1].c;
+    // punti a fuoco (frazione della foto) per Impasto, Pomodoro, Latticini, Ingredienti
+    var PTS = [{ x: .43, y: .84 }, { x: .2, y: .5 }, { x: .41, y: .53 }, { x: .57, y: .28 }];
+    var M = 2.5; // ingrandimento della lente
+    function ease(u) { u = clamp(u, 0, 1); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+    // dove guarda la lente a t (0…N): ferma su ogni dettaglio per un tratto, poi scivola al successivo
+    function focusAt(t) {
+      var i = clamp(Math.floor(t), 0, 3), u = t - i;
+      if (t >= 3) return PTS[3];
+      var A = PTS[i], B = PTS[i + 1], k = ease((u - .55) / .45);
+      return { x: A.x + (B.x - A.x) * k, y: A.y + (B.y - A.y) * k };
     }
-    function place(c) {
-      var W = frame.clientWidth, H = frame.clientHeight, z = c.z;
-      var tx = Math.min(0, Math.max(W - W * z, W / 2 - c.x * W * z));
-      var ty = Math.min(0, Math.max(H - H * z, H / 2 - c.y * H * z));
+    var W = 0, H = 0, D = 0, tagW = 0, last = -1;
+    function measure() {
+      W = frame.clientWidth; H = frame.clientHeight;
+      D = Math.round(clamp(W * .38, 130, 300));
+      lens.style.width = lens.style.height = D + 'px';
+      lensImg.style.width = (W * M) + 'px'; lensImg.style.height = (H * M) + 'px';
+    }
+    function render(t) {
+      var vis = ease((t - .08) / .34) * (1 - ease((t - 3.85) / .45)); // la lente si apre all'inizio e si chiude al forno
+      var f = focusAt(t);
+      // la foto si avvicina appena verso il dettaglio: dà profondità senza perdere la pizza intera
+      var z = 1 + .09 * vis;
+      var tx = clamp(W / 2 - f.x * W * z, W - W * z, 0) * vis, ty = clamp(H / 2 - f.y * H * z, H - H * z, 0) * vis;
       img.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0) scale(' + z.toFixed(4) + ')';
+      var pad = 12, cx = clamp(tx + f.x * W * z, D / 2 + pad, W - D / 2 - pad), cy = clamp(ty + f.y * H * z, D / 2 + pad, H - D / 2 - pad);
+      lens.style.transform = 'translate3d(' + (cx - D / 2).toFixed(1) + 'px,' + (cy - D / 2).toFixed(1) + 'px,0) scale(' + (.35 + .65 * vis).toFixed(4) + ')';
+      lens.style.opacity = vis.toFixed(3);
+      lensImg.style.transform = 'translate3d(' + (D / 2 - f.x * W * M).toFixed(1) + 'px,' + (D / 2 - f.y * H * M).toFixed(1) + 'px,0)';
+      var below = cy + D / 2 + 46 < H, ty2 = below ? cy + D / 2 + 12 : cy - D / 2 - 44;
+      tag.style.transform = 'translate3d(' + (cx - tagW / 2).toFixed(1) + 'px,' + ty2.toFixed(1) + 'px,0)';
+      tag.style.opacity = (vis * vis).toFixed(3);
+      heat.style.opacity = ease((t - 3.95) / .55).toFixed(3);
     }
     function setText(i) {
       steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
       pills.forEach(function (b, k) { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
-      frame.setAttribute('data-step', i);
+      if (i < 4) { tag.textContent = names[i]; tagW = tag.offsetWidth; last = -1; }
+      frame.classList.toggle('baked', i === 4);
     }
-    if (reduce) { wrap.classList.add('static'); setText(N - 1); place(WHOLE); return; }
+    measure();
+    if (reduce) { wrap.classList.add('static'); setText(N - 1); render(N); return; }
     var span = function () { return Math.max(1, wrap.offsetHeight - window.innerHeight); };
-    var raf = 0, last = -1;
+    var raf = 0, lastE = -1, art = $('buildArt');
     function onScroll() {
       raf = 0;
       var r = wrap.getBoundingClientRect();
       if (r.top > window.innerHeight || r.bottom < 0) return;
-      var p = Math.min(1, Math.max(0, -r.top / span()));
+      var p = clamp(-r.top / span(), 0, 1);
       if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      // la foto arriva: cresce mentre la sezione entra nello schermo
+      var e = ease(clamp(1 - r.top / (window.innerHeight * .9), 0, 1));
+      if (Math.abs(e - lastE) > .001 || e === 1 && lastE !== 1) { lastE = e; art.style.transform = e >= 1 ? '' : 'translate3d(0,' + ((1 - e) * 60).toFixed(1) + 'px,0) scale(' + (.86 + .14 * e).toFixed(4) + ')'; art.style.opacity = e >= 1 ? '' : (.3 + .7 * e).toFixed(3); }
       var t = p * N;
-      if (Math.abs(t - last) > .0005) { last = t; place(cam(t)); }
       var k = state < 0 ? Math.floor(t) : state;
       if (t >= state + 1.04 || t < state - .04) k = Math.floor(t);
-      k = Math.max(0, Math.min(N - 1, k));
+      k = clamp(k, 0, N - 1);
       if (k !== state) { state = k; setText(k); }
+      if (Math.abs(t - last) > .0004) { last = t; render(t); }
     }
     window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
-    window.addEventListener('resize', function () { last = -1; onScroll(); });
-    // le etichette portano al dettaglio, quando è fermo
+    window.addEventListener('resize', function () { measure(); last = -1; onScroll(); });
+    if (img.complete) measure(); else img.addEventListener('load', function () { measure(); last = -1; onScroll(); });
+    // le etichette portano al dettaglio, quando la lente è ferma
     pills.forEach(function (b, k) {
       b.addEventListener('click', function () {
-        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .66) / N * span();
+        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .3) / N * span();
         window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
       });
     });
-    setText(0); state = 0; place(WHOLE);
+    setText(0); state = 0;
     onScroll();
   }
 
