@@ -77,7 +77,7 @@
   /* ================= Si entra dall'arco ================= */
   var fireC = $('fire'), sparkC = $('sparks');
   var hero = $('fuoco'), arch = $('arch'), archPath = $('archPath'), copy = $('heroCopy'), enter = $('heroEnter');
-  var beatW = [].slice.call(document.querySelectorAll('#heroBeat span')), fade = $('heroFade');
+  var fade = $('heroFade');
   var openT = reduce ? 1 : 0, prog = 0;
   function archShape() {
     var W = stick.clientWidth, H = stick.clientHeight, wide = W >= 960;
@@ -85,9 +85,9 @@
     var top = wide ? 96 : 74;
     var aw = W - mx * 2, ah = H - top;
     var ry = wide ? Math.min(aw * .2, ah * .34) : Math.min(aw * .5, ah * .3);
-    var o = openT >= 1 ? 1 : 1 - Math.pow(2, -10 * openT), p = easeOut(clamp(prog / .55, 0, 1));
+    var o = openT >= 1 ? 1 : 1 - Math.pow(2, -10 * openT), p = easeOut(prog);
     var w = lerp(aw * .3, aw, o), h = lerp(ah * .28, ah, o);
-    var s = 1 + p * 1.25;
+    var s = 1 + p * .7;
     w *= s; h *= s;
     var rY = ry * (w / aw);
     var left = (W - w) / 2, topY = H - h;
@@ -110,29 +110,28 @@
     }
     return out;
   }
-  var raf = 0;
+  var raf = 0, lastKey = '';
   function paintHero() {
     raf = 0;
     var g = archShape();
-    var dPath = 'M' + g.left + ',' + (g.H + 2) + 'L' + g.left + ',' + (g.top + g.ry) + 'A' + g.rx + ',' + g.ry + ' 0 0 1 ' + (g.left + g.w) + ',' + (g.top + g.ry) + 'L' + (g.left + g.w) + ',' + (g.H + 2) + 'Z';
-    arch.style.clipPath = 'path("' + dPath + '")';
-    archPath.setAttribute('d', linesFor(g));
-    archPath.style.opacity = String(clamp(easeOut(openT) * (1 - g.p * 1.6), 0, 1));
-    stick.style.setProperty('--ax', Math.max(0, g.left) + 'px');
+    // l'arco cambia solo durante l'apertura e il primo tratto di scroll: dopo non si ricalcola nulla
+    var key = Math.round(g.w) + ',' + Math.round(g.h) + ',' + g.W + ',' + g.H;
+    if (key !== lastKey) {
+      lastKey = key;
+      var dPath = 'M' + g.left + ',' + (g.H + 2) + 'L' + g.left + ',' + (g.top + g.ry) + 'A' + g.rx + ',' + g.ry + ' 0 0 1 ' + (g.left + g.w) + ',' + (g.top + g.ry) + 'L' + (g.left + g.w) + ',' + (g.H + 2) + 'Z';
+      arch.style.clipPath = 'path("' + dPath + '")';
+      var lo = clamp(easeOut(openT) * (1 - g.p * 1.6), 0, 1);
+      if (lo > 0) archPath.setAttribute('d', linesFor(g));
+      archPath.style.opacity = String(lo);
+      if (g.p < .001) { stick.style.setProperty('--ax', Math.max(0, g.left) + 'px'); stick.style.setProperty('--ctop', g.ctop + 'px'); }
+    }
     copy.style.opacity = String(clamp(1 - g.p * 2.2, 0, 1));
-    stick.style.setProperty('--ctop', g.ctop + 'px');
     var z = 'scale(' + (1 + g.p * .16).toFixed(4) + ')';
     fireC.style.transform = (g.wide ? '' : 'translateY(13%) ') + z; sparkC.style.transform = z;
-    copy.style.transform = 'translateY(' + (-g.p * 90) + 'px)';
+    copy.style.transform = 'translate3d(0,' + (-g.p * 90).toFixed(1) + 'px,0)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
-    // dentro l'arco: un saluto, poi la luce della sala
-    var b1 = clamp((prog - .42) / .2, 0, 1), b2 = clamp((prog - .8) / .14, 0, 1);
-    for (var i = 0; i < beatW.length; i++) {
-      var bi = easeOut(clamp(b1 * 1.6 - i * .3, 0, 1));
-      beatW[i].style.opacity = (bi * (1 - b2)).toFixed(3);
-      beatW[i].style.transform = 'translate3d(0,' + ((1 - bi) * 60 - b2 * 30).toFixed(1) + 'px,0)';
-    }
-    fade.style.opacity = easeOut(clamp((prog - .86) / .14, 0, 1)).toFixed(3);
+    // mentre la storia sale, il fuoco si abbassa: profondità, niente vuoti
+    fade.style.opacity = (prog * .62).toFixed(3);
   }
   function queueHero() { if (!raf) raf = requestAnimationFrame(paintHero); }
   function onScrollHero() {
@@ -460,7 +459,7 @@
      da un dettaglio all'altro; al forno la lente si chiude e la pizza si scalda.
      Tutto segue lo scroll in modo continuo e muove solo transform e opacity (livelli composti). */
   function buildScene() {
-    var wrap = $('build'), frame = $('buildFrame'), img = $('buildPhoto'), lens = $('buildLens'), tag = $('buildTag'), heat = $('buildHeat');
+    var wrap = $('build'), frame = $('buildFrame'), img = $('buildPhoto'), lens = $('buildLens'), tag = $('buildTag'), oven = $('buildOven'), fireV = $('buildFire');
     if (!wrap || !frame || !img || wrap.dataset.ready) return;
     wrap.dataset.ready = '1';
     var lensImg = lens.querySelector('img');
@@ -486,7 +485,7 @@
       lensImg.style.width = (W * M) + 'px'; lensImg.style.height = (H * M) + 'px';
     }
     function render(t) {
-      var vis = ease((t - .08) / .34) * (1 - ease((t - 3.85) / .45)); // la lente si apre all'inizio e si chiude al forno
+      var vis = ease((t - .08) / .34) * (1 - ease((t - 3.8) / .3)); // la lente si apre all'inizio e si chiude al forno
       var f = focusAt(t);
       // la foto si avvicina appena verso il dettaglio: dà profondità senza perdere la pizza intera
       var z = 1 + .09 * vis;
@@ -499,9 +498,26 @@
       var below = cy + D / 2 + 46 < H, ty2 = below ? cy + D / 2 + 12 : cy - D / 2 - 44;
       tag.style.transform = 'translate3d(' + (cx - tagW / 2).toFixed(1) + 'px,' + ty2.toFixed(1) + 'px,0)';
       tag.style.opacity = (vis * vis).toFixed(3);
-      heat.style.opacity = ease((t - 3.95) / .55).toFixed(3);
+      // il forno: la pizza entra nel fuoco (lo stesso dell'arco) e ne esce cotta
+      var inO = ease((t - 3.92) / .3), outO = ease((t - 4.38) / .32), ov = inO * (1 - outO);
+      oven.style.opacity = ov.toFixed(3);
+      fireV.style.transform = 'scale(' + (1.15 + .12 * inO - .08 * outO).toFixed(4) + ')';
+      var zz = 1 + .06 * inO * (1 - outO);
+      if (ov > 0 || inO > 0) img.style.transform = 'translate3d(0,0,0) scale(' + zz.toFixed(4) + ')';
+      if (ov > .01) playFire(); else stopFire();
+      frame.classList.toggle('cooked', outO > .5);
     }
+    var fireOn = false, fireSet = false;
+    function playFire() {
+      if (fireOn) return; fireOn = true;
+      if (!fireSet) { fireSet = true; var base = AA.ROOT + 'assets/video/forno-16x9'; fireV.poster = base + '.jpg'; fireV.innerHTML = '<source src="' + base + '.webm" type="video/webm"><source src="' + base + '.mp4" type="video/mp4">'; fireV.load(); }
+      var pr = fireV.play(); if (pr && pr.catch) pr.catch(function () {});
+    }
+    function stopFire() { if (!fireOn) return; fireOn = false; fireV.pause(); }
+    // prepara il video del forno quando la lente arriva agli ingredienti, così è pronto in tempo
+    function prepFire() { if (!fireSet) { fireSet = true; var base = AA.ROOT + 'assets/video/forno-16x9'; fireV.poster = base + '.jpg'; fireV.preload = 'auto'; fireV.innerHTML = '<source src="' + base + '.webm" type="video/webm"><source src="' + base + '.mp4" type="video/mp4">'; fireV.load(); } }
     function setText(i) {
+      if (i >= 3) prepFire();
       steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
       pills.forEach(function (b, k) { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
       if (i < 4) { tag.textContent = names[i]; tagW = tag.offsetWidth; last = -1; }
@@ -580,7 +596,7 @@
     if (els.some(function (e) { return !e; })) return;
     var links = {};
     document.querySelectorAll('.nav-links a[data-ch], .chap a[data-ch]').forEach(function (a) { (links[a.dataset.ch] = links[a.dataset.ch] || []).push(a); });
-    var bar = $('chap'), inner = bar.querySelector('.chap-in'), hero = $('fuoco'), navEl = $('nav');
+    var bar = $('chap'), inner = bar.querySelector('.chap-in'), hero = $('fuoco'), navEl = $('nav'), storyEl = $('storia');
     var cur = null, raf = 0;
     function setH() { document.documentElement.style.setProperty('--navh', navEl.offsetHeight + 'px'); }
     function upd() {
@@ -590,7 +606,7 @@
         var r = els[i].getBoundingClientRect(), end = i + 1 < els.length ? els[i + 1].getBoundingClientRect().top : r.bottom;
         if (r.top <= line) { act = ids[i]; prog = Math.max(0, Math.min(1, (line - r.top) / Math.max(1, end - r.top))); }
       }
-      bar.classList.toggle('on', hero.getBoundingClientRect().bottom < navEl.offsetHeight + 40);
+      bar.classList.toggle('on', (storyEl || hero).getBoundingClientRect().top < navEl.offsetHeight + 40);
       if (act !== cur) {
         cur = act;
         Object.keys(links).forEach(function (k) { links[k].forEach(function (a) { a.setAttribute('aria-current', k === act ? 'true' : 'false'); }); });

@@ -77,7 +77,7 @@ body.locked { overflow: hidden; }
 .in [data-rv], [data-rv].in { opacity: 1; transform: none; }
 
 /* ---------- 1 · Si entra dall'arco ---------- */
-.hero { position: relative; height: 190vh; height: 190svh; }
+.hero { position: relative; height: 160vh; height: 160svh; }
 .hero-stick { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .arch { position: absolute; inset: 0; background: var(--night); clip-path: inset(100% 50% 0 50%); will-change: clip-path; }
 .arch canvas, .arch video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transform-origin: 66% 80%; }
@@ -131,7 +131,7 @@ body.locked { overflow: hidden; }
 @keyframes spinR { to { transform: rotate(360deg); } }
 
 /* ---------- 2 · La storia: una miccia che accende gli anni ---------- */
-.ch-storia { padding-bottom: clamp(80px, 12vh, 140px); }
+.ch-storia { padding-bottom: clamp(80px, 12vh, 140px); z-index: 3; margin-top: -60vh; margin-top: -60svh; background: var(--bg) url(../img/grana.png); border-radius: clamp(28px, 4vw, 48px) clamp(28px, 4vw, 48px) 0 0; box-shadow: 0 -40px 80px -30px rgba(10, 6, 4, .55); }
 .st-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 7vw, 130px); align-items: start; }
 .st-side { position: sticky; top: 130px; }
 .st-side .lead { margin-top: 22px; }
@@ -306,7 +306,6 @@ body.locked { overflow: hidden; }
   .pill { height: 42px; padding: 0 16px; }
   .pill-line span { display: none; }
   .pill-line { padding: 0 13px; }
-  .hero { height: 175vh; height: 175svh; }
   .arch canvas, .arch video { transform-origin: 50% 82%; }
   #fire { object-position: 50% 100%; }
   .hero-copy { left: calc(var(--ax, 12px) + 22px); right: calc(var(--ax, 12px) + 22px); top: var(--ctop, 200px); bottom: auto; max-width: none; }
@@ -401,17 +400,15 @@ body.locked { overflow: hidden; }
 .build-lens img { position: absolute; left: 0; top: 0; max-width: none; transform-origin: 0 0; will-change: transform; }
 .build-lens::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, .22), transparent 38%), radial-gradient(circle, transparent 62%, rgba(10, 6, 4, .28) 100%); pointer-events: none; }
 .build-tag { position: absolute; z-index: 4; left: 0; top: 0; opacity: 0; will-change: transform, opacity; background: var(--cream); color: var(--ink); font-weight: 600; font-size: .86rem; line-height: 1; padding: 8px 13px; border-radius: 999px; white-space: nowrap; box-shadow: 0 10px 24px -10px rgba(10, 6, 4, .6); pointer-events: none; }
-.build-heat { position: absolute; inset: 0; z-index: 2; opacity: 0; pointer-events: none; will-change: opacity; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 150, 60, .35), inset 0 0 120px rgba(255, 106, 28, .55); background: linear-gradient(0deg, rgba(255, 110, 30, .28), transparent 45%); }
-.build-heat i { position: absolute; bottom: 30%; width: 34%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 252, 246, .42), rgba(255, 252, 246, .12) 55%, transparent); filter: blur(6px); opacity: 0; animation: steam 4.2s ease-out infinite; }
-.build-heat i:nth-child(1) { left: 22%; }
-.build-heat i:nth-child(2) { left: 46%; animation-delay: 1.4s; }
-.build-heat i:nth-child(3) { left: 62%; animation-delay: 2.8s; }
-@keyframes steam { 0% { opacity: 0; transform: translateY(20%) scale(.7); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-85%) scale(1.5); } }
+.build-oven { position: absolute; inset: 0; z-index: 2; opacity: 0; pointer-events: none; will-change: opacity; background: #0b0604; }
+.build-oven video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 70%; transform: scale(1.15); transform-origin: 60% 80%; will-change: transform; }
+.build-oven::after { content: ""; position: absolute; inset: 0; background: radial-gradient(90% 80% at 55% 70%, transparent 40%, rgba(11, 6, 4, .7)); }
+.build-frame.cooked .build-photo { filter: saturate(1.08) contrast(1.03); }
 .build-frame::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(16, 10, 7, .38)); }
 .build.static { height: auto; }
 .build.static .build-stick { position: static; height: auto; padding-top: 0; }
 .build.static .build-steps li h3, .build.static .build-steps li p, .build.static .build-steps li a { clip-path: none; opacity: 1; transform: none; }
-.build.static .build-lens, .build.static .build-tag { display: none; }
+.build.static .build-lens, .build.static .build-tag, .build.static .build-oven { display: none; }
 .build.static .build-steps li { position: static; opacity: 1; visibility: visible; transform: none; margin-bottom: 18px; }
 .build.static .build-steps { min-height: 0; }
 .build.static .build-nav { display: none; }
@@ -485,7 +482,6 @@ body.locked { overflow: hidden; }
 /* telefono: più corto */
 @media (max-width: 960px) {
   .ch { padding-top: 76px; padding-bottom: 76px; }
-  .hero { height: 165vh; height: 165svh; }
   .build { height: 270svh; }
   .tl-i { padding-bottom: 30px; }
   .tl-y { font-size: clamp(2.5rem, 12vw, 3.4rem); }
@@ -578,8 +574,6 @@ body.locked { overflow: hidden; }
   .build-prog { display: none; }
 }
 
-/* ---------- Dentro l'arco: il saluto e la luce che porta alla storia ---------- */
-.hero-beat { position: absolute; z-index: 3; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; padding: 0 var(--pad); color: var(--cream); font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.05em; line-height: .92; font-size: clamp(3rem, 8vw, 8.4rem); text-shadow: 0 6px 40px rgba(10, 6, 4, .6); pointer-events: none; }
-.hero-beat span { display: inline-block; opacity: 0; will-change: transform, opacity; }
-.hero-fade { position: absolute; inset: 0; z-index: 4; background: var(--bg) url(../img/grana.png); opacity: 0; pointer-events: none; will-change: opacity; }
-@media (prefers-reduced-motion: reduce) { .hero-beat { display: none; } }
+/* ---------- Si scorre: la storia sale come un foglio sopra il fuoco, che si abbassa ---------- */
+.hero-fade { position: absolute; inset: 0; z-index: 1; background: #0e0805; opacity: 0; pointer-events: none; will-change: opacity; }
+@media (prefers-reduced-motion: reduce) { .ch-storia { margin-top: 0; border-radius: 0; box-shadow: none; } }
