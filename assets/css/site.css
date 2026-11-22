@@ -542,14 +542,21 @@ body.locked { overflow: hidden; }
   .build-art { width: 60%; }
 }
 @media (max-width: 960px) {
-  .build-text { padding: 0 20px 40px; }
+  .build-text { flex: 1 1 auto; display: flex; flex-direction: column; padding: 6px 20px 22px; }
+  .build-cta { margin-top: auto !important; padding-top: 14px; }
   .build-h { display: none; }
   .build-list { max-width: none; }
-  .build-list li { padding: 8px 0 8px 20px; }
-  .build-list li::before { top: calc(8px + .45em); width: 7px; height: 7px; }
-  .build-list b { font-size: 1.02rem; }
-  .build-list span { font-size: .84rem; line-height: 1.35; margin-top: 2px; }
-  .build-cta { margin-top: 14px; gap: 10px 18px; }
+  .build-list li { padding: 11px 0 11px 20px; display: grid; grid-template-rows: auto 0fr; transition: grid-template-rows .55s var(--ease-out), opacity .5s var(--ease-out); }
+  .build-list li.on { grid-template-rows: auto 1fr; }
+  .build-list li > span { overflow: hidden; min-height: 0; opacity: 0; transition: opacity .35s; }
+  .build-list li.on > span { opacity: 1; transition: opacity .6s var(--ease-out) .12s; }
+  .build.static .build-list li { grid-template-rows: auto 1fr; }
+  .build.static .build-list li > span { opacity: 1; }
+  .build-list li::before { top: calc(11px + .45em); width: 7px; height: 7px; }
+  .build-list b { font-size: 1.12rem; }
+  .build-list span { font-size: .9rem; line-height: 1.4; margin-top: 0; }
+  .build-list li.on > span { padding-top: 4px; }
+  .build-cta { margin-top: 14px; gap: 10px 16px; flex-wrap: nowrap; }
   .build-cta .btn { min-height: 44px; padding: 0 18px; font-size: .92rem; }
 }
 /* avanzamento e invito a scorrere: si capisce che qui lo scroll guida la scena */
@@ -570,10 +577,10 @@ body.locked { overflow: hidden; }
   .build { height: 270vh; height: 270svh; }
   .build-stick { padding: 114px 0 10px; }
   .build-stage { display: flex; flex-direction: column; align-items: stretch; border-radius: 28px; margin: 0 calc(-1 * var(--pad) + 10px); }
-  .build-art { position: relative; width: auto; flex: 1 1 auto; min-height: 0; }
-  .build-pic { -webkit-mask-image: linear-gradient(180deg, #000 70%, rgba(0, 0, 0, .5) 86%, transparent 100%); mask-image: linear-gradient(180deg, #000 70%, rgba(0, 0, 0, .5) 86%, transparent 100%); }
+  .build-stick { align-items: stretch; }
+  .build-art { position: relative; flex: none; width: min(100%, calc(56svh * 4 / 3)); aspect-ratio: 4 / 3; align-self: center; }
+  .build-pic { -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%); }
   .build-frame::after { background: linear-gradient(180deg, rgba(22, 16, 12, .4), transparent 16%); }
-  .build-text { flex: none; padding: 0 22px 44px; }
   .build-prog { display: none; }
   .build-hint { left: 14px; right: auto; top: 14px; bottom: auto; font-size: .8rem; padding: 7px 12px; border-radius: 999px; background: rgba(16, 10, 7, .62); }
   .build-hint::after { display: none; }
