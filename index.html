@@ -15,7 +15,7 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="assets/css/site.css?v=86876842">
+<link rel="stylesheet" href="assets/css/site.css?v=0c0a337f">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -128,22 +128,27 @@
   <section class="ch ch-prod" id="prodotto">
     <header class="pr-head">
       <h2 class="h2" data-rv>La qualità è una ricerca continua.</h2>
-      <p class="lead" data-rv style="--d:.1s">Scendi piano e guardala da vicino: ogni parte ha la sua storia.</p>
+      <p class="lead" data-rv style="--d:.1s">Una pizza vera, appena uscita dal forno. Guardala da vicino: ogni parte ha la sua storia.</p>
     </header>
     <div class="build" id="build">
       <div class="build-stick">
-        <div class="build-text">
-          <div class="build-nav" id="buildNav" role="group" aria-label="Passaggi"><button type="button">Impasto</button><button type="button">Pomodoro</button><button type="button">Latticini</button><button type="button">Ingredienti</button><button type="button">Forno</button></div>
-          <div class="build-prog" aria-hidden="true"><i id="buildBar"></i></div>
-          <ol class="build-steps" id="buildSteps" aria-live="polite"><li data-i="0"><h3>Impasto</h3><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</p><a href="#impasti">Gli impasti</a></li><li data-i="1"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></li><li data-i="2"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></li><li data-i="3"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p><a href="menu/#crea">Crea la tua pizza</a></li><li data-i="4"><h3>Forno</h3><p>In pietra, a legna d'ulivo. Pochi minuti ed è pronta.</p><a href="menu/">Guarda il menu</a></li></ol>
-        </div>
-        <div class="build-art" id="buildArt">
-          <div class="build-frame" id="buildFrame" data-step="0">
-            <img class="build-photo" id="buildPhoto" src="assets/img/pizza-giro.webp" alt="Una pizza appena uscita dal forno: cornicione, pomodoro, mozzarella e cime di rapa" width="1440" height="1080" loading="lazy" decoding="async">
-            <div class="build-oven" id="buildOven" aria-hidden="true"><video id="buildFire" muted loop playsinline preload="none" disablepictureinpicture></video></div>
-            <div class="build-lens" id="buildLens" aria-hidden="true"><img src="assets/img/pizza-giro.webp" alt="" width="1440" height="1080" loading="lazy" decoding="async"></div>
-            <span class="build-tag" id="buildTag" aria-hidden="true"></span>
+        <div class="build-stage" id="buildStage">
+          <div class="build-art" id="buildArt">
+            <div class="build-frame" id="buildFrame">
+              <div class="build-pic">
+                <img class="build-photo" id="buildPhoto" src="assets/img/pizza-giro.webp" alt="Una pizza appena uscita dal forno: cornicione, pomodoro, mozzarella e cime di rapa" width="1440" height="1080" loading="lazy" decoding="async">
+                <div class="build-oven" id="buildOven" aria-hidden="true"><video id="buildFire" muted loop playsinline preload="none" disablepictureinpicture></video></div>
+              </div>
+              <div class="build-lens" id="buildLens" aria-hidden="true"><img src="assets/img/pizza-giro.webp" alt="" width="1440" height="1080" loading="lazy" decoding="async"></div>
+              <span class="build-tag" id="buildTag" aria-hidden="true"></span>
+            </div>
           </div>
+          <div class="build-text">
+            <div class="build-nav" id="buildNav" role="group" aria-label="Passaggi"><button type="button">Impasto</button><button type="button">Pomodoro</button><button type="button">Latticini</button><button type="button">Ingredienti</button><button type="button">Forno</button></div>
+            <ol class="build-steps" id="buildSteps" aria-live="polite"><li data-i="0"><h3>Impasto</h3><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</p><a href="#impasti">Gli impasti</a></li><li data-i="1"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></li><li data-i="2"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></li><li data-i="3"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p><a href="menu/#crea">Crea la tua pizza</a></li><li data-i="4"><h3>Forno</h3><p>In pietra, a legna d'ulivo. Pochi minuti ed è pronta.</p><a href="menu/">Guarda il menu</a></li></ol>
+          </div>
+          <p class="build-hint" id="buildHint" aria-hidden="true">Scorri piano: la guardiamo da vicino</p>
+          <div class="build-prog" aria-hidden="true"><i id="buildBar"></i></div>
         </div>
       </div>
     </div>
@@ -270,7 +275,8 @@
 </footer>
 </div>
 
+<script src="assets/vendor/lenis.min.js"></script>
 <script src="assets/js/core.js?v=e001f4eb"></script>
-<script src="assets/js/site.js?v=0e7ef73b"></script>
+<script src="assets/js/site.js?v=7fd0630d"></script>
 </body>
 </html>
