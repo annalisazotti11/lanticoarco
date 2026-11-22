@@ -15,7 +15,7 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="assets/css/site.css?v=463377e5">
+<link rel="stylesheet" href="assets/css/site.css?v=ec6ff185">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -107,10 +107,19 @@
         <li class="tl-i"><span class="tl-y">2001</span><div class="tl-b"><h3>L'arco</h3><p>Dopo l'Alberghiero di Bari e anni di cucine, il 26 ottobre Vito e Angela aprono accanto all'antica porta di Cellamare.</p></div></li>
         <li class="tl-i"><span class="tl-y">2011</span><div class="tl-b"><h3>Senza glutine, sul serio</h3><p>Nasce il laboratorio dedicato, separato dal resto della cucina.</p></div></li>
         <li class="tl-i"><span class="tl-y">2015</span><div class="tl-b"><h3>1.595 metri: la pizza più lunga del mondo</h3><p>Vito è nella squadra del Guinness all'Expo di Milano.</p></div></li>
-        <li class="tl-i"><span class="tl-y">Oggi</span><div class="tl-b"><h3>Il forno è sempre acceso</h3><p>Una sala da 32 posti, farine biologiche, birre artigianali di Cellamare.</p><figure class="tl-ph"><img src="assets/img/sala.webp" alt="La sala apparecchiata con fiori gialli" loading="lazy"></figure></div></li>
+        <li class="tl-i"><span class="tl-y">Oggi</span><div class="tl-b"><h3>Il forno è sempre acceso</h3><p>Una sala da 32 posti, farine biologiche, birre artigianali di Cellamare.</p></div></li>
       </ol>
       <a class="next" href="#prodotto" data-rv><span>E oggi, cosa mettiamo nella pizza?</span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></i></a>
       </div>
+    </div>
+  </section>
+
+  <!-- Pausa: la sala -->
+  <section class="band" id="sala" aria-label="La sala">
+    <img class="band-img" src="assets/img/sala-band.webp" srcset="assets/img/sala-band-768.webp 768w, assets/img/sala-band.webp 1536w" sizes="100vw" alt="La sala apparecchiata, con i fiori gialli sui tavoli" width="1536" height="1080" loading="lazy" decoding="async">
+    <div class="band-t">
+      <p class="band-q">Trentadue posti, accanto all'antica porta di&nbsp;Cellamare.</p>
+      <p class="band-s">La sala, in Corso Roma 31</p>
     </div>
   </section>
 
@@ -118,7 +127,7 @@
   <section class="ch ch-prod" id="prodotto">
     <header class="pr-head">
       <h2 class="h2" data-rv>La qualità è una ricerca continua.</h2>
-      <p class="lead" data-rv style="--d:.1s">Scendi piano: la prepariamo davanti a te, uno strato alla volta.</p>
+      <p class="lead" data-rv style="--d:.1s">Scendi piano e guardala da vicino: ogni parte ha la sua storia.</p>
     </header>
     <div class="build" id="build">
       <div class="build-stick">
@@ -128,9 +137,9 @@
           <ol class="build-steps" id="buildSteps" aria-live="polite"><li data-i="0"><h3>Impasto</h3><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nove impasti, niente miglioratori.</p><a href="#impasti">Gli impasti</a></li><li data-i="1"><h3>Pomodoro</h3><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></li><li data-i="2"><h3>Latticini</h3><p>Mozzarella a siero innesto, bufala aggiunta all'uscita dal forno, provolone della Murgia.</p></li><li data-i="3"><h3>Ingredienti</h3><p><span data-n="ingredienti">113</span> da aggiungere come vuoi. Il prezzo lo vedi subito.</p><a href="menu/#crea">Crea la tua pizza</a></li><li data-i="4"><h3>Forno</h3><p>In pietra, a legna d'ulivo. Pochi minuti ed è pronta.</p><a href="menu/">Guarda il menu</a></li></ol>
         </div>
         <div class="build-art" id="buildArt">
-          <div class="build-glow" id="buildGlow"></div>
-          <svg id="buildSvg" viewBox="0 0 600 560" aria-hidden="true"></svg>
-          <img class="build-photo" id="buildPhoto" src="img/scontorni/media-159.webp" alt="La pizza finita, con pomodorini, bufala e basilico" width="760" height="760" loading="lazy">
+          <div class="build-frame" id="buildFrame" data-step="0">
+            <img class="build-photo" id="buildPhoto" src="assets/img/pizza-giro.webp" alt="Una pizza appena uscita dal forno: cornicione, pomodoro, mozzarella e cime di rapa" width="1440" height="1080" loading="lazy" decoding="async">
+          </div>
         </div>
       </div>
     </div>
@@ -205,11 +214,6 @@
 
   <!-- 6 · Il tavolo -->
   <section class="ch ch-vieni" id="vieni">
-    <div class="strip" aria-hidden="true">
-      <div class="strip-track">
-        <img src="assets/img/galleria/pizza-cipolla.webp" alt="" loading="lazy"><img src="assets/img/impasti-grano.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-patate.webp" alt="" loading="lazy"><img src="assets/img/galleria/crudo-rucola-2.webp" alt="" loading="lazy"><img src="assets/img/galleria/ospiti.webp" alt="" loading="lazy"><img src="assets/img/galleria/pizza-cime.webp" alt="" loading="lazy">
-      </div>
-    </div>
     <div class="vi-grid">
       <div class="vi-main">
         <h2 class="h2" data-rv id="viTitle">Ti teniamo un tavolo?</h2>
@@ -243,16 +247,26 @@
         </div>
       </div>
     </div>
-    <footer class="foot">
-      <p><span data-bind="name">Pizzeria L'Antico Arco</span>, <span data-bind="address">Corso Roma 31, 70010 Cellamare (BA)</span></p>
-      <p class="legal" id="legal"><span>P.IVA 05721510724</span><span>C.F. SCHNGL4M53L425A</span><span>REA BA - 439204</span></p>
-      <p><a href="https://www.facebook.com/869344019766232" target="_blank" rel="noopener">Facebook</a><a href="mailto:vito.zotti@libero.it" data-mail>Email</a><a href="privacy/">Privacy e cookie</a><a class="foot-admin" href="gestione/">Area riservata</a></p>
-    </footer>
   </section>
 </main>
+<footer class="sf">
+  <div class="sf-in">
+    <p class="sf-big">Ti aspettiamo all'arco.</p>
+    <div class="sf-cols">
+      <div><h3>Dove</h3><p><span data-bind="address">Corso Roma 31, 70010 Cellamare (BA)</span></p><a href="https://www.google.com/maps/place/Pizzeria+L%27Antico+Arco/@41.0211525,16.9287426,19z" target="_blank" rel="noopener">Indicazioni</a></div>
+      <div><h3>Contatti</h3><a href="tel:+390804656280" data-tel="phone"><span data-bind="phone">080 4656280</span></a><a href="mailto:vito.zotti@libero.it" data-mail>Scrivici una email</a><a href="https://www.facebook.com/869344019766232" target="_blank" rel="noopener">Facebook</a></div>
+      <div><h3>Il locale</h3><a href="menu/">Il menu</a><a href="menu/#senza-glutine">Menu senza glutine</a><a href="privacy/">Privacy e cookie</a></div>
+    </div>
+    <div class="sf-legal">
+      <p><span data-bind="name">Pizzeria L'Antico Arco</span></p>
+      <p class="legal" id="legal"><span>P.IVA 05721510724</span><span>C.F. SCHNGL4M53L425A</span><span>REA BA - 439204</span></p>
+      <a class="foot-admin" href="gestione/">Area riservata</a>
+    </div>
+  </div>
+</footer>
 </div>
 
 <script src="assets/js/core.js?v=e001f4eb"></script>
-<script src="assets/js/site.js?v=012a0419"></script>
+<script src="assets/js/site.js?v=99153d16"></script>
 </body>
 </html>

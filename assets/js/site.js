@@ -446,211 +446,80 @@
     document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
     buildScene();
   }
-  /* La pizza si prepara mentre scorri: strati disegnati a linee che scendono uno sull'altro,
-     poi il forno e la foto vera. Proiezione ortogonale: un disco di raggio r diventa un'ellisse r × r·K. */
+  /* La pizza vista da vicino: una sola foto vera, l'inquadratura scorre da un dettaglio all'altro.
+     Il movimento segue lo scroll in modo continuo (solo transform su un livello composto: niente scatti). */
   function buildScene() {
-    var wrap = $('build'), svg = $('buildSvg');
-    if (!wrap || !svg || wrap.dataset.ready) return;
+    var wrap = $('build'), frame = $('buildFrame'), img = $('buildPhoto');
+    if (!wrap || !frame || !img || wrap.dataset.ready) return;
     wrap.dataset.ready = '1';
-    var CX = 300, CY = 330, R = 230, K = 0.4, G = 150, NS = 'http://www.w3.org/2000/svg';
-    var seed = 11;
-    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
-    function proj(x, y) { return [CX + x, CY + y * K]; }
-    function smooth(pts) {
-      var n = pts.length, d = '', m = function (a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; };
-      for (var i = 0; i < n; i++) {
-        var p1 = pts[(i + 1) % n], mid = m(pts[i], p1), mid2 = m(p1, pts[(i + 2) % n]);
-        if (!i) d = 'M' + mid[0].toFixed(1) + ',' + mid[1].toFixed(1);
-        d += 'Q' + p1[0].toFixed(1) + ',' + p1[1].toFixed(1) + ' ' + mid2[0].toFixed(1) + ',' + mid2[1].toFixed(1);
-      }
-      return d + 'Z';
-    }
-    function blob(x, y, r, wob, n, rot) {
-      var pts = [];
-      for (var i = 0; i < n; i++) {
-        var a = i / n * Math.PI * 2 + (rot || 0), rr = r + (rnd() - .5) * wob;
-        pts.push(proj(x + rr * Math.cos(a), y + rr * Math.sin(a)));
-      }
-      return smooth(pts);
-    }
-    function ell(r, y0) { return 'M' + (CX - r) + ',' + (CY + (y0 || 0)) + 'A' + r + ',' + (r * K) + ' 0 1 0 ' + (CX + r) + ',' + (CY + (y0 || 0)) + 'A' + r + ',' + (r * K) + ' 0 1 0 ' + (CX - r) + ',' + (CY + (y0 || 0)) + 'Z'; }
-    function leaf(x, y, len, ang) {
-      var pts = [], w = len * .42;
-      for (var i = 0; i <= 10; i++) { var t = i / 10, u = t * len - len / 2, v = Math.sin(t * Math.PI) * w * (1 - t * .25); pts.push([u, v]); }
-      for (var j = 9; j > 0; j--) { var t2 = j / 10, u2 = t2 * len - len / 2, v2 = -Math.sin(t2 * Math.PI) * w * (1 - t2 * .25); pts.push([u2, v2]); }
-      var c = Math.cos(ang), sn = Math.sin(ang);
-      var P = pts.map(function (q) { return proj(x + q[0] * c - q[1] * sn, y + q[0] * sn + q[1] * c); });
-      var a0 = proj(x - len / 2 * c, y - len / 2 * sn), a1 = proj(x + len / 2 * .8 * c, y + len / 2 * .8 * sn);
-      return { body: 'M' + P.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join('L') + 'Z', vein: 'M' + a0[0].toFixed(1) + ',' + a0[1].toFixed(1) + 'L' + a1[0].toFixed(1) + ',' + a1[1].toFixed(1) };
-    }
-    var T = 16; // spessore del disco
-    var html = '<defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="7" stroke="#1a1410" stroke-width="1" opacity=".38"/></pattern></defs>';
-    // 0 · impasto: disco con spessore, cornicione, un po' di farina
-    var dough = '<path d="M' + (CX - R) + ',' + CY + 'L' + (CX - R) + ',' + (CY + T) + 'A' + R + ',' + (R * K) + ' 0 0 0 ' + (CX + R) + ',' + (CY + T) + 'L' + (CX + R) + ',' + CY + 'Z" fill="#e8d4ad" class="ink"/>' +
-      '<path d="' + ell(R) + '" fill="#f6ebd4" class="ink"/><path d="' + ell(R - 26) + '" class="ink thin"/>';
-    for (var f = 0; f < 70; f++) { var fa = rnd() * 6.283, fr = Math.sqrt(rnd()) * (R - 34), fp = proj(fr * Math.cos(fa), fr * Math.sin(fa)); dough += '<circle cx="' + fp[0].toFixed(1) + '" cy="' + fp[1].toFixed(1) + '" r="' + (.6 + rnd() * .9).toFixed(2) + '" fill="#1a1410" opacity=".28"/>'; }
-    var flour = '';
-    for (var q = 0; q < 46; q++) { var qa = rnd() * 6.283, qr = R * (.5 + rnd() * .75); var qp = proj(qr * Math.cos(qa), qr * Math.sin(qa)); flour += '<circle data-v="' + (rnd() * 1).toFixed(2) + '" cx="' + qp[0].toFixed(1) + '" cy="' + (qp[1] - 10 - rnd() * 80).toFixed(1) + '" r="' + (.8 + rnd() * 1.6).toFixed(2) + '" fill="#1a1410" opacity=".35"/>'; }
-    // 1 · pomodoro: steso fino al cornicione, bordo irregolare
-    seed = 23; var sauceD = blob(0, 0, R - 34, 12, 30);
-    var sauce = '<path d="' + sauceD + '" fill="rgba(150,40,25,.07)" class="ink"/><path d="' + sauceD + '" fill="url(#hatch)" stroke="none"/>';
-    // 2 · latticini: pezzi di mozzarella
-    var mozz = '', MZ = [[-110, -60, 34], [-30, -120, 30], [70, -90, 36], [140, -10, 30], [60, 40, 38], [-60, 50, 34], [-140, 20, 28], [10, 120, 30], [110, 110, 26], [-100, 120, 24], [0, -30, 26]];
-    MZ.forEach(function (m) { mozz += '<path d="' + blob(m[0], m[1], m[2], m[2] * .35, 12, rnd()) + '" fill="#fffdf8" class="ink"/>'; });
-    // 3 · ingredienti: pomodorini a metà e basilico
-    var top = '', TM = [[-150, -30], [-80, -140], [20, -70], [120, -120], [165, 50], [80, 70], [-20, 150], [-120, 90], [40, 10]];
-    TM.forEach(function (m) {
-      var r = 22 + rnd() * 8;
-      top += '<path d="' + blob(m[0], m[1], r, 3, 14) + '" fill="rgba(150,40,25,.12)" class="ink"/><path d="' + blob(m[0], m[1], r * .55, 2, 10) + '" class="ink thin"/>';
-    });
-    [[-40, -150, 66, .6], [150, -60, 60, 2.2], [-110, 10, 64, 4.1], [60, 140, 62, 1.1], [-10, 60, 58, 5.3]].forEach(function (l) {
-      var lf = leaf(l[0], l[1], l[2], l[3]); top += '<path d="' + lf.body + '" fill="rgba(70,90,40,.10)" class="ink"/><path d="' + lf.vein + '" class="ink thin"/>';
-    });
-    // ogni strato è un disegno a sé: si muove intero e il browser lo anima senza ridisegnarlo (niente scatti)
-    var defs = html;
-    var draw = document.createElement('div'); draw.className = 'build-draw'; draw.setAttribute('aria-hidden', 'true');
-    svg.parentNode.replaceChild(draw, svg); svg = draw;
-    // su telefono si inquadra più stretto: disegno più grande, meno vuoto sopra e sotto
-    var mqM = window.matchMedia('(max-width: 960px)');
-    function vbFor() { return mqM.matches ? { x: 40, y: 40, w: 520, h: 450 } : { x: 0, y: 0, w: 600, h: 560 }; }
-    var VB = vbFor(), SHIFT = 0, svgs = [];
-    function vbStr() { return VB.x + ' ' + VB.y + ' ' + VB.w + ' ' + VB.h; }
-    function mk(inner) {
-      var e = document.createElementNS(NS, 'svg');
-      e.setAttribute('viewBox', vbStr()); e.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-      e.innerHTML = inner; draw.appendChild(e); svgs.push(e); return e;
-    }
-    var REST = [0, -5, -9, -13], RAD = [R, R - 34, R - 60, R - 40];
-    var svDough = mk(dough), flourEl = mk(flour), G2 = [];
-    for (var gk = 1; gk <= 3; gk++) {
-      var gr = RAD[gk], y0 = CY - G, y1 = CY + REST[gk];
-      G2[gk] = mk('<path class="guide" d="M' + (CX - gr) + ',' + y0 + 'L' + (CX - gr) + ',' + y1 + 'M' + (CX + gr) + ',' + y0 + 'L' + (CX + gr) + ',' + y1 + '"/>');
-      G2[gk].style.opacity = 0;
-    }
-    var L = [svDough, mk(defs + sauce), mk(mozz), mk(top)];
     var steps = [].slice.call(document.querySelectorAll('#buildSteps li')), pills = [].slice.call(document.querySelectorAll('#buildNav button'));
-    var photo = $('buildPhoto'), glow = $('buildGlow'), bar = $('buildBar');
-    var N = 5, state = -1;
-    var EASE = 'cubic-bezier(.45,0,.2,1)';
-    function stop(el) { if (el.getAnimations) el.getAnimations().forEach(function (an) { an.commitStyles && an.commitStyles(); an.cancel(); }); }
-    function ty(v) { return 'translateY(' + (v / (VB.h / 100)).toFixed(3) + '%)'; }
-    function geo() {
-      var art = $('buildArt');
-      art.style.aspectRatio = VB.w + ' / ' + VB.h; art.style.setProperty('--arn', (VB.w / VB.h).toFixed(4));
-      photo.style.left = ((CX - R - VB.x) / VB.w * 100).toFixed(3) + '%';
-      photo.style.width = (2 * R / VB.w * 100).toFixed(3) + '%';
-      photo.style.top = ((CY - R - VB.y) / VB.h * 100).toFixed(3) + '%';
-      SHIFT = (VB.y + VB.h / 2 - CY) / (2 * R) * 100;
+    var bar = $('buildBar'), N = steps.length, state = -1;
+    // punto a fuoco (frazione della foto) e ingrandimento per ogni passaggio; l'ultimo torna alla pizza intera
+    var WHOLE = { x: .5, y: .5, z: 1 };
+    var SHOT = [{ x: .44, y: .84, z: 2.3 }, { x: .2, y: .55, z: 2.4 }, { x: .4, y: .5, z: 2.1 }, { x: .66, y: .38, z: 2.2 }, WHOLE];
+    // tappe lungo lo scroll (0…N): si parte dalla pizza intera, ogni dettaglio resta fermo per un tratto
+    var STOPS = [{ t: 0, c: WHOLE }];
+    SHOT.forEach(function (c, i) { STOPS.push({ t: i + .42, c: c }, { t: i + .9, c: c }); });
+    function ease(u) { return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+    function cam(t) {
+      if (t <= 0) return WHOLE;
+      for (var i = 1; i < STOPS.length; i++) {
+        var A = STOPS[i - 1], B = STOPS[i];
+        if (t <= B.t) {
+          var u = ease((t - A.t) / Math.max(.0001, B.t - A.t));
+          var lz = Math.log(A.c.z) + (Math.log(B.c.z) - Math.log(A.c.z)) * u;
+          return { x: A.c.x + (B.c.x - A.c.x) * u, y: A.c.y + (B.c.y - A.c.y) * u, z: Math.exp(lz) };
+        }
+      }
+      return STOPS[STOPS.length - 1].c;
     }
-    // uno strato arriva sospeso, si ferma un attimo e scende al suo posto
-    function drop(k, delay, fast) {
-      var el = L[k], d = fast ? 620 : 1050;
-      stop(el); stop(G2[k]);
-      el.animate([
-        { transform: ty(-G - 46), opacity: 0 },
-        { transform: ty(-G), opacity: 1, offset: .32 },
-        { transform: ty(-G), opacity: 1, offset: .42 },
-        { transform: ty(REST[k] + 3), opacity: 1, offset: .9 },
-        { transform: ty(REST[k]), opacity: 1 }
-      ], { duration: d, delay: delay, easing: EASE, fill: 'both' });
-      G2[k].animate([{ opacity: 0 }, { opacity: .55, offset: .35 }, { opacity: .55, offset: .8 }, { opacity: 0 }], { duration: d, delay: delay, fill: 'both' });
-    }
-    function lift(k) {
-      var el = L[k]; stop(el); stop(G2[k]);
-      el.animate([{ transform: ty(-G * .6), opacity: 0 }], { duration: 420, easing: 'cubic-bezier(.4,0,1,1)', fill: 'both' });
-    }
-    function rest(k, on) { var el = L[k]; stop(el); el.animate([{ transform: ty(on ? REST[k] : -G), opacity: on ? 1 : 0 }], { duration: 1, fill: 'both' }); }
-    function flourPuff() {
-      stop(flourEl);
-      flourEl.animate([{ transform: ty(24), opacity: 0 }, { transform: ty(0), opacity: 1, offset: .3 }, { transform: ty(-70), opacity: 0 }], { duration: 2000, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'both' });
-    }
-    function bake() {
-      [glow, photo, svg].forEach(stop);
-      glow.animate([{ opacity: 0 }, { opacity: .95, offset: .35 }, { opacity: 0 }], { duration: 1700, fill: 'both' });
-      svg.animate([{ opacity: 1 }, { opacity: .06 }], { duration: 650, delay: 500, fill: 'both' });
-      photo.animate([
-        { opacity: 0, transform: 'translateY(0%) scaleY(' + K + ')' },
-        { opacity: 1, transform: 'translateY(0%) scaleY(' + K + ')', offset: .35 },
-        { opacity: 1, transform: 'translateY(' + SHIFT.toFixed(2) + '%) scaleY(1)' }
-      ], { duration: 1500, delay: 380, easing: EASE, fill: 'both' });
-    }
-    function unbake() {
-      [glow, photo, svg].forEach(stop);
-      glow.animate([{ opacity: 0 }], { duration: 1, fill: 'both' });
-      photo.animate([{ opacity: 0, transform: 'translateY(0%) scaleY(' + K + ')' }], { duration: 380, fill: 'both' });
-      svg.animate([{ opacity: 1 }], { duration: 380, fill: 'both' });
+    function place(c) {
+      var W = frame.clientWidth, H = frame.clientHeight, z = c.z;
+      var tx = Math.min(0, Math.max(W - W * z, W / 2 - c.x * W * z));
+      var ty = Math.min(0, Math.max(H - H * z, H / 2 - c.y * H * z));
+      img.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0) scale(' + z.toFixed(4) + ')';
     }
     function setText(i) {
       steps.forEach(function (li, k) { li.classList.toggle('on', k === i); });
       pills.forEach(function (b, k) { b.classList.toggle('on', k === i); b.classList.toggle('done', k < i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
-      var nb = pills[i] && pills[i].parentNode;
-      if (nb && nb.scrollWidth > nb.clientWidth) {
-        var pl = pills[i].offsetLeft - nb.offsetLeft, pr = pl + pills[i].offsetWidth;
-        if (pl < nb.scrollLeft) nb.scrollTo({ left: Math.max(0, pl - 12), behavior: 'smooth' });
-        else if (pr > nb.scrollLeft + nb.clientWidth) nb.scrollTo({ left: pr - nb.clientWidth + 12, behavior: 'smooth' });
-      }
+      frame.setAttribute('data-step', i);
     }
-    // lo scorrimento sceglie il passaggio; le animazioni hanno tempi propri, così niente salti
-    function go(k) {
-      if (k === state) return;
-      var prev = state; state = k; setText(k);
-      if (prev < 0) {
-        L[0].animate([{ transform: ty(26), opacity: .2 }, { transform: ty(0), opacity: 1 }], { duration: 900, easing: EASE, fill: 'both' });
-        flourPuff();
-      }
-      var newly = [];
-      for (var j = 1; j <= 3; j++) {
-        if (k >= j && prev < j) newly.push(j);
-        if (k < j && prev >= j) lift(j);
-      }
-      newly.forEach(function (j, n) { drop(j, n * 260, newly.length > 1); });
-      if (k === 4 && prev !== 4) bake();
-      if (k < 4 && prev === 4) unbake();
-    }
-    function finalState() {
-      setText(4); state = 4;
-      for (var j = 1; j <= 3; j++) rest(j, true);
-      photo.style.opacity = 1; photo.style.transform = 'translateY(' + SHIFT.toFixed(2) + '%) scaleY(1)'; svg.style.opacity = .06;
-    }
-    geo();
-    function reframe() {
-      var nv = vbFor(); if (nv.w === VB.w && nv.h === VB.h) return;
-      VB = nv; svgs.forEach(function (e) { e.setAttribute('viewBox', vbStr()); }); geo();
-      [photo, svg, glow, flourEl].concat(L).forEach(stop);
-      L[0].style.transform = ty(0); L[0].style.opacity = 1;
-      for (var j = 1; j <= 3; j++) { L[j].style.transform = ty(state >= j ? REST[j] : -G); L[j].style.opacity = state >= j ? 1 : 0; }
-      var done = state === 4;
-      photo.style.opacity = done ? 1 : 0; photo.style.transform = done ? 'translateY(' + SHIFT.toFixed(2) + '%) scaleY(1)' : 'scaleY(' + K + ')';
-      svg.style.opacity = done ? .06 : 1; glow.style.opacity = 0;
-    }
-    if (mqM.addEventListener) mqM.addEventListener('change', reframe);
-    if (reduce) { wrap.classList.add('static'); finalState(); return; }
+    if (reduce) { wrap.classList.add('static'); setText(N - 1); place(WHOLE); return; }
     var span = function () { return Math.max(1, wrap.offsetHeight - window.innerHeight); };
-    var raf = 0;
+    var raf = 0, last = -1;
     function onScroll() {
       raf = 0;
       var r = wrap.getBoundingClientRect();
-      if (r.top > window.innerHeight * .75 || r.bottom < 0) return;
+      if (r.top > window.innerHeight || r.bottom < 0) return;
       var p = Math.min(1, Math.max(0, -r.top / span()));
       if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
-      var raw = p * N, k = state < 0 ? Math.floor(raw) : state;
-      if (raw >= state + 1.06 || raw < state - .06) k = Math.floor(raw);
-      go(Math.max(0, Math.min(N - 1, k)));
+      var t = p * N;
+      if (Math.abs(t - last) > .0005) { last = t; place(cam(t)); }
+      var k = state < 0 ? Math.floor(t) : state;
+      if (t >= state + 1.04 || t < state - .04) k = Math.floor(t);
+      k = Math.max(0, Math.min(N - 1, k));
+      if (k !== state) { state = k; setText(k); }
     }
     window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
-    window.addEventListener('resize', onScroll);
-    // le etichette portano al passaggio
+    window.addEventListener('resize', function () { last = -1; onScroll(); });
+    // le etichette portano al dettaglio, quando è fermo
     pills.forEach(function (b, k) {
       b.addEventListener('click', function () {
-        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .5) / N * span();
+        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .66) / N * span();
         window.scrollTo({ top: Math.round(top), behavior: 'smooth' });
       });
     });
-    L.slice(1).forEach(function (el) { el.style.opacity = 0; });
-    L[0].style.opacity = .2; L[0].style.transform = ty(26);
-    flourEl.style.opacity = 0;
+    setText(0); state = 0; place(WHOLE);
     onScroll();
   }
+
+  /* La sala: la foto si assesta quando entra nello schermo */
+  (function band() {
+    var b = document.querySelector('.band'); if (!b) return;
+    if (reduce || !('IntersectionObserver' in window)) { b.classList.add('in'); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { b.classList.add('in'); io.disconnect(); } }); }, { threshold: .2 });
+    io.observe(b);
+  })();
 
   /* ================= Dati vivi ================= */
   function bind(info) {
