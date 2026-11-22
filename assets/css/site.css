@@ -542,7 +542,7 @@ body.locked { overflow: hidden; }
   .build-art { width: 60%; }
 }
 @media (max-width: 960px) {
-  .build-text { flex: 1 1 auto; display: flex; flex-direction: column; padding: 6px 20px 22px; }
+  .build-text { flex: none; padding: 6px 20px 22px; }
   .build-cta { display: none; }
   .build-h { display: none; }
   .build-list { max-width: none; }
@@ -577,7 +577,7 @@ body.locked { overflow: hidden; }
   .build { height: 270vh; height: 270svh; }
   .build-stick { padding: 114px 0 10px; }
   .build-stage { display: flex; flex-direction: column; align-items: stretch; border-radius: 28px; margin: 0 calc(-1 * var(--pad) + 10px); }
-  .build-stick { align-items: stretch; }
+  .build-stick { align-items: center; }
   .build-art { position: relative; flex: none; width: min(100%, calc((100svh - 400px) * 4 / 3)); aspect-ratio: 4 / 3; align-self: center; }
   .build-pic { -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%); }
   .build-frame::after { background: linear-gradient(180deg, rgba(22, 16, 12, .4), transparent 16%); }
