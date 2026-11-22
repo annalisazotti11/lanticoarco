@@ -71,8 +71,22 @@ body { background: var(--bg); color: var(--ink); font-size: 16px; }
 .gnav-in::-webkit-scrollbar { display: none; }
 .gnav a { flex: none; text-decoration: none; padding: 8px 14px; border-radius: 99px; font-weight: 500; font-size: .9rem; color: var(--ink-2); white-space: nowrap; transition: background .2s, color .2s; }
 .gnav a[aria-current="true"] { background: var(--ink); color: var(--bg-2); }
-.active-filters { max-width: 860px; margin: 12px auto 0; padding: 0 18px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .92rem; color: var(--ink-2); }
-.active-filters button { border: 0; background: var(--ink); color: var(--bg-2); border-radius: 99px; padding: 7px 13px; font-weight: 600; }
+/* Filtro attivo: si vede subito e si toglie con un tocco */
+.active-filters { max-width: 824px; margin: 18px auto 0; background: var(--ink); color: var(--bg-2); border-radius: 20px; padding: 16px 16px 16px 20px; display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; justify-content: space-between; }
+@media (max-width: 860px) { .active-filters { margin: 18px 18px 0; } }
+.af-t { flex: 1 1 300px; min-width: 0; }
+.af-t b { display: block; font-family: var(--font-display); font-weight: 600; letter-spacing: -.02em; font-size: 1.3rem; line-height: 1.15; }
+.af-t span { display: block; margin-top: 4px; font-size: .92rem; line-height: 1.45; color: rgba(255, 250, 243, .78); }
+.af-x { flex: none; border: 0; background: var(--bg-2); color: var(--ink); border-radius: 99px; padding: 11px 18px; font-weight: 600; font-size: .95rem; }
+.af-x:hover { background: #fff; }
+@media (max-width: 520px) { .af-x { width: 100%; } }
+.gnav.has-f { display: flex; align-items: center; }
+.gnav-fw { flex: none; padding: 10px 2px 10px 14px; }
+.gnav.has-f .gnav-in { flex: 1 1 auto; min-width: 0; padding-left: 10px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30px); mask-image: linear-gradient(90deg, transparent 0, #000 30px); }
+.gnav-f { flex: none; display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--ink); background: var(--bg-2); color: var(--ink); border-radius: 99px; padding: 6px 10px 6px 14px; font-weight: 600; font-size: .9rem; white-space: nowrap; }
+.gnav-f i { position: relative; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); }
+.gnav-f i::before, .gnav-f i::after { content: ""; position: absolute; left: 4px; top: 8.25px; width: 10px; height: 1.5px; background: var(--bg-2); border-radius: 1px; transform: rotate(45deg); }
+.gnav-f i::after { transform: rotate(-45deg); }
 
 /* Corpo */
 .menu { max-width: 860px; margin: 0 auto; padding: 4px 18px 40px; }
@@ -276,6 +290,9 @@ mark { background: #f1d9b5; color: inherit; border-radius: 3px; padding: 0 1px; 
 /* PC: tutte le categorie in vista, senza tagli */
 @media (min-width: 1100px) {
   .gnav-in { max-width: 1240px; justify-content: center; flex-wrap: wrap; }
+  .gnav.has-f { justify-content: center; }
+  .gnav.has-f .gnav-in { flex: 0 1 auto; margin: 0; padding-left: 4px; -webkit-mask-image: none; mask-image: none; }
+  .gnav-fw { padding-left: 14px; }
 }
 
 /* Crea la tua pizza: togli, aggiungi, parti da qualunque pizza */

@@ -11,7 +11,7 @@
 <link rel="preload" href="../assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="../assets/css/menu.css?v=1cce21c1">
+<link rel="stylesheet" href="../assets/css/menu.css?v=675f5b71">
 </head>
 <body>
 <a class="sr-only" href="#contenuto">Vai al menu</a>
@@ -41,9 +41,9 @@
 
 <section class="tiles" id="tiles" aria-label="Categorie"></section>
 
-<nav class="gnav" id="gnav" aria-label="Categorie"><div class="gnav-in" id="gnavIn"></div></nav>
+<div class="active-filters" id="activeFilters" role="status" hidden></div>
 
-<div class="active-filters" id="activeFilters" hidden></div>
+<nav class="gnav" id="gnav" aria-label="Categorie"><div class="gnav-fw" id="gnavF" hidden></div><div class="gnav-in" id="gnavIn"></div></nav>
 
 <main id="contenuto" class="menu" aria-live="polite">
   <p class="loading">Carico il menu…</p>
@@ -73,7 +73,7 @@
     <p class="f-warn">Il filtro allergeni si basa sulle schede del menu: in caso di allergia chiedete sempre conferma al personale. Molte pizze si possono preparare senza glutine o senza lattosio.</p>
     <div class="f-actions">
       <button type="button" class="b-ghost" id="fReset">Azzera</button>
-      <button type="button" class="b-fire" id="fApply">Mostra i piatti</button>
+      <button type="button" class="b-fire" id="fApply">Mostra tutto il menu</button>
     </div>
   </div>
 </div>
@@ -91,6 +91,6 @@
 <div class="waiter" id="waiter" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden></div>
 <script src="../assets/vendor/qrcode.js"></script>
 <script src="../assets/js/core.js?v=e001f4eb"></script>
-<script src="../assets/js/menu.js?v=2e84f91f"></script>
+<script src="../assets/js/menu.js?v=97077953"></script>
 </body>
 </html>

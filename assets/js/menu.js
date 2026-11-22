@@ -165,6 +165,9 @@
     });
     $('contenuto').innerHTML = html || '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
     $('gnavIn').innerHTML = nav;
+    $('gnavF').innerHTML = filterChip();
+    $('gnavF').hidden = !nFilters();
+    $('gnav').classList.toggle('has-f', nFilters() > 0);
     $('gnav').hidden = !nav;
     renderTiles(); renderGuide();
     spy(); reveal();
@@ -201,7 +204,7 @@
         var id = e.target.id.slice(2);
         Object.keys(links).forEach(function (k) { links[k].setAttribute('aria-current', k === id ? 'true' : 'false'); });
         var a = links[id], nav = $('gnavIn');
-        if (a) nav.scrollTo({ left: a.offsetLeft - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' });
+        if (a) { var x = a.getBoundingClientRect().left - nav.getBoundingClientRect().left + nav.scrollLeft; nav.scrollTo({ left: x - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' }); }
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
     document.querySelectorAll('.grp').forEach(function (g) { spyIO.observe(g); });
@@ -511,17 +514,72 @@
       return '<button type="button" class="chip" data-alg="' + a.code + '" aria-pressed="' + (state.noAllergens.indexOf(a.code) >= 0) + '">' + a.n + '. ' + esc(a.label) + '</button>';
     }).join('');
   }
-  function updateFilterUI() {
-    var n = state.tags.length + state.noAllergens.length;
-    $('filterCount').hidden = !n; $('filterCount').textContent = n;
-    var box = $('activeFilters');
-    if (!n) { box.hidden = true; box.innerHTML = ''; return; }
+  function nFilters() { return state.tags.length + state.noAllergens.length; }
+  function countMatches() {
     var count = 0;
     DATA.sections.forEach(function (s) { if (s.visible) count += s.items.filter(matches).length; });
+    return count;
+  }
+  function filterNames() {
+    return state.tags.map(function (c) { var t = AA.TAG_BY_CODE[c]; return t ? t.label : c; })
+      .concat(state.noAllergens.map(function (c) {
+        var a = AA.ALLERGENS.filter(function (x) { return x.code === c; })[0];
+        return 'senza ' + (a ? a.label : c).toLowerCase();
+      }));
+  }
+  function filterChip() {
+    var n = nFilters(); if (!n) return '';
+    var label = n === 1 ? filterNames()[0] : n + ' filtri';
+    return '<button type="button" class="gnav-f" data-clear-filters aria-label="Togli ' + (n === 1 ? 'il filtro ' : 'i filtri: ') + esc(filterNames().join(', ')) + '">' + esc(label) + '<i aria-hidden="true"></i></button>';
+  }
+  function dropHash() {
+    if (!location.hash || location.hash === '#crea') return;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+  function updateFilterUI() {
+    var n = nFilters();
+    $('filterCount').hidden = !n; $('filterCount').textContent = n;
+    var box = $('activeFilters');
+    var apply = $('fApply');
+    if (!n) { box.hidden = true; box.innerHTML = ''; if (apply) apply.textContent = 'Mostra tutto il menu'; return; }
+    var count = countMatches();
+    var gf = state.tags.indexOf('senza-glutine') >= 0, onlyGf = gf && n === 1;
+    var title = onlyGf ? 'Menu senza glutine' : 'Filtri attivi: ' + filterNames().join(', ');
+    var text = count + (count === 1 ? ' piatto' : ' piatti') + (onlyGf ? ' senza glutine o che possiamo fare senza glutine.' : '.');
+    if (gf && Object.keys(CAN_GF).length) text += ' Pizze e panzerotti con l’impasto senza glutine hanno un supplemento.';
+    if (gf) text += ' Se sei celiaco, dillo sempre quando ordini.';
     box.hidden = false;
-    var gfNote = state.tags.indexOf('senza-glutine') >= 0 && Object.keys(CAN_GF).length ? ' · pizze e panzerotti con impasto senza glutine, con supplemento' : '';
-    box.innerHTML = '<span>' + count + ' piatti con i filtri attivi' + gfNote + '</span><button type="button" id="clearF">Azzera filtri</button>';
-    $('clearF').onclick = function () { state.tags = []; state.noAllergens = []; renderFilters(); updateFilterUI(); render(); };
+    box.innerHTML = '<div class="af-t"><b>' + esc(title) + '</b><span>' + esc(text) + '</span></div>' +
+      '<button type="button" class="af-x" data-clear-filters>Mostra tutto il menu</button>';
+    if (apply) apply.textContent = count ? 'Mostra ' + count + (count === 1 ? ' piatto' : ' piatti') : 'Nessun piatto';
+  }
+  function applyFilters() { dropHash(); updateFilterUI(); render(); }
+  function clearFilters() {
+    // tiene il segno: dopo aver tolto il filtro resti sul piatto che stavi guardando
+    var line = $('gnav').hidden ? 80 : $('gnav').getBoundingClientRect().bottom, anchor = null, off = 0;
+    var passed = $('contenuto').getBoundingClientRect().top < line;
+    if (passed) {
+      var its = document.querySelectorAll('#contenuto [data-item]');
+      for (var i = 0; i < its.length; i++) {
+        var r = its[i].getBoundingClientRect();
+        if (its[i].offsetParent && r.bottom > line + 8) { anchor = its[i].dataset.item; off = r.top; break; }
+      }
+      var fa = anchor && findItem(anchor);
+      if (fa) OPEN[fa.sec.id] = true; // la tendina del piatto che stavi guardando resta aperta
+    }
+    state.tags = []; state.noAllergens = [];
+    renderFilters(); applyFilters();
+    if (!passed) return;
+    var el = anchor && document.querySelector('#contenuto [data-item="' + anchor + '"]');
+    if (el) {
+      // le schede di quella sottocategoria compaiono subito, senza animazione, così il punto non si sposta
+      var near = [].slice.call((el.closest('.sec') || document).querySelectorAll('.item'));
+      near.forEach(function (it) { it.style.transition = 'none'; it.classList.add('in'); });
+      requestAnimationFrame(function () { near.forEach(function (it) { it.style.transition = ''; }); });
+      if (el.offsetParent) { window.scrollBy(0, el.getBoundingClientRect().top - off); return; }
+    }
+    var f = anchor && findItem(anchor), g = f && $('g-' + f.sec.group);
+    if (g) g.scrollIntoView();
   }
 
   function renderHeader() {
@@ -587,17 +645,25 @@
       sh.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeSheet(sh); });
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') document.querySelectorAll('.sheet:not([hidden])').forEach(closeSheet); });
-    $('filterBtn').onclick = function () { renderFilters(); openSheet($('filters')); };
+    $('filterBtn').onclick = function () { renderFilters(); updateFilterUI(); openSheet($('filters')); };
     $('filters').addEventListener('click', function (e) {
       var c = e.target.closest('.chip'); if (!c) return;
       var list = c.dataset.tag ? state.tags : state.noAllergens, v = c.dataset.tag || c.dataset.alg, k = list.indexOf(v);
       if (k >= 0) list.splice(k, 1); else list.push(v);
       c.setAttribute('aria-pressed', k < 0);
+      applyFilters();
     });
-    $('fReset').onclick = function () { state.tags = []; state.noAllergens = []; renderFilters(); };
-    $('fApply').onclick = function () { closeSheet($('filters')); updateFilterUI(); render(); window.scrollTo({ top: $('gnav').offsetTop - 70, behavior: 'smooth' }); };
+    $('fReset').onclick = function () { state.tags = []; state.noAllergens = []; renderFilters(); applyFilters(); };
+    $('fApply').onclick = function () {
+      closeSheet($('filters'));
+      var box = $('activeFilters'), to = !box.hidden ? box : $('gnav');
+      window.scrollTo({ top: Math.max(0, to.getBoundingClientRect().top + window.scrollY - 84), behavior: 'smooth' });
+    };
   }
 
+  document.addEventListener('click', function (e) {
+    if (DATA && e.target.closest('[data-clear-filters]')) { e.preventDefault(); clearFilters(); }
+  });
   document.addEventListener('click', function (e) {
     var o = e.target.closest('[data-open-builder]'); if (!o || !DATA) return;
     e.preventDefault();
@@ -612,7 +678,15 @@
     var tagHash = location.hash.slice(1);
     if (tagHash && AA.TAG_BY_CODE[tagHash]) { state.tags = [tagHash]; }
     renderHeader(); render(); renderFooter(); bind(); bindBuilder();
-    if (state.tags.length) { updateFilterUI(); return; }
+    // un link a #senza-glutine (o a un altro filtro) mentre sei già nel menu
+    window.addEventListener('hashchange', function () {
+      var h = location.hash.slice(1);
+      if (!h || !AA.TAG_BY_CODE[h]) return;
+      state.tags = [h]; state.noAllergens = [];
+      renderFilters(); applyFilters();
+      window.scrollTo(0, 0);
+    });
+    if (state.tags.length) { dropHash(); updateFilterUI(); return; }
     if (location.hash === '#crea') { openBuilder(null); return; }
     if (location.hash) {
       var el = null;

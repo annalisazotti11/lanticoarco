@@ -426,7 +426,8 @@ body.locked { overflow: hidden; }
 @media (max-width: 960px) {
   .pr-head { grid-template-columns: 1fr; }
   .build { height: 230svh; }
-  .build-stick { grid-template-columns: 1fr; grid-template-rows: auto auto; align-content: center; gap: 4px; padding-top: 64px; }
+  .build-stick { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; align-content: center; gap: 4px; padding-top: 64px; }
+  .build-text { min-width: 0; }
   .build-art { order: -1; width: min(100vw - 24px, calc((100svh - 330px) * var(--arn, 1.155))); }
   .build-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 6px calc(-1 * var(--pad)) 12px; padding: 0 var(--pad); }
   .build-nav::-webkit-scrollbar { display: none; }
@@ -434,6 +435,19 @@ body.locked { overflow: hidden; }
   .build-nav button { white-space: nowrap; font-size: .82rem; padding: 6px 10px; flex: none; }
   .build-prog { margin: -6px 0 12px; }
   .build-steps { min-height: 9em; }
+}
+@media (max-width: 600px) {
+  .build-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; overflow: visible; margin: 8px 0 12px; padding: 0; }
+  .build-nav button { position: relative; border: 0; border-radius: 0; background: none; padding: 11px 0 8px; text-align: left; font-size: min(.74rem, 3.2vw); font-weight: 600; letter-spacing: -.01em; color: var(--ink-2); white-space: nowrap; overflow: hidden; min-width: 0; }
+  .build-nav button::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 3px; background: var(--line); transition: background .35s; }
+  .build-nav button:hover { color: var(--ink); }
+  .build-nav button.done { color: var(--ink-2); }
+  .build-nav button.done::before { background: #a8957f; }
+  .build-nav button.on { background: none; color: var(--ink); }
+  .build-nav button.on::before { background: var(--ink); }
+  .build-prog { display: none; }
+}
+@media (max-width: 960px) {
   .build-steps h3 { font-size: 1.9rem; }
   .build-steps p { font-size: 1rem; margin-top: 8px; }
   .build-steps a { margin-top: 8px; }
