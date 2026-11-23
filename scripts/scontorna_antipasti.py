@@ -51,8 +51,10 @@ DISH_SHAPES = {
         (83, 304), (83, 224), (94, 186), (108, 157),
     ]),
     "media-137.webp": ("polygon", [
-        (109, 161), (355, 160), (386, 177), (395, 352),
-        (373, 380), (99, 382), (88, 359), (94, 190),
+        # Sagoma allargata del vero piatto quadrato, escluso il telo giallo.
+        (109, 158), (352, 159), (379, 169), (394, 192),
+        (401, 340), (394, 366), (374, 388), (104, 391),
+        (83, 378), (74, 354), (78, 214), (90, 179),
     ]),
 }
 
@@ -140,8 +142,8 @@ def prepare(src: Path, out: Path, session) -> dict:
 
 
 def main():
-    # Una foto per volta: in questo passaggio rifiniamo solo il prosciutto cotto.
-    only_item_id = "i433"
+    # Una foto per volta: in questo passaggio rifiniamo soltanto i taralli.
+    only_item_id = "i443"
     session = get_session()
     records = []
     changes = {}
