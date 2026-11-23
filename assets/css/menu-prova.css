@@ -456,3 +456,4 @@ html.kiosk .algs { font-size: .82rem; }
 .acc .acc-in > .items .item:last-child { border-bottom: 0; }
 .sec.acc { margin-top: 12px; }
 .acc-in { padding: 0 4px; }
+.d-custom-s { margin-top: 8px; font-size: .84rem; color: var(--ink-2); text-align: center; line-height: 1.4; }

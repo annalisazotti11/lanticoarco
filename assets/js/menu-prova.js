@@ -209,7 +209,7 @@
       if (!inner) return;
       var top = '';
       if (g.id === 'pizze' && !filtering()) top += doughStrip();
-      if (common.length && !filtering()) top += '<p class="gsupp"><b>Su ogni pizza</b> ' + common.map(function (x) { return esc(x.label.toLowerCase()) + ' <span class="num">' + AA.price(x.price, { signed: true }) + '</span>'; }).join(' · ') + '. Le altre varianti sono nella scheda di ogni pizza.</p>';
+      if (common.length && !filtering()) top += '<p class="gsupp"><b>Su ogni pizza</b> ' + common.map(function (x) { return esc(x.label.toLowerCase()) + ' <span class="num">' + AA.price(x.price, { signed: true }) + '</span>'; }).join(' · ') + '. Le altre varianti le trovi in “Personalizza”, nella scheda di ogni pizza.</p>';
       html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + top + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
       SUBS[g.id] = false && secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
@@ -353,8 +353,9 @@
       (algs.length ? '<h3 class="d-h">Allergeni</h3><ul class="d-algs">' + algs.map(function (a) {
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
       }).join('') + '</ul>' : '') +
-      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza e calcola il prezzo</button>' : '') +
-      ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '') +
+      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza</button>' +
+        '<p class="d-custom-s">Impasto, pizzella, senza lattosio, base e ingredienti in più: il prezzo si aggiorna mentre scegli.</p>'
+        : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
       '<p class="d-note">' + esc(DATA.info.allergenNote) + '</p></div>';
   }
