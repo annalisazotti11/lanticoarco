@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-23T16:26:16.283Z",
+ "updatedAt": "2026-11-23T16:57:04.888Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -157,7 +157,7 @@
       "soia",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261123-172646-impasto-classico.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -201,7 +201,7 @@
       "soia",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261123-172901-impasto-carbone-vegetale-da-cocc.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -224,7 +224,7 @@
       "uova",
       "sesamo"
      ],
-     "image": "img/menu/media-33.webp",
+     "image": "img/uploads/20261123-173004-impasto-cereali-misti.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -247,7 +247,7 @@
       "uova",
       "sesamo"
      ],
-     "image": "img/menu/media-43.webp",
+     "image": "img/uploads/20261123-173101-impasto-curcuma-zenzero-e-semi-d.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -269,7 +269,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-25.webp",
+     "image": "img/uploads/20261123-173159-impasto-farro-integrale.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -291,7 +291,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-155.webp",
+     "image": "img/uploads/20261123-173303-impasto-kamut-grano-khorasan.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -313,7 +313,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-124.webp",
+     "image": "img/uploads/20261123-173356-impasto-senatore-cappelli-integr.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -330,7 +330,7 @@
       "senza-glutine"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261123-173615-impasto-senza-glutine.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -404,7 +404,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-128.webp",
+     "image": "img/uploads/20261123-174138-bruschetta-ai-cereali-al-pezzo.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -464,7 +464,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "img/menu/media-95.webp",
+     "image": "img/uploads/20261123-174338-caprese-con-mozzarella-artigiana.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -480,7 +480,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "img/menu/media-101.webp",
+     "image": "img/uploads/20261123-175140-caprese-di-bufala-km-0.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -496,7 +496,7 @@
      "allergens": [
       "solfiti"
      ],
-     "image": "img/menu/media-15.webp",
+     "image": "img/uploads/20261123-175506-carciofi-grigliati-sott-olio.webp",
      "frozen": false,
      "available": true,
      "featured": false
