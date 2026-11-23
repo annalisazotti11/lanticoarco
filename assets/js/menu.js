@@ -127,7 +127,7 @@
     var hasExtra = DATA.sections.some(function (s) { return s.group === 'aggiunte' && s.visible && s.items.length; });
     var steps = [
       ['g-impasti', 'Scegli l\'impasto', 'Il classico è compreso' + (min ? ', gli altri da ' + AA.price(min) + ' in più' : '') + '.'],
-      ['g-pizze', 'Poi la pizza', 'Gourmet, classiche, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
+      ['g-pizze', 'Poi la pizza', 'Classiche, gourmet, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
       hasExtra ? ['crea', 'Oppure creala tu', 'Scegli impasto e ingredienti: ti diciamo subito quanto costa.'] : null
     ].filter(function (x) { return x && (x[0] === 'crea' || document.getElementById(x[0])); });
     if (!steps.length) { box.hidden = true; return; }
@@ -160,7 +160,7 @@
       var acc = secs.length > 1;
       var inner = secs.map(function (s) { return sectionHTML(s, acc, g.id); }).join('');
       if (!inner) return;
-      html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + inner + '</section>';
+      html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
     });
     $('contenuto').innerHTML = html || '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
