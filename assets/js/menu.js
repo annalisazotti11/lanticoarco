@@ -200,24 +200,57 @@
     items.forEach(function (i) { revealIO.observe(i); });
   }
 
-  /* Categoria visibile nella barra */
-  var spyIO;
-  function spy() {
-    if (spyIO) spyIO.disconnect();
-    if (!('IntersectionObserver' in window)) return;
-    var links = {};
-    document.querySelectorAll('#gnavIn a').forEach(function (a) { links[a.dataset.g] = a; });
-    spyIO = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        var id = e.target.id.slice(2);
-        Object.keys(links).forEach(function (k) { links[k].setAttribute('aria-current', k === id ? 'true' : 'false'); });
-        var a = links[id], nav = $('gnavIn');
-        if (a) { var x = a.getBoundingClientRect().left - nav.getBoundingClientRect().left + nav.scrollLeft; nav.scrollTo({ left: x - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' }); }
-      });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-    document.querySelectorAll('.grp').forEach(function (g) { spyIO.observe(g); });
+  /* Categoria visibile nella barra: è quella che sta subito sotto la barra, non quella a metà schermo.
+     Toccando una voce la scelta resta ferma finché la pagina non ha finito di scorrere. */
+  var spyCur = null, spyLock = null, spyLockT = null, spyRaf = 0, spyBound = false;
+  function spyLine() { var n = $('gnav'); return (n && !n.hidden ? n.getBoundingClientRect().bottom : 70) + 16; }
+  function spySet(id) {
+    if (id === spyCur) return;
+    spyCur = id;
+    var nav = $('gnavIn'), a = null;
+    nav.querySelectorAll('a').forEach(function (x) { var on = x.dataset.g === id; x.setAttribute('aria-current', on ? 'true' : 'false'); if (on) a = x; });
+    if (a) nav.scrollTo({ left: a.offsetLeft - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' });
   }
+  function spyCalc() {
+    spyRaf = 0;
+    if (spyLock) return;
+    var grps = document.querySelectorAll('#contenuto .grp'); if (!grps.length) return;
+    var line = spyLine(), id = grps[0].id.slice(2);
+    grps.forEach(function (g) { if (g.getBoundingClientRect().top <= line) id = g.id.slice(2); });
+    // in fondo alla pagina le ultime categorie non arrivano sotto la barra: vale l'ultima visibile
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+      var last = grps[grps.length - 1]; if (last.getBoundingClientRect().top < window.innerHeight * .6) id = last.id.slice(2);
+    }
+    spySet(id);
+  }
+  function spy() {
+    spyCur = null;
+    if (!spyBound) {
+      spyBound = true;
+      window.addEventListener('scroll', function () {
+        if (spyLock) { clearTimeout(spyLockT); spyLockT = setTimeout(function () { spyLock = null; spyCalc(); }, 160); }
+        if (!spyRaf) spyRaf = requestAnimationFrame(spyCalc);
+      }, { passive: true });
+      window.addEventListener('resize', function () { if (!spyRaf) spyRaf = requestAnimationFrame(spyCalc); });
+      // un tocco su una categoria (barra o riquadri): la voce si accende subito e la pagina si ferma con il titolo sotto la barra
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href^="#g-"]'); if (!a) return;
+        var el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
+        e.preventDefault();
+        var id = el.id.slice(2);
+        spySet(id); spyLock = id;
+        clearTimeout(spyLockT); spyLockT = setTimeout(function () { spyLock = null; spyCalc(); }, 1200);
+        // la barra a fine corsa sta ferma in alto: conta la sua posizione finale, non quella di adesso
+        var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1; // sul totem la pagina è ingrandita
+        var stuck = n && !n.hidden ? ((parseFloat(getComputedStyle(n).top) || 0) + n.offsetHeight) * z : 70;
+        var y = window.scrollY + el.getBoundingClientRect().top - stuck - 4;
+        window.scrollTo({ top: Math.max(0, Math.round(y)), behavior: reduceMotion() ? 'auto' : 'smooth' });
+        if (history.replaceState) history.replaceState(null, '', '#' + el.id);
+      });
+    }
+    spyCalc();
+  }
+  function reduceMotion() { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
   function findItem(id) {
     for (var i = 0; i < DATA.sections.length; i++) {
