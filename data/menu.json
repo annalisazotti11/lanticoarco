@@ -169,7 +169,7 @@
     },
     {
      "id": "i407",
-     "name": "Impasto Canapa sativa",
+     "name": "Impasto canapa sativa",
      "desc": "Farina tipo 0 bio, semola rimacinata bio e farina integrale bio, con semi di canapa sativa. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. I semi danno un colore più scuro e un gusto che ricorda la nocciola.",
      "price": 2,
      "prices": [],
@@ -191,7 +191,7 @@
     },
     {
      "id": "i408",
-     "name": "Impasto Carbone Vegetale da cocco",
+     "name": "Impasto carbone vegetale (da cocco)",
      "desc": "Farina tipo 0 bio, semola rimacinata bio e farina integrale bio, con carbone vegetale di cocco (E153) che colora l’impasto di nero. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata.",
      "price": null,
      "prices": [],
@@ -213,7 +213,7 @@
     },
     {
      "id": "i409",
-     "name": "Impasto cereali misti da noi prodotto",
+     "name": "Impasto cereali misti",
      "desc": "Lo prepariamo noi con farine biologiche: tipo 0, semola rimacinata, integrale di grano tenero, grano khorasan, Senatore Cappelli integrale e farro integrale. Con cinque semi bio: sesamo bianco e nero, lino giallo e marrone, papavero. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata.",
      "price": 2,
      "prices": [],
@@ -236,7 +236,7 @@
     },
     {
      "id": "i410",
-     "name": "Impasto Curcuma, zenzero e semi di sesamo nero",
+     "name": "Impasto curcuma, zenzero e semi di sesamo nero",
      "desc": "Farina tipo 0 bio, semola rimacinata bio e farina integrale bio, con curcuma, zenzero e semi. Lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. La curcuma dà all’impasto un colore dorato, lo zenzero un profumo speziato.",
      "price": 2,
      "prices": [],
@@ -259,7 +259,7 @@
     },
     {
      "id": "i411",
-     "name": "Impasto Farro integrale 100% bio",
+     "name": "Impasto farro integrale",
      "desc": "100% farina integrale di farro bio, lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. Il farro è uno dei primi cereali coltivati dall’uomo: dal suo nome latino, far, viene la parola farina.",
      "price": 2,
      "prices": [],
@@ -303,7 +303,7 @@
     },
     {
      "id": "i413",
-     "name": "Impasto Senatore Cappelli integrale 100% Bio",
+     "name": "Impasto Senatore Cappelli integrale",
      "desc": "100% farina integrale di grano duro Senatore Cappelli bio, lievito di birra, sale marino integrale di Trapani, olio EVO bio e acqua microfiltrata. È la varietà selezionata nel 1915 da Nazareno Strampelli vicino a Foggia e dedicata al senatore Raffaele Cappelli, che gli aveva messo a disposizione i campi: per decenni è stato il grano duro più coltivato in Italia.",
      "price": 2,
      "prices": [],
@@ -370,16 +370,16 @@
     },
     {
      "id": "i798",
-     "name": "Bologna (Mortadella al forno terrina)",
+     "name": "Bologna (mortadella al forno terrina)",
      "desc": "",
      "price": null,
      "prices": [
       {
-       "label": "Per 2 p.",
+       "label": "Per 2 persone",
        "price": 6
       },
       {
-       "label": "Per 4 p.",
+       "label": "Per 4 persone",
        "price": 8
       }
      ],
@@ -585,7 +585,7 @@
     },
     {
      "id": "i427",
-     "name": "Mozzarella di Bufala KM 0 125 gr.",
+     "name": "Mozzarella di bufala km 0 (125 g)",
      "desc": "",
      "price": 4,
      "prices": [],
@@ -657,7 +657,7 @@
     },
     {
      "id": "i431",
-     "name": "Peperone crusco del Senise fritto in olio d’oliva (30 gr.)",
+     "name": "Peperone crusco del Senise fritto in olio d’oliva (30 g)",
      "desc": "",
      "price": 10,
      "prices": [],
@@ -693,7 +693,7 @@
     },
     {
      "id": "i433",
-     "name": "Prosciutto cotto ( senza lattosio, senza glutine)",
+     "name": "Prosciutto cotto",
      "desc": "",
      "price": 4,
      "prices": [],
@@ -710,7 +710,7 @@
     },
     {
      "id": "i434",
-     "name": "Prosciutto crudo alla barese (Nazionale Lucano o Parma)",
+     "name": "Prosciutto crudo alla barese (nazionale lucano o Parma)",
      "desc": "",
      "price": 8,
      "prices": [],
@@ -906,11 +906,11 @@
      "price": null,
      "prices": [
       {
-       "label": "Per 2 p.",
+       "label": "Per 2 persone",
        "price": 4
       },
       {
-       "label": "Per 4 p.",
+       "label": "Per 4 persone",
        "price": 6
       }
      ],
@@ -947,7 +947,7 @@
     },
     {
      "id": "i445",
-     "name": "Wurstel di pura carne di suino al forno ( senza glutine, senza lattosio)",
+     "name": "Wurstel di pura carne di suino al forno",
      "desc": "",
      "price": 5,
      "prices": [],
@@ -999,7 +999,7 @@
     },
     {
      "id": "i449",
-     "name": "Code di Gamberoni Argentini impanati e fritti 5 Pz.",
+     "name": "Code di gamberoni argentini impanati e fritti (5 pz)",
      "desc": "",
      "price": 7,
      "prices": [],
@@ -1033,7 +1033,7 @@
     },
     {
      "id": "i452",
-     "name": "Gamberoni Argentini in tempura 5 Pz.",
+     "name": "Gamberoni argentini in tempura (5 pz)",
      "desc": "",
      "price": 7,
      "prices": [],
@@ -1158,7 +1158,7 @@
     },
     {
      "id": "i456",
-     "name": "Patate fritte con buccia, wurstel e salsa Cheddar",
+     "name": "Patate fritte con buccia, wurstel e salsa cheddar",
      "desc": "",
      "price": null,
      "prices": [
@@ -1304,11 +1304,11 @@
      "price": null,
      "prices": [
       {
-       "label": "Per 2 p.",
+       "label": "Per 2 persone",
        "price": 8
       },
       {
-       "label": "Per 4 p.",
+       "label": "Per 4 persone",
        "price": 12
       }
      ],
@@ -1348,7 +1348,7 @@
    "items": [
     {
      "id": "i462",
-     "name": "Panzerotto Classico",
+     "name": "Panzerotto classico",
      "desc": "mozzarella, pomodoro e pepe",
      "price": 3.5,
      "prices": [],
@@ -1371,7 +1371,7 @@
     },
     {
      "id": "i463",
-     "name": "Panzerotto Ai Capperi",
+     "name": "Panzerotto ai capperi",
      "desc": "mozzarella, pomodoro, pepe e capperi",
      "price": 4,
      "prices": [],
@@ -1395,7 +1395,7 @@
     },
     {
      "id": "i464",
-     "name": "Panzerotto Al Cotto",
+     "name": "Panzerotto al cotto",
      "desc": "mozzarella, pomodoro, pepe, prosciutto cotto",
      "price": 4.5,
      "prices": [],
@@ -1418,7 +1418,7 @@
     },
     {
      "id": "i465",
-     "name": "Panzerotto Alle rape stufate",
+     "name": "Panzerotto alle rape stufate",
      "desc": "mozzarella, pomodoro, pepe, rape stufate",
      "price": 5,
      "prices": [],
@@ -1441,7 +1441,7 @@
     },
     {
      "id": "i466",
-     "name": "Panzerotto Alla Romana",
+     "name": "Panzerotto alla romana",
      "desc": "mozzarella, pomodoro, pepe, acciughe di Cetara e capperi",
      "price": 4.5,
      "prices": [],
@@ -1466,7 +1466,7 @@
     },
     {
      "id": "i467",
-     "name": "Panzerotto Alla Bufala",
+     "name": "Panzerotto alla bufala",
      "desc": "mozzarella di bufala, pomodoro, pepe",
      "price": 4.5,
      "prices": [],
@@ -1489,7 +1489,7 @@
     },
     {
      "id": "i468",
-     "name": "Panzerotto Ai Wurstel",
+     "name": "Panzerotto ai wurstel",
      "desc": "pomodoro, mozzarella, pepe e wurstel",
      "price": 4.5,
      "prices": [],
@@ -1512,7 +1512,7 @@
     },
     {
      "id": "i469",
-     "name": "Panzerotto Alla Capricciosa",
+     "name": "Panzerotto alla capricciosa",
      "desc": "pomodoro, mozzarella, pepe, funghi trifolati, carciofi, prosciutto cotto e pepe",
      "price": 6,
      "prices": [],
@@ -1536,7 +1536,7 @@
     },
     {
      "id": "i470",
-     "name": "Panzerotto Alla Diavola",
+     "name": "Panzerotto alla diavola",
      "desc": "pomodoro, mozzarella, pepe, salsiccia piccante a punta di coltello lucana",
      "price": 4.5,
      "prices": [],
@@ -1561,7 +1561,7 @@
     },
     {
      "id": "i471",
-     "name": "Panzerotto Senza glutine classico",
+     "name": "Panzerotto senza glutine classico",
      "desc": "pomodoro, mozzarella (impasto al saraceno)",
      "price": 5.5,
      "prices": [],
@@ -1581,7 +1581,7 @@
     },
     {
      "id": "i472",
-     "name": "Panzerotto Senza glutine e senza lattosio",
+     "name": "Panzerotto senza glutine e senza lattosio",
      "desc": "pomodoro, mozzarella senza lattosio, pepe",
      "price": 6.5,
      "prices": [],
@@ -1601,7 +1601,7 @@
     },
     {
      "id": "i473",
-     "name": "Panzerotto Senza lattosio",
+     "name": "Panzerotto senza lattosio",
      "desc": "pomodoro, mozzarella senza lattosio",
      "price": 4.5,
      "prices": [],
@@ -1625,7 +1625,7 @@
     },
     {
      "id": "i474",
-     "name": "Panzerotto Solo pomodoro",
+     "name": "Panzerotto solo pomodoro",
      "desc": "pomodoro",
      "price": 3,
      "prices": [],
@@ -1647,7 +1647,7 @@
     },
     {
      "id": "i475",
-     "name": "Panzerotto Alla bufala",
+     "name": "Panzerotto alla bufala",
      "desc": "",
      "price": 4.5,
      "prices": [],
@@ -1661,7 +1661,7 @@
     },
     {
      "id": "i476",
-     "name": "Panzerotto Alla carne",
+     "name": "Panzerotto alla carne",
      "desc": "",
      "price": 5,
      "prices": [],
@@ -1675,7 +1675,7 @@
     },
     {
      "id": "i477",
-     "name": "Panzerotto Alla carne bianco",
+     "name": "Panzerotto alla carne bianco",
      "desc": "",
      "price": 5.5,
      "prices": [],
@@ -2056,7 +2056,7 @@
     },
     {
      "id": "i564",
-     "name": "Marinara Romana",
+     "name": "Marinara romana",
      "desc": "pomodoro, aglio a rondelle, prezzemolo, acciughe di Cetara",
      "price": 8,
      "prices": [],
@@ -2589,7 +2589,7 @@
     },
     {
      "id": "i587",
-     "name": "Chiusa Sfiziosa (aperta)",
+     "name": "Chiusa sfiziosa (aperta)",
      "desc": "pomodoro, mozzarella di bufala, formaggio francese; all’uscita: prosciutto crudo a fette (Parma / Nazionale Lucano), rucola, scaglie di Grana Padano",
      "price": 10.5,
      "prices": [],
@@ -2613,7 +2613,7 @@
     },
     {
      "id": "i588",
-     "name": "Chiusa Sfiziosa (simile a calzone/panzerotto)",
+     "name": "Chiusa sfiziosa (simile a calzone/panzerotto)",
      "desc": "pomodoro, mozzarella di bufala 100% DOP, formaggio francese; all’uscita: prosciutto crudo a fette (Parma / Nazionale Lucano), rucola, scaglie di Grana Padano",
      "price": 10,
      "prices": [],
@@ -2680,7 +2680,7 @@
     },
     {
      "id": "i591",
-     "name": "Cinque Formaggi",
+     "name": "Cinque formaggi",
      "desc": "pomodoro, mozzarella siero innesto, provolone artigianale murgiano (Putignano), scamorza affumicata, gorgonzola DOP, scaglie di grana",
      "price": 10,
      "prices": [],
@@ -3433,7 +3433,7 @@
     },
     {
      "id": "i623",
-     "name": "Quattro Formaggi",
+     "name": "Quattro formaggi",
      "desc": "pomodoro, mozzarella siero innesto, scamorza affumicata, gorgonzola DOP, scaglie di Grana Padana",
      "price": 9,
      "prices": [],
@@ -3456,7 +3456,7 @@
     },
     {
      "id": "i624",
-     "name": "Quattro Stagioni",
+     "name": "Quattro stagioni",
      "desc": "pomodoro, mozzarella siero innesto, prosciutto cotto, funghi champignon trifolati, carciofi, olive",
      "price": 10,
      "prices": [],
@@ -3551,7 +3551,7 @@
     },
     {
      "id": "i628",
-     "name": "Sfiziosa Rossa",
+     "name": "Sfiziosa rossa",
      "desc": "pomodoro, mozzarella siero innesto, scamorza affumicata, bacon, funghi freschi cardoncelli, scaglie di Grana Padana",
      "price": 10,
      "prices": [],
@@ -3574,7 +3574,7 @@
     },
     {
      "id": "i629",
-     "name": "Siciliana Rossa",
+     "name": "Siciliana rossa",
      "desc": "pomodoro, mozzarella siero innesto, pomodorini, tonno sott’olio o al naturale, granella di pistacchio bio Catanese",
      "price": 10,
      "prices": [],
@@ -3646,7 +3646,7 @@
     },
     {
      "id": "i632",
-     "name": "Super Diavola",
+     "name": "Super diavola",
      "desc": "pomodoro, mozzarella siero innesto, crema di peperoncino con verdure miste, salsiccia lucana piccante a punta di coltello",
      "price": 9,
      "prices": [],
@@ -3671,7 +3671,7 @@
     },
     {
      "id": "i633",
-     "name": "Terra e Mare rossa",
+     "name": "Terra e mare rossa",
      "desc": "pomodoro, mozzarella siero innesto, funghi porcini sott’olio, gamberetti*",
      "price": 11.5,
      "prices": [],
@@ -3950,7 +3950,7 @@
     },
     {
      "id": "i642",
-     "name": "Bacon Ricca",
+     "name": "Bacon ricca",
      "desc": "mozzarella siero innesto, pomodorini, formaggio francese, bacon a fette, carciofi, scaglie di Grana Padana",
      "price": 11,
      "prices": [],
@@ -3997,7 +3997,7 @@
     },
     {
      "id": "i644",
-     "name": "Chiusa Sorpresa",
+     "name": "Chiusa sorpresa",
      "desc": "mozzarella siero innesto, stracciatella, pomodorini pachino; all’uscita: crudo di Parma o nazionale Lucano, rucola, scaglie di Grana Padano",
      "price": 10,
      "prices": [],
@@ -4044,7 +4044,7 @@
     },
     {
      "id": "i646",
-     "name": "Del Boscaiolo",
+     "name": "Del boscaiolo",
      "desc": "mozzarella siero innesto, funghi chiodini, salsiccia di Norcia fresca, pomodorini, scaglie di Grana Padana",
      "price": 10.5,
      "prices": [],
@@ -4068,7 +4068,7 @@
     },
     {
      "id": "i647",
-     "name": "Foresta Nera",
+     "name": "Foresta nera",
      "desc": "mozzarella siero innesto, funghi porcini sott’olio, stracciatella, speck a fette",
      "price": 11.5,
      "prices": [],
@@ -4139,7 +4139,7 @@
     },
     {
      "id": "i650",
-     "name": "La Caramellata 1",
+     "name": "La caramellata 1",
      "desc": "mozzarella siero innesto, cipolla caramellata, tonno sott’olio o al naturale",
      "price": 9,
      "prices": [],
@@ -4164,7 +4164,7 @@
     },
     {
      "id": "i651",
-     "name": "La Caramellata 2",
+     "name": "La caramellata 2",
      "desc": "mozzarella siero innesto, cipolla caramellata, salsiccia di Norcia fresca, scaglie di Grana Padana",
      "price": 9.5,
      "prices": [],
@@ -4188,7 +4188,7 @@
     },
     {
      "id": "i652",
-     "name": "Mare e Monti",
+     "name": "Mare e monti",
      "desc": "mozzarella siero innesto, crema ai funghi porcini, gamberetti*, rucola, scaglie di Grana Padana",
      "price": 13,
      "prices": [],
@@ -4307,7 +4307,7 @@
     },
     {
      "id": "i657",
-     "name": "La Porcina",
+     "name": "La porcina",
      "desc": "mozzarella siero innesto, crema di porcini, funghi porcini, rucola, scaglie di Grana Padana",
      "price": 11.5,
      "prices": [],
@@ -4377,7 +4377,7 @@
     },
     {
      "id": "i660",
-     "name": "Siciliana Bianca",
+     "name": "Siciliana bianca",
      "desc": "mozzarella siero innesto, pomodori sott’olio, melanzane, pangrattato",
      "price": 10,
      "prices": [],
@@ -4400,7 +4400,7 @@
     },
     {
      "id": "i661",
-     "name": "Sole Mio",
+     "name": "Sole mio",
      "desc": "mozzarella siero innesto, pomodori sott’olio, rucola, scaglie di Grana Padana",
      "price": 9,
      "prices": [],
@@ -4423,7 +4423,7 @@
     },
     {
      "id": "i662",
-     "name": "Sole nel Bosco",
+     "name": "Sole nel bosco",
      "desc": "mozzarella siero innesto, pomodorino datterino giallo, funghi chiodini, zucchine, prezzemolo",
      "price": 10,
      "prices": [],
@@ -4447,7 +4447,7 @@
     },
     {
      "id": "i663",
-     "name": "Sole nel Bosco 2",
+     "name": "Sole nel bosco 2",
      "desc": "mozzarella siero innesto, funghi misti sott’olio, pomodorino datterino giallo, zucchine a julienne, scaglie di pecorino",
      "price": 11,
      "prices": [],
@@ -4541,7 +4541,7 @@
     },
     {
      "id": "i667",
-     "name": "Vesuvio Bufala",
+     "name": "Vesuvio bufala",
      "desc": "mozzarella di bufala 100% DOP, datterino giallo e datterino rosso, basilico",
      "price": 11,
      "prices": [],
@@ -4853,7 +4853,7 @@
    "items": [
     {
      "id": "i530",
-     "name": "Ciccio Semplice",
+     "name": "Ciccio semplice",
      "desc": "olio evo bio, origano e sale",
      "price": 2.5,
      "prices": [],
@@ -4875,7 +4875,7 @@
     },
     {
      "id": "i531",
-     "name": "Ciccio Caprese",
+     "name": "Ciccio caprese",
      "desc": "olio evo bio, mozzarella a fette, pomodorini, origano",
      "price": 8,
      "prices": [],
@@ -4921,7 +4921,7 @@
     },
     {
      "id": "i533",
-     "name": "Ciccio Crudaiola",
+     "name": "Ciccio crudaiola",
      "desc": "olio evo bio, pomodorini, mozzarella, rucola, scaglie di grana padano",
      "price": 9.5,
      "prices": [],
@@ -4944,7 +4944,7 @@
     },
     {
      "id": "i534",
-     "name": "Ciccio Formaggio",
+     "name": "Ciccio formaggio",
      "desc": "olio evo bio, origano, scaglie di grana padano",
      "price": 3.5,
      "prices": [],
@@ -4990,7 +4990,7 @@
     },
     {
      "id": "i536",
-     "name": "Ciccio Saporito",
+     "name": "Ciccio saporito",
      "desc": "olio evo bio, pesto genovese, provolone",
      "price": 7.5,
      "prices": [],
@@ -5654,7 +5654,7 @@
     },
     {
      "id": "i485",
-     "name": "Insalata Mediterranea",
+     "name": "Insalata mediterranea",
      "desc": "insalata verde, radicchio, rucola, mais, pomodori, tonno, Ciccio semplice, olio evo, aceto di vino",
      "price": 10,
      "prices": [],
@@ -5671,7 +5671,7 @@
     },
     {
      "id": "i486",
-     "name": "Insalata Norvegese",
+     "name": "Insalata norvegese",
      "desc": "rucola, mais, pomodori, insalata verde, salmone affumicato, olio evo, limone, Ciccio semplice, semi di sesamo nero",
      "price": 11,
      "prices": [],
@@ -5919,7 +5919,7 @@
    "items": [
     {
      "id": "i497",
-     "name": "Puccia Beef burger",
+     "name": "Puccia beef burger",
      "desc": "puccia autoprodotta con farina bio di tipo 1, *hamburger di manzo (Scottona), bacon croccante, cipolla caramellata, Cheddar, insalata, salse varie",
      "price": 10,
      "prices": [],
@@ -5943,7 +5943,7 @@
     },
     {
      "id": "i498",
-     "name": "Puccia Bolognese",
+     "name": "Puccia bolognese",
      "desc": "mortadella, stracciatella, pesto genovese, granella di pistacchio 100% italiana",
      "price": 8,
      "prices": [],
@@ -5966,7 +5966,7 @@
     },
     {
      "id": "i499",
-     "name": "Puccia Bresaola",
+     "name": "Puccia bresaola",
      "desc": "puccia autoprodotta con farina bio di tipo 1, bresaola, rucola e scaglie di Grana Padana, olio extravergine d’oliva e succo di limone",
      "price": 8,
      "prices": [],
@@ -5989,7 +5989,7 @@
     },
     {
      "id": "i500",
-     "name": "Puccia Calabrese",
+     "name": "Puccia calabrese",
      "desc": "nduja calabrese, stracciatella, *salsiccia di suino a punta di coltello",
      "price": 9,
      "prices": [],
@@ -6012,7 +6012,7 @@
     },
     {
      "id": "i501",
-     "name": "Puccia Formaggio",
+     "name": "Puccia formaggio",
      "desc": "puccia autoprodotta con farina bio di tipo 1, provolone artigianale piastrato murgiano (Putignano BA), insalata o rucola, pomodorini a fette",
      "price": 7.5,
      "prices": [],
@@ -6035,7 +6035,7 @@
     },
     {
      "id": "i502",
-     "name": "Puccia Hamburger",
+     "name": "Puccia hamburger",
      "desc": "puccia autoprodotta con farina bio di tipo 1, *hamburger di manzo (Scottona) 200 gr., insalata, salse varie a piacimento (ketchup e mayonnaise)",
      "price": 6,
      "prices": [],
@@ -6058,7 +6058,7 @@
     },
     {
      "id": "i503",
-     "name": "Puccia Hot dog",
+     "name": "Puccia hot dog",
      "desc": "puccia autoprodotta con farina bio di tipo 1, ketchup e maionese, wurstel Senfter di puro suino carne 100% italiana",
      "price": 4,
      "prices": [],
@@ -6081,7 +6081,7 @@
     },
     {
      "id": "i504",
-     "name": "Puccia Italiana",
+     "name": "Puccia italiana",
      "desc": "puccia autoprodotta con farina bio di tipo 1, prosciutto crudo a fette (Parma o nazionale Lucano), mozzarella a siero innesto",
      "price": 8,
      "prices": [],
@@ -6104,7 +6104,7 @@
     },
     {
      "id": "i505",
-     "name": "Puccia Kebab",
+     "name": "Puccia kebab",
      "desc": "puccia autoprodotta con farina di tipo 1, kebab di pollo*, insalata e pomodoro con salse a vostro piacere",
      "price": 8,
      "prices": [],
@@ -6150,7 +6150,7 @@
     },
     {
      "id": "i507",
-     "name": "Puccia Vegana Marilena",
+     "name": "Puccia vegana Marilena",
      "desc": "puccia, crema d’asparagi, insalata verde, carciofi grigliati",
      "price": 7,
      "prices": [],
@@ -6175,7 +6175,7 @@
     },
     {
      "id": "i508",
-     "name": "Puccia Vegana 2",
+     "name": "Puccia vegana 2",
      "desc": "puccia autoprodotta con farina bio di tipo 1, rape stufate, Violife, funghi champignon trifolati",
      "price": 8,
      "prices": [],
@@ -6199,7 +6199,7 @@
     },
     {
      "id": "i509",
-     "name": "Puccia Zampina",
+     "name": "Puccia zampina",
      "desc": "puccia autoprodotta con farina bio tipo 1, salsiccia zampina*, rucola, provolone di capra",
      "price": 9,
      "prices": [],
@@ -6236,7 +6236,7 @@
    "items": [
     {
      "id": "i510",
-     "name": "Assassina Classica",
+     "name": "Assassina classica",
      "desc": "spaghetti 100% italiani trafilati a bronzo, olio evo, aglio, peperoncino, pomodoro made in Puglia",
      "price": 10,
      "prices": [],
@@ -6252,7 +6252,7 @@
     },
     {
      "id": "i511",
-     "name": "Assassina Gourmet",
+     "name": "Assassina gourmet",
      "desc": "spaghetti 100% italiani trafilati a bronzo, olio evo, aglio, peperoncino, pomodoro made in Puglia, stracciatella/burrata",
      "price": 12,
      "prices": [],
@@ -6302,7 +6302,7 @@
     },
     {
      "id": "i514",
-     "name": "Spaghetti Cacio e pepe",
+     "name": "Spaghetti cacio e pepe",
      "desc": "troccolo fresco, pecorino romano, pepe",
      "price": 11,
      "prices": [],
@@ -6338,7 +6338,7 @@
     },
     {
      "id": "i516",
-     "name": "Spaghetti alla Gricia",
+     "name": "Spaghetti alla gricia",
      "desc": "Pasta, guanciale di suino, pecorino romano, pepe nero",
      "price": 13,
      "prices": [],
@@ -6457,7 +6457,7 @@
    "items": [
     {
      "id": "i732",
-     "name": "Bomboniera Algida (12 pz) – classica o mista (senza glutine)",
+     "name": "Bomboniera Algida (12 pz), classica o mista",
      "desc": "Praline di gelato alla panna ricoperte di cioccolato al latte, miste: al latte, al cioccolato bianco, alle mandorle",
      "price": 7,
      "prices": [],
@@ -6501,7 +6501,7 @@
     },
     {
      "id": "i734",
-     "name": "Cassata al Caffè (senza glutine)",
+     "name": "Cassata al caffè",
      "desc": "Dessert gelato/cassata gusto caffè",
      "price": 5,
      "prices": [],
@@ -6521,7 +6521,7 @@
     },
     {
      "id": "i735",
-     "name": "Cassata al Cioccolato (senza glutine)",
+     "name": "Cassata al cioccolato",
      "desc": "Dessert gelato/cassata al cioccolato",
      "price": 5,
      "prices": [],
@@ -6541,7 +6541,7 @@
     },
     {
      "id": "i736",
-     "name": "Cassata al Limoncello (senza glutine)",
+     "name": "Cassata al limoncello",
      "desc": "Dessert gelato/cassata al limoncello",
      "price": 5,
      "prices": [],
@@ -6561,7 +6561,7 @@
     },
     {
      "id": "i737",
-     "name": "Cassata alla Nocciola (senza glutine)",
+     "name": "Cassata alla nocciola",
      "desc": "Dessert gelato/cassata alla nocciola",
      "price": 5.5,
      "prices": [],
@@ -6581,7 +6581,7 @@
     },
     {
      "id": "i738",
-     "name": "Cassata Pistacchio e Ricotta (senza glutine)",
+     "name": "Cassata pistacchio e ricotta",
      "desc": "Dessert gelato/cassata pistacchio e ricotta",
      "price": 5.5,
      "prices": [],
@@ -6601,7 +6601,7 @@
     },
     {
      "id": "i739",
-     "name": "Cassata al Torroncino (senza glutine)",
+     "name": "Cassata al torroncino",
      "desc": "Dessert gelato/cassata al torroncino",
      "price": 5,
      "prices": [],
@@ -6621,7 +6621,7 @@
     },
     {
      "id": "i740",
-     "name": "Cheese cake gelato ai frutti di bosco (senza glutine)",
+     "name": "Cheese cake gelato ai frutti di bosco",
      "desc": "Cheesecake in versione gelato ai frutti di bosco",
      "price": 5,
      "prices": [],
@@ -6641,7 +6641,7 @@
     },
     {
      "id": "i741",
-     "name": "Cheese cake gelato nocciola e cacao (senza glutine)",
+     "name": "Cheese cake gelato nocciola e cacao",
      "desc": "Cheesecake in versione gelato nocciola e cacao",
      "price": 5,
      "prices": [],
@@ -6661,7 +6661,7 @@
     },
     {
      "id": "i742",
-     "name": "Cheese cake al pistacchio gelato (senza glutine)",
+     "name": "Cheese cake al pistacchio gelato",
      "desc": "Cheesecake in versione gelato al pistacchio",
      "price": 5.5,
      "prices": [],
@@ -6681,7 +6681,7 @@
     },
     {
      "id": "i743",
-     "name": "Cremoso Paradiso (senza glutine)",
+     "name": "Cremoso paradiso",
      "desc": "Dessert cremoso “Paradiso",
      "price": 5.5,
      "prices": [],
@@ -6701,7 +6701,7 @@
     },
     {
      "id": "i744",
-     "name": "Cremoso Tiramisù (senza glutine)",
+     "name": "Cremoso tiramisù",
      "desc": "Dessert cremoso gusto tiramisù",
      "price": 5.5,
      "prices": [],
@@ -6721,7 +6721,7 @@
     },
     {
      "id": "i745",
-     "name": "Cremoso Tris Cioccolato (senza glutine)",
+     "name": "Cremoso tris cioccolato",
      "desc": "Dessert cremoso ai 3 cioccolati",
      "price": 5.5,
      "prices": [],
@@ -6741,7 +6741,7 @@
     },
     {
      "id": "i746",
-     "name": "Croccantino all’Amarena (senza glutine)",
+     "name": "Croccantino all’amarena",
      "desc": "Dessert gelato croccante all’amarena",
      "price": 5.5,
      "prices": [],
@@ -6761,7 +6761,7 @@
     },
     {
      "id": "i747",
-     "name": "Cubano (senza glutine)",
+     "name": "Cubano",
      "desc": "Dessert gelato Cubano",
      "price": 6,
      "prices": [],
@@ -6781,7 +6781,7 @@
     },
     {
      "id": "i748",
-     "name": "Delizia croccante al Pistacchio (senza glutine)",
+     "name": "Delizia croccante al pistacchio",
      "desc": "Dessert croccante al pistacchio",
      "price": 6,
      "prices": [],
@@ -6801,7 +6801,7 @@
     },
     {
      "id": "i749",
-     "name": "Delizia pralinata alla gianduia (senza glutine)",
+     "name": "Delizia pralinata alla gianduia",
      "desc": "",
      "price": 5.5,
      "prices": [],
@@ -6821,7 +6821,7 @@
     },
     {
      "id": "i750",
-     "name": "Delizia pralinata Bianca (senza glutine)",
+     "name": "Delizia pralinata bianca",
      "desc": "Dessert pralinato al cioccolato bianco",
      "price": 5.5,
      "prices": [],
@@ -6925,7 +6925,7 @@
     },
     {
      "id": "i755",
-     "name": "Sorbetto al Limone (senza glutine)",
+     "name": "Sorbetto al limone",
      "desc": "Sorbetto al limone",
      "price": 5,
      "prices": [],
@@ -6945,7 +6945,7 @@
     },
     {
      "id": "i756",
-     "name": "Sorbetto al Mandarino (senza glutine)",
+     "name": "Sorbetto al mandarino",
      "desc": "Sorbetto al mandarino",
      "price": 5,
      "prices": [],
@@ -6965,7 +6965,7 @@
     },
     {
      "id": "i757",
-     "name": "Soufflé al Cioccolato (senza glutine e senza lattosio)",
+     "name": "Soufflé al cioccolato",
      "desc": "Soufflé caldo al cioccolato",
      "price": 5.5,
      "prices": [],
@@ -6985,7 +6985,7 @@
     },
     {
      "id": "i758",
-     "name": "Soufflé al pistacchio (senza glutine senza lattosio)",
+     "name": "Soufflé al pistacchio",
      "desc": "",
      "price": 5.5,
      "prices": [],
@@ -7005,7 +7005,7 @@
     },
     {
      "id": "i759",
-     "name": "Tartufo classico bianco al Caffè",
+     "name": "Tartufo classico bianco al caffè",
      "desc": "Gelato “tartufo” bianco al caffè",
      "price": 4.5,
      "prices": [],
@@ -7024,7 +7024,7 @@
     },
     {
      "id": "i760",
-     "name": "Tartufo classico Cioccolato e Cacao",
+     "name": "Tartufo classico cioccolato e cacao",
      "desc": "Gelato “tartufo” cioccolato e cacao",
      "price": 4.5,
      "prices": [],
@@ -7043,7 +7043,7 @@
     },
     {
      "id": "i761",
-     "name": "Tartufo vegano alla Gianduia (senza glutine) – Manfredonia (FG)",
+     "name": "Tartufo vegano alla gianduia (Manfredonia, FG)",
      "desc": "Tartufo vegano alla gianduia",
      "price": 5.5,
      "prices": [],
@@ -7351,7 +7351,7 @@
    "items": [
     {
      "id": "i702",
-     "name": "SELVAROSSA – Cantine DuePalme (Salice Salentino Riserva DOP)",
+     "name": "Selvarossa – Cantine Due Palme (Salice Salentino Riserva DOP)",
      "desc": "vino rosso",
      "price": 30,
      "prices": [],
@@ -7423,7 +7423,7 @@
     },
     {
      "id": "i706",
-     "name": "Vino bianco Bio sfuso – Cantina Polvanera",
+     "name": "Vino bianco bio sfuso – Cantina Polvanera",
      "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
      "price": null,
      "prices": [
@@ -7452,7 +7452,7 @@
     },
     {
      "id": "i707",
-     "name": "Vino Primitivo Bio sfuso – Cantina Polvanera",
+     "name": "Vino Primitivo bio sfuso – Cantina Polvanera",
      "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
      "price": null,
      "prices": [
@@ -7481,7 +7481,7 @@
     },
     {
      "id": "i708",
-     "name": "Vino Rosato Bio sfuso – Cantina Polvanera",
+     "name": "Vino rosato bio sfuso – Cantina Polvanera",
      "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
      "price": null,
      "prices": [
@@ -8423,7 +8423,7 @@
     },
     {
      "id": "i782",
-     "name": "Grappa Barrique",
+     "name": "Grappa barrique",
      "desc": "Grappa affinata in legno, più morbida e vanigliata",
      "price": 4,
      "prices": [],
@@ -8439,7 +8439,7 @@
     },
     {
      "id": "i783",
-     "name": "Liquorice (Liquirizia)",
+     "name": "Liquorice (liquirizia)",
      "desc": "Liquore alla liquirizia, dolce e persistente",
      "price": 4,
      "prices": [],
@@ -8533,7 +8533,7 @@
    "items": [
     {
      "id": "i788",
-     "name": "Caffè Espresso",
+     "name": "Caffè espresso",
      "desc": "",
      "price": 1.5,
      "prices": [],
@@ -8547,7 +8547,7 @@
     },
     {
      "id": "i789",
-     "name": "Caffè Decaffeinato",
+     "name": "Caffè decaffeinato",
      "desc": "",
      "price": 2,
      "prices": [],
@@ -9806,7 +9806,7 @@
     },
     {
      "id": "x193",
-     "name": "Provolone Murgiano Putignano",
+     "name": "Provolone murgiano di Putignano",
      "desc": "",
      "price": 2.5,
      "prices": [],
@@ -9997,7 +9997,7 @@
     },
     {
      "id": "x206",
-     "name": "Grattuggiato vegano Vemondo",
+     "name": "Grattugiato vegano Vemondo",
      "desc": "",
      "price": 3,
      "prices": [],
@@ -10147,7 +10147,7 @@
     },
     {
      "id": "x223",
-     "name": "Pomodoro Nickel free",
+     "name": "Pomodoro nickel free",
      "desc": "",
      "price": 3,
      "prices": [],

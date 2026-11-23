@@ -463,3 +463,12 @@ html.kiosk .algs { font-size: .82rem; }
 .b-allt svg { width: 18px; height: 18px; transition: transform .3s var(--ease-out); }
 .b-allt[aria-expanded="true"] svg { transform: rotate(180deg); }
 .b-allt:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* Pulizia testi (audit): note di sezione come riga piccola, Personalizza più asciutto */
+.sec-note, .acc-in > .sec-note:first-child { margin: 8px 0 0; background: none; border: 0; border-radius: 0; padding: 0; font-size: .86rem; line-height: 1.45; color: var(--ink-2); }
+.b-k { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-right: 60px; }
+.b-k .b-reset { font-size: .84rem; font-weight: 500; color: var(--ink-2); margin: 0; }
+.b-change { border: 0; background: none; padding: 6px 4px; font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; align-self: center; }
+.b-change[aria-expanded="true"] { text-decoration: none; color: var(--ink-2); }
+.w-a { display: block; font-size: .95rem; }
+.mf-kv small { display: block; font-size: .8rem; color: var(--ink-2); margin-top: 2px; }

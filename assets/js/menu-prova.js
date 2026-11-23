@@ -67,7 +67,7 @@
     return '<div class="cards">' + items.map(function (it) {
       return '<button class="card" type="button" data-item="' + esc(it.id) + '">' +
         (it.image ? '<img class="card-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '<span class="card-ph ph-empty">' + AA.archSVG() + '</span>') +
-        '<span class="card-name" style="display:block">' + hl(it.name.replace(/^Impasto\s+/i, '')) + '</span>' +
+        '<span class="card-name" style="display:block">' + hl(doughName(it.name)) + '</span>' +
         '<span class="card-price" style="display:block">' + priceHTML(it, sec) + '</span></button>';
     }).join('') + '</div>';
   }
@@ -354,7 +354,6 @@
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
       }).join('') + '</ul>' : '') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
-      '<p class="d-note">' + esc(DATA.info.allergenNote) + '</p>' +
       (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza</button>'
         : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
       '</div>';
@@ -403,7 +402,7 @@
     var secs = pizzaSections();
     var starts = [];
     if (itemId) { var f = findItem(itemId); if (f) starts.push(f); }
-    ['Margherita', 'Marinara'].forEach(function (n) {
+    if (!starts.length) ['Margherita', 'Marinara'].forEach(function (n) {
       var f = findByName(n, secs);
       if (f && !starts.some(function (x) { return x.item.id === f.item.id; })) starts.push(f);
     });
@@ -459,24 +458,23 @@
   function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
   function renderBuilder() {
     var opt = builderOptions(B.start.sec);
-    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '</p>' +
-      '<h2 class="b-t" id="bTitle">' + esc(B.from ? B.from.item.name + ', a modo tuo.' : 'La tua pizza, il tuo prezzo.') + '</h2>' +
-      '<p class="b-s">Togli e aggiungi ingredienti, scegli l’impasto: il totale si aggiorna mentre scegli. <button type="button" class="b-reset" data-b="reset">Ricomincia</button></p></div>';
+    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '<button type="button" class="b-reset" data-b="reset">Ricomincia</button></p>' +
+      '<h2 class="b-t" id="bTitle">' + esc(B.start.item.name) + '</h2></div>';
     var rec = recipeOf(B.start.item);
     h += '<section class="b-step"><h3><b>1</b>Si parte da</h3><div class="bchips">' + B.starts.map(function (st) {
       return chip('start', st.item.id, st.item.name, AA.price(unitPrice(st.item)), st.item.id === B.start.item.id);
-    }).join('') + '<button type="button" class="bchip b-other" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '"><span>Un’altra pizza</span></button></div>' +
+    }).join('') + '<button type="button" class="' + (B.from ? 'b-change' : 'bchip b-other') + '" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '"><span>' + (B.from ? 'Cambia pizza' : 'Un’altra pizza') + '</span></button></div>' +
       '<div class="b-pick" id="bPick"' + (B.picking ? '' : ' hidden') + '><label class="b-search"><span class="sr-only">Cerca una pizza</span><input type="search" id="bPickQ" placeholder="Cerca per nome o ingrediente, es. bufala" autocomplete="off"></label><div class="b-pks" id="bPickList">' + (B.picking ? pickList('') : '') + '</div></div>';
     if (rec.length) {
-      h += '<p class="b-sub">Nella ricetta. Tocca per togliere quello che non vuoi</p><div class="bchips" id="bRec">' + rec.map(function (r) {
+      h += '<p class="b-sub">Nella ricetta: tocca per togliere, il prezzo non cambia</p><div class="bchips" id="bRec">' + rec.map(function (r) {
         var off = B.removed.indexOf(r) >= 0;
         return '<button type="button" class="bchip b-rec' + (off ? ' off' : '') + '" data-b="rm" data-v="' + esc(r) + '" aria-pressed="' + (off ? 'false' : 'true') + '" aria-label="' + esc(cap(r)) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo') + '"><span>' + esc(cap(r)) + '</span><i aria-hidden="true"></i></button>';
-      }).join('') + '</div><p class="b-hint">Se togli un ingrediente il totale non cambia.</p>';
+      }).join('') + '</div>';
     }
     h += '</section>';
     if (B.doughs.length) {
       h += '<section class="b-step"><h3><b>2</b>L’impasto</h3><div class="bchips">' + B.doughs.map(function (d) {
-        return chip('dough', d.id, d.name.replace(/^Impasto\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); }), deltaLabel(d.price), B.dough && d.id === B.dough.id);
+        return chip('dough', d.id, doughName(d.name), deltaLabel(d.price), B.dough && d.id === B.dough.id);
       }).join('') + '</div></section>';
     }
     if (opt.base.length) {
@@ -513,7 +511,7 @@
         return chip('extra', it.id, it.name, '', B.sel.indexOf(it.id) >= 0, ' small');
       }).join('') + '</div></div>';
     });
-    h += '</div></section><p class="d-note">Il prezzo è indicativo: lo confermiamo al momento dell’ordine. In caso di allergie chiedete sempre al personale.</p>';
+    h += '</div></section>';
     $('bBody').innerHTML = h;
     $('bPickQ').addEventListener('input', function (e) { $('bPickList').innerHTML = pickList(e.target.value.trim()); });
     if (B.picking) setTimeout(function () { var q = $('bPickQ'); if (q) q.focus({ preventScroll: true }); }, 50);
@@ -537,7 +535,7 @@
     if (B.dough) {
       var dp = Number(B.dough.price) || 0; total += dp;
       if (B.dough.price == null || B.dough.price === '') B.tbc = true;
-      lines.push(['Impasto', B.dough.name.replace(/^Impasto\s+/i, ''), dp]);
+      lines.push(['Impasto', doughName(B.dough.name), dp]);
       (B.dough.allergens || []).forEach(function (a) { algs.push(a); });
     }
     var bo = opt.base.filter(function (o) { return o.id === B.baseOpt; })[0];
@@ -554,7 +552,7 @@
     if (st.rem.length) parts.push('senza ' + st.rem.join(', '));
     if (st.ing.length) parts.push('+ ' + st.ing.map(function (i) { return i.name.toLowerCase(); }).join(', '));
     $('bFoot').innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Totale indicativo, impasto da chiedere' : 'Totale indicativo') + '</p><p class="bf-p num">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
-      '<p class="bf-s">' + esc(B.start.item.name) + (parts.length ? ', ' + esc(parts.join('; ')) : '') + '</p></div>' +
+      (parts.length ? '<p class="bf-s">' + esc(cap(parts.join('; '))) + '</p>' : '') + '</div>' +
       '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
     var mine = $('bMine');
     if (mine) mine.innerHTML = st.ing.length ? '<p class="b-sub">Aggiunti da te. Tocca per togliere</p><div class="bchips">' + st.ing.map(function (it) {
@@ -564,16 +562,16 @@
   function showWaiter() {
     var st = builderState();
     var algs = AA.allergenNums(st.algs);
-    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + (st.ing.length || st.rem.length ? ', a modo mio' : '') + '</h2><dl class="w-l">' +
-      st.lines.map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
-      (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + st.rem.map(function (r) { return esc(r); }).join(', ') + '</dd></div>' : '') +
+    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + '</h2><dl class="w-l">' +
+      st.lines.slice(1).map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
+      (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + esc(cap(st.rem.join(', '))) + '</dd></div>' : '') +
       (st.ing.length ? '<div><dt>In più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
-      '</dl><p class="w-p num">' + AA.price(st.total) + '<small>prezzo indicativo</small></p>' +
-      (algs.length ? '<p class="w-a">Allergeni: ' + algs.map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('') + '</p>' : '') +
+      '</dl><p class="w-p num">' + AA.price(st.total) + '</p>' +
+      (algs.length ? '<p class="w-a">Allergeni ' + algs.map(function (a) { return a.n; }).join(' · ') + '</p>' : '') +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
     $('waiter').hidden = false;
     $('wBack').onclick = function () { $('waiter').hidden = true; };
-    $('wBack').focus();
+    $('wBack').focus({ focusVisible: false });
   }
   function bindBuilder() {
     $('builder').addEventListener('click', function (e) {
@@ -584,7 +582,8 @@
       if (g === 'pickit') {
         var hit = allPizzas().filter(function (x) { return x.item.id === v; })[0];
         if (hit) {
-          if (!B.starts.some(function (x) { return x.item.id === v; })) B.starts.unshift(hit);
+          if (B.from) B.starts = [hit];
+          else if (!B.starts.some(function (x) { return x.item.id === v; })) B.starts.unshift(hit);
           B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.removed = []; B.picking = false; renderBuilder();
           var t = $('bBody'); if (t) t.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -659,11 +658,9 @@
     var count = countMatches();
     var gf = state.tags.indexOf('senza-glutine') >= 0, onlyGf = gf && n === 1;
     var title = onlyGf ? 'Menu senza glutine' : 'Filtri attivi: ' + filterNames().join(', ');
-    var text = count + (count === 1 ? ' piatto' : ' piatti') + (onlyGf ? ' senza glutine o che possiamo fare senza glutine.' : '.');
-    if (gf && Object.keys(CAN_GF).length) text += ' Pizze e panzerotti con l’impasto senza glutine hanno un supplemento.';
-    if (gf) text += ' Se sei celiaco, dillo sempre quando ordini.';
+    var text = (onlyGf ? 'Piatti senza glutine o che possiamo preparare senza glutine.' : '') + (gf ? ' Se sei celiaco, dillo quando ordini.' : '');
     box.hidden = false;
-    box.innerHTML = '<div class="af-t"><b>' + esc(title) + '</b><span>' + esc(text) + '</span></div>' +
+    box.innerHTML = '<div class="af-t"><b>' + esc(title) + '</b>' + (text ? '<span>' + esc(text.trim()) + '</span>' : '') + '</div>' +
       '<button type="button" class="af-x" data-clear-filters>Mostra tutto il menu</button>';
     if (apply) apply.textContent = count ? 'Mostra ' + count + (count === 1 ? ' piatto' : ' piatti') : 'Nessun piatto';
   }
@@ -707,7 +704,7 @@
       return '<article class="promo">' + (p.image ? '<img alt="" loading="lazy" src="' + esc(AA.src(p.image)) + '">' : '') +
         '<div>' + (p.kicker ? '<span class="promo-k">' + esc(p.kicker) + '</span>' : '') +
         '<h2 class="promo-t">' + esc(p.title) + '</h2>' + (p.text ? '<p class="promo-x">' + esc(p.text) + '</p>' : '') +
-        (p.price ? '<p class="promo-p num">' + esc(p.price) + '</p>' : '') + '</div></article>';
+        (p.price ? '<p class="promo-p num">' + esc(cleanPrice(p.price)) + '</p>' : '') + '</div></article>';
     }).join('');
     $('promos').hidden = !promos.length;
   }
@@ -717,13 +714,22 @@
     f += '<div class="mf-card"><h2>Da sapere</h2><div class="mf-row">' +
       (i.coverCharge ? '<p class="mf-kv"><b>Coperto</b>' + AA.price(i.coverCharge) + '</p>' : '') +
       (i.wifi && i.wifi.network ? '<p class="mf-kv"><b>Wi‑Fi gratuito</b>' + esc(i.wifi.network) + ', password ' + esc(i.wifi.password) + '</p>' : '') +
-      '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a></p>' +
+      '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a><small>solo al telefono, anche per asporto e domicilio</small></p>' +
       (i.mobile ? '<p class="mf-kv"><b>Cellulare</b><a href="' + AA.telHref(i.mobile) + '">' + esc(i.mobile) + '</a></p>' : '') +
       '<p class="mf-kv"><b>Orari</b>' + (i.hours || []).map(function (h) { return esc(h.days) + ' ' + esc(h.time); }).join('<br>') + '</p></div>';
     if (i.products) f += '<details><summary>I nostri prodotti</summary><p>' + esc(i.products) + '</p></details>';
-    (i.notes || []).forEach(function (n) { f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(n.text) + '</p></details>'; });
+    // "Prenotazioni" è già sopra; "Domicilio € 3" finisce dentro "Asporto e domicilio"
+    var notes = (i.notes || []).filter(function (n) { return !/^prenotazion/i.test(n.title); });
+    var dom = notes.filter(function (n) { return /^domicilio\b/i.test(n.title); })[0];
+    var asp = notes.filter(function (n) { return /asporto/i.test(n.title); })[0];
+    notes.forEach(function (n) {
+      if (n === dom && asp) return;
+      var t = n.text;
+      if (n === asp && dom) t += ' ' + cleanPrice(dom.title) + ': ' + dom.text.replace(/^./, function (c) { return c.toLowerCase(); });
+      f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(cleanPrice(t)) + '</p></details>';
+    });
     if (i.frozenLegend) f += '<p class="mf-frz"><span class="frz">*</span> ' + esc(i.frozenLegend) + '</p>';
-    f += '<p class="mf-frz"><a href="#g-allergeni">Allergeni e intolleranze</a></p></div>';
+    f += '</div>';
     f += '<p class="mf-links"><a href="' + AA.ROOT + '">Scopri L\'Antico Arco</a> · <a href="' + AA.ROOT + 'privacy/">Privacy e cookie</a></p></div>';
     $('footer').innerHTML = f;
   }
