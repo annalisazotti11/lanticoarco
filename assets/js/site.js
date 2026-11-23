@@ -481,11 +481,12 @@
     anatomy(extras.length);
   }
   /* La pizza da vicino: un punto si accende sul dettaglio, una linea si disegna fino alla lente, la lente lo ingrandisce.
-     Avanza da sola, a tempo, finché la sezione è sullo schermo; toccando un'icona si ferma e comanda chi guarda. */
+     Lo scorrimento guida: la scena resta ferma sullo schermo e a ogni tratto passa al dettaglio successivo.
+     Toccare un'icona porta lo scorrimento a quel dettaglio. */
   function anatomy(nIngr) {
     var shot = $('anShot'); if (!shot || shot.dataset.ready) return;
     shot.dataset.ready = '1';
-    var DUR = 5200, M = 2.4;
+    var M = 2.4, STEP = .55; // mezza schermata abbondante di scorrimento per ogni dettaglio
     var D = [
       { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio.', a: 'Scegli tra nove impasti', href: '#impasti' },
       { x: .2, y: .5, n: 'Pomodoro', from: 'Torre Guaceto · Presidio Slow Food', t: 'Il pomodoro', p: 'I pomodorini di Torre Guaceto, sulla costa di Brindisi. Su richiesta, anche il pomodoro nickel free.' },
@@ -494,7 +495,7 @@
     ];
     var lens = $('anLens'), lensImg = lens.querySelector('img'), dot = $('anDot'), wire = $('anWire'), nameEl = $('anName'), det = $('anDet');
     var lis = [].slice.call(document.querySelectorAll('#anPicks li'));
-    var cur = -1, auto = !reduce, timer = null, swapT = null, seqT = [];
+    var cur = -1, swapT = null, seqT = [], track = $('anTrack'), stick = $('anStick');
     function later(fn, ms) { seqT.push(setTimeout(fn, ms)); }
     function place(k) {
       var W = shot.clientWidth, H = shot.clientHeight, ir = 4 / 3, dw = W, dh = H, ox = 0, oy = 0;
@@ -542,22 +543,49 @@
     }
     function go(k) {
       cur = k; frame(k); text(k);
-      lis.forEach(function (li, i) {
-        li.classList.toggle('on', i === k); li.querySelector('button').setAttribute('aria-pressed', i === k);
-        li.classList.remove('run'); if (auto && i === k) { void li.offsetWidth; li.classList.add('run'); }
-      });
+      lis.forEach(function (li, i) { li.classList.toggle('on', i === k); li.querySelector('button').setAttribute('aria-pressed', i === k); });
     }
-    function next() { if (!auto) return; go((cur + 1) % D.length); timer = setTimeout(next, DUR); }
-    lis.forEach(function (li, i) { li.querySelector('button').addEventListener('click', function () { auto = false; clearTimeout(timer); go(i); }); });
     var img = shot.querySelector('.an-cam img');
-    function ready(fn) { if (img.complete) fn(); else img.addEventListener('load', fn, { once: true }); }
-    if (reduce) { ready(function () { go(0); }); return; }
-    new IntersectionObserver(function (es) {
-      if (!auto) return;
-      if (es[0].isIntersecting) { if (!timer) timer = setTimeout(function () { ready(next); }, cur < 0 ? 900 : 400); }
-      else { clearTimeout(timer); timer = null; }
-    }, { threshold: .5 }).observe(shot);
-    window.addEventListener('resize', function () { if (cur >= 0) place(cur); });
+    function ready(fn) { if (img.complete && img.naturalWidth) fn(); else img.addEventListener('load', fn, { once: true }); }
+    if (reduce) {
+      lis.forEach(function (li, i) { li.querySelector('button').addEventListener('click', function () { go(i); }); });
+      ready(function () { go(0); });
+      return;
+    }
+    // la scena si ferma sotto la barra in alto; il binario è lungo quanto serve per i quattro dettagli
+    var top0 = 0;
+    function layout() {
+      var nav = $('nav'), chap = $('chap');
+      top0 = (nav ? nav.offsetHeight : 0) + (chap && getComputedStyle(chap).display !== 'none' ? chap.offsetHeight : 0);
+      var free = window.innerHeight - top0 - stick.offsetHeight;
+      top0 += Math.max(0, Math.min(free / 2, 40));
+      stick.style.setProperty('--an-top', top0 + 'px'); stick.style.top = top0 + 'px';
+      shot.style.setProperty('--an-top', top0 + 'px');
+      track.style.height = Math.round(stick.offsetHeight + window.innerHeight * STEP * D.length) + 'px';
+    }
+    function range() { return Math.max(1, track.offsetHeight - stick.offsetHeight); }
+    var seen = false, pend = 0;
+    function onScroll() {
+      pend = 0;
+      var r = track.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+      var t = clamp((top0 - r.top) / range(), 0, .9999) * D.length;
+      var k = Math.floor(t);
+      if (cur >= 0 && k !== cur && Math.abs(t - Math.round(t)) < .06) k = cur; // un margine sul confine: niente sfarfallii
+      if (!seen) { seen = true; ready(function () { go(k); }); }
+      else if (k !== cur) go(k);
+      var on = lis[k]; if (on) on.style.setProperty('--f', clamp(t - k, 0, 1).toFixed(3));
+    }
+    lis.forEach(function (li, i) {
+      li.querySelector('button').addEventListener('click', function () {
+        var r = track.getBoundingClientRect();
+        scrollToY(Math.round(window.scrollY + r.top - top0 + (i + .5) / D.length * range()));
+      });
+    });
+    layout();
+    window.addEventListener('scroll', function () { if (!pend) pend = requestAnimationFrame(onScroll); }, { passive: true });
+    window.addEventListener('resize', function () { layout(); if (cur >= 0) place(cur); onScroll(); });
+    onScroll();
   }
 
   /* ================= Dati vivi ================= */

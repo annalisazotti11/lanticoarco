@@ -541,9 +541,9 @@ body.locked { overflow: hidden; }
 }
 
 /* ---------- La pizza da vicino: foto pulita, punto, linea e lente; le icone sotto fanno da comandi ---------- */
-.an { --cream-2: rgba(248, 237, 220, .72); --cream-3: rgba(248, 237, 220, .5); --hair: rgba(248, 237, 220, .16); --ease: cubic-bezier(.22, 1, .36, 1); --dur: 5200ms; margin: 0 calc(-1 * var(--pad)); }
+.an { --cream-2: rgba(248, 237, 220, .72); --cream-3: rgba(248, 237, 220, .5); --hair: rgba(248, 237, 220, .16); --ease: cubic-bezier(.22, 1, .36, 1); margin: 0 calc(-1 * var(--pad)); }
 .an-h, .an-t { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.045em; }
-.an { background: var(--night); color: var(--cream); padding: clamp(60px, 10vh, 120px) 0 clamp(56px, 9vh, 110px); position: relative; overflow: hidden; }
+.an { background: var(--night); color: var(--cream); padding: clamp(60px, 10vh, 120px) 0 clamp(56px, 9vh, 110px); position: relative; overflow: clip; }
 .an::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(90% 50% at 50% 38%, rgba(255, 226, 190, .06), transparent 70%); }
 .an-in { position: relative; }
 .an-over { display: flex; align-items: center; gap: 12px; font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--cream-3); padding: 0 var(--pad); }
@@ -552,7 +552,7 @@ body.locked { overflow: hidden; }
 .an-h em { font-style: normal; color: var(--cream-3); }
 
 /* la foto: da bordo a bordo, pulita */
-.an-shot { position: relative; margin: clamp(30px, 5vh, 48px) 0 0; aspect-ratio: 4 / 3.25; overflow: hidden; background: #0e0a07; }
+.an-shot { position: relative; margin: 0; aspect-ratio: 4 / 3.1; overflow: hidden; background: #0e0a07; }
 .an-cam { position: absolute; inset: 0; }
 .an-cam img { width: 100%; height: 100%; object-fit: cover; transition: filter .9s var(--ease); }
 .an-shot.s1 .an-cam img { filter: brightness(.6) saturate(.85); }
@@ -575,22 +575,21 @@ body.locked { overflow: hidden; }
 .an-shot::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, var(--night) 0%, transparent 14%, transparent 72%, var(--night) 100%); }
 
 /* le quattro icone: sotto, come comandi */
-.an-picks { list-style: none; padding: 0 var(--pad); margin-top: 10px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; position: relative; z-index: 1; }
-.an-picks button { all: unset; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; padding: 10px 0 6px; -webkit-tap-highlight-color: transparent; }
+.an-picks { list-style: none; padding: 0 var(--pad); margin-top: 4px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; position: relative; z-index: 1; }
+.an-picks button { all: unset; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; padding: 10px 0 4px; -webkit-tap-highlight-color: transparent; }
 .an-ic { position: relative; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--hair); color: var(--cream-2); transition: background .5s var(--ease), color .5s var(--ease), border-color .5s var(--ease), transform .5s var(--ease); }
-.an-ic svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.an-ic svg { width: 36px; height: 36px; fill: none; stroke: currentColor; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
 .an-picks span { font-size: .78rem; font-weight: 500; color: var(--cream-3); letter-spacing: .01em; transition: color .4s; }
 .an-picks li.on .an-ic { background: var(--cream); color: var(--ink); border-color: var(--cream); }
 /* il tempo che passa: un anello sottile che si chiude attorno all'icona attiva */
-.an-ring { position: absolute; inset: -7px; width: calc(100% + 14px) !important; height: calc(100% + 14px) !important; transform: rotate(-90deg); pointer-events: none; }
+.an-ic svg.an-ring { position: absolute; inset: -7px; width: calc(100% + 14px); height: calc(100% + 14px); stroke: none; transform: rotate(-90deg); pointer-events: none; }
 .an-ring circle { fill: none; stroke: var(--cream); stroke-width: 1.2; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; }
-.an-picks li.run .an-ring circle { opacity: .9; animation: anRing var(--dur) linear forwards; }
-@keyframes anRing { to { stroke-dashoffset: 0; } }
+.an-picks li.on .an-ring circle { opacity: .9; stroke-dashoffset: calc(100 - var(--f, 0) * 100); }
 .an-picks li.on span { color: var(--cream); }
 .an-picks button:focus-visible .an-ic { outline: 1.5px solid var(--cream); outline-offset: 4px; }
 
 /* il dettaglio */
-.an-det { padding: 28px var(--pad) 0; min-height: 13.5em; }
+.an-det { padding: 18px var(--pad) 0; min-height: 11.6em; }
 .an-det > * { transition: opacity .45s var(--ease), transform .7s var(--ease); }
 .an-det.out > * { opacity: 0; transform: translateY(10px); }
 .an-from { font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--cream-3); }
@@ -602,20 +601,29 @@ body.locked { overflow: hidden; }
 .an-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 22px; padding: 30px var(--pad) 0; }
 .an-own { color: var(--cream); font-weight: 600; text-underline-offset: 6px; text-decoration-color: var(--cream-3); }
 
+/* lo scorrimento guida i dettagli: la scena resta ferma mentre si scorre */
+.an-track { position: relative; }
+.an-stick { position: sticky; top: var(--an-top, 120px); }
+.an-head { margin-bottom: clamp(26px, 4vh, 40px); }
+.an-head-side { display: none; }
+.an-cta { padding-top: 26px; }
+
 /* PC: foto a sinistra, tutto il resto a destra */
 @media (min-width: 960px) {
+  .an > .an-head { display: none; }
+  .an-head-side { display: block; margin-bottom: 0; }
   .an-in { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0 clamp(40px, 5vw, 90px); padding: 0 var(--pad); align-items: center; }
-  .an-shot { grid-column: 1; grid-row: 1 / 7; margin: 0; aspect-ratio: auto; height: min(78vh, 720px); border-radius: 36px; }
+  .an-shot { grid-column: 1; grid-row: 1 / 5; margin: 0; aspect-ratio: auto; height: min(calc(100vh - var(--an-top, 90px) - 40px), 720px); border-radius: 36px; }
   .an-shot::after { background: radial-gradient(120% 90% at 50% 50%, transparent 60%, rgba(21, 16, 12, .55) 100%); }
-  .an-over, .an-h, .an-picks, .an-det, .an-cta { grid-column: 2; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+  .an-head-side, .an-picks, .an-det { grid-column: 2; padding-left: 0; padding-right: 0; margin-left: 0; margin-right: 0; }
+  .an-head-side .an-over, .an-head-side .an-h { padding: 0; }
   .an-h { font-size: clamp(3rem, 4.6vw, 4.8rem); }
-  .an-picks { margin-top: 40px; justify-items: start; }
+  .an-picks { margin-top: 36px; justify-items: start; }
   .an-picks button { align-items: flex-start; }
-  .an-det { min-height: 12em; }
+  .an-det { min-height: 12em; padding-top: 22px; }
+  .an-cta { padding-left: calc(var(--pad) + (100% - 2 * var(--pad) - clamp(40px, 5vw, 90px)) * 1.25 / 2.25 + clamp(40px, 5vw, 90px)); padding-top: 20px; }
 }
-
-
-@media (prefers-reduced-motion: reduce) { .an-lens, .an-dot, .an-wire path, .an-name, .an-det > * { transition: none !important; } .an-ring { display: none; } .an-shot.s3 .an-dot::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .an-lens, .an-dot, .an-wire path, .an-name, .an-det > * { transition: none !important; } .an-ic svg.an-ring { display: none; } .an-stick { position: static; } .an-track { height: auto !important; } .an-shot.s3 .an-dot::after { animation: none; } }
 
 /* telefono: nell'apertura solo titolo, pulsanti e stato */
 @media (max-width: 960px) {
