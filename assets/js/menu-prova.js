@@ -291,7 +291,7 @@
         var el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
         e.preventDefault();
         var grp = el.classList.contains('grp') ? el : el.closest('.grp'), id = grp ? grp.id.slice(2) : '';
-        spySet(id); renderSub(id); if (!el.classList.contains('grp')) setSub(el.id); spyLock = id;
+        spySet(id); renderSub(id); var fs = el.classList.contains('grp') ? el.querySelector('.sec') : el; if (fs) setSub(fs.id); spyLock = id;
         clearTimeout(spyLockT); spyLockT = setTimeout(function () { spyLock = null; spyCalc(); }, 1200);
         // la barra a fine corsa sta ferma in alto: conta la sua posizione finale, non quella di adesso
         var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1; // sul totem la pagina è ingrandita
