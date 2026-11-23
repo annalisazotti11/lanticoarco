@@ -708,6 +708,7 @@
       '<select data-act="pop-add" aria-label="Aggiungi ingrediente">' + opts(b.popular) + '</select></section>';
     h += '<section class="card"><h2>Cartellone in sala</h2>' +
       '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Una novità ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
+      '<label class="line"><span><b>Schermo touch</b><small>Un tocco sul cartellone apre il menu da sfogliare; dopo 90 secondi senza tocchi si torna al cartellone</small></span><label class="sw"><input type="checkbox" data-ck="settings.totem.touch"' + (t.touch !== false ? ' checked' : '') + '><span></span></label></label>' +
       '<label class="line"><span><b>Foto dei piatti</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '><span></span></label></label>' +
       '<label class="line"><span><b>QR per aprire il menu sul telefono</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showQr"' + (t.showQr !== false ? ' checked' : '') + '><span></span></label></label>' +
       '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="chiaro"' + (t.theme !== 'scuro' ? ' selected' : '') + '>Chiari, come il sito</option><option value="scuro"' + (t.theme === 'scuro' ? ' selected' : '') + '>Scuri con scintille</option></select></label>' +

@@ -17,7 +17,8 @@
       promoEvery: t.promoEvery == null ? 4 : Number(t.promoEvery),
       showPhotos: t.showPhotos !== false,
       showQr: t.showQr !== false,
-      theme: params.get('tema') || t.theme || 'chiaro'
+      theme: params.get('tema') || t.theme || 'chiaro',
+      touch: params.has('touch') ? params.get('touch') !== '0' : t.touch !== false
     };
   }
 
@@ -201,6 +202,7 @@
     bits.push('<span><b>*</b> ' + esc(info.frozenLegend || 'Prodotto surgelato') + '</span>');
     bits.push('<span><b>1–14</b> allergeni: chiedete al personale</span>');
     $('info').innerHTML = bits.join('');
+    $('tvTouch').hidden = !c.touch;
   }
 
   function animateBar(sec) {
@@ -274,10 +276,14 @@
     show(target, true);
   }
 
-  /* ---------- Interazione (schermo touch) ---------- */
+  /* ---------- Interazione (schermo touch) ----------
+     Con lo schermo touch il cartellone fa da attesa: un tocco apre il menu da sfogliare,
+     sulla categoria che si stava guardando. Senza touch, i tocchi sfogliano le pagine. */
+  function openMenu(group) { location.href = '../menu/?totem' + (group ? '#g-' + encodeURIComponent(group) : ''); }
   $('groups').addEventListener('click', function (e) {
     var b = e.target.closest('button');
     if (!b) return;
+    if (DATA && cfg().touch) { openMenu(b.dataset.g); return; }
     for (var i = 0; i < pages.length; i++) if (pages[i].group === b.dataset.g && !pages[i].promo) { pauseForTouch(); show(i); return; }
   });
   var sx = null;
@@ -285,6 +291,7 @@
   stage.addEventListener('pointerup', function (e) {
     if (sx === null) return;
     var dx = e.clientX - sx; sx = null;
+    if (DATA && cfg().touch) { var pg = pages[idx]; openMenu(pg && !pg.promo ? pg.group : ''); return; }
     if (Math.abs(dx) > 50) { pauseForTouch(); show(idx + (dx < 0 ? 1 : -1)); }
     else { pauseForTouch(); show(idx + 1); }
   });

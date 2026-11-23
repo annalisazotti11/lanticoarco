@@ -146,3 +146,11 @@ body.tema-scuro .promo-logo { background: #fff5e8; border-radius: 2rem; padding:
 .tv::before { content: ""; position: fixed; inset: auto -10% -20% -10%; height: 45%; background: radial-gradient(60% 60% at 50% 100%, rgba(255, 90, 31, .22), transparent 70%); pointer-events: none; z-index: 0; }
 .tv-foot { position: relative; z-index: 2; }
 body:not(.tema-scuro) .tv::before, body:not(.tema-scuro) .tv-sparks { display: none; }
+
+/* Schermo touch: il cartellone invita a toccare */
+.tv-touch { display: flex; align-items: center; justify-content: center; gap: .8rem; margin: 0 0 1.1rem; font-size: 1.35rem; font-weight: 600; color: var(--tv-fg); }
+.tv-touch[hidden] { display: none; }
+.tv-touch span { position: relative; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--tv-fg); }
+.tv-touch span::after { content: ""; position: absolute; inset: -.45rem; border-radius: 50%; border: 2px solid var(--tv-fg); opacity: 0; animation: tvTap 2.2s ease-out infinite; }
+@keyframes tvTap { 0% { opacity: .8; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.6); } }
+@media (prefers-reduced-motion: reduce) { .tv-touch span::after { animation: none; } }

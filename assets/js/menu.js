@@ -119,6 +119,7 @@
   /* Come si sceglie: tre passi, chiudibile */
   function renderGuide() {
     var box = $('guide'), seen = false;
+    if (!box) return; // il riquadro "Prima volta da noi?" non c'è più: la parte alta del menu resta corta
     try { seen = localStorage.getItem('aa-guida') === '1'; } catch (e) {}
     if (seen || filtering()) { box.hidden = true; return; }
     var imp = DATA.sections.filter(function (s) { return s.group === 'impasti' && s.visible; })[0];
