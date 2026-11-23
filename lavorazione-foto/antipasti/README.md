@@ -64,3 +64,19 @@ Data inventario: 2026-11-23. Fonte: `data/menu.json`, sottocategoria `s36` (`Ant
 **Totale:** 36 antipasti; 7 foto caricate oggi; 7 vecchie foto da elaborare; 1 già scontornata; 21 senza foto.
 
 **Nota:** Questo registro serve per il lavoro foto, non modifica il menu né sostituisce le foto pubblicate.
+
+## Stato effettivo del lavoro nel repository (verificato il 23/11/2026)
+
+Esiste già la **[Pull Request #1](https://github.com/annalisazotti11/lanticoarco/pull/1)**, aperta come *bozza* dal ramo `preparazione-foto-antipasti-20261123` verso `main`. Contiene **7 PNG trasparenti** in `img/menu/antipasti-rifiniti/`, una procedura non generativa di scontorno e le sette associazioni aggiornate in `data/menu.json` **sul ramo di bozza**. Gli originali `img/menu/media-*.webp` sono conservati.
+
+### Verifica visiva individuale delle sette immagini
+
+- **Peperone crusco (media-161):** scontorno riuscito, ma sorgente solo 200×150; forte pixelatura a grande formato. Da usare soltanto come miniatura finché non c'è una foto più definita.
+- **Prosciutto cotto (media-78):** il bordo inferiore del piatto quadrato risulta irregolare; **da correggere prima del merge**.
+- **Prosciutto crudo alla barese (media-73):** disposizione e recipiente conservati; scontorno sostanzialmente accettabile, ricontrollare la posata al bordo.
+- **Tagliere formaggi murgiani (media-113):** composizione e tagliere conservati; qualitativamente accettabile come foto da menu.
+- **Tagliere salumi misti (media-99):** composizione conservata e sfondo eliminato; accettabile come foto da menu.
+- **Taralli scaldatelli (media-137):** margini del piatto non ben regolari e bordi della carta/taglio evidenti; **da correggere prima del merge**.
+- **Verdure miste sott'olio (media-140):** scontorno corretto ma sorgente solo 200×150; molto pixelata a grande formato, preferire una sorgente originale migliore.
+
+**Decisione:** lasciare la PR #1 in bozza e non pubblicare finché le foto con difetti di contorno non sono corrette. Procedere una foto per volta con verifica del risultato. La lista precedente si riferisce alle immagini che hanno uno sfondo nella versione `main`; le bozze PNG esistono già sul ramo di revisione.
