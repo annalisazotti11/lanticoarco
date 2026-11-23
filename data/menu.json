@@ -64,7 +64,7 @@
   ],
   "products": "Le farine che utilizziamo provengono da un piccolo mulino a Km 0 della Murgia Barese. L'impasto base è preparato con farina tipo 1 biologica, acqua microfiltrata, sale integrale dello Stagnone di Trapani (riserva naturale WWF), pochissimo lievito di birra e olio EVO bio della Murgia Barese. Le nostre farine sono 100% naturali, non industriali e prive di additivi chimici come enzimi o miglioratori. Il pomodoro è 100% italiano, condito con sale integrale dello Stagnone di Trapani e basilico fresco.",
   "frozenLegend": "Prodotto surgelato",
-  "allergenNote": "Per informazioni su allergeni e intolleranze rivolgetevi al personale. I prodotti possono contenere tracce di allergeni.",
+  "allergenNote": "Prima di ordinare comunicate sempre al personale qualsiasi allergia o intolleranza alimentare, anche se non compare in questo elenco. Le preparazioni possono contenere tracce di altri allergeni.",
   "legal": {
    "vat": "05721510724",
    "cf": "SCHNGL4M53L425A",
@@ -5014,284 +5014,6 @@
    ]
   },
   {
-   "id": "s52",
-   "group": "cicci",
-   "name": "I cicci vegan",
-   "subtitle": "",
-   "note": "A partire da € 1,00. Prodotti vegani disponibili: Violife € 3,00 (allergeni: n.d.), grattugiato vegano Vemondo (allergeni: 1), La Pizzeria Valsoia € 4,50 (allergeni: 7, 10, 11), Dream Form € 5,00 (allergeni: 6, 8, 10, 12).",
-   "supplements": [],
-   "layout": "list",
-   "deltaPrices": false,
-   "visible": true,
-   "totem": true,
-   "items": [
-    {
-     "id": "i678",
-     "name": "Ciccio vegan 1",
-     "desc": "crema di tartufo, funghi porcini, olio bio evo, rucola",
-     "price": 9,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i679",
-     "name": "Ciccio vegan 2",
-     "desc": "crema di carciofi, carciofi, peperoni sott’olio bio, melanzane, zucchine",
-     "price": 10.5,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i680",
-     "name": "Ciccio vegan 3",
-     "desc": "crema di zucchine, zucchine a julienne, funghi freschi champignon, capperi, pomodorini",
-     "price": 10.5,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i681",
-     "name": "Ciccio vegan 4 Marilena",
-     "desc": "crema di asparagi, insalata, carciofi grigliati, olio evo",
-     "price": 9.5,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-105.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i682",
-     "name": "Ciccio vegan Vito 5",
-     "desc": "rape stufate, funghi cardoncelli freschi, pomodorini",
-     "price": 8.5,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i683",
-     "name": "Ciccio vegan 6",
-     "desc": "crema di carciofi, olive nere, funghi trifolati, carciofi e crema di asparagi sparsa",
-     "price": 9.5,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i684",
-     "name": "Ciccio vegan 7",
-     "desc": "crema di pomodori secchi, insalata, carciofi, capperi",
-     "price": 7,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i685",
-     "name": "Ciccio vegan 8",
-     "desc": "insalata, carciofi grigliati, carote a julienne, olio evo bio, limone",
-     "price": 7,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-11.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i686",
-     "name": "Ciccio vegan 9",
-     "desc": "crema di carciofi, germogli di aglio sott’olio, pomodori secchi sott’olio bio, insalata a julienne",
-     "price": 10.5,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i687",
-     "name": "Ciccio vegan 10",
-     "desc": "crema di rape o zucchine, lampascioni (muscari), funghi trifolati",
-     "price": 9,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i688",
-     "name": "Ciccio vegan Vito 11",
-     "desc": "funghi cardoncelli freschi, peperoni sott’olio bio, pomodori secchi sott’olio bio",
-     "price": 11,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "vegana"
-     ],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    }
-   ]
-  },
-  {
    "id": "s46",
    "group": "cicci",
    "name": "Le skattate",
@@ -5595,6 +5317,386 @@
       "sesamo",
       "senape",
       "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    }
+   ]
+  },
+  {
+   "id": "s52",
+   "group": "cicci",
+   "name": "I cicci vegan",
+   "subtitle": "",
+   "note": "A partire da € 1,00. Prodotti vegani disponibili: Violife € 3,00 (allergeni: n.d.), grattugiato vegano Vemondo (allergeni: 1), La Pizzeria Valsoia € 4,50 (allergeni: 7, 10, 11), Dream Form € 5,00 (allergeni: 6, 8, 10, 12).",
+   "supplements": [],
+   "layout": "list",
+   "deltaPrices": false,
+   "visible": true,
+   "totem": true,
+   "items": [
+    {
+     "id": "i678",
+     "name": "Ciccio vegan 1",
+     "desc": "crema di tartufo, funghi porcini, olio bio evo, rucola",
+     "price": 9,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i679",
+     "name": "Ciccio vegan 2",
+     "desc": "crema di carciofi, carciofi, peperoni sott’olio bio, melanzane, zucchine",
+     "price": 10.5,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i680",
+     "name": "Ciccio vegan 3",
+     "desc": "crema di zucchine, zucchine a julienne, funghi freschi champignon, capperi, pomodorini",
+     "price": 10.5,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i681",
+     "name": "Ciccio vegan 4 Marilena",
+     "desc": "crema di asparagi, insalata, carciofi grigliati, olio evo",
+     "price": 9.5,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-105.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i682",
+     "name": "Ciccio vegan Vito 5",
+     "desc": "rape stufate, funghi cardoncelli freschi, pomodorini",
+     "price": 8.5,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i683",
+     "name": "Ciccio vegan 6",
+     "desc": "crema di carciofi, olive nere, funghi trifolati, carciofi e crema di asparagi sparsa",
+     "price": 9.5,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i684",
+     "name": "Ciccio vegan 7",
+     "desc": "crema di pomodori secchi, insalata, carciofi, capperi",
+     "price": 7,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i685",
+     "name": "Ciccio vegan 8",
+     "desc": "insalata, carciofi grigliati, carote a julienne, olio evo bio, limone",
+     "price": 7,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-11.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i686",
+     "name": "Ciccio vegan 9",
+     "desc": "crema di carciofi, germogli di aglio sott’olio, pomodori secchi sott’olio bio, insalata a julienne",
+     "price": 10.5,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i687",
+     "name": "Ciccio vegan 10",
+     "desc": "crema di rape o zucchine, lampascioni (muscari), funghi trifolati",
+     "price": 9,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i688",
+     "name": "Ciccio vegan Vito 11",
+     "desc": "funghi cardoncelli freschi, peperoni sott’olio bio, pomodori secchi sott’olio bio",
+     "price": 11,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "vegana"
+     ],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    }
+   ]
+  },
+  {
+   "id": "s39",
+   "group": "piadine",
+   "name": "Le insalate",
+   "subtitle": "",
+   "note": "Non disponibili il sabato.",
+   "supplements": [],
+   "layout": "list",
+   "deltaPrices": false,
+   "visible": true,
+   "totem": true,
+   "items": [
+    {
+     "id": "i479",
+     "name": "Insalata argentina",
+     "desc": "insalata verde, radicchio, rucola, mais, gamberoni* argentini, Ciccio semplice, olio evo pugliese e limoni 100% italiani",
+     "price": 13,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti",
+      "crostacei",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "sesamo",
+      "soia",
+      "uova"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i484",
+     "name": "Insalata verde",
+     "desc": "insalata, radicchio, rucola, pomodori, olio e aceto di vino, sale integrale",
+     "price": 6,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i485",
+     "name": "Insalata Mediterranea",
+     "desc": "insalata verde, radicchio, rucola, mais, pomodori, tonno, Ciccio semplice, olio evo, aceto di vino",
+     "price": 10,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "glutine",
+      "pesce"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i486",
+     "name": "Insalata Norvegese",
+     "desc": "rucola, mais, pomodori, insalata verde, salmone affumicato, olio evo, limone, Ciccio semplice, semi di sesamo nero",
+     "price": 11,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "glutine",
+      "pesce",
+      "sesamo"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i488",
+     "name": "Insalata valtellinese",
+     "desc": "insalata verde, radicchio, rucola, pomodori, mais, scaglie di grana padano, bresaola a julienne, olio evo pugliese e limoni 100% italiani",
+     "price": 11,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "latte"
      ],
      "image": "",
      "frozen": false,
@@ -6115,108 +6217,6 @@
      ],
      "image": "",
      "frozen": true,
-     "available": true,
-     "featured": false
-    }
-   ]
-  },
-  {
-   "id": "s39",
-   "group": "piadine",
-   "name": "Le insalate",
-   "subtitle": "",
-   "note": "Non disponibili il sabato.",
-   "supplements": [],
-   "layout": "list",
-   "deltaPrices": false,
-   "visible": true,
-   "totem": true,
-   "items": [
-    {
-     "id": "i479",
-     "name": "Insalata argentina",
-     "desc": "insalata verde, radicchio, rucola, mais, gamberoni* argentini, Ciccio semplice, olio evo pugliese e limoni 100% italiani",
-     "price": 13,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti",
-      "crostacei",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "sesamo",
-      "soia",
-      "uova"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i484",
-     "name": "Insalata verde",
-     "desc": "insalata, radicchio, rucola, pomodori, olio e aceto di vino, sale integrale",
-     "price": 6,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i485",
-     "name": "Insalata Mediterranea",
-     "desc": "insalata verde, radicchio, rucola, mais, pomodori, tonno, Ciccio semplice, olio evo, aceto di vino",
-     "price": 10,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "glutine",
-      "pesce"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i486",
-     "name": "Insalata Norvegese",
-     "desc": "rucola, mais, pomodori, insalata verde, salmone affumicato, olio evo, limone, Ciccio semplice, semi di sesamo nero",
-     "price": 11,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "glutine",
-      "pesce",
-      "sesamo"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i488",
-     "name": "Insalata valtellinese",
-     "desc": "insalata verde, radicchio, rucola, pomodori, mais, scaglie di grana padano, bresaola a julienne, olio evo pugliese e limoni 100% italiani",
-     "price": 11,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "latte"
-     ],
-     "image": "",
-     "frozen": false,
      "available": true,
      "featured": false
     }
@@ -7308,6 +7308,165 @@
    ]
   },
   {
+   "id": "s54",
+   "group": "bevande",
+   "name": "Vini e prosecchi",
+   "subtitle": "",
+   "note": "",
+   "supplements": [],
+   "layout": "list",
+   "deltaPrices": false,
+   "visible": true,
+   "totem": true,
+   "items": [
+    {
+     "id": "i702",
+     "name": "SELVAROSSA – Cantine DuePalme (Salice Salentino Riserva DOP)",
+     "desc": "vino rosso",
+     "price": 30,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti"
+     ],
+     "image": "img/menu/media-40.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i703",
+     "name": "Rosé frizzante “Mare Mosso” – Torrevento",
+     "desc": "vino rosé frizzante",
+     "price": 30,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti"
+     ],
+     "image": "img/menu/media-171.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i704",
+     "name": "Primitivo rosé IGP “Notte Rosa” – Salento",
+     "desc": "vino rosé",
+     "price": 30,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti"
+     ],
+     "image": "img/menu/media-135.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i705",
+     "name": "Prosecco Superiore Valdobbiadene DOCG “Ca’ Ernesto”",
+     "desc": "prosecco",
+     "price": 30,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti"
+     ],
+     "image": "img/menu/media-115.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i706",
+     "name": "Vino bianco Bio sfuso – Cantina Polvanera",
+     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
+     "price": null,
+     "prices": [
+      {
+       "label": "Calice",
+       "price": 4
+      },
+      {
+       "label": "Mezzo litro",
+       "price": 7
+      },
+      {
+       "label": "1 litro",
+       "price": 14
+      }
+     ],
+     "note": "",
+     "tags": [],
+     "allergens": [],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i707",
+     "name": "Vino Primitivo Bio sfuso – Cantina Polvanera",
+     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
+     "price": null,
+     "prices": [
+      {
+       "label": "Calice",
+       "price": 4
+      },
+      {
+       "label": "Mezzo litro",
+       "price": 7
+      },
+      {
+       "label": "1 litro",
+       "price": 14
+      }
+     ],
+     "note": "",
+     "tags": [],
+     "allergens": [],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i708",
+     "name": "Vino Rosato Bio sfuso – Cantina Polvanera",
+     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
+     "price": null,
+     "prices": [
+      {
+       "label": "Calice",
+       "price": 4
+      },
+      {
+       "label": "Mezzo litro",
+       "price": 7
+      },
+      {
+       "label": "1 litro",
+       "price": 14
+      }
+     ],
+     "note": "",
+     "tags": [],
+     "allergens": [],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    }
+   ]
+  },
+  {
    "id": "s55",
    "group": "bevande",
    "name": "Le nostre birre",
@@ -7844,165 +8003,6 @@
      "tags": [
       "senza-glutine"
      ],
-     "allergens": [],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    }
-   ]
-  },
-  {
-   "id": "s54",
-   "group": "bevande",
-   "name": "Vini e prosecchi",
-   "subtitle": "",
-   "note": "",
-   "supplements": [],
-   "layout": "list",
-   "deltaPrices": false,
-   "visible": true,
-   "totem": true,
-   "items": [
-    {
-     "id": "i702",
-     "name": "SELVAROSSA – Cantine DuePalme (Salice Salentino Riserva DOP)",
-     "desc": "vino rosso",
-     "price": 30,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti"
-     ],
-     "image": "img/menu/media-40.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i703",
-     "name": "Rosé frizzante “Mare Mosso” – Torrevento",
-     "desc": "vino rosé frizzante",
-     "price": 30,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti"
-     ],
-     "image": "img/menu/media-171.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i704",
-     "name": "Primitivo rosé IGP “Notte Rosa” – Salento",
-     "desc": "vino rosé",
-     "price": 30,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti"
-     ],
-     "image": "img/menu/media-135.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i705",
-     "name": "Prosecco Superiore Valdobbiadene DOCG “Ca’ Ernesto”",
-     "desc": "prosecco",
-     "price": 30,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti"
-     ],
-     "image": "img/menu/media-115.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i706",
-     "name": "Vino bianco Bio sfuso – Cantina Polvanera",
-     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
-     "price": null,
-     "prices": [
-      {
-       "label": "Calice",
-       "price": 4
-      },
-      {
-       "label": "Mezzo litro",
-       "price": 7
-      },
-      {
-       "label": "1 litro",
-       "price": 14
-      }
-     ],
-     "note": "",
-     "tags": [],
-     "allergens": [],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i707",
-     "name": "Vino Primitivo Bio sfuso – Cantina Polvanera",
-     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
-     "price": null,
-     "prices": [
-      {
-       "label": "Calice",
-       "price": 4
-      },
-      {
-       "label": "Mezzo litro",
-       "price": 7
-      },
-      {
-       "label": "1 litro",
-       "price": 14
-      }
-     ],
-     "note": "",
-     "tags": [],
-     "allergens": [],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i708",
-     "name": "Vino Rosato Bio sfuso – Cantina Polvanera",
-     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
-     "price": null,
-     "prices": [
-      {
-       "label": "Calice",
-       "price": 4
-      },
-      {
-       "label": "Mezzo litro",
-       "price": 7
-      },
-      {
-       "label": "1 litro",
-       "price": 14
-      }
-     ],
-     "note": "",
-     "tags": [],
      "allergens": [],
      "image": "",
      "frozen": false,

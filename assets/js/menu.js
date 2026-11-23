@@ -144,7 +144,7 @@
     $('tiles').hidden = f;
     $('promos').hidden = f || !$('promos').innerHTML;
     if (f) return;
-    $('tiles').innerHTML = groupsWithContent().map(function (g) {
+    $('tiles').innerHTML = '<a class="tile no-img tile-alg" href="#g-allergeni"><span><b>Allergeni</b><small>Leggi prima di ordinare</small></span></a>' + groupsWithContent().map(function (g) {
       var n = 0;
       DATA.sections.forEach(function (s) { if (s.group === g.id && s.visible) n += s.items.filter(matches).length; });
       return '<a class="tile' + (g.image ? '' : ' no-img') + '" href="#g-' + esc(g.id) + '">' +
@@ -153,8 +153,18 @@
     }).join('');
   }
 
+  /* Allergeni: la prima voce del menu */
+  function allergensHTML() {
+    var i = DATA.info || {};
+    return '<section class="grp grp-alg" id="g-allergeni"><h2 class="grp-t">Allergeni</h2><div class="alg-box">' +
+      '<p class="alg-lead"><b>Allergie o intolleranze? Ditecelo sempre.</b> ' + esc(i.allergenNote || '') + '</p>' +
+      '<p class="alg-how">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011):</p>' +
+      '<ol class="alg-legend alg-top">' + AA.ALLERGENS.map(function (a) { return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol>' +
+      '<button type="button" class="b-ghost alg-f" id="algFilter">Escludi un allergene dal menu</button></div></section>';
+  }
+
   function render() {
-    var html = '', nav = '';
+    var html = filtering() ? '' : allergensHTML(), nav = filtering() ? '' : '<a href="#g-allergeni" data-g="allergeni">Allergeni</a>';
     groupsWithContent().forEach(function (g) {
       var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
       var acc = secs.length > 1;
@@ -163,8 +173,10 @@
       html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
     });
-    $('contenuto').innerHTML = html || '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
+    var hasDishes = html.indexOf('class="grp" id="g-') >= 0;
+    $('contenuto').innerHTML = hasDishes ? html : '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
     $('gnavIn').innerHTML = nav;
+    var af = $('algFilter'); if (af) af.onclick = function () { $('filterBtn').click(); };
     $('gnavF').innerHTML = filterChip();
     $('gnavF').hidden = !nFilters();
     $('gnav').classList.toggle('has-f', nFilters() > 0);
@@ -604,11 +616,12 @@
       (i.coverCharge ? '<p class="mf-kv"><b>Coperto</b>' + AA.price(i.coverCharge) + '</p>' : '') +
       (i.wifi && i.wifi.network ? '<p class="mf-kv"><b>Wi‑Fi gratuito</b>' + esc(i.wifi.network) + ', password ' + esc(i.wifi.password) + '</p>' : '') +
       '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a></p>' +
+      (i.mobile ? '<p class="mf-kv"><b>Cellulare</b><a href="' + AA.telHref(i.mobile) + '">' + esc(i.mobile) + '</a></p>' : '') +
       '<p class="mf-kv"><b>Orari</b>' + (i.hours || []).map(function (h) { return esc(h.days) + ' ' + esc(h.time); }).join('<br>') + '</p></div>';
+    if (i.products) f += '<details><summary>I nostri prodotti</summary><p>' + esc(i.products) + '</p></details>';
     (i.notes || []).forEach(function (n) { f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(n.text) + '</p></details>'; });
-    f += '</div><div class="mf-card"><h2>Allergeni</h2><p style="margin-bottom:12px">' + esc(i.allergenNote) + ' I numeri accanto ai piatti indicano gli allergeni (Reg. UE 1169/2011).</p><ul class="alg-legend">' +
-      AA.ALLERGENS.map(function (a) { return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ul>' +
-      '<p style="margin-top:12px"><span class="frz">*</span> ' + esc(i.frozenLegend) + '</p></div>';
+    if (i.frozenLegend) f += '<p class="mf-frz"><span class="frz">*</span> ' + esc(i.frozenLegend) + '</p>';
+    f += '<p class="mf-frz"><a href="#g-allergeni">Allergeni e intolleranze</a></p></div>';
     f += '<p style="text-align:center;padding:8px 0"><a href="../">Scopri L\'Antico Arco</a> · <a href="../privacy/">Privacy e cookie</a></p></div>';
     $('footer').innerHTML = f;
   }
