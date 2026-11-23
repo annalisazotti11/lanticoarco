@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-21T14:55:22+00:00",
+ "updatedAt": "2026-11-23T16:26:16.283Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -179,7 +179,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-16.webp",
+     "image": "img/uploads/20261123-172543-impasto-canapa-sativa.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10306,6 +10306,70 @@
    "showPhotos": true,
    "showQr": true
   },
-  "menuUrl": ""
+  "menuUrl": "",
+  "builder": {
+   "presets": [
+    {
+     "name": "Pugliese",
+     "items": [
+      "Rape stufate",
+      "Salsiccia pezzente",
+      "Provolone Murgiano Putignano"
+     ]
+    },
+    {
+     "name": "Bufala e pomodorini",
+     "items": [
+      "Bufala all’uscita",
+      "Pomodorini Torre Guaceto bio presidio slow"
+     ]
+    },
+    {
+     "name": "Mortadella e pistacchio",
+     "items": [
+      "Mortadella a fette",
+      "Stracciatella all’uscita",
+      "Granella di pistacchio"
+     ]
+    },
+    {
+     "name": "Piccante",
+     "items": [
+      "Nduja",
+      "Salsiccia piccante",
+      "Cipolla rossa"
+     ]
+    },
+    {
+     "name": "Funghi e tartufo",
+     "items": [
+      "Funghi porcini",
+      "Crema di tartufo spalmata"
+     ]
+    },
+    {
+     "name": "Cetara",
+     "items": [
+      "Acciughe di Cetara",
+      "Pomodorini confit",
+      "Capperi"
+     ]
+    }
+   ],
+   "popular": [
+    "Bufala all’uscita",
+    "Stracciatella all’uscita",
+    "Funghi freschi champignon",
+    "Salsiccia di Norcia",
+    "Prosciutto crudo a dadi",
+    "Nduja",
+    "Olive leccine",
+    "Rape stufate",
+    "Pomodorini confit",
+    "Acciughe di Cetara",
+    "Granella di pistacchio",
+    "Patate fritte"
+   ]
+  }
  }
 }
