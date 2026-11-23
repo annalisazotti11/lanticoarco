@@ -10,7 +10,7 @@
       1024,
       1024
     ],
-    "foreground_coverage": 0.1317,
+    "foreground_coverage": 0.3937,
     "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
     "item_id": "i431"
   },
@@ -25,7 +25,7 @@
       1024,
       1024
     ],
-    "foreground_coverage": 0.2203,
+    "foreground_coverage": 0.3075,
     "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
     "item_id": "i433"
   },
@@ -85,7 +85,7 @@
       1024,
       1024
     ],
-    "foreground_coverage": 0.1881,
+    "foreground_coverage": 0.335,
     "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
     "item_id": "i443"
   },
