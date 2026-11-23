@@ -505,19 +505,6 @@
       lens.style.width = lens.style.height = D + 'px';
       lensImg.style.width = (dW * M) + 'px'; lensImg.style.height = (dH * M) + 'px';
       if (tag.textContent) tagW = tag.offsetWidth;
-      // su telefono si apre solo la riga attiva: l'elenco tiene sempre l'altezza della riga più lunga aperta,
-      // così il pannello non cambia misura e non restano vuoti
-      var list = $('buildSteps');
-      if (window.innerWidth <= 960) {
-        var closed = 0, open = 0;
-        rows.forEach(function (li) {
-          var sp = li.querySelector(':scope > span');
-          var shown = li.classList.contains('on') ? sp.offsetHeight : 0;
-          closed += li.offsetHeight - shown;
-          open = Math.max(open, sp.scrollHeight + 4);
-        });
-        list.style.minHeight = Math.ceil(closed + open) + 'px';
-      } else list.style.minHeight = '';
     }
     function render(t) {
       var vis = ease((t - .1) / .32) * (1 - ease((t - (N - .1)) / .35)); // la lente si apre all'inizio e si chiude alla fine: resta la pizza intera
