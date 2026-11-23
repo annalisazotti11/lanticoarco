@@ -1704,6 +1704,575 @@
    ]
   },
   {
+   "id": "s48",
+   "group": "pizze",
+   "name": "Pizze gourmet",
+   "subtitle": "",
+   "note": "",
+   "supplements": [
+    {
+     "label": "Pizzella",
+     "price": -1
+    },
+    {
+     "label": "Senza lattosio",
+     "price": 1.5
+    },
+    {
+     "label": "Senza glutine",
+     "price": 2.5
+    },
+    {
+     "label": "Base bianca",
+     "price": 0.5
+    },
+    {
+     "label": "Doppio pomodoro",
+     "price": 0.5
+    }
+   ],
+   "layout": "list",
+   "deltaPrices": false,
+   "visible": true,
+   "totem": true,
+   "items": [
+    {
+     "id": "i550",
+     "name": "Alla brasciola",
+     "desc": "ragù di brasciole, mozzarella, brasciola a pezzi, pecorino romano",
+     "price": 12,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "pesce",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-167.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i551",
+     "name": "Amatriciana semplice",
+     "desc": "pomodoro, cipolla, peperoncino, guanciale a cubetti, pecorino romano",
+     "price": 7.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i552",
+     "name": "Cacio e pepe",
+     "desc": "mozzarella siero innesto, pecorino romano e pepe",
+     "price": 9,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-100.webp",
+     "frozen": false,
+     "available": true,
+     "featured": true,
+     "cutout": "img/scontorni/media-100.webp"
+    },
+    {
+     "id": "i553",
+     "name": "Campagnola",
+     "desc": "mozzarella siero innesto, cipolla bianca, guanciale a fette, scaglie di provolone artigianale murgiano (Putignano), pomodori/ini secchi sott’olio",
+     "price": 12,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti",
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i554",
+     "name": "Cetara",
+     "desc": "crema di datterino giallo, mozzarella siero innesto, acciughe di Cetara, rucola, scaglie di grana padano",
+     "price": 11,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "pesce",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-170.webp",
+     "frozen": false,
+     "available": true,
+     "featured": true,
+     "cutout": "img/scontorni/media-170.webp"
+    },
+    {
+     "id": "i555",
+     "name": "Cetara 2",
+     "desc": "mozzarella siero innesto, capperi, olive taggiasche o leccine, acciughe di Cetara, pomodori confit, origano, basilico",
+     "price": 13,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "pesce",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-4.webp",
+     "frozen": false,
+     "available": true,
+     "featured": true,
+     "cutout": "img/scontorni/media-4.webp"
+    },
+    {
+     "id": "i556",
+     "name": "Diavola dolce",
+     "desc": "ricotta vaccina, fior di latte, salsiccia piccante, miele",
+     "price": 13,
+     "prices": [],
+     "note": "",
+     "tags": [
+      "piccante"
+     ],
+     "allergens": [],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i557",
+     "name": "Deliziosa",
+     "desc": "crema di cavolo rosso, fior di latte, pancetta arrotolata, Pecorino romano, pomodorini confit",
+     "price": 14,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti",
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i558",
+     "name": "Fantastica",
+     "desc": "pesto alla genovese, mozzarella, capocollo croccante, fiocchi di ricotta, noci",
+     "price": 16,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i559",
+     "name": "Gricia",
+     "desc": "mozzarella siero innesto, guanciale a cubetti, cacio e pepe",
+     "price": 11,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i560",
+     "name": "La campana",
+     "desc": "Ciccio, mozzarella di bufala, acciughe di Cetara, basilico fresco, olio evo bio, origano",
+     "price": 11,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "pesce",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-44.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i561",
+     "name": "Laziale",
+     "desc": "mozzarella siero innesto, carciofi, guanciale a cubetti, crema cacio e pepe",
+     "price": 12,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-28.webp",
+     "frozen": false,
+     "available": true,
+     "featured": true,
+     "cutout": "img/scontorni/media-28.webp"
+    },
+    {
+     "id": "i562",
+     "name": "Lucana 1",
+     "desc": "mozzarella siero innesto, asparagi, salsiccia pezzente, peperone crusco lucano fritto sbriciolato",
+     "price": 13.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-147.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false,
+     "cutout": "img/scontorni/media-147.webp"
+    },
+    {
+     "id": "i563",
+     "name": "Lucana 2",
+     "desc": "mozzarella siero innesto, capocollo lucano, peperone crusco lucano fritto, scaglie di provolone di capra murgiano",
+     "price": 13.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-49.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false,
+     "cutout": "img/scontorni/media-49.webp"
+    },
+    {
+     "id": "i564",
+     "name": "Marinara Romana",
+     "desc": "pomodoro, aglio a rondelle, prezzemolo, acciughe di Cetara",
+     "price": 8,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "pesce",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i565",
+     "name": "Marzolina",
+     "desc": "pomodoro, fior di latte, scamorza affumicata, pomodori ciliegini, ricotta marzotica a filo",
+     "price": 12,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i568",
+     "name": "Murgiana",
+     "desc": "mozzarella siero innesto, prosciutto cotto, provolone di capra murgiano, carciofi",
+     "price": 12.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-168.webp",
+     "frozen": false,
+     "available": true,
+     "featured": true,
+     "cutout": "img/scontorni/media-168.webp"
+    },
+    {
+     "id": "i569",
+     "name": "Partenopea",
+     "desc": "pomodoro, mozzarella siero innesto, polpette, stracciatella affumicata, pomodorino confit",
+     "price": 13.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia",
+      "uova"
+     ],
+     "image": "",
+     "frozen": false,
+     "available": true,
+     "featured": false
+    },
+    {
+     "id": "i570",
+     "name": "Pezzente rape stufate e funghi cardoncelli",
+     "desc": "pomodoro, mozzarella siero innesto, funghi cardoncelli trifolati, salsiccia pezzente, rape stufate",
+     "price": 13,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-121.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false,
+     "cutout": "img/scontorni/media-121.webp"
+    },
+    {
+     "id": "i571",
+     "name": "Pezzente, rape e datterini",
+     "desc": "pomodoro, mozzarella siero innesto, rape stufate, salsiccia pezzente, datterino giallo e datterino rosso",
+     "price": 13.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-145.webp",
+     "frozen": false,
+     "available": true,
+     "featured": true,
+     "cutout": "img/scontorni/media-145.webp"
+    },
+    {
+     "id": "i572",
+     "name": "Pistacchiona",
+     "desc": "mozzarella siero innesto, mortadella di suino nero, stracciatella, polvere di limone, granella di pistacchio bio catanese",
+     "price": 13,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-134.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false,
+     "cutout": "img/scontorni/media-134.webp"
+    },
+    {
+     "id": "i573",
+     "name": "Soddisfacente",
+     "desc": "crema di datterino giallo, mozzarella siero innesto, bacon, asparagi sott’olio, scaglie di provolone di capra murgiano",
+     "price": 13.5,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "solfiti",
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-96.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false,
+     "cutout": "img/scontorni/media-96.webp"
+    },
+    {
+     "id": "i574",
+     "name": "Super tartufata",
+     "desc": "mozzarella siero innesto, polvere di tartufo, lamelle di tartufo nero estivo, olio evo bio",
+     "price": 15,
+     "prices": [],
+     "note": "",
+     "tags": [],
+     "allergens": [
+      "arachidi",
+      "frutta-a-guscio",
+      "glutine",
+      "latte",
+      "lupini",
+      "sesamo",
+      "senape",
+      "soia"
+     ],
+     "image": "img/menu/media-59.webp",
+     "frozen": false,
+     "available": true,
+     "featured": false,
+     "cutout": "img/scontorni/media-59.webp"
+    }
+   ]
+  },
+  {
    "id": "s49",
    "group": "pizze",
    "name": "Pizze classiche",
@@ -3319,575 +3888,6 @@
      "frozen": false,
      "available": true,
      "featured": false
-    }
-   ]
-  },
-  {
-   "id": "s48",
-   "group": "pizze",
-   "name": "Pizze gourmet",
-   "subtitle": "",
-   "note": "",
-   "supplements": [
-    {
-     "label": "Pizzella",
-     "price": -1
-    },
-    {
-     "label": "Senza lattosio",
-     "price": 1.5
-    },
-    {
-     "label": "Senza glutine",
-     "price": 2.5
-    },
-    {
-     "label": "Base bianca",
-     "price": 0.5
-    },
-    {
-     "label": "Doppio pomodoro",
-     "price": 0.5
-    }
-   ],
-   "layout": "list",
-   "deltaPrices": false,
-   "visible": true,
-   "totem": true,
-   "items": [
-    {
-     "id": "i550",
-     "name": "Alla brasciola",
-     "desc": "ragù di brasciole, mozzarella, brasciola a pezzi, pecorino romano",
-     "price": 12,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "pesce",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-167.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i551",
-     "name": "Amatriciana semplice",
-     "desc": "pomodoro, cipolla, peperoncino, guanciale a cubetti, pecorino romano",
-     "price": 7.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i552",
-     "name": "Cacio e pepe",
-     "desc": "mozzarella siero innesto, pecorino romano e pepe",
-     "price": 9,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-100.webp",
-     "frozen": false,
-     "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-100.webp"
-    },
-    {
-     "id": "i553",
-     "name": "Campagnola",
-     "desc": "mozzarella siero innesto, cipolla bianca, guanciale a fette, scaglie di provolone artigianale murgiano (Putignano), pomodori/ini secchi sott’olio",
-     "price": 12,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti",
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i554",
-     "name": "Cetara",
-     "desc": "crema di datterino giallo, mozzarella siero innesto, acciughe di Cetara, rucola, scaglie di grana padano",
-     "price": 11,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "pesce",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-170.webp",
-     "frozen": false,
-     "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-170.webp"
-    },
-    {
-     "id": "i555",
-     "name": "Cetara 2",
-     "desc": "mozzarella siero innesto, capperi, olive taggiasche o leccine, acciughe di Cetara, pomodori confit, origano, basilico",
-     "price": 13,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "pesce",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-4.webp",
-     "frozen": false,
-     "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-4.webp"
-    },
-    {
-     "id": "i556",
-     "name": "Diavola dolce",
-     "desc": "ricotta vaccina, fior di latte, salsiccia piccante, miele",
-     "price": 13,
-     "prices": [],
-     "note": "",
-     "tags": [
-      "piccante"
-     ],
-     "allergens": [],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i557",
-     "name": "Deliziosa",
-     "desc": "crema di cavolo rosso, fior di latte, pancetta arrotolata, Pecorino romano, pomodorini confit",
-     "price": 14,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti",
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i558",
-     "name": "Fantastica",
-     "desc": "pesto alla genovese, mozzarella, capocollo croccante, fiocchi di ricotta, noci",
-     "price": 16,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i559",
-     "name": "Gricia",
-     "desc": "mozzarella siero innesto, guanciale a cubetti, cacio e pepe",
-     "price": 11,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i560",
-     "name": "La campana",
-     "desc": "Ciccio, mozzarella di bufala, acciughe di Cetara, basilico fresco, olio evo bio, origano",
-     "price": 11,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "pesce",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-44.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i561",
-     "name": "Laziale",
-     "desc": "mozzarella siero innesto, carciofi, guanciale a cubetti, crema cacio e pepe",
-     "price": 12,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-28.webp",
-     "frozen": false,
-     "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-28.webp"
-    },
-    {
-     "id": "i562",
-     "name": "Lucana 1",
-     "desc": "mozzarella siero innesto, asparagi, salsiccia pezzente, peperone crusco lucano fritto sbriciolato",
-     "price": 13.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-147.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-147.webp"
-    },
-    {
-     "id": "i563",
-     "name": "Lucana 2",
-     "desc": "mozzarella siero innesto, capocollo lucano, peperone crusco lucano fritto, scaglie di provolone di capra murgiano",
-     "price": 13.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-49.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-49.webp"
-    },
-    {
-     "id": "i564",
-     "name": "Marinara Romana",
-     "desc": "pomodoro, aglio a rondelle, prezzemolo, acciughe di Cetara",
-     "price": 8,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "pesce",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i565",
-     "name": "Marzolina",
-     "desc": "pomodoro, fior di latte, scamorza affumicata, pomodori ciliegini, ricotta marzotica a filo",
-     "price": 12,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i568",
-     "name": "Murgiana",
-     "desc": "mozzarella siero innesto, prosciutto cotto, provolone di capra murgiano, carciofi",
-     "price": 12.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-168.webp",
-     "frozen": false,
-     "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-168.webp"
-    },
-    {
-     "id": "i569",
-     "name": "Partenopea",
-     "desc": "pomodoro, mozzarella siero innesto, polpette, stracciatella affumicata, pomodorino confit",
-     "price": 13.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia",
-      "uova"
-     ],
-     "image": "",
-     "frozen": false,
-     "available": true,
-     "featured": false
-    },
-    {
-     "id": "i570",
-     "name": "Pezzente rape stufate e funghi cardoncelli",
-     "desc": "pomodoro, mozzarella siero innesto, funghi cardoncelli trifolati, salsiccia pezzente, rape stufate",
-     "price": 13,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-121.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-121.webp"
-    },
-    {
-     "id": "i571",
-     "name": "Pezzente, rape e datterini",
-     "desc": "pomodoro, mozzarella siero innesto, rape stufate, salsiccia pezzente, datterino giallo e datterino rosso",
-     "price": 13.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-145.webp",
-     "frozen": false,
-     "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-145.webp"
-    },
-    {
-     "id": "i572",
-     "name": "Pistacchiona",
-     "desc": "mozzarella siero innesto, mortadella di suino nero, stracciatella, polvere di limone, granella di pistacchio bio catanese",
-     "price": 13,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-134.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-134.webp"
-    },
-    {
-     "id": "i573",
-     "name": "Soddisfacente",
-     "desc": "crema di datterino giallo, mozzarella siero innesto, bacon, asparagi sott’olio, scaglie di provolone di capra murgiano",
-     "price": 13.5,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "solfiti",
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-96.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-96.webp"
-    },
-    {
-     "id": "i574",
-     "name": "Super tartufata",
-     "desc": "mozzarella siero innesto, polvere di tartufo, lamelle di tartufo nero estivo, olio evo bio",
-     "price": 15,
-     "prices": [],
-     "note": "",
-     "tags": [],
-     "allergens": [
-      "arachidi",
-      "frutta-a-guscio",
-      "glutine",
-      "latte",
-      "lupini",
-      "sesamo",
-      "senape",
-      "soia"
-     ],
-     "image": "img/menu/media-59.webp",
-     "frozen": false,
-     "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-59.webp"
     }
    ]
   },
@@ -7326,7 +7326,9 @@
      "price": 30,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "solfiti"
      ],
@@ -7342,7 +7344,9 @@
      "price": 30,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "solfiti"
      ],
@@ -7358,7 +7362,9 @@
      "price": 30,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "solfiti"
      ],
@@ -7374,7 +7380,9 @@
      "price": 30,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "solfiti"
      ],
@@ -7403,7 +7411,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7430,7 +7440,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7457,7 +7469,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7501,7 +7515,9 @@
      "price": 3.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7517,7 +7533,9 @@
      "price": 5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7533,7 +7551,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7549,7 +7569,9 @@
      "price": 5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7565,7 +7587,9 @@
      "price": 7,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7590,7 +7614,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7606,7 +7632,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7647,7 +7675,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7676,7 +7706,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7692,7 +7724,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7708,7 +7742,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7724,7 +7760,9 @@
      "price": 5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7763,7 +7801,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7788,7 +7828,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7813,7 +7855,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7838,7 +7882,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7863,7 +7909,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7888,7 +7936,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7913,7 +7963,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7938,7 +7990,9 @@
       }
      ],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7969,7 +8023,8 @@
      "prices": [],
      "note": "",
      "tags": [
-      "senza-glutine"
+      "senza-glutine",
+      "alcolico"
      ],
      "allergens": [],
      "image": "img/menu/media-67.webp",
@@ -7985,7 +8040,8 @@
      "prices": [],
      "note": "",
      "tags": [
-      "senza-glutine"
+      "senza-glutine",
+      "alcolico"
      ],
      "allergens": [],
      "image": "img/menu/media-53.webp",
@@ -8001,7 +8057,8 @@
      "prices": [],
      "note": "",
      "tags": [
-      "senza-glutine"
+      "senza-glutine",
+      "alcolico"
      ],
      "allergens": [],
      "image": "",
@@ -8030,7 +8087,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-12.webp",
      "frozen": false,
@@ -8044,7 +8103,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [
       "latte"
      ],
@@ -8061,7 +8122,8 @@
      "prices": [],
      "note": "",
      "tags": [
-      "senza-lattosio"
+      "senza-lattosio",
+      "alcolico"
      ],
      "allergens": [],
      "image": "img/menu/media-68.webp",
@@ -8076,7 +8138,9 @@
      "price": 2,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-13.webp",
      "frozen": false,
@@ -8090,7 +8154,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-144.webp",
      "frozen": false,
@@ -8104,7 +8170,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-63.webp",
      "frozen": false,
@@ -8118,7 +8186,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-66.webp",
      "frozen": false,
@@ -8132,7 +8202,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-45.webp",
      "frozen": false,
@@ -8146,7 +8218,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -8160,7 +8234,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-91.webp",
      "frozen": false,
@@ -8174,7 +8250,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-93.webp",
      "frozen": false,
@@ -8188,7 +8266,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-60.webp",
      "frozen": false,
@@ -8202,7 +8282,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -8216,7 +8298,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-2.webp",
      "frozen": false,
@@ -8230,7 +8314,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-61.webp",
      "frozen": false,
@@ -8244,7 +8330,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-69.webp",
      "frozen": false,
@@ -8258,7 +8346,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-151.webp",
      "frozen": false,
@@ -8272,7 +8362,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-130.webp",
      "frozen": false,
@@ -8286,7 +8378,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-77.webp",
      "frozen": false,
@@ -8300,7 +8394,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-80.webp",
      "frozen": false,
@@ -8314,7 +8410,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-35.webp",
      "frozen": false,
@@ -8328,7 +8426,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-122.webp",
      "frozen": false,
@@ -8342,7 +8442,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-126.webp",
      "frozen": false,
@@ -8356,7 +8458,9 @@
      "price": 5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-23.webp",
      "frozen": false,
@@ -8370,7 +8474,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "alcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-50.webp",
      "frozen": false,

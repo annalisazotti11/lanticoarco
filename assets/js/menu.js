@@ -127,7 +127,7 @@
     var hasExtra = DATA.sections.some(function (s) { return s.group === 'aggiunte' && s.visible && s.items.length; });
     var steps = [
       ['g-impasti', 'Scegli l\'impasto', 'Il classico è compreso' + (min ? ', gli altri da ' + AA.price(min) + ' in più' : '') + '.'],
-      ['g-pizze', 'Poi la pizza', 'Classiche, gourmet, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
+      ['g-pizze', 'Poi la pizza', 'Gourmet, classiche, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
       hasExtra ? ['crea', 'Oppure creala tu', 'Scegli impasto e ingredienti: ti diciamo subito quanto costa.'] : null
     ].filter(function (x) { return x && (x[0] === 'crea' || document.getElementById(x[0])); });
     if (!steps.length) { box.hidden = true; return; }
@@ -519,7 +519,7 @@
 
   /* Filtri */
   function renderFilters() {
-    $('fTags').innerHTML = AA.TAGS.filter(function (t) { return t.code !== 'della-casa' && t.code !== 'novita'; }).map(function (t) {
+    $('fTags').innerHTML = AA.TAGS.filter(function (t) { return t.code !== 'della-casa' && t.code !== 'novita' && t.code !== 'alcolico'; }).map(function (t) {
       return '<button type="button" class="chip" data-tag="' + t.code + '" aria-pressed="' + (state.tags.indexOf(t.code) >= 0) + '">' + esc(t.label) + '</button>';
     }).join('');
     $('fAllergens').innerHTML = AA.ALLERGENS.map(function (a) {

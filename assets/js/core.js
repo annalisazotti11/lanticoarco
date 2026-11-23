@@ -32,7 +32,8 @@
     { code: 'senza-lattosio', label: 'Senza lattosio', short: 'Senza lattosio' },
     { code: 'piccante', label: 'Piccante', short: 'Piccante' },
     { code: 'novita', label: 'Novità', short: 'Novità' },
-    { code: 'della-casa', label: 'Consigliata dalla casa', short: 'Della casa' }
+    { code: 'della-casa', label: 'Consigliata dalla casa', short: 'Della casa' },
+    { code: 'alcolico', label: 'Alcolico', short: 'Alcolico' }
   ];
   var TAG_BY_CODE = {};
   TAGS.forEach(function (t) { TAG_BY_CODE[t.code] = t; });
