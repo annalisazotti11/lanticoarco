@@ -1,4 +1,4 @@
-/* PROVA del menu ridisegnato (/prova/menu/): cassetti con anteprima, righe pulite, impasti dentro le pizze */
+/* PROVA del menu ridisegnato (/prova/menu/): comparti che si aprono e chiudono, righe pulite, impasti dentro le pizze */
 (function () {
   'use strict';
   var AA = window.AA, esc = AA.esc;
@@ -93,39 +93,23 @@
       : sec.layout === 'chips' ? chipsHTML(items)
       : '<ul class="items">' + items.map(function (it) { return itemHTML(it, sec); }).join('') + '</ul>';
   }
-  /* Cassetti: chiusi mostrano tre piatti (prima le Preferite), aperti tutti; uno aperto alla volta */
-  var PREVIEW = 3;
-  function setPreview() { PREVIEW = window.matchMedia('(min-width: 760px)').matches ? 4 : 3; } // su due colonne, quattro
-  setPreview();
-  function previewItems(items) {
-    var fav = items.filter(function (it) { return it.featured; });
-    var pick = fav.slice(0, PREVIEW);
-    items.forEach(function (it) { if (pick.length < PREVIEW && pick.indexOf(it) < 0) pick.push(it); });
-    return items.filter(function (it) { return pick.indexOf(it) >= 0; });
-  }
-  function sectionHTML(sec, showSupp) {
+  /* Comparti: chiusi all'inizio, si aprono e si chiudono toccando il titolo */
+  function sectionHTML(sec, showSupp, accordion) {
     var items = sec.items.filter(matches);
     if (!items.length) return '';
     var extra = (sec.note && !filtering() ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '') + (showSupp && !filtering() ? suppHTML(sec) : '');
-    var drawer = !filtering() && sec.layout !== 'cards' && sec.layout !== 'chips' && items.length > PREVIEW + 1;
-    var open = drawer && !!OPEN[sec.id];
-    var shown = drawer && !open ? previewItems(items) : items;
-    var label = sec.name.charAt(0).toLowerCase() + sec.name.slice(1);
-    var more = drawer ? '<button type="button" class="more' + (open ? ' is-open' : '') + '" data-acc="' + esc(sec.id) + '" aria-expanded="' + open + '">' +
-      (open ? 'Mostra meno' : 'Mostra tutte: ' + esc(label)) + CHEV + '</button>' : '';
-    return '<section class="sec' + (drawer ? ' drw' + (open ? ' open' : '') : '') + '" id="' + esc(sec.id) + '"><div class="sec-h"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
-      (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + '</div>' + extra + sectionBody(sec, shown) + more + '</section>';
-  }
-  function toggleDrawer(id) {
-    var was = !!OPEN[id];
-    OPEN = {}; if (!was) OPEN[id] = true;
-    render();
-    var el = document.getElementById(id); if (!el) return;
-    el.querySelectorAll('.item').forEach(function (i) { i.classList.add('in'); });
-    var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1;
-    var stuck = n && !n.hidden ? ((parseFloat(getComputedStyle(n).top) || 0) + n.offsetHeight) * z : 70;
-    var top = el.getBoundingClientRect().top;
-    if (!was || top < stuck) window.scrollTo({ top: Math.max(0, Math.round(window.scrollY + top - stuck - 10)), behavior: was ? 'auto' : 'smooth' });
+    if (!accordion) {
+      return '<section class="sec" id="' + esc(sec.id) + '"><div class="sec-h"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
+        (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + '</div>' + extra + sectionBody(sec, items) + '</section>';
+    }
+    var open = filtering() || !!OPEN[sec.id];
+    var ph = items.filter(function (it) { return it.cutout; })[0] || items.filter(function (it) { return it.image; })[0];
+    return '<section class="sec acc' + (open ? ' open' : '') + '" id="' + esc(sec.id) + '">' +
+      '<button type="button" class="acc-h" data-acc="' + esc(sec.id) + '" aria-expanded="' + open + '" aria-controls="' + esc(sec.id) + '-b">' +
+      (ph ? '<span class="acc-ph' + (ph.cutout ? ' cut' : '') + '"><img alt="" loading="lazy" src="' + esc(AA.src(ph.cutout || ph.image)) + '"></span>' : '<span class="acc-ph ph-empty">' + AA.archSVG() + '</span>') +
+      '<span class="acc-tx"><b>' + esc(sec.name) + '</b>' + (sec.subtitle ? '<small>' + esc(sec.subtitle) + '</small>' : '') + '</span>' +
+      '<span class="acc-ch">' + CHEV + '</span></button>' +
+      '<div class="acc-b" id="' + esc(sec.id) + '-b"><div class="acc-in"' + (open ? '' : ' inert') + '>' + extra + sectionBody(sec, items) + '</div></div></section>';
   }
 
   /* Varianti: quelle comuni a tutto il gruppo si dicono una volta in cima; le altre stanno nella scheda del piatto */
@@ -221,7 +205,7 @@
       if (g.id === 'impasti' && !filtering()) return;
       var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
       var common = commonSupp(secs);
-      var inner = secs.map(function (s) { return sectionHTML(s, !common.length); }).join('');
+      var inner = secs.map(function (s) { return sectionHTML(s, !common.length, secs.length > 1); }).join('');
       if (!inner) return;
       var top = '';
       if (g.id === 'pizze' && !filtering()) top += doughStrip();
@@ -757,7 +741,7 @@
     var t;
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
     $('contenuto').addEventListener('click', function (e) {
-      var m = e.target.closest('[data-acc]'); if (m) { toggleDrawer(m.dataset.acc); return; }
+      var m = e.target.closest('[data-acc]'); if (m) { toggleAcc(m.dataset.acc); return; }
       if (e.target.closest('[data-doughs]')) { openSheet($('sheet'), doughsHTML()); return; }
       var b = e.target.closest('[data-item]'); if (!b) return;
       var f = findItem(b.dataset.item); if (f) openSheet($('sheet'), detailHTML(f.item, f.sec));
@@ -812,8 +796,8 @@
     if (location.hash) {
       var el = null;
       try { el = document.querySelector(location.hash); } catch (e) {}
-      if (el && el.classList.contains('drw')) { OPEN = {}; OPEN[el.id] = true; render(); el = document.getElementById(el.id); }
-      if (el) el.scrollIntoView();
+      if (el && el.classList.contains('acc')) toggleAcc(el.id, true);
+      else if (el) el.scrollIntoView();
     }
   }).catch(function () {
     $('contenuto').innerHTML = '<p class="empty">Non riesco a caricare il menu. Controlla la connessione e ricarica la pagina.</p>';
