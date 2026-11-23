@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="aa-root" content="../../">
+<meta name="robots" content="noindex, nofollow">
+<title>Menu · L'Antico Arco</title>
+<meta name="theme-color" content="#f4ebdf">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/base.css?v=f547ae7d">
+<link rel="stylesheet" href="../../assets/css/totem-prova.css?v=1">
+</head>
+<body>
+<canvas class="tv-sparks" id="tvSparks" aria-hidden="true"></canvas>
+<div class="tv" id="tv">
+  <header class="tv-head">
+    <div class="tv-brand">
+      <img class="tv-logo" src="../../assets/img/logo/logo-600.webp" alt="L'Antico Arco Pizzeria" width="600" height="388">
+      <p class="tv-sub" id="tvSub">Cellamare, dal 2001</p>
+    </div>
+    <div class="tv-qr" id="tvQr" hidden>
+      <div class="tv-qr-code" id="tvQrCode"></div>
+      <p>Il menu sul<br>tuo telefono</p>
+    </div>
+  </header>
+  <div class="tv-notice" id="tvNotice" hidden></div>
+  <main class="tv-stage" id="stage" aria-live="polite">
+    <p class="tv-loading">Carico il menu…</p>
+  </main>
+  <footer class="tv-foot">
+    <div class="tv-progress"><span id="bar"></span></div>
+    <p class="tv-touch" id="tvTouch" hidden><span aria-hidden="true"></span>Tocca lo schermo per sfogliare il menu</p>
+    <nav class="tv-groups" id="groups" aria-label="Categorie"></nav>
+    <div class="tv-info" id="info"></div>
+  </footer>
+</div>
+<div class="tv-measure" id="measure" aria-hidden="true"></div>
+<button class="tv-fs" id="fs" type="button" hidden>Schermo intero</button>
+<script src="../../assets/vendor/qrcode.js"></script>
+<script src="../../assets/js/core.js?v=7b7ee7fc"></script>
+<script src="../../assets/js/totem-prova.js?v=1"></script>
+</body>
+</html>
