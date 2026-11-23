@@ -1,4 +1,4 @@
-/* PROVA del menu ridisegnato (/prova/menu/): liste aperte, righe pulite, impasti dentro le pizze */
+/* PROVA del menu ridisegnato (/prova/menu/): cassetti con anteprima, righe pulite, impasti dentro le pizze */
 (function () {
   'use strict';
   var AA = window.AA, esc = AA.esc;
@@ -93,13 +93,41 @@
       : sec.layout === 'chips' ? chipsHTML(items)
       : '<ul class="items">' + items.map(function (it) { return itemHTML(it, sec); }).join('') + '</ul>';
   }
+  /* Cassetti: chiusi mostrano tre piatti (prima le Preferite), aperti tutti; uno aperto alla volta */
+  var PREVIEW = 3;
+  function setPreview() { PREVIEW = window.matchMedia('(min-width: 760px)').matches ? 4 : 3; } // su due colonne, quattro
+  setPreview();
+  function previewItems(items) {
+    var fav = items.filter(function (it) { return it.featured; });
+    var pick = fav.slice(0, PREVIEW);
+    items.forEach(function (it) { if (pick.length < PREVIEW && pick.indexOf(it) < 0) pick.push(it); });
+    return items.filter(function (it) { return pick.indexOf(it) >= 0; });
+  }
   function sectionHTML(sec, showSupp) {
     var items = sec.items.filter(matches);
     if (!items.length) return '';
     var extra = (sec.note && !filtering() ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '') + (showSupp && !filtering() ? suppHTML(sec) : '');
-    return '<section class="sec" id="' + esc(sec.id) + '"><div class="sec-h"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
-      (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + '</div>' + extra + sectionBody(sec, items) + '</section>';
+    var drawer = !filtering() && sec.layout !== 'cards' && sec.layout !== 'chips' && items.length > PREVIEW + 1;
+    var open = drawer && !!OPEN[sec.id];
+    var shown = drawer && !open ? previewItems(items) : items;
+    var label = sec.name.charAt(0).toLowerCase() + sec.name.slice(1);
+    var more = drawer ? '<button type="button" class="more' + (open ? ' is-open' : '') + '" data-acc="' + esc(sec.id) + '" aria-expanded="' + open + '">' +
+      (open ? 'Mostra meno' : 'Mostra tutte: ' + esc(label)) + CHEV + '</button>' : '';
+    return '<section class="sec' + (drawer ? ' drw' + (open ? ' open' : '') : '') + '" id="' + esc(sec.id) + '"><div class="sec-h"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
+      (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + '</div>' + extra + sectionBody(sec, shown) + more + '</section>';
   }
+  function toggleDrawer(id) {
+    var was = !!OPEN[id];
+    OPEN = {}; if (!was) OPEN[id] = true;
+    render();
+    var el = document.getElementById(id); if (!el) return;
+    el.querySelectorAll('.item').forEach(function (i) { i.classList.add('in'); });
+    var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1;
+    var stuck = n && !n.hidden ? ((parseFloat(getComputedStyle(n).top) || 0) + n.offsetHeight) * z : 70;
+    var top = el.getBoundingClientRect().top;
+    if (!was || top < stuck) window.scrollTo({ top: Math.max(0, Math.round(window.scrollY + top - stuck - 10)), behavior: was ? 'auto' : 'smooth' });
+  }
+
   /* Varianti: quelle comuni a tutto il gruppo si dicono una volta in cima; le altre stanno nella scheda del piatto */
   function commonSupp(secs) {
     var withS = secs.filter(function (s) { return (s.supplements || []).length; });
@@ -200,7 +228,7 @@
       if (common.length && !filtering()) top += '<p class="gsupp"><b>Su ogni pizza</b> ' + common.map(function (x) { return esc(x.label.toLowerCase()) + ' <span class="num">' + AA.price(x.price, { signed: true }) + '</span>'; }).join(' · ') + '. Le altre varianti sono nella scheda di ogni pizza.</p>';
       html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + top + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
-      SUBS[g.id] = secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
+      SUBS[g.id] = false && secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
     });
     var hasDishes = html.indexOf('class="grp" id="g-') >= 0;
     $('contenuto').innerHTML = hasDishes ? html : '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
@@ -729,6 +757,7 @@
     var t;
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
     $('contenuto').addEventListener('click', function (e) {
+      var m = e.target.closest('[data-acc]'); if (m) { toggleDrawer(m.dataset.acc); return; }
       if (e.target.closest('[data-doughs]')) { openSheet($('sheet'), doughsHTML()); return; }
       var b = e.target.closest('[data-item]'); if (!b) return;
       var f = findItem(b.dataset.item); if (f) openSheet($('sheet'), detailHTML(f.item, f.sec));
@@ -783,6 +812,7 @@
     if (location.hash) {
       var el = null;
       try { el = document.querySelector(location.hash); } catch (e) {}
+      if (el && el.classList.contains('drw')) { OPEN = {}; OPEN[el.id] = true; render(); el = document.getElementById(el.id); }
       if (el) el.scrollIntoView();
     }
   }).catch(function () {
