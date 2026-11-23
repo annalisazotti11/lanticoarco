@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-23T16:58:12.308Z",
+ "updatedAt": "2026-11-23T16:59:37.755Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -610,7 +610,7 @@
       "sedano",
       "senape"
      ],
-     "image": "img/menu/media-88.webp",
+     "image": "img/uploads/20261123-175931-olive-miste-piccole-in-calce-e-s.webp",
      "frozen": false,
      "available": true,
      "featured": false
