@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-23T16:57:04.888Z",
+ "updatedAt": "2026-11-23T16:58:12.308Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -528,7 +528,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "img/menu/media-110.webp",
+     "image": "img/uploads/20261123-175806-carpaccio-di-salmone-affumicato-.webp",
      "frozen": false,
      "available": true,
      "featured": false
