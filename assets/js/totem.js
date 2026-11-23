@@ -120,6 +120,14 @@
     measure.style.position = 'absolute';
     var out = [];
     var only = (params.get('solo') || '').split(',').filter(Boolean);
+    // prima pagina: allergie e intolleranze, come nel menu
+    if (!only.length) {
+      var inf = DATA.info || {};
+      out.push({ group: 'allergeni', html: '<div class="pg pg-alg"><div class="pg-top"><p class="pg-group">Allergeni</p></div>' +
+        '<h2 class="pg-title">Allergie e intolleranze</h2>' + (inf.allergenNote ? '<p class="pg-sub">' + esc(inf.allergenNote) + '</p>' : '') +
+        '<div class="pg-rule"></div><p class="pg-note">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011).</p>' +
+        '<ol class="alg-grid">' + AA.ALLERGENS.map(function (a) { return '<li><span>' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol></div>' });
+    }
 
     DATA.groups.forEach(function (g) {
       if (only.length && only.indexOf(g.id) < 0) return;
@@ -196,6 +204,7 @@
     }).map(function (g) {
       return '<button type="button" data-g="' + esc(g.id) + '">' + esc(g.name) + '</button>';
     }).join('');
+    if (!(params.get('solo') || '')) $('groups').insertAdjacentHTML('afterbegin', '<button type="button" data-g="allergeni">Allergeni</button>');
     var bits = [];
     if (info.coverCharge) bits.push('<span><b>Coperto</b> ' + AA.price(info.coverCharge) + '</span>');
     if (info.wifi && info.wifi.network) bits.push('<span><b>Wi‑Fi</b> ' + esc(info.wifi.network) + ', password ' + esc(info.wifi.password) + '</span>');

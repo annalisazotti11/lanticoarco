@@ -684,7 +684,7 @@
         '<textarea data-list="notes" data-k="' + k + '" data-f="text" rows="3" aria-label="Testo">' + esc(n.text) + '</textarea>' +
         '<button type="button" class="b b-x" data-act="list-del" data-list="notes" data-k="' + k + '" aria-label="Elimina nota">×</button></div>';
     }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="list-add" data-list="notes">+ Aggiungi nota</button></section>';
-    h += '<details class="card more"><summary>Testi del menu e dati fiscali</summary>' + field('Legenda dell\'asterisco *', 'info.frozenLegend') + field('Nota sugli allergeni', 'info.allergenNote', { area: true, rows: 2 }) +
+    h += '<details class="card more"><summary>Testi del menu e dati fiscali</summary>' + field('Legenda dell\'asterisco *', 'info.frozenLegend') + field('Nota sugli allergeni', 'info.allergenNote', { area: true, rows: 3, hint: 'Compare in cima al menu e nella prima pagina del cartellone, sotto «Allergie e intolleranze».' }) + field('I nostri prodotti', 'info.products', { area: true, rows: 5, hint: 'Compare in fondo al menu, tra le informazioni utili.' }) +
       '<div class="two">' + field('Partita IVA', 'info.legal.vat') + field('Codice fiscale', 'info.legal.cf') + '</div>' + field('REA', 'info.legal.rea') + '</details>';
     return h;
   }
@@ -795,7 +795,7 @@
   function secEditor() {
     var sec = findSec(S.ed.sec);
     var h = '<label class="fld">Nome<input data-s="name" value="' + esc(sec.name) + '"></label>' +
-      '<label class="fld">Sottotitolo<input data-s="subtitle" value="' + esc(sec.subtitle) + '" placeholder="es. Fritti o al forno"></label>' +
+      '<label class="fld">Frase sotto il nome<input data-s="subtitle" value="' + esc(sec.subtitle) + '" placeholder="es. Quelle di sempre, fatte come si deve."><small>Una frase breve che invogli: compare nel menu e sul cartellone.</small></label>' +
       '<label class="fld">Nota (es. "Non disponibili il sabato")<textarea data-s="note" rows="2">' + esc(sec.note) + '</textarea></label>';
     h += '<label class="line"><span><b>Visibile</b><small>Spenta = nascosta ovunque</small></span><label class="sw"><input type="checkbox" data-sb="visible"' + (sec.visible !== false ? ' checked' : '') + '><span></span></label></label>';
     h += '<label class="line"><span><b>Sul cartellone in sala</b></span><label class="sw"><input type="checkbox" data-sb="totem"' + (sec.totem !== false ? ' checked' : '') + '><span></span></label></label>';

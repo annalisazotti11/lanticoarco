@@ -154,3 +154,10 @@ body:not(.tema-scuro) .tv::before, body:not(.tema-scuro) .tv-sparks { display: n
 .tv-touch span::after { content: ""; position: absolute; inset: -.45rem; border-radius: 50%; border: 2px solid var(--tv-fg); opacity: 0; animation: tvTap 2.2s ease-out infinite; }
 @keyframes tvTap { 0% { opacity: .8; transform: scale(.4); } 100% { opacity: 0; transform: scale(1.6); } }
 @media (prefers-reduced-motion: reduce) { .tv-touch span::after { animation: none; } }
+
+/* Prima pagina: allergie e intolleranze */
+.pg-alg .pg-sub { max-width: 52rem; color: var(--tv-fg); font-size: 1.6rem; line-height: 1.35; margin-top: 1rem; }
+.alg-grid { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem 2.4rem; font-size: 1.6rem; font-weight: 500; }
+.alg-grid li { display: flex; align-items: center; gap: .9rem; }
+.alg-grid span { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1.5px solid var(--tv-line-2, rgba(110, 84, 68, .3)); display: grid; place-items: center; font-weight: 600; font-size: 1.2rem; color: var(--tv-muted); }
+@media (min-aspect-ratio: 11/10) { .alg-grid { grid-template-columns: repeat(4, 1fr); } }
