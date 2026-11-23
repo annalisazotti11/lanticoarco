@@ -44,11 +44,11 @@ def get_session():
 DISH_SHAPES = {
     "media-161.webp": ("ellipse", [45, 20, 166, 120]),
     "media-78.webp": ("polygon", [
-        # Contorno del piatto ricontrollato sulla foto originale 500x500.
-        (118, 126), (357, 125), (380, 139), (399, 170),
-        (419, 225), (426, 324), (421, 347), (406, 365),
-        (382, 375), (113, 378), (90, 371), (77, 353),
-        (71, 328), (74, 219), (85, 174), (103, 141),
+        # Bordo interno del piatto: evita il tavolo grigio e l'ombra sotto.
+        (124, 145), (353, 143), (375, 152), (389, 176),
+        (406, 222), (415, 304), (414, 339), (403, 352),
+        (376, 363), (117, 364), (94, 357), (83, 343),
+        (83, 304), (83, 224), (94, 186), (108, 157),
     ]),
     "media-137.webp": ("polygon", [
         (109, 161), (355, 160), (386, 177), (395, 352),
@@ -78,6 +78,10 @@ def keep_original_plate(src_name: str, alpha: Image.Image, scale: float, photo: 
         ])
         plate = ImageChops.multiply(plate, neutral)
     plate = plate.filter(ImageFilter.GaussianBlur(radius=max(0.8, 0.7*scale)))
+    if src_name == "media-78.webp":
+        # Per questo piatto il modello segmenta anche pezzi di tavolo;
+        # la sagoma manuale evita gli aloni fuori dalla ceramica.
+        return plate
     return ImageChops.lighter(alpha, plate)
 
 
