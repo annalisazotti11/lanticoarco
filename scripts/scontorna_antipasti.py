@@ -42,19 +42,19 @@ def get_session():
 # Coordinate misurate sulle fotografie ORIGINALI: non eliminare anche i piatti.
 # Le maschere vengono aggiunte (non sostituite) al ritaglio del modello.
 DISH_SHAPES = {
-    "media-161.webp": ("ellipse", [40, 16, 171, 129]),
+    "media-161.webp": ("ellipse", [45, 20, 166, 120]),
     "media-78.webp": ("polygon", [
-        (116, 126), (354, 126), (400, 145), (427, 331),
-        (410, 349), (92, 352), (70, 340), (71, 179),
+        (127, 141), (347, 137), (387, 154), (403, 323),
+        (388, 340), (109, 340), (94, 323), (97, 185),
     ]),
     "media-137.webp": ("polygon", [
-        (109, 153), (362, 155), (404, 171), (412, 354),
-        (382, 384), (93, 393), (72, 373), (75, 183),
+        (109, 161), (355, 160), (386, 177), (395, 352),
+        (373, 380), (99, 382), (88, 359), (94, 190),
     ]),
 }
 
 
-def keep_original_plate(src_name: str, alpha: Image.Image, scale: float) -> Image.Image:
+def keep_original_plate(src_name: str, alpha: Image.Image, scale: float, photo: Image.Image) -> Image.Image:
     shape = DISH_SHAPES.get(src_name)
     if not shape:
         return alpha
@@ -65,6 +65,15 @@ def keep_original_plate(src_name: str, alpha: Image.Image, scale: float) -> Imag
         drawing.ellipse([round(v*scale) for v in coords], fill=255)
     else:
         drawing.polygon([(round(x*scale), round(y*scale)) for x,y in coords], fill=255)
+    # Escludi il telo giallo esterno al piatto dei taralli.
+    if src_name == "media-137.webp":
+        colors = list(photo.convert("RGB").getdata())
+        neutral = Image.new("L", photo.size)
+        neutral.putdata([
+            255 if min(r, g, b) > 136 and abs(r-g) < 65 and abs(g-b) < 65 else 0
+            for r, g, b in colors
+        ])
+        plate = ImageChops.multiply(plate, neutral)
     plate = plate.filter(ImageFilter.GaussianBlur(radius=max(0.8, 0.7*scale)))
     return ImageChops.lighter(alpha, plate)
 
@@ -81,7 +90,7 @@ def prepare(src: Path, out: Path, session) -> dict:
         from io import BytesIO
         cutout = Image.open(BytesIO(cutout))
     cutout = cutout.convert("RGBA")
-    alpha = keep_original_plate(src.name, cutout.getchannel("A"), scale)
+    alpha = keep_original_plate(src.name, cutout.getchannel("A"), scale, enlarged)
 
     visible = sum(1 for p in alpha.resize((128, 128)).getdata() if p > 80)
     coverage = visible / (128 * 128)
