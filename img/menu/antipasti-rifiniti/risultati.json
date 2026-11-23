@@ -1,20 +1,5 @@
 [
   {
-    "source": "img/menu/media-161.webp",
-    "output": "img/menu/antipasti-rifiniti/peperone-crusco-senise.png",
-    "source_size": [
-      200,
-      150
-    ],
-    "output_size": [
-      1024,
-      1024
-    ],
-    "foreground_coverage": 0.3226,
-    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
-    "item_id": "i431"
-  },
-  {
     "source": "img/menu/media-78.webp",
     "output": "img/menu/antipasti-rifiniti/prosciutto-cotto.png",
     "source_size": [
@@ -25,83 +10,8 @@
       1024,
       1024
     ],
-    "foreground_coverage": 0.2597,
+    "foreground_coverage": 0.336,
     "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
     "item_id": "i433"
-  },
-  {
-    "source": "img/menu/media-73.webp",
-    "output": "img/menu/antipasti-rifiniti/prosciutto-crudo-alla-barese.png",
-    "source_size": [
-      500,
-      500
-    ],
-    "output_size": [
-      1024,
-      1024
-    ],
-    "foreground_coverage": 0.3165,
-    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
-    "item_id": "i434"
-  },
-  {
-    "source": "img/menu/media-113.webp",
-    "output": "img/menu/antipasti-rifiniti/tagliere-formaggi-murgiani.png",
-    "source_size": [
-      500,
-      500
-    ],
-    "output_size": [
-      1024,
-      1024
-    ],
-    "foreground_coverage": 0.1451,
-    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
-    "item_id": "i442"
-  },
-  {
-    "source": "img/menu/media-99.webp",
-    "output": "img/menu/antipasti-rifiniti/tagliere-salumi-misti.png",
-    "source_size": [
-      500,
-      374
-    ],
-    "output_size": [
-      1024,
-      1024
-    ],
-    "foreground_coverage": 0.3275,
-    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
-    "item_id": "i441"
-  },
-  {
-    "source": "img/menu/media-137.webp",
-    "output": "img/menu/antipasti-rifiniti/taralli-scaldatelli.png",
-    "source_size": [
-      500,
-      500
-    ],
-    "output_size": [
-      1024,
-      1024
-    ],
-    "foreground_coverage": 0.2911,
-    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
-    "item_id": "i443"
-  },
-  {
-    "source": "img/menu/media-140.webp",
-    "output": "img/menu/antipasti-rifiniti/verdure-miste-sottolio.png",
-    "source_size": [
-      200,
-      150
-    ],
-    "output_size": [
-      1024,
-      1024
-    ],
-    "foreground_coverage": 0.2901,
-    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
-    "item_id": "i444"
   }
 ]
