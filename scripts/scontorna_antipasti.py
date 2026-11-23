@@ -11,7 +11,7 @@ import json
 import warnings
 from pathlib import Path
 
-from PIL import Image, ImageEnhance, ImageFilter, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter, ImageOps
 from rembg import new_session, remove
 
 BASE = Path(__file__).resolve().parents[1]
@@ -39,6 +39,36 @@ def get_session():
         return new_session("u2netp")
 
 
+# Coordinate misurate sulle fotografie ORIGINALI: non eliminare anche i piatti.
+# Le maschere vengono aggiunte (non sostituite) al ritaglio del modello.
+DISH_SHAPES = {
+    "media-161.webp": ("ellipse", [40, 16, 171, 129]),
+    "media-78.webp": ("polygon", [
+        (116, 126), (354, 126), (400, 145), (427, 331),
+        (410, 349), (92, 352), (70, 340), (71, 179),
+    ]),
+    "media-137.webp": ("polygon", [
+        (109, 153), (362, 155), (404, 171), (412, 354),
+        (382, 384), (93, 393), (72, 373), (75, 183),
+    ]),
+}
+
+
+def keep_original_plate(src_name: str, alpha: Image.Image, scale: float) -> Image.Image:
+    shape = DISH_SHAPES.get(src_name)
+    if not shape:
+        return alpha
+    kind, coords = shape
+    plate = Image.new("L", alpha.size, 0)
+    drawing = ImageDraw.Draw(plate)
+    if kind == "ellipse":
+        drawing.ellipse([round(v*scale) for v in coords], fill=255)
+    else:
+        drawing.polygon([(round(x*scale), round(y*scale)) for x,y in coords], fill=255)
+    plate = plate.filter(ImageFilter.GaussianBlur(radius=max(0.8, 0.7*scale)))
+    return ImageChops.lighter(alpha, plate)
+
+
 def prepare(src: Path, out: Path, session) -> dict:
     photo = ImageOps.exif_transpose(Image.open(src)).convert("RGBA")
     original_width, original_height = photo.size
@@ -51,7 +81,7 @@ def prepare(src: Path, out: Path, session) -> dict:
         from io import BytesIO
         cutout = Image.open(BytesIO(cutout))
     cutout = cutout.convert("RGBA")
-    alpha = cutout.getchannel("A")
+    alpha = keep_original_plate(src.name, cutout.getchannel("A"), scale)
 
     visible = sum(1 for p in alpha.resize((128, 128)).getdata() if p > 80)
     coverage = visible / (128 * 128)
@@ -59,7 +89,7 @@ def prepare(src: Path, out: Path, session) -> dict:
         raise RuntimeError(f"Maschera sospetta per {src.name}: {coverage:.1%} pixel visibili")
 
     # Ritocco leggero non generativo: non inventa né sposta alimenti.
-    rgb = cutout.convert("RGB")
+    rgb = enlarged.convert("RGB")
     rgb = ImageEnhance.Brightness(rgb).enhance(1.045)
     rgb = ImageEnhance.Contrast(rgb).enhance(1.055)
     rgb = ImageEnhance.Color(rgb).enhance(1.025)
