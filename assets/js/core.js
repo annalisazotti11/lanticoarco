@@ -51,7 +51,7 @@
     opts = opts || {};
     if (v === null || v === undefined || v === '' || isNaN(Number(v))) return '';
     var n = Number(v);
-    var s = Math.abs(n).toFixed(2).replace('.', ',');
+    var s = Math.abs(n).toFixed(2).replace('.', ',').replace(/,00$/, ''); // € 9, non € 9,00
     var sign = opts.signed ? (n < 0 ? '− ' : '+ ') : (n < 0 ? '−' : '');
     return sign + (opts.noEuro ? '' : '€ ') + s;
   }

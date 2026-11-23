@@ -15,7 +15,7 @@
 
   // su uno schermo grande il menu si ingrandisce tutto insieme, come un grande telefono
   function scale() {
-    var z = window.innerWidth >= 760 ? Math.min(1.7, Math.max(1, window.innerWidth / 720)) : 1;
+    var z = window.innerWidth >= 760 ? Math.min(1.9, Math.max(1, window.innerWidth / 640)) : 1; // un po' più grande per chi sta in piedi
     root.style.zoom = z === 1 ? '' : z.toFixed(3);
     // la pagina è larga quanto lo schermo diviso l'ingrandimento: così, ingrandita, lo riempie senza uscire
     root.style.width = z === 1 ? '' : (window.innerWidth / z).toFixed(1) + 'px';
@@ -36,13 +36,18 @@
 
   function toTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-  // pulsante Inizio, compare scorrendo
+  // "Inizio" riporta sempre allo schermo con le categorie; la freccia torna in cima, e compare scorrendo
   var home = document.createElement('button');
-  home.type = 'button'; home.className = 'k-home'; home.hidden = true;
-  home.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Inizio';
-  home.onclick = toTop;
+  home.type = 'button'; home.className = 'k-home';
+  home.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Inizio';
+  home.onclick = function () { location.href = '../totem/'; };
   document.body.appendChild(home);
-  window.addEventListener('scroll', function () { home.hidden = window.scrollY < 500; }, { passive: true });
+  var up = document.createElement('button');
+  up.type = 'button'; up.className = 'k-up'; up.hidden = true; up.setAttribute('aria-label', 'Torna su');
+  up.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  up.onclick = toTop;
+  document.body.appendChild(up);
+  window.addEventListener('scroll', function () { up.hidden = window.scrollY < 500; }, { passive: true });
 
   // QR: il menu sul proprio telefono
   function addQr(data) {

@@ -338,3 +338,137 @@ html.kiosk .mf a[href^="tel:"] { text-decoration: none; color: inherit; pointer-
 .k-home { position: fixed; z-index: 40; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 99px; padding: 12px 18px 12px 14px; background: var(--ink); color: var(--bg-2); font: inherit; font-weight: 600; box-shadow: 0 14px 30px -12px rgba(26, 20, 16, .6); }
 .k-home svg { width: 20px; height: 20px; }
 
+
+/* =====================================================================
+   Menu ridisegnato
+   ===================================================================== */
+
+/* Testata: solo logo e filtri; la ricerca è il campo sotto */
+.intro { padding-top: 14px; }
+.intro-row { margin-bottom: 10px; }
+.intro-t { font-size: 2rem; }
+
+/* Barra: categorie + seconda fila con le sottocategorie del gruppo che stai guardando */
+.gnav.has-f { display: block; }
+.gnav-row { display: block; }
+.gnav.has-f .gnav-row { display: flex; align-items: center; }
+.gnav-in { padding-bottom: 6px; }
+.gnav-sub { max-width: 896px; margin: 0 auto; display: flex; align-items: center; gap: 18px; height: 38px; padding: 0 18px; overflow-x: auto; scrollbar-width: none; white-space: nowrap; border-top: 1px solid rgba(110, 84, 68, .1); }
+.gnav-sub::-webkit-scrollbar { display: none; }
+.gnav-sub a { flex: none; position: relative; text-decoration: none; font-size: .86rem; font-weight: 500; color: var(--ink-2); padding: 9px 0; transition: color .2s; }
+.gnav-sub a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 3px; height: 2px; border-radius: 2px; background: var(--ink); transform: scaleX(0); transition: transform .3s var(--ease-out); }
+.gnav-sub a[aria-current="true"] { color: var(--ink); font-weight: 600; }
+.gnav-sub a[aria-current="true"]::after { transform: none; }
+.gs-line { font-size: .86rem; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; }
+.grp, .sec { scroll-margin-top: 170px; }
+
+/* Gerarchia: gruppo, sottocategoria, piatto */
+.grp { padding-top: 40px; }
+.grp-t { font-size: clamp(1.9rem, 8vw, 2.4rem); line-height: 1; letter-spacing: -.04em; }
+.sec { margin-top: 30px; }
+.grp-t + .sec { margin-top: 18px; }
+.sec-h { padding-bottom: 6px; }
+.sec-t { font-size: 1.18rem; letter-spacing: -.02em; }
+.sec-sub { font-size: .9rem; }
+
+/* Piatti: righe con un filo sottile, non scatole */
+.items { gap: 0; margin-top: 6px; border-top: 1px solid var(--line); }
+.item { border-bottom: 1px solid var(--line); }
+.item-btn { background: none; border: 0; border-radius: 0; box-shadow: none !important; padding: 15px 0; gap: 16px; grid-template-columns: 1fr auto; transition: background .2s; }
+.item-btn:hover { border: 0; background: rgba(255, 252, 246, .55); }
+.item-btn:active { transform: none; background: rgba(255, 252, 246, .8); }
+.item-name { font-size: 1.02rem; }
+.item-desc { font-size: .9rem; margin-top: 3px; }
+.item-meta { margin-top: 7px; gap: 4px; }
+.item-meta:empty { display: none; }
+.item-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; }
+.item-price { font-size: 1.05rem; margin: 0; padding: 0; }
+.algs { display: inline; font-size: .76rem; color: #9a8b7e; font-weight: 500; letter-spacing: .01em; }
+.item-ph { width: 76px; height: 76px; border-radius: 12px; }
+.tag { font-size: .74rem; padding: 2px 7px; border-radius: 5px; }
+
+/* Varianti dette una volta */
+.gsupp { margin-top: 12px; font-size: .88rem; color: var(--ink-2); line-height: 1.5; }
+.gsupp b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+.suppl { margin-top: 8px; }
+
+/* Impasti dentro le pizze */
+.dstrip { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; align-items: center; gap: 14px; margin-top: 16px; padding: 12px 14px 12px 12px; border-radius: 18px; background: var(--bg-2); border: 1px solid var(--line); transition: border-color .2s; }
+.dstrip:hover { border-color: #cdbba6; }
+.dstrip:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.dstrip-phs { display: flex; flex: none; }
+.dstrip-phs i, .dl-ph { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; background: #e6d9c7; border: 2px solid var(--bg-2); display: grid; place-items: center; font-style: normal; font-weight: 700; font-size: .8rem; color: var(--ink-2); }
+.dstrip-phs i + i { margin-left: -10px; }
+.dstrip-phs img, .dl-ph img { width: 100%; height: 100%; object-fit: cover; }
+.dstrip-tx { flex: 1; min-width: 0; }
+.dstrip-tx b { display: block; font-weight: 600; font-size: .98rem; }
+.dstrip-tx small { display: block; color: var(--ink-2); font-size: .84rem; margin-top: 1px; }
+.dstrip > svg { width: 20px; height: 20px; flex: none; color: var(--ink-2); transform: rotate(-90deg); }
+.dl { padding-top: 26px; }
+.dlist { list-style: none; padding: 0; margin: 16px 0 0; border-top: 1px solid var(--line); }
+.dlist li { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.dl-ph { width: 52px; height: 52px; border: 0; font-size: 1.1rem; }
+.dlist b { display: block; font-weight: 600; }
+.dlist span { display: block; font-size: .86rem; color: var(--ink-2); line-height: 1.4; margin-top: 2px; }
+.dlist em { font-style: normal; font-family: var(--font-display); font-weight: 600; white-space: nowrap; padding-top: 1px; }
+
+/* Crea la tua pizza: resta in fondo alle pizze */
+.bcta { margin-top: 26px; }
+
+/* Da sapere: le voci a scomparsa disegnate come il resto */
+.mf details { padding: 0; }
+.mf summary { list-style: none; display: flex; align-items: center; justify-content: space-between; padding: 13px 0; }
+.mf summary::-webkit-details-marker { display: none; }
+.mf summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--ink-2); border-bottom: 2px solid var(--ink-2); transform: rotate(45deg) translate(-2px, -2px); transition: transform .25s var(--ease-out); flex: none; margin-left: 12px; }
+.mf details[open] summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+.mf details p { margin: 0 0 14px; line-height: 1.5; }
+.mf-links { text-align: center; padding: 8px 0; }
+
+/* Totem: niente ricerca da tastiera, caratteri un po' più grandi */
+html.kiosk .searchbar { display: none; }
+html.kiosk .k-qr { margin-top: 0; }
+html.kiosk .item-name { font-size: 1.1rem; }
+html.kiosk .item-desc { font-size: .97rem; }
+html.kiosk .algs { font-size: .82rem; }
+.k-up { position: fixed; z-index: 40; right: 132px; bottom: max(16px, env(safe-area-inset-bottom)); width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg-2); color: var(--ink); display: grid; place-items: center; box-shadow: 0 12px 30px -14px rgba(26, 20, 16, .5); }
+.k-up svg { width: 20px; height: 20px; }
+
+@media (min-width: 760px) {
+  .items { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; border-top: 0; }
+  .item { border-bottom: 1px solid var(--line); }
+  .items .item:nth-child(-n+2) { border-top: 1px solid var(--line); }
+}
+/* seconda fila: testo con sottolineatura, non pillola */
+.gnav .gnav-sub a { padding: 9px 0; border-radius: 0; background: none; }
+.gnav .gnav-sub a[aria-current="true"] { background: none; color: var(--ink); }
+.algs { white-space: nowrap; }
+.dl-ph.dl-none, .dstrip-phs i.dl-none { color: rgba(110, 84, 68, .45); }
+.dl-ph.dl-none svg { width: 55%; }
+.dstrip-phs i.dl-none svg { width: 60%; }
+.dlist span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ---------- Versione con comparti ---------- */
+.gnav-sub { display: none !important; }
+.grp, .sec { scroll-margin-top: 140px; }
+.gnav-in { padding-bottom: 10px; }
+.grp-t + .acc, .gsupp + .acc, .dstrip + .acc { margin-top: 16px; }
+.acc .items { border-top: 0; margin-top: 2px; }
+.acc .acc-in > .items .item:last-child { border-bottom: 0; }
+.sec.acc { margin-top: 12px; }
+.acc-in { padding: 0 4px; }
+.d-custom-s { margin-top: 8px; font-size: .84rem; color: var(--ink-2); text-align: center; line-height: 1.4; }
+/* Personalizza: l'elenco completo degli ingredienti in un comparto */
+.b-search-all { display: block; margin-top: 16px; }
+.b-allt { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 10px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: #fff; font-weight: 600; font-size: .95rem; color: var(--ink); }
+.b-allt svg { width: 18px; height: 18px; transition: transform .3s var(--ease-out); }
+.b-allt[aria-expanded="true"] svg { transform: rotate(180deg); }
+.b-allt:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* Pulizia testi (audit): note di sezione come riga piccola, Personalizza più asciutto */
+.sec-note, .acc-in > .sec-note:first-child { margin: 8px 0 0; background: none; border: 0; border-radius: 0; padding: 0; font-size: .86rem; line-height: 1.45; color: var(--ink-2); }
+.b-k { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-right: 60px; }
+.b-k .b-reset { font-size: .84rem; font-weight: 500; color: var(--ink-2); margin: 0; }
+.b-change { border: 0; background: none; padding: 6px 4px; font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; align-self: center; }
+.b-change[aria-expanded="true"] { text-decoration: none; color: var(--ink-2); }
+.w-a { display: block; font-size: .95rem; }
+.mf-kv small { display: block; font-size: .8rem; color: var(--ink-2); margin-top: 2px; }

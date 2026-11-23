@@ -112,7 +112,7 @@
       (p.kicker ? '<p class="promo-k">' + esc(p.kicker) + '</p>' : '') +
       '<h2 class="promo-t">' + esc(p.title) + '</h2>' +
       (p.text ? '<p class="promo-x">' + esc(p.text) + '</p>' : '') +
-      (p.price ? '<p class="promo-p">' + esc(p.price) + '</p>' : '') + '</div>';
+      (p.price ? '<p class="promo-p">' + esc(String(p.price).replace(/,00(?!\d)/g, '')) + '</p>' : '') + '</div>';
   }
 
   /* ---------- Impaginazione: misura le righe e riempie ogni schermata ---------- */
@@ -284,7 +284,7 @@
     ATTRACT = true;
     clearTimeout(timer); clearTimeout(resumeTimer); clearInterval(promoT);
     document.body.classList.add('attract');
-    var groups = DATA.groups.filter(function (g) { return g.id !== 'aggiunte' && AA.sectionsOf(DATA, g.id, 'totem').length; });
+    var groups = DATA.groups.filter(function (g) { return g.id !== 'aggiunte' && g.id !== 'impasti' && AA.sectionsOf(DATA, g.id, 'totem').length; }); // gli impasti sono dentro le pizze
     var promos = AA.activePromos(DATA, 'totem');
     var h = '<div class="att">' +
       '<div class="att-h"><h2>Che cosa ti va stasera?</h2><p class="att-cta"><span aria-hidden="true"></span>Tocca una categoria per iniziare</p></div>' +

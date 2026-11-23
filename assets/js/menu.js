@@ -1,7 +1,12 @@
-/* Menu per telefono, tablet e PC */
+/* Menu: comparti che si aprono e chiudono, righe pulite, impasti dentro le pizze */
 (function () {
   'use strict';
   var AA = window.AA, esc = AA.esc;
+  // prezzi semplici: 12 invece di 12,00
+  var _price = AA.price;
+  AA.price = function (v, o) { return String(_price(v, o)).replace(/,00(?!\d)/g, ''); };
+  function cleanPrice(h) { return String(h).replace(/,00(?!\d)/g, ''); }
+  var NUMW = ['zero', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci', 'undici', 'dodici'];
   var DATA = null;
   var state = { q: '', tags: [], noAllergens: [] };
   var $ = function (id) { return document.getElementById(id); };
@@ -32,28 +37,29 @@
   function algsHTML(codes) {
     var list = AA.allergenNums(codes);
     if (!list.length) return '';
-    return '<span class="algs" aria-label="Allergeni: ' + list.map(function (a) { return a.label; }).join(', ') + '">' +
-      list.map(function (a) { return '<span class="alg" aria-hidden="true">' + a.n + '</span>'; }).join('') + '</span>';
+    return '<span class="algs" aria-label="Allergeni: ' + list.map(function (a) { return a.label; }).join(', ') + '"><span aria-hidden="true">Allergeni ' +
+      list.map(function (a) { return a.n; }).join(' · ') + '</span></span>';
   }
   function tagsHTML(tags) {
     return (tags || []).map(function (t) { var d = AA.TAG_BY_CODE[t]; return d ? '<span class="tag tag-' + t + '">' + esc(d.short) + '</span>' : ''; }).join('');
   }
   function priceHTML(it, sec) {
-    if (it.prices && it.prices.length) return AA.itemPriceHTML(it, '');
-    if (it.price === null || it.price === undefined || it.price === '') return '<span class="tbc">Prezzo da confermare</span>';
+    if (it.prices && it.prices.length) return cleanPrice(AA.itemPriceHTML(it, ''));
+    if (it.price === null || it.price === undefined || it.price === '') return '<span class="tbc">Chiedi al personale</span>';
     if (sec.deltaPrices) return Number(it.price) === 0 ? 'Impasto base' : AA.price(it.price, { signed: true });
     return AA.price(it.price);
   }
 
   function itemHTML(it, sec) {
-    var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags) + algsHTML(it.allergens);
+    var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags);
+    var algs = algsHTML(it.allergens);
     return '<li class="item"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
       '<span class="item-main">' +
       '<span class="item-name">' + hl(it.name) + (it.frozen ? '<span class="frz" title="' + esc(DATA.info.frozenLegend) + '">*</span>' : '') + '</span>' +
       (it.desc ? '<span class="item-desc">' + hl(it.desc) + '</span>' : '') +
       (it.note ? '<span class="item-note">' + esc(it.note) + '</span>' : '') +
       (meta ? '<span class="item-meta">' + meta + '</span>' : '') +
-      '<span class="item-price num">' + priceHTML(it, sec) + '</span></span>' +
+      '<span class="item-foot"><span class="item-price num">' + priceHTML(it, sec) + '</span>' + algs + '</span></span>' +
       (it.image ? '<img class="item-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '') +
       '</button></li>';
   }
@@ -61,7 +67,7 @@
     return '<div class="cards">' + items.map(function (it) {
       return '<button class="card" type="button" data-item="' + esc(it.id) + '">' +
         (it.image ? '<img class="card-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '<span class="card-ph ph-empty">' + AA.archSVG() + '</span>') +
-        '<span class="card-name" style="display:block">' + hl(it.name.replace(/^Impasto\s+/i, '')) + '</span>' +
+        '<span class="card-name" style="display:block">' + hl(doughName(it.name)) + '</span>' +
         '<span class="card-price" style="display:block">' + priceHTML(it, sec) + '</span></button>';
     }).join('') + '</div>';
   }
@@ -87,23 +93,61 @@
       : sec.layout === 'chips' ? chipsHTML(items)
       : '<ul class="items">' + items.map(function (it) { return itemHTML(it, sec); }).join('') + '</ul>';
   }
-  function sectionHTML(sec, accordion, groupId) {
+  /* Comparti: chiusi all'inizio, si aprono e si chiudono toccando il titolo */
+  function sectionHTML(sec, showSupp, accordion) {
     var items = sec.items.filter(matches);
     if (!items.length) return '';
-    var extra = (sec.note && !filtering() ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '') + (filtering() ? '' : suppHTML(sec));
+    var extra = (sec.note && !filtering() ? '<p class="sec-note">' + esc(sec.note) + '</p>' : '') + (showSupp && !filtering() ? suppHTML(sec) : '');
     if (!accordion) {
-      return '<section class="sec" id="' + esc(sec.id) + '"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
-        (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + extra + sectionBody(sec, items) + '</section>';
+      return '<section class="sec" id="' + esc(sec.id) + '"><div class="sec-h"><h3 class="sec-t">' + esc(sec.name) + '</h3>' +
+        (sec.subtitle ? '<p class="sec-sub">' + esc(sec.subtitle) + '</p>' : '') + '</div>' + extra + sectionBody(sec, items) + '</section>';
     }
     var open = filtering() || !!OPEN[sec.id];
     var ph = items.filter(function (it) { return it.cutout; })[0] || items.filter(function (it) { return it.image; })[0];
-    var name = sec.name;
     return '<section class="sec acc' + (open ? ' open' : '') + '" id="' + esc(sec.id) + '">' +
       '<button type="button" class="acc-h" data-acc="' + esc(sec.id) + '" aria-expanded="' + open + '" aria-controls="' + esc(sec.id) + '-b">' +
       (ph ? '<span class="acc-ph' + (ph.cutout ? ' cut' : '') + '"><img alt="" loading="lazy" src="' + esc(AA.src(ph.cutout || ph.image)) + '"></span>' : '<span class="acc-ph ph-empty">' + AA.archSVG() + '</span>') +
-      '<span class="acc-tx"><b>' + esc(name) + '</b>' + (sec.subtitle ? '<small>' + esc(sec.subtitle) + '</small>' : '') + '</span>' +
+      '<span class="acc-tx"><b>' + esc(sec.name) + '</b>' + (sec.subtitle ? '<small>' + esc(sec.subtitle) + '</small>' : '') + '</span>' +
       '<span class="acc-ch">' + CHEV + '</span></button>' +
       '<div class="acc-b" id="' + esc(sec.id) + '-b"><div class="acc-in"' + (open ? '' : ' inert') + '>' + extra + sectionBody(sec, items) + '</div></div></section>';
+  }
+
+  /* Varianti: quelle comuni a tutto il gruppo si dicono una volta in cima; le altre stanno nella scheda del piatto */
+  function commonSupp(secs) {
+    var withS = secs.filter(function (s) { return (s.supplements || []).length; });
+    if (withS.length < 2) return [];
+    var key = function (x) { return x.label + '|' + x.price; };
+    return withS[0].supplements.filter(function (x) { return withS.every(function (s) { return s.supplements.some(function (y) { return key(y) === key(x); }); }); });
+  }
+  function shortSec(n) {
+    var t = String(n).replace(/^(Birre artigianali|Le nostre|I nostri|Pizze|Le|I|Gli)\s+/i, '');
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  /* Gli impasti: una scelta dentro le pizze, non una portata */
+  function doughName(n) {
+    var t = String(n).replace(/^Impasto\s+/i, '').replace(/\s+da noi prodotto$/i, '').replace(/\s+100% bio$/i, '').replace(/ integrale 100% Bio$/i, ' integrale');
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  function doughPh(it) {
+    return it.image ? '<img alt="" loading="lazy" src="' + esc(AA.src(it.image)) + '">' : AA.archSVG();
+  }
+  function doughStrip() {
+    var d = doughSection(); if (!d) return '';
+    var its = d.items.filter(function (it) { return it.available !== false; });
+    if (!its.length) return '';
+    var w = NUMW[its.length] || its.length;
+    return '<button type="button" class="dstrip" data-doughs><span class="dstrip-phs">' + its.slice(0, 5).map(function (it) { return '<i' + (it.image ? '' : ' class="dl-none"') + '>' + doughPh(it) + '</i>'; }).join('') + '</span>' +
+      '<span class="dstrip-tx"><b>' + esc(w.charAt(0).toUpperCase() + w.slice(1)) + ' impasti, su ogni pizza</b><small>Dal classico al carbone vegetale: scopri quale fa per te</small></span>' + CHEV + '</button>';
+  }
+  function doughsHTML() {
+    var d = doughSection();
+    return '<div class="d-body dl"><p class="d-sec">Su ogni pizza</p><h2 class="d-name" id="sheetTitle">I nostri impasti</h2>' +
+      (d.subtitle ? '<p class="d-desc">' + esc(d.subtitle) + '. Il classico è compreso nel prezzo.</p>' : '') +
+      '<ul class="dlist">' + d.items.filter(function (it) { return it.available !== false; }).map(function (it) {
+        var p = it.price === null || it.price === undefined || it.price === '' ? '' : (Number(it.price) === 0 ? 'Compreso' : AA.price(it.price, { signed: true }));
+        return '<li><i class="dl-ph' + (it.image ? '' : ' dl-none') + '">' + doughPh(it) + '</i><div><b>' + esc(doughName(it.name)) + '</b><span>' + esc(it.desc || '') + '</span></div>' + (p ? '<em class="num">' + p + '</em>' : '') + '</li>';
+      }).join('') + '</ul>' +
+      '<button type="button" class="b-fire d-custom" data-open-builder>Crea la tua pizza con l’impasto che vuoi</button></div>';
   }
 
   function groupsWithContent() {
@@ -153,15 +197,22 @@
       '<button type="button" class="b-ghost alg-f" id="algFilter">Escludi un allergene dal menu</button></div></section>';
   }
 
+  var SUBS = {};   // per ogni gruppo: le sue sottocategorie (seconda fila della barra)
   function render() {
     var html = filtering() ? '' : allergensHTML(), nav = filtering() ? '' : '<a href="#g-allergeni" data-g="allergeni">Allergeni</a>';
+    SUBS = { allergeni: { line: 'Comunicate sempre allergie e intolleranze' } };
     groupsWithContent().forEach(function (g) {
+      if (g.id === 'impasti' && !filtering()) return;
       var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
-      var acc = secs.length > 1;
-      var inner = secs.map(function (s) { return sectionHTML(s, acc, g.id); }).join('');
+      var common = commonSupp(secs);
+      var inner = secs.map(function (s) { return sectionHTML(s, !common.length, secs.length > 1); }).join('');
       if (!inner) return;
-      html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
+      var top = '';
+      if (g.id === 'pizze' && !filtering()) top += doughStrip();
+      if (false && common.length && !filtering()) top += '<p class="gsupp"><b>Su ogni pizza</b> ' + common.map(function (x) { return esc(x.label.toLowerCase()) + ' <span class="num">' + AA.price(x.price, { signed: true }) + '</span>'; }).join(' · ') + '. Le altre varianti le trovi in “Personalizza”, nella scheda di ogni pizza.</p>';
+      html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + top + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
+      SUBS[g.id] = false && secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
     });
     var hasDishes = html.indexOf('class="grp" id="g-') >= 0;
     $('contenuto').innerHTML = hasDishes ? html : '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
@@ -171,8 +222,24 @@
     $('gnavF').hidden = !nFilters();
     $('gnav').classList.toggle('has-f', nFilters() > 0);
     $('gnav').hidden = !nav;
-    renderGuide();
+    subCur = null; subGrp = null;
     spy(); reveal();
+  }
+  /* Seconda fila: le sottocategorie del gruppo che stai guardando */
+  var subGrp = null, subCur = null;
+  function renderSub(gid) {
+    if (gid === subGrp) return;
+    subGrp = gid; subCur = null;
+    var d = SUBS[gid] || {}, box = $('gnavSub');
+    box.innerHTML = d.secs ? d.secs.map(function (x) { return '<a href="#' + esc(x[0]) + '" data-jump data-s="' + esc(x[0]) + '">' + esc(x[1]) + '</a>'; }).join('') : '<span class="gs-line">' + esc(d.line || '') + '</span>';
+    box.scrollLeft = 0;
+  }
+  function setSub(sid) {
+    if (sid === subCur) return;
+    subCur = sid;
+    var box = $('gnavSub'), a = null;
+    box.querySelectorAll('a').forEach(function (x) { var on = x.dataset.s === sid; x.setAttribute('aria-current', on ? 'true' : 'false'); if (on) a = x; });
+    if (a) box.scrollTo({ left: a.offsetLeft - 14, behavior: 'smooth' });
   }
 
   /* Comparsa morbida delle schede */
@@ -215,6 +282,11 @@
       var last = grps[grps.length - 1]; if (last.getBoundingClientRect().top < window.innerHeight * .6) id = last.id.slice(2);
     }
     spySet(id);
+    renderSub(id);
+    var g = document.getElementById('g-' + id), sid = null;
+    if (g) g.querySelectorAll('.sec').forEach(function (x) { if (x.getBoundingClientRect().top <= line + 30) sid = x.id; });
+    if (!sid && g) { var f = g.querySelector('.sec'); sid = f && f.id; }
+    setSub(sid);
   }
   function spy() {
     spyCur = null;
@@ -227,11 +299,11 @@
       window.addEventListener('resize', function () { if (!spyRaf) spyRaf = requestAnimationFrame(spyCalc); });
       // un tocco su una categoria (barra o riquadri): la voce si accende subito e la pagina si ferma con il titolo sotto la barra
       document.addEventListener('click', function (e) {
-        var a = e.target.closest('a[href^="#g-"]'); if (!a) return;
+        var a = e.target.closest('a[href^="#g-"], a[data-jump]'); if (!a) return;
         var el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
         e.preventDefault();
-        var id = el.id.slice(2);
-        spySet(id); spyLock = id;
+        var grp = el.classList.contains('grp') ? el : el.closest('.grp'), id = grp ? grp.id.slice(2) : '';
+        spySet(id); renderSub(id); var fs = el.classList.contains('grp') ? el.querySelector('.sec') : el; if (fs) setSub(fs.id); spyLock = id;
         clearTimeout(spyLockT); spyLockT = setTimeout(function () { spyLock = null; spyCalc(); }, 1200);
         // la barra a fine corsa sta ferma in alto: conta la sua posizione finale, non quella di adesso
         var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1; // sul totem la pagina è ingrandita
@@ -269,7 +341,7 @@
 
   function detailHTML(it, sec) {
     var price = priceHTML(it, sec);
-    if (/class="tbc"/.test(price)) price = '<span class="d-tbc">Prezzo da confermare</span>';
+    if (/class="tbc"/.test(price)) price = '<span class="d-tbc">Prezzo: chiedi al personale</span>';
     var algs = AA.allergenNums(it.allergens);
     return (it.image ? '<img class="d-ph" alt="" onload="if(this.naturalWidth<400)this.classList.add(\'lowres\')" src="' + esc(AA.src(it.image)) + '">' : '') +
       '<div class="d-body"><p class="d-sec">' + esc(sec.name) + '</p>' +
@@ -281,10 +353,10 @@
       (algs.length ? '<h3 class="d-h">Allergeni</h3><ul class="d-algs">' + algs.map(function (a) {
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
       }).join('') + '</ul>' : '') +
-      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza e calcola il prezzo</button>' : '') +
-      ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
-      '<p class="d-note">' + esc(DATA.info.allergenNote) + '</p></div>';
+      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza</button>'
+        : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
+      '</div>';
   }
 
 
@@ -330,7 +402,7 @@
     var secs = pizzaSections();
     var starts = [];
     if (itemId) { var f = findItem(itemId); if (f) starts.push(f); }
-    ['Margherita', 'Marinara'].forEach(function (n) {
+    if (!starts.length) ['Margherita', 'Marinara'].forEach(function (n) {
       var f = findByName(n, secs);
       if (f && !starts.some(function (x) { return x.item.id === f.item.id; })) starts.push(f);
     });
@@ -386,24 +458,23 @@
   function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
   function renderBuilder() {
     var opt = builderOptions(B.start.sec);
-    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '</p>' +
-      '<h2 class="b-t" id="bTitle">' + esc(B.from ? B.from.item.name + ', a modo tuo.' : 'La tua pizza, il tuo prezzo.') + '</h2>' +
-      '<p class="b-s">Togli e aggiungi ingredienti, scegli l’impasto: il totale si aggiorna mentre scegli. <button type="button" class="b-reset" data-b="reset">Ricomincia</button></p></div>';
+    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '<button type="button" class="b-reset" data-b="reset">Ricomincia</button></p>' +
+      '<h2 class="b-t" id="bTitle">' + esc(B.start.item.name) + '</h2></div>';
     var rec = recipeOf(B.start.item);
     h += '<section class="b-step"><h3><b>1</b>Si parte da</h3><div class="bchips">' + B.starts.map(function (st) {
       return chip('start', st.item.id, st.item.name, AA.price(unitPrice(st.item)), st.item.id === B.start.item.id);
-    }).join('') + '<button type="button" class="bchip b-other" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '"><span>Un’altra pizza</span></button></div>' +
+    }).join('') + '<button type="button" class="' + (B.from ? 'b-change' : 'bchip b-other') + '" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '"><span>' + (B.from ? 'Cambia pizza' : 'Un’altra pizza') + '</span></button></div>' +
       '<div class="b-pick" id="bPick"' + (B.picking ? '' : ' hidden') + '><label class="b-search"><span class="sr-only">Cerca una pizza</span><input type="search" id="bPickQ" placeholder="Cerca per nome o ingrediente, es. bufala" autocomplete="off"></label><div class="b-pks" id="bPickList">' + (B.picking ? pickList('') : '') + '</div></div>';
     if (rec.length) {
-      h += '<p class="b-sub">Nella ricetta. Tocca per togliere quello che non vuoi</p><div class="bchips" id="bRec">' + rec.map(function (r) {
+      h += '<p class="b-sub">Nella ricetta: tocca per togliere, il prezzo non cambia</p><div class="bchips" id="bRec">' + rec.map(function (r) {
         var off = B.removed.indexOf(r) >= 0;
         return '<button type="button" class="bchip b-rec' + (off ? ' off' : '') + '" data-b="rm" data-v="' + esc(r) + '" aria-pressed="' + (off ? 'false' : 'true') + '" aria-label="' + esc(cap(r)) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo') + '"><span>' + esc(cap(r)) + '</span><i aria-hidden="true"></i></button>';
-      }).join('') + '</div><p class="b-hint">Se togli un ingrediente il totale non cambia.</p>';
+      }).join('') + '</div>';
     }
     h += '</section>';
     if (B.doughs.length) {
       h += '<section class="b-step"><h3><b>2</b>L’impasto</h3><div class="bchips">' + B.doughs.map(function (d) {
-        return chip('dough', d.id, d.name.replace(/^Impasto\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); }), deltaLabel(d.price), B.dough && d.id === B.dough.id);
+        return chip('dough', d.id, doughName(d.name), deltaLabel(d.price), B.dough && d.id === B.dough.id);
       }).join('') + '</div></section>';
     }
     if (opt.base.length) {
@@ -418,19 +489,22 @@
     }
     var n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
     h += '<section class="b-step"><h3><b>' + n + '</b>Aggiungi ingredienti</h3><div id="bMine"></div>';
-    if (B.presets.length) {
+    if (false && B.presets.length) { // niente "Idee per cominciare": si parte dalla pizza scelta
       h += '<p class="b-sub">Idee per cominciare</p><div class="bchips">' + B.presets.map(function (p, i) {
         return '<button type="button" class="bidea" data-b="preset" data-v="' + i + '"><span>' + esc(p.name) + '</span><small>' + p.ids.map(function (id) {
           return esc(B.extras.filter(function (x) { return x.id === id; })[0].name);
         }).join(', ') + '</small></button>';
       }).join('') + '</div>';
     }
+    // la ricerca sta sopra i più scelti
+    h += '<label class="b-search b-search-all"><span class="sr-only">Cerca un ingrediente</span><input type="search" id="bQ" placeholder="Cerca un ingrediente" autocomplete="off"></label>';
     if (B.popular.length) {
       h += '<p class="b-sub">I più scelti</p><div class="bchips">' + B.popular.map(function (it) {
         return chip('extra', it.id, it.name, AA.price(it.price, { signed: true }), B.sel.indexOf(it.id) >= 0);
       }).join('') + '</div>';
     }
-    h += '<p class="b-sub">Tutti gli ingredienti</p><label class="b-search"><span class="sr-only">Cerca un ingrediente</span><input type="search" id="bQ" placeholder="Cerca un ingrediente" autocomplete="off"></label><div id="bAll">';
+    // l'elenco completo sta in un comparto chiuso: si apre toccando, o da solo quando cerchi
+    h += '<button type="button" class="b-allt" id="bAllT" aria-expanded="false" aria-controls="bAll">Tutti gli ingredienti' + CHEV + '</button><div id="bAll" hidden>';
     var by = {};
     B.extras.forEach(function (it) { var k = String(unitPrice(it)); (by[k] = by[k] || []).push(it); });
     Object.keys(by).sort(function (a, b) { return Number(a) - Number(b); }).forEach(function (k) {
@@ -438,12 +512,16 @@
         return chip('extra', it.id, it.name, '', B.sel.indexOf(it.id) >= 0, ' small');
       }).join('') + '</div></div>';
     });
-    h += '</div></section><p class="d-note">Il prezzo è indicativo: lo confermiamo al momento dell’ordine. In caso di allergie chiedete sempre al personale.</p>';
+    h += '</div></section>';
     $('bBody').innerHTML = h;
     $('bPickQ').addEventListener('input', function (e) { $('bPickList').innerHTML = pickList(e.target.value.trim()); });
     if (B.picking) setTimeout(function () { var q = $('bPickQ'); if (q) q.focus({ preventScroll: true }); }, 50);
+    $('bAllT').addEventListener('click', function () {
+      var open = $('bAll').hidden; $('bAll').hidden = !open; this.setAttribute('aria-expanded', open);
+    });
     $('bQ').addEventListener('input', function (e) {
       var q = norm(e.target.value.trim());
+      if (q && $('bAll').hidden) { $('bAll').hidden = false; $('bAllT').setAttribute('aria-expanded', 'true'); }
       $('bAll').querySelectorAll('.bchip').forEach(function (b) { b.hidden = q && norm(b.textContent).indexOf(q) < 0; });
       $('bAll').querySelectorAll('[data-grp]').forEach(function (g) { g.hidden = ![].some.call(g.querySelectorAll('.bchip'), function (b) { return !b.hidden; }); });
     });
@@ -458,7 +536,7 @@
     if (B.dough) {
       var dp = Number(B.dough.price) || 0; total += dp;
       if (B.dough.price == null || B.dough.price === '') B.tbc = true;
-      lines.push(['Impasto', B.dough.name.replace(/^Impasto\s+/i, ''), dp]);
+      lines.push(['Impasto', doughName(B.dough.name), dp]);
       (B.dough.allergens || []).forEach(function (a) { algs.push(a); });
     }
     var bo = opt.base.filter(function (o) { return o.id === B.baseOpt; })[0];
@@ -475,7 +553,7 @@
     if (st.rem.length) parts.push('senza ' + st.rem.join(', '));
     if (st.ing.length) parts.push('+ ' + st.ing.map(function (i) { return i.name.toLowerCase(); }).join(', '));
     $('bFoot').innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Totale indicativo, impasto da chiedere' : 'Totale indicativo') + '</p><p class="bf-p num">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
-      '<p class="bf-s">' + esc(B.start.item.name) + (parts.length ? ', ' + esc(parts.join('; ')) : '') + '</p></div>' +
+      (parts.length ? '<p class="bf-s">' + esc(cap(parts.join('; '))) + '</p>' : '') + '</div>' +
       '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
     var mine = $('bMine');
     if (mine) mine.innerHTML = st.ing.length ? '<p class="b-sub">Aggiunti da te. Tocca per togliere</p><div class="bchips">' + st.ing.map(function (it) {
@@ -485,16 +563,16 @@
   function showWaiter() {
     var st = builderState();
     var algs = AA.allergenNums(st.algs);
-    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + (st.ing.length || st.rem.length ? ', a modo mio' : '') + '</h2><dl class="w-l">' +
-      st.lines.map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
-      (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + st.rem.map(function (r) { return esc(r); }).join(', ') + '</dd></div>' : '') +
+    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + '</h2><dl class="w-l">' +
+      st.lines.slice(1).map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
+      (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + esc(cap(st.rem.join(', '))) + '</dd></div>' : '') +
       (st.ing.length ? '<div><dt>In più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
-      '</dl><p class="w-p num">' + AA.price(st.total) + '<small>prezzo indicativo</small></p>' +
-      (algs.length ? '<p class="w-a">Allergeni: ' + algs.map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('') + '</p>' : '') +
+      '</dl><p class="w-p num">' + AA.price(st.total) + '</p>' +
+      (algs.length ? '<p class="w-a">Allergeni ' + algs.map(function (a) { return a.n; }).join(' · ') + '</p>' : '') +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
     $('waiter').hidden = false;
     $('wBack').onclick = function () { $('waiter').hidden = true; };
-    $('wBack').focus();
+    $('wBack').focus({ focusVisible: false });
   }
   function bindBuilder() {
     $('builder').addEventListener('click', function (e) {
@@ -505,7 +583,8 @@
       if (g === 'pickit') {
         var hit = allPizzas().filter(function (x) { return x.item.id === v; })[0];
         if (hit) {
-          if (!B.starts.some(function (x) { return x.item.id === v; })) B.starts.unshift(hit);
+          if (B.from) B.starts = [hit];
+          else if (!B.starts.some(function (x) { return x.item.id === v; })) B.starts.unshift(hit);
           B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.removed = []; B.picking = false; renderBuilder();
           var t = $('bBody'); if (t) t.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -576,15 +655,13 @@
     $('filterCount').hidden = !n; $('filterCount').textContent = n;
     var box = $('activeFilters');
     var apply = $('fApply');
-    if (!n) { box.hidden = true; box.innerHTML = ''; if (apply) apply.textContent = 'Mostra tutto il menu'; return; }
+    if (!n) { box.hidden = true; box.innerHTML = ''; if (apply) apply.textContent = 'Chiudi'; return; }
     var count = countMatches();
     var gf = state.tags.indexOf('senza-glutine') >= 0, onlyGf = gf && n === 1;
     var title = onlyGf ? 'Menu senza glutine' : 'Filtri attivi: ' + filterNames().join(', ');
-    var text = count + (count === 1 ? ' piatto' : ' piatti') + (onlyGf ? ' senza glutine o che possiamo fare senza glutine.' : '.');
-    if (gf && Object.keys(CAN_GF).length) text += ' Pizze e panzerotti con l’impasto senza glutine hanno un supplemento.';
-    if (gf) text += ' Se sei celiaco, dillo sempre quando ordini.';
+    var text = (onlyGf ? 'Piatti senza glutine o che possiamo preparare senza glutine.' : '') + (gf ? ' Se sei celiaco, dillo quando ordini.' : '');
     box.hidden = false;
-    box.innerHTML = '<div class="af-t"><b>' + esc(title) + '</b><span>' + esc(text) + '</span></div>' +
+    box.innerHTML = '<div class="af-t"><b>' + esc(title) + '</b>' + (text ? '<span>' + esc(text.trim()) + '</span>' : '') + '</div>' +
       '<button type="button" class="af-x" data-clear-filters>Mostra tutto il menu</button>';
     if (apply) apply.textContent = count ? 'Mostra ' + count + (count === 1 ? ' piatto' : ' piatti') : 'Nessun piatto';
   }
@@ -628,7 +705,7 @@
       return '<article class="promo">' + (p.image ? '<img alt="" loading="lazy" src="' + esc(AA.src(p.image)) + '">' : '') +
         '<div>' + (p.kicker ? '<span class="promo-k">' + esc(p.kicker) + '</span>' : '') +
         '<h2 class="promo-t">' + esc(p.title) + '</h2>' + (p.text ? '<p class="promo-x">' + esc(p.text) + '</p>' : '') +
-        (p.price ? '<p class="promo-p num">' + esc(p.price) + '</p>' : '') + '</div></article>';
+        (p.price ? '<p class="promo-p num">' + esc(cleanPrice(p.price)) + '</p>' : '') + '</div></article>';
     }).join('');
     $('promos').hidden = !promos.length;
   }
@@ -638,14 +715,23 @@
     f += '<div class="mf-card"><h2>Da sapere</h2><div class="mf-row">' +
       (i.coverCharge ? '<p class="mf-kv"><b>Coperto</b>' + AA.price(i.coverCharge) + '</p>' : '') +
       (i.wifi && i.wifi.network ? '<p class="mf-kv"><b>Wi‑Fi gratuito</b>' + esc(i.wifi.network) + ', password ' + esc(i.wifi.password) + '</p>' : '') +
-      '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a></p>' +
+      '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a><small>solo al telefono, anche per asporto e domicilio</small></p>' +
       (i.mobile ? '<p class="mf-kv"><b>Cellulare</b><a href="' + AA.telHref(i.mobile) + '">' + esc(i.mobile) + '</a></p>' : '') +
       '<p class="mf-kv"><b>Orari</b>' + (i.hours || []).map(function (h) { return esc(h.days) + ' ' + esc(h.time); }).join('<br>') + '</p></div>';
     if (i.products) f += '<details><summary>I nostri prodotti</summary><p>' + esc(i.products) + '</p></details>';
-    (i.notes || []).forEach(function (n) { f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(n.text) + '</p></details>'; });
+    // "Prenotazioni" è già sopra; "Domicilio € 3" finisce dentro "Asporto e domicilio"
+    var notes = (i.notes || []).filter(function (n) { return !/^prenotazion/i.test(n.title); });
+    var dom = notes.filter(function (n) { return /^domicilio\b/i.test(n.title); })[0];
+    var asp = notes.filter(function (n) { return /asporto/i.test(n.title); })[0];
+    notes.forEach(function (n) {
+      if (n === dom && asp) return;
+      var t = n.text;
+      if (n === asp && dom) t += ' ' + cleanPrice(dom.title) + ': ' + dom.text.replace(/^./, function (c) { return c.toLowerCase(); });
+      f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(cleanPrice(t)) + '</p></details>';
+    });
     if (i.frozenLegend) f += '<p class="mf-frz"><span class="frz">*</span> ' + esc(i.frozenLegend) + '</p>';
-    f += '<p class="mf-frz"><a href="#g-allergeni">Allergeni e intolleranze</a></p></div>';
-    f += '<p style="text-align:center;padding:8px 0"><a href="../">Scopri L\'Antico Arco</a> · <a href="../privacy/">Privacy e cookie</a></p></div>';
+    f += '</div>';
+    f += '<p class="mf-links"><a href="' + AA.ROOT + '">Scopri L\'Antico Arco</a> · <a href="' + AA.ROOT + 'privacy/">Privacy e cookie</a></p></div>';
     $('footer').innerHTML = f;
   }
 
@@ -667,13 +753,10 @@
   }
   function bind() {
     var t;
-    $('contenuto').addEventListener('click', function (e) {
-      var h = e.target.closest('[data-acc]'); if (!h) return;
-      toggleAcc(h.dataset.acc);
-    });
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
-    $('searchBtn').onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { $('q').focus(); }, 300); };
     $('contenuto').addEventListener('click', function (e) {
+      var m = e.target.closest('[data-acc]'); if (m) { toggleAcc(m.dataset.acc); return; }
+      if (e.target.closest('[data-doughs]')) { openSheet($('sheet'), doughsHTML()); return; }
       var b = e.target.closest('[data-item]'); if (!b) return;
       var f = findItem(b.dataset.item); if (f) openSheet($('sheet'), detailHTML(f.item, f.sec));
     });
