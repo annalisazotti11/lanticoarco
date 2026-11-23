@@ -491,7 +491,7 @@
     }
     var n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
     h += '<section class="b-step"><h3><b>' + n + '</b>Aggiungi ingredienti</h3><div id="bMine"></div>';
-    if (B.presets.length) {
+    if (false && B.presets.length) { // niente "Idee per cominciare": si parte dalla pizza scelta
       h += '<p class="b-sub">Idee per cominciare</p><div class="bchips">' + B.presets.map(function (p, i) {
         return '<button type="button" class="bidea" data-b="preset" data-v="' + i + '"><span>' + esc(p.name) + '</span><small>' + p.ids.map(function (id) {
           return esc(B.extras.filter(function (x) { return x.id === id; })[0].name);
