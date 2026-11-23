@@ -457,3 +457,9 @@ html.kiosk .algs { font-size: .82rem; }
 .sec.acc { margin-top: 12px; }
 .acc-in { padding: 0 4px; }
 .d-custom-s { margin-top: 8px; font-size: .84rem; color: var(--ink-2); text-align: center; line-height: 1.4; }
+/* Personalizza: l'elenco completo degli ingredienti in un comparto */
+.b-search-all { display: block; margin-top: 16px; }
+.b-allt { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 10px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: #fff; font-weight: 600; font-size: .95rem; color: var(--ink); }
+.b-allt svg { width: 18px; height: 18px; transition: transform .3s var(--ease-out); }
+.b-allt[aria-expanded="true"] svg { transform: rotate(180deg); }
+.b-allt:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
