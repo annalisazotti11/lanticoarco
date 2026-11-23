@@ -20,31 +20,28 @@
 
   document.querySelectorAll('[data-years]').forEach(function (el) { el.textContent = new Date().getFullYear() - 2001; });
 
-  /* ================= Il fuoco: video in loop del forno (orizzontale su PC, verticale su telefono) ================= */
+  /* ================= Il fuoco: sintetizzato dal nostro forno (volta disegnata, la nostra brace vera, fiamme vere) ================= */
   var stick = $('heroStick');
   function isWide() { return stick.clientWidth >= 960; }
   var fireCtl = (function fire() {
-    var vid = $('fire');
-    if (!vid) return null;
-    var cur = '';
-    function pick() {
-      var f = isWide() ? 'forno-16x9' : 'forno-9x16';
-      if (f === cur) return;
-      cur = f;
-      var base = AA.ROOT + 'assets/video/' + f;
-      vid.poster = base + '.jpg';
-      vid.innerHTML = '<source src="' + base + '.webm" type="video/webm"><source src="' + base + '.mp4" type="video/mp4">';
-      vid.load();
-      if (wantPlay) play();
+    var c = $('fire');
+    if (!c) return null;
+    // senza WebGL, o con il movimento ridotto: un fotogramma fermo dello stesso fuoco
+    function still() { c.style.background = '#0e0806 url(' + AA.ROOT + 'assets/video/fuoco-' + (isWide() ? '16' : '9') + '.jpg) center / cover no-repeat'; }
+    function src(name) {
+      var v = document.createElement('video');
+      v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true'); v.className = 'fire-src';
+      v.innerHTML = '<source src="' + AA.ROOT + 'assets/video/' + name + '.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/' + name + '.mp4" type="video/mp4">';
+      c.parentNode.appendChild(v);
+      return v;
     }
-    var wantPlay = false;
-    function play() { if (reduce) return; var p = vid.play(); if (p && p.catch) p.catch(function () {}); }
-    pick();
-    window.addEventListener('resize', function () { clearTimeout(vid._t); vid._t = setTimeout(pick, 250); });
-    return {
-      play: function () { wantPlay = true; play(); },
-      pause: function () { wantPlay = false; vid.pause(); }
-    };
+    if (reduce || !window.FireS) { still(); window.addEventListener('resize', still); return null; }
+    var f = null;
+    // il fuoco un po' a lato: a destra del titolo su PC, leggermente a destra sul telefono
+    try { f = new window.FireS(c, src('brace'), src('fiamma'), function (a) { return a > 1 ? { x: .23, y: .27, s: .6 } : { x: .16, y: .3, s: .42 }; }); } catch (e) { f = null; }
+    if (!f || !f.ok) { still(); window.addEventListener('resize', still); return null; }
+    return { play: function () { f.play(); }, pause: function () { f.pause(); } };
   })();
 
   /* ================= Scintille ================= */
@@ -54,9 +51,9 @@
     var ctx = c.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W, H, ps = [], running = false;
     function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
     function spawn(initial) {
-      var cx = isWide() ? .655 : .5, spread = isWide() ? .1 : .2;
+      var cx = isWide() ? .73 : .66, spread = isWide() ? .07 : .1;
       return {
-        x: W * (cx - spread + Math.random() * spread * 2), y: initial ? H * (.15 + Math.random() * .6) : H * (isWide() ? .38 : .5) + Math.random() * H * (isWide() ? .3 : .25),
+        x: W * (cx - spread + Math.random() * spread * 2), y: initial ? H * (.15 + Math.random() * .6) : H * (isWide() ? .45 : .52) + Math.random() * H * (isWide() ? .22 : .18),
         vy: .5 + Math.random() * 1.5, vx: (Math.random() - .5) * .4, r: .6 + Math.random() * 1.8,
         life: 0, max: 200 + Math.random() * 360, ph: Math.random() * 6.28, hue: 18 + Math.random() * 26
       };
@@ -137,7 +134,7 @@
     }
     copy.style.opacity = String(clamp(1 - g.p * 2.2, 0, 1));
     var z = 'scale(' + (1 + g.p * .16).toFixed(4) + ')';
-    fireC.style.transform = (g.wide ? '' : 'translateY(13%) ') + z; sparkC.style.transform = z;
+    fireC.style.transform = z; sparkC.style.transform = z;
     copy.style.transform = 'translate3d(0,' + (-g.p * 90).toFixed(1) + 'px,0)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
     // mentre la pizza sale, il fuoco si abbassa: profondità, niente vuoti
