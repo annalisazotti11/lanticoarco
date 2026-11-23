@@ -165,7 +165,7 @@
     var draft = AA.readJSON(AA.DRAFT_KEY);
     if (draft && draft.data) ensureShape(draft.data);
     S.data = JSON.parse(S.publishedStr);
-    if (draft && draft.data && JSON.stringify(draft.data) !== S.publishedStr) {
+    if (draft && draft.data && stable(draft.data) !== stable(published)) {
       if (draft.baseSha === file.sha) {
         S.data = draft.data; Object.assign(S.pending, draft.pending || {});
         toast('Ho ripreso le modifiche non ancora pubblicate.');
@@ -212,14 +212,23 @@
     var ok = AA.writeJSON(AA.DRAFT_KEY, { data: S.data, pending: S.pending, baseSha: S.baseSha, savedAt: new Date().toISOString() });
     if (!ok) toast('Memoria del dispositivo piena: pubblica le modifiche per non perderle.', 6000);
   }
-  /* confronto che non bada all'ordine delle chiavi */
+  /* confronto che non bada all'ordine delle chiavi né ai campi vuoti:
+     un campo vuoto, mancante o null è la stessa cosa, "disponibile" è il normale stato di un piatto,
+     la data di pubblicazione non è una modifica */
+  function blank(k, v) {
+    return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length) || (k === 'available' && v === true) || k === 'updatedAt';
+  }
   function stable(o) {
     if (Array.isArray(o)) return '[' + o.map(stable).join(',') + ']';
-    if (o && typeof o === 'object') return '{' + Object.keys(o).filter(function (k) { return o[k] !== undefined; }).sort().map(function (k) { return JSON.stringify(k) + ':' + stable(o[k]); }).join(',') + '}';
+    if (o && typeof o === 'object') return '{' + Object.keys(o).filter(function (k) { return !blank(k, o[k]); }).sort().map(function (k) { return JSON.stringify(k) + ':' + stable(o[k]); }).join(',') + '}';
     return JSON.stringify(o);
   }
+  function samePrice(a, b) {
+    var ea = a == null || a === '', eb = b == null || b === '';
+    return ea || eb ? ea === eb : Number(a) === Number(b);
+  }
   function pubData() { return S.published || (S.published = JSON.parse(S.publishedStr)); }
-  function isDirty() { return JSON.stringify(S.data) !== S.publishedStr && stable(S.data) !== stable(pubData()); }
+  function isDirty() { return JSON.stringify(S.data) !== S.publishedStr && stable(S.data) !== stable(pubData()) && diff(pubData(), S.data).length > 0; }
   function fmtP(v) { return v == null || v === '' ? 'senza prezzo' : AA.price(v); }
   function setOrDel(o, k, v) { if (v === undefined) delete o[k]; else o[k] = clone(v); }
   function idsOf(arr) { return (arr || []).map(function (x) { return x.id; }); }
@@ -243,7 +252,7 @@
       if (!a) { add('Nuovo in ' + b.sec.name + ': ' + n, function () { var c = here(id); if (c) c.sec.items.splice(c.k, 1); }); return; }
       if (stable(a.it) === stable(b.it) && a.sec.id === b.sec.id) return;
       var done = false;
-      if (a.it.price !== b.it.price) { add(n + ': ' + fmtP(a.it.price) + ' → ' + fmtP(b.it.price), function () { var c = here(id); if (c) setOrDel(c.it, 'price', a.it.price); }); done = true; }
+      if (!samePrice(a.it.price, b.it.price)) { add(n + ': ' + fmtP(a.it.price) + ' → ' + fmtP(b.it.price), function () { var c = here(id); if (c) setOrDel(c.it, 'price', a.it.price); }); done = true; }
       if ((a.it.available !== false) !== (b.it.available !== false)) { add(n + ': ' + (b.it.available === false ? 'esaurito' : 'di nuovo disponibile'), function () { var c = here(id); if (c) setOrDel(c.it, 'available', a.it.available); }); done = true; }
       if (a.sec.id !== b.sec.id) { add(n + ': spostato in ' + b.sec.name, function () { putBack(a); }); done = true; }
       var ra = Object.assign({}, a.it, { price: 0, available: 0 }), rb = Object.assign({}, b.it, { price: 0, available: 0 });
@@ -326,11 +335,11 @@
     S.data.sections.forEach(function (s) { s.items = s.items.map(function (it) { return pi[it.id] && stable(pi[it.id]) === stable(it) ? clone(pi[it.id]) : it; }); });
   }
   function updateState() {
-    var d = isDirty();
+    // da pubblicare solo se c'è almeno una modifica vera da mostrare
+    var n = isDirty() ? changesList().length : 0, d = n > 0;
     $('pub').hidden = !d;
     document.body.classList.toggle('has-pub', d);
     if (d) {
-      var n = changesList().length || 1;
       $('pubN').innerHTML = '<b>' + n + (n === 1 ? ' modifica' : ' modifiche') + '</b> da pubblicare<span>Vedi e annulla</span>';
     }
     histUI();
@@ -450,15 +459,15 @@
         var force = await ask('Il menu è cambiato', 'Qualcuno ha pubblicato da un altro dispositivo dopo che hai aperto il gestionale. Pubblicando ora, la tua versione sostituisce la sua.', 'Pubblica comunque', { danger: true });
         if (!force) return;
       }
-      S.data.updatedAt = new Date().toISOString();
-      var text = JSON.stringify(S.data, null, 1);
+      var out = clone(S.data); out.updatedAt = new Date().toISOString(); // la data entra solo se la pubblicazione riesce
+      var text = JSON.stringify(out, null, 1);
       var files = [{ path: MENU_PATH, text: text }];
       Object.keys(S.pending).forEach(function (p) {
         if (text.indexOf('"' + p + '"') >= 0) files.push({ path: p, base64: S.pending[p].split(',')[1] });
       });
       var res = await S.store.commitFiles(files, 'Menu aggiornato dal gestionale (' + S.user + ')');
       S.baseSha = res.blobs[MENU_PATH] || current;
-      S.publishedStr = JSON.stringify(S.data); S.published = JSON.parse(S.publishedStr);
+      S.data = out; S.publishedStr = JSON.stringify(S.data); S.published = JSON.parse(S.publishedStr);
       if (S.ed && S.ed.type === 'changes') closeSheet();
       try { localStorage.removeItem(AA.DRAFT_KEY); } catch (e) {}
       updateState();
@@ -631,7 +640,7 @@
       (p.text ? '<p class="pv-x">' + esc(p.text) + '</p>' : '') + (p.price ? '<p class="pv-p">' + esc(p.price) + '</p>' : '') + '</div></div>';
   }
   function viewPromos() {
-    var h = pageHead('Novità', 'Gli annunci in vetrina: in alto nel menu, sul sito e a tutto schermo sul cartellone in sala.');
+    var h = pageHead('Novità', 'Gli annunci in vetrina: in alto nel menu, sul sito e nel carosello del cartellone in sala.');
     h += '<button type="button" class="b b-main" data-act="add-promo">+ Nuova novità</button>';
     h += '<ul class="pgrid">' + S.data.promos.map(function (p, i) {
       var where = ['site', 'menu', 'totem'].filter(function (k) { return p[k]; }).map(function (k) { return { totem: 'cartellone', menu: 'menu', site: 'sito' }[k]; }).join(', ');
@@ -679,7 +688,7 @@
       '<div class="two">' + field('Pagina Facebook', 'info.facebook', { type: 'url' }) + field('Instagram', 'info.instagram', { type: 'url', ph: 'https://instagram.com/…' }) + '</div></section>';
     h += '<section class="card"><h2>In sala</h2><div class="two">' + field('Coperto (€)', 'info.coverCharge', { price: true }) + '<span></span></div>' +
       '<div class="two">' + field('Wi‑Fi: nome rete', 'info.wifi.network') + field('Wi‑Fi: password', 'info.wifi.password') + '</div></section>';
-    h += '<section class="card"><h2>Note per i clienti</h2><p class="muted">Prenotazioni, asporto, domicilio… Compaiono in fondo al menu.</p><div class="list">' + (i.notes || []).map(function (n, k) {
+    h += '<section class="card"><h2>Note per i clienti</h2><p class="muted">Compaiono in fondo al menu, da aprire. La nota «Prenotazioni» compare invece sotto il numero di telefono: tienila breve.</p><div class="list">' + (i.notes || []).map(function (n, k) {
       return '<div class="lnote"><input data-list="notes" data-k="' + k + '" data-f="title" value="' + esc(n.title) + '" aria-label="Titolo" placeholder="Titolo">' +
         '<textarea data-list="notes" data-k="' + k + '" data-f="text" rows="3" aria-label="Testo">' + esc(n.text) + '</textarea>' +
         '<button type="button" class="b b-x" data-act="list-del" data-list="notes" data-k="' + k + '" aria-label="Elimina nota">×</button></div>';
@@ -698,18 +707,15 @@
     var t = S.data.settings.totem, demo = S.store.mode === 'demo', b = S.data.settings.builder, ex = extrasList();
     var opts = function (sel) { return '<option value="">+ aggiungi ingrediente</option>' + ex.filter(function (n) { return sel.indexOf(n) < 0; }).map(function (n) { return '<option>' + esc(n) + '</option>'; }).join(''); };
     var h = pageHead('Altro', '');
-    h += '<section class="card"><h2>Crea la tua pizza</h2><p class="muted">Le "idee per cominciare" e gli ingredienti "più scelti" che il cliente vede nel menu.</p>' +
-      '<h3>Idee per cominciare</h3><div class="ideas">' + b.presets.map(function (p, k) {
-        return '<div class="idea" data-k="' + k + '"><div class="idea-h"><input data-idea="name" value="' + esc(p.name) + '" aria-label="Nome dell\'idea"><button type="button" class="b b-x" data-act="idea-del" aria-label="Elimina idea">×</button></div>' +
-          '<div class="tagl">' + p.items.map(function (n, j) { return '<span class="tg">' + esc(n) + '<button type="button" data-act="idea-rm" data-j="' + j + '" aria-label="Togli ' + esc(n) + '">×</button></span>'; }).join('') + '</div>' +
-          '<select data-act="idea-add" aria-label="Aggiungi ingrediente">' + opts(p.items) + '</select></div>';
-      }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="idea-new">+ Nuova idea</button>' +
-      '<h3>I più scelti</h3><div class="tagl">' + b.popular.map(function (n, j) { return '<span class="tg">' + esc(n) + '<button type="button" data-act="pop-rm" data-j="' + j + '" aria-label="Togli ' + esc(n) + '">×</button></span>'; }).join('') + '</div>' +
+    h += '<section class="card"><h2>Personalizza la pizza</h2><p class="muted">Gli ingredienti «più scelti»: il cliente li vede per primi quando aggiunge ingredienti a una pizza. Tutti gli altri restano nell\'elenco completo.</p>' +
+      '<div class="tagl">' + b.popular.map(function (n, j) { return '<span class="tg">' + esc(n) + '<button type="button" data-act="pop-rm" data-j="' + j + '" aria-label="Togli ' + esc(n) + '">×</button></span>'; }).join('') + '</div>' +
       '<select data-act="pop-add" aria-label="Aggiungi ingrediente">' + opts(b.popular) + '</select></section>';
+    var touch = t.touch !== false;
     h += '<section class="card"><h2>Cartellone in sala</h2>' +
-      '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Una novità ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
-      '<label class="line"><span><b>Schermo touch</b><small>Un tocco sul cartellone apre il menu da sfogliare; dopo 90 secondi senza tocchi si torna al cartellone</small></span><label class="sw"><input type="checkbox" data-ck="settings.totem.touch"' + (t.touch !== false ? ' checked' : '') + '><span></span></label></label>' +
-      '<label class="line"><span><b>Foto dei piatti</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '><span></span></label></label>' +
+      '<label class="line"><span><b>Schermo touch</b><small>' + (touch ? 'In attesa gira un carosello di novità e specialità; un tocco ovunque apre il menu da sfogliare. Dopo 90 secondi senza tocchi torna il carosello.' : 'Il menu scorre da solo, una pagina dopo l\'altra.') + '</small></span><label class="sw"><input type="checkbox" data-ck="settings.totem.touch"' + (touch ? ' checked' : '') + '><span></span></label></label>' +
+      (touch ? '<p class="muted">Nel carosello: le <b>novità</b> attive sul cartellone (scheda Novità), i piatti con l\'etichetta <b>Novità</b> e quelli <b>tra le preferite</b>.</p>'
+        : '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Una novità ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
+          '<label class="line"><span><b>Foto dei piatti</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '><span></span></label></label>') +
       '<label class="line"><span><b>QR per aprire il menu sul telefono</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showQr"' + (t.showQr !== false ? ' checked' : '') + '><span></span></label></label>' +
       '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="chiaro"' + (t.theme !== 'scuro' ? ' selected' : '') + '>Chiari, come il sito</option><option value="scuro"' + (t.theme === 'scuro' ? ' selected' : '') + '>Scuri con scintille</option></select></label>' +
       '<div class="btns"><a class="b b-ghost b-sm" href="../totem/" target="_blank" rel="noopener">Apri il cartellone</a><button type="button" class="b b-ghost b-sm" data-act="qr">Stampa i QR per i tavoli</button></div>' +
@@ -775,8 +781,8 @@
     }
     h += '</fieldset>';
     h += '<label class="line"><span><b>Disponibile</b><small>Spento = esaurito, non compare</small></span><label class="sw"><input type="checkbox" data-fb="available"' + (it.available !== false ? ' checked' : '') + '><span></span></label></label>';
-    h += '<label class="line"><span><b>Tra le preferite</b><small>Segnata nel menu e mostrata in home</small></span><label class="sw"><input type="checkbox" data-fb="featured"' + (it.featured ? ' checked' : '') + '><span></span></label></label>';
-    h += '<div class="fld"><span>Caratteristiche</span>' + chips(AA.TAGS.filter(function (t) { return t.code !== 'della-casa'; }), it.tags || [], 'data-tag') + '</div>';
+    h += '<label class="line"><span><b>Tra le preferite</b><small>Segnata nel menu, mostrata in home e nel carosello del cartellone</small></span><label class="sw"><input type="checkbox" data-fb="featured"' + (it.featured ? ' checked' : '') + '><span></span></label></label>';
+    h += '<div class="fld"><span>Caratteristiche</span>' + chips(AA.TAGS.filter(function (t) { return t.code !== 'della-casa'; }), it.tags || [], 'data-tag') + '<small class="muted">Con «Novità» il piatto gira anche nel carosello del cartellone.</small></div>';
     var na = (it.allergens || []).length;
     h += '<details class="more-in"' + (na ? '' : ' open') + '><summary>Allergeni' + (na ? ' (' + na + ')' : '') + '</summary>' + chips(AA.ALLERGENS, it.allergens || [], 'data-alg') + '</details>';
     h += '<details class="more-in"><summary>Altre opzioni</summary>' +
@@ -824,7 +830,7 @@
     h += '<label class="fld">Titolo<input data-p="title" value="' + esc(p.title) + '" placeholder="es. Pomodoro nickel free"></label>';
     h += '<label class="fld">Etichetta piccola<input data-p="kicker" value="' + esc(p.kicker) + '" placeholder="es. Novità, Da provare"></label>';
     h += '<label class="fld">Testo<textarea data-p="text" rows="3">' + esc(p.text) + '</textarea></label>';
-    h += '<label class="fld">Prezzo<input data-p="price" value="' + esc(p.price) + '" placeholder="es. € 9,00 oppure + € 3,00"></label>';
+    h += '<label class="fld">Prezzo<input data-p="price" value="' + esc(p.price) + '" placeholder="es. € 9 oppure + € 3"></label>';
     h += '<label class="line"><span><b>Attiva</b></span><label class="sw"><input type="checkbox" data-pb="active"' + (p.active ? ' checked' : '') + '><span></span></label></label>';
     h += '<div class="fld"><span>Dove mostrarla</span><div class="chips">' + [['site', 'Sito'], ['menu', 'Menu'], ['totem', 'Cartellone']].map(function (w) {
       return '<button type="button" class="chip" data-where="' + w[0] + '" aria-pressed="' + !!p[w[0]] + '">' + w[1] + '</button>';
@@ -910,7 +916,7 @@
       S.data.settings.builder.presets[Number(t.closest('.idea').dataset.k)].items.push(t.value); changed(); render(); return;
     }
     if (t.dataset.act === 'pop-add' && t.value) { S.data.settings.builder.popular.push(t.value); changed(); render(); return; }
-    if (t.dataset.ck) { setPath(S.data, t.dataset.ck, t.checked); changed(); return; }
+    if (t.dataset.ck) { setPath(S.data, t.dataset.ck, t.checked); changed(); if (t.dataset.ck === 'settings.totem.touch') render(); return; }
     if (t.tagName === 'SELECT' && t.dataset.path) { setPath(S.data, t.dataset.path, t.value); changed(); }
   });
   view.addEventListener('click', async function (e) {

@@ -712,22 +712,18 @@
 
   function renderFooter() {
     var i = DATA.info, f = '<div class="mf-in">';
+    var isPren = function (n) { return /^prenotazion/i.test(n.title || ''); };
+    var pren = (i.notes || []).filter(isPren)[0];
     f += '<div class="mf-card"><h2>Da sapere</h2><div class="mf-row">' +
       (i.coverCharge ? '<p class="mf-kv"><b>Coperto</b>' + AA.price(i.coverCharge) + '</p>' : '') +
       (i.wifi && i.wifi.network ? '<p class="mf-kv"><b>Wi‑Fi gratuito</b>' + esc(i.wifi.network) + ', password ' + esc(i.wifi.password) + '</p>' : '') +
-      '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a><small>solo al telefono, anche per asporto e domicilio</small></p>' +
+      '<p class="mf-kv"><b>Prenotazioni</b><a href="' + AA.telHref(i.phone) + '">' + esc(i.phone) + '</a>' + (pren && pren.text ? '<small>' + esc(pren.text) + '</small>' : '') + '</p>' +
       (i.mobile ? '<p class="mf-kv"><b>Cellulare</b><a href="' + AA.telHref(i.mobile) + '">' + esc(i.mobile) + '</a></p>' : '') +
       '<p class="mf-kv"><b>Orari</b>' + (i.hours || []).map(function (h) { return esc(h.days) + ' ' + esc(h.time); }).join('<br>') + '</p></div>';
     if (i.products) f += '<details><summary>I nostri prodotti</summary><p>' + esc(i.products) + '</p></details>';
-    // "Prenotazioni" è già sopra; "Domicilio € 3" finisce dentro "Asporto e domicilio"
-    var notes = (i.notes || []).filter(function (n) { return !/^prenotazion/i.test(n.title); });
-    var dom = notes.filter(function (n) { return /^domicilio\b/i.test(n.title); })[0];
-    var asp = notes.filter(function (n) { return /asporto/i.test(n.title); })[0];
-    notes.forEach(function (n) {
-      if (n === dom && asp) return;
-      var t = n.text;
-      if (n === asp && dom) t += ' ' + cleanPrice(dom.title) + ': ' + dom.text.replace(/^./, function (c) { return c.toLowerCase(); });
-      f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(cleanPrice(t)) + '</p></details>';
+    // la nota "Prenotazioni" sta già sotto il telefono
+    (i.notes || []).filter(function (n) { return !isPren(n); }).forEach(function (n) {
+      f += '<details><summary>' + esc(n.title) + '</summary><p>' + esc(cleanPrice(n.text)) + '</p></details>';
     });
     if (i.frozenLegend) f += '<p class="mf-frz"><span class="frz">*</span> ' + esc(i.frozenLegend) + '</p>';
     f += '</div>';
@@ -807,6 +803,19 @@
     });
     if (state.tags.length) { dropHash(); updateFilterUI(); return; }
     if (location.hash === '#crea') { openBuilder(null); return; }
+    // #piatto-i554: dal totem, apre il comparto del piatto e la sua scheda
+    var pm = location.hash.match(/^#piatto-(.+)$/);
+    if (pm) {
+      var pf = findItem(decodeURIComponent(pm[1]));
+      dropHash();
+      if (pf) {
+        toggleAcc(pf.sec.id, true);
+        var pel = document.querySelector('#contenuto [data-item="' + pf.item.id + '"]');
+        if (pel) pel.scrollIntoView({ block: 'center' });
+        openSheet($('sheet'), detailHTML(pf.item, pf.sec));
+      }
+      return;
+    }
     if (location.hash) {
       var el = null;
       try { el = document.querySelector(location.hash); } catch (e) {}

@@ -278,32 +278,69 @@
     resumeTimer = setTimeout(function () { paused = false; show(idx + 1); }, 45000);
   }
 
-  /* ---------- Schermo d'attesa (totem touch): le categorie in grande, un tocco apre il menu lì ---------- */
+  /* ---------- Schermo d'attesa (totem touch): carosello di novità e specialità, un tocco ovunque apre il menu ---------- */
   var ATTRACT = false, promoT = null;
+  function cleanP(t) { return String(t || '').replace(/,00(?!\d)/g, ''); }
+  function itemPrice(it) {
+    if (it.prices && it.prices.length) {
+      var v = it.prices.map(function (x) { return Number(x.price); }).filter(function (n) { return !isNaN(n); });
+      return v.length ? 'da ' + AA.price(Math.min.apply(null, v)) : '';
+    }
+    return it.price == null || it.price === '' ? '' : AA.price(it.price);
+  }
+  function slides() {
+    var out = [], seen = {};
+    AA.activePromos(DATA, 'totem').forEach(function (p) {
+      out.push({ kicker: p.kicker || 'Da non perdere', title: p.title, text: p.text, price: cleanP(p.price), image: p.image });
+    });
+    var tagged = [], fill = [];
+    DATA.groups.forEach(function (g) {
+      if (g.id === 'aggiunte' || g.id === 'impasti') return;
+      AA.sectionsOf(DATA, g.id, 'totem').forEach(function (sec) {
+        AA.visibleItems(sec).forEach(function (it) {
+          var t = it.tags || [];
+          var k = t.indexOf('novita') >= 0 ? 'Novità' : (it.featured || t.indexOf('della-casa') >= 0 ? 'Specialità della casa' : '');
+          var sl = { kicker: k, title: it.name, text: it.desc, price: itemPrice(it), image: it.image, item: it.id };
+          if (k) tagged.push(sl);
+          else if (g.id === 'pizze' && /gourmet/i.test(sec.name) && it.image) { sl.kicker = sec.name; fill.push(sl); }
+        });
+      });
+    });
+    // prima le novità, poi le specialità della casa
+    tagged.sort(function (a, b) { return (a.kicker === 'Novità' ? 0 : 1) - (b.kicker === 'Novità' ? 0 : 1); });
+    tagged.forEach(function (x) { if (!seen[x.item]) { seen[x.item] = 1; out.push(x); } });
+    // se novità e specialità sono pochissime, si aggiungono alcune pizze gourmet con la foto
+    for (var i = 0; out.length < 4 && i < fill.length; i++) out.push(fill[i]);
+    // alterna le slide con la foto e quelle senza
+    var ph = out.filter(function (x) { return x.image; }), no = out.filter(function (x) { return !x.image; }), mix = [];
+    while (ph.length || no.length) { if (ph.length) mix.push(ph.shift()); if (ph.length) mix.push(ph.shift()); if (no.length) mix.push(no.shift()); }
+    return mix;
+  }
   function buildAttract() {
     ATTRACT = true;
     clearTimeout(timer); clearTimeout(resumeTimer); clearInterval(promoT);
     document.body.classList.add('attract');
-    var groups = DATA.groups.filter(function (g) { return g.id !== 'aggiunte' && g.id !== 'impasti' && AA.sectionsOf(DATA, g.id, 'totem').length; }); // gli impasti sono dentro le pizze
-    var promos = AA.activePromos(DATA, 'totem');
+    var sl = slides();
     var h = '<div class="att">' +
-      '<div class="att-h"><h2>Che cosa ti va stasera?</h2><p class="att-cta"><span aria-hidden="true"></span>Tocca una categoria per iniziare</p></div>' +
-      '<div class="att-grid">' + groups.map(function (g, i) {
-        return '<button type="button" class="att-tile" data-g="' + esc(g.id) + '" style="--d:' + (-i * 3.7).toFixed(1) + 's">' +
-          (g.image ? '<img alt="" src="' + esc(AA.src(g.image)) + '">' : '<i class="att-ph">' + AA.archSVG() + '</i>') +
-          '<b>' + esc(g.name) + '</b></button>';
-      }).join('') + '</div>' +
-      (promos.length ? '<div class="att-promos">' + promos.map(function (p, i) {
-        return '<div class="att-promo' + (i === 0 ? ' on' : '') + '">' + (p.image ? '<img alt="" src="' + esc(AA.src(p.image)) + '">' : '') +
-          '<div>' + (p.kicker ? '<small>' + esc(p.kicker) + '</small>' : '') + '<b>' + esc(p.title) + '</b>' + (p.text ? '<span>' + esc(p.text) + '</span>' : '') + '</div></div>';
-      }).join('') + '</div>' : '') +
-      '<button type="button" class="att-alg" data-g="allergeni"><b>Allergie o intolleranze?</b> Comunicatele al personale prima di ordinare.</button>' +
+      '<div class="car" aria-roledescription="carosello">' + sl.map(function (x, i) {
+        return '<div class="car-s' + (i === 0 ? ' on' : '') + (x.image ? '' : ' no-ph') + '"' + (x.item ? ' data-item="' + esc(x.item) + '"' : '') + '>' +
+          (x.image ? '<img alt="" src="' + esc(AA.src(x.image)) + '"' + (i > 1 ? ' loading="lazy"' : '') + '>' : '<i class="car-arch" aria-hidden="true">' + AA.archSVG() + '</i>') +
+          '<div class="car-t">' + (x.kicker ? '<p class="car-k">' + esc(x.kicker) + '</p>' : '') +
+          '<h2>' + esc(x.title) + '</h2>' + (x.text ? '<p class="car-x">' + esc(x.text) + '</p>' : '') +
+          (x.price ? '<p class="car-p">' + esc(x.price) + '</p>' : '') + '</div></div>';
+      }).join('') +
+      (sl.length > 1 ? '<div class="car-dots" aria-hidden="true">' + sl.map(function (x, i) { return '<i' + (i === 0 ? ' class="on"' : '') + '></i>'; }).join('') + '</div>' : '') +
+      '</div>' +
+      '<div class="att-go"><span aria-hidden="true"></span>Tocca lo schermo per iniziare</div>' +
+      '<p class="att-alg"><b>Allergie o intolleranze?</b> Comunicatele al personale prima di ordinare.</p>' +
       '</div>';
     stage.innerHTML = h;
-    var cards = stage.querySelectorAll('.att-promo'), pi = 0;
-    if (cards.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) promoT = setInterval(function () {
-      cards[pi].classList.remove('on'); pi = (pi + 1) % cards.length; cards[pi].classList.add('on');
-    }, 6000);
+    var cards = stage.querySelectorAll('.car-s'), dots = stage.querySelectorAll('.car-dots i'), pi = 0;
+    if (cards.length > 1) promoT = setInterval(function () {
+      cards[pi].classList.remove('on'); if (dots[pi]) dots[pi].classList.remove('on');
+      pi = (pi + 1) % cards.length;
+      cards[pi].classList.add('on'); if (dots[pi]) dots[pi].classList.add('on');
+    }, 7000);
   }
 
   function rebuild(keepPlace) {
@@ -331,10 +368,12 @@
   });
   var sx = null;
   stage.addEventListener('pointerdown', function (e) { sx = e.clientX; });
-  stage.addEventListener('click', function (e) {
-    if (!ATTRACT) return;
-    var b = e.target.closest('[data-g]');
-    openMenu(b ? b.dataset.g : '');
+  // schermo d'attesa: un tocco ovunque apre il menu; se si tocca un piatto del carosello, apre la sua scheda
+  document.addEventListener('click', function (e) {
+    if (!ATTRACT || e.target.closest('#fs')) return;
+    var on = stage.querySelector('.car-s.on');
+    var it = e.target.closest('.car') && on && on.dataset.item;
+    location.href = '../menu/?totem' + (it ? '#piatto-' + encodeURIComponent(it) : '');
   });
   stage.addEventListener('pointerup', function (e) {
     if (ATTRACT) { sx = null; return; }
