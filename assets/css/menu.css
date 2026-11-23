@@ -53,20 +53,6 @@ body { background: var(--bg); color: var(--ink); font-size: 16px; }
 @media (min-width: 760px) { .guide ol { grid-template-columns: repeat(3, 1fr); gap: 16px; } .guide li a { border-top: 0; } }
 
 /* Riquadri categorie */
-.tiles { max-width: 860px; margin: 0 auto; padding: 12px 18px 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.tile { position: relative; height: 84px; border-radius: 20px; overflow: hidden; display: flex; align-items: flex-end; padding: 14px; text-decoration: none; color: #fff; background: var(--ink); transition: transform .25s var(--ease-out); isolation: isolate; }
-.tile:active { transform: scale(.97); }
-.tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform .6s var(--ease-out); }
-.tile:hover img { transform: scale(1.06); }
-.tile::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(26, 20, 16, 0) 30%, rgba(26, 20, 16, .82) 100%); }
-.tile.no-img { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line); }
-.tile.no-img::before { display: none; }
-.tile b { font-family: var(--font-display); font-weight: 600; letter-spacing: -.03em; font-size: 1.35rem; line-height: 1; display: block; }
-.tile small { display: block; opacity: .9; font-weight: 500; margin-top: 4px; font-size: .84rem; }
-.tile { padding: 11px 13px; }
-.tile b { font-size: 1.15rem; }
-.tile small { font-size: .78rem; margin-top: 3px; }
-@media (min-width: 640px) { .tiles { grid-template-columns: repeat(3, 1fr); } .tile { height: 104px; } .tile b { font-size: 1.3rem; } .tile:first-child, .tile:last-child { grid-column: span 2; } }
 
 /* Navigazione categorie */
 .gnav { position: sticky; top: 69px; z-index: 20; background: rgba(244, 235, 223, .97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); margin-top: 14px; }
@@ -200,8 +186,6 @@ body { background: var(--bg); color: var(--ink); font-size: 16px; }
 mark { background: #f1d9b5; color: inherit; border-radius: 3px; padding: 0 1px; }
 
 @media (min-width: 760px) {
-  .tiles { grid-template-columns: repeat(4, 1fr); }
-  .tile { height: 112px; }
   .items { grid-template-columns: 1fr 1fr; }
   .sheet { align-items: center; }
   .sheet-card { border-radius: 28px; max-height: 88vh; }
@@ -332,13 +316,13 @@ mark { background: #f1d9b5; color: inherit; border-radius: 3px; padding: 0 1px; 
 .grp-alg { padding-top: 26px; }
 .alg-box { margin-top: 16px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 22px; padding: 18px; }
 .alg-lead { line-height: 1.5; }
-.alg-lead b { display: block; font-family: var(--font-display); font-weight: 600; letter-spacing: -.03em; font-size: 1.3rem; line-height: 1.15; margin-bottom: 6px; }
+.alg-lead { font-size: 1.02rem; }
+.alg-lead b { font-weight: 600; }
 .alg-how { margin: 14px 0 10px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: .92rem; }
 .alg-top { gap: 8px 14px; font-size: .95rem; }
 .alg-top li { display: flex; align-items: center; }
 .alg-f { display: block; width: 100%; margin-top: 16px; padding: 13px; }
 @media (min-width: 760px) { .alg-top { grid-template-columns: repeat(3, 1fr); } .alg-f { width: auto; padding: 12px 22px; } }
-.tile-alg { background: var(--ink) !important; color: var(--bg-2) !important; border-color: var(--ink) !important; }
 .mf-frz { margin-top: 12px; font-size: .9rem; color: var(--ink-2); }
 
 /* ---------- Totem touch in sala (menu/?totem) ---------- */
@@ -354,14 +338,3 @@ html.kiosk .mf a[href^="tel:"] { text-decoration: none; color: inherit; pointer-
 .k-home { position: fixed; z-index: 40; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 99px; padding: 12px 18px 12px 14px; background: var(--ink); color: var(--bg-2); font: inherit; font-weight: 600; box-shadow: 0 14px 30px -12px rgba(26, 20, 16, .6); }
 .k-home svg { width: 20px; height: 20px; }
 
-/* telefono: categorie compatte, tre per riga; Allergeni e Aggiunte come barre */
-@media (max-width: 639px) {
-  .tiles { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .tile { height: 74px; border-radius: 16px; padding: 9px 10px; }
-  .tile b { font-size: .98rem; line-height: 1.05; }
-  .tile small { display: none; }
-  .tile-alg { grid-column: 1 / -1; height: 50px; align-items: center; }
-  .tile-alg span { display: flex; align-items: baseline; gap: 10px; }
-  .tile-alg small { display: block; margin: 0; opacity: .75; }
-  .tile.no-img:not(.tile-alg) { grid-column: auto; }
-}

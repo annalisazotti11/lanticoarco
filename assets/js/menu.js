@@ -136,25 +136,18 @@
     $('guideF').onclick = function () { $('filterBtn').click(); };
   }
 
-  function renderTiles() {
-    var f = filtering();
-    $('tiles').hidden = f;
-    $('promos').hidden = f || !$('promos').innerHTML;
-    if (f) return;
-    $('tiles').innerHTML = '<a class="tile no-img tile-alg" href="#g-allergeni"><span><b>Allergeni</b><small>Leggi prima di ordinare</small></span></a>' + groupsWithContent().map(function (g) {
-      var n = 0;
-      DATA.sections.forEach(function (s) { if (s.group === g.id && s.visible) n += s.items.filter(matches).length; });
-      return '<a class="tile' + (g.image ? '' : ' no-img') + '" href="#g-' + esc(g.id) + '">' +
-        (g.image ? '<img alt="" loading="lazy" src="' + esc(AA.src(g.image)) + '">' : '') +
-        '<span><b>' + esc(g.name) + '</b></span></a>';
-    }).join('');
-  }
 
+
+  /* La prima frase in grassetto, il resto normale */
+  function leadBold(t) {
+    var m = String(t).match(/^(.+?[.!?])(\s+[\s\S]*)?$/);
+    return m ? '<b>' + esc(m[1]) + '</b>' + esc(m[2] || '') : esc(t);
+  }
   /* Allergeni: la prima voce del menu */
   function allergensHTML() {
     var i = DATA.info || {};
     return '<section class="grp grp-alg" id="g-allergeni"><h2 class="grp-t">Allergeni</h2><div class="alg-box">' +
-      '<p class="alg-lead"><b>Allergie e intolleranze</b> ' + esc(i.allergenNote || '') + '</p>' +
+      '<p class="alg-lead">' + leadBold(i.allergenNote || '') + '</p>' +
       '<p class="alg-how">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011):</p>' +
       '<ol class="alg-legend alg-top">' + AA.ALLERGENS.map(function (a) { return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol>' +
       '<button type="button" class="b-ghost alg-f" id="algFilter">Escludi un allergene dal menu</button></div></section>';
@@ -178,7 +171,7 @@
     $('gnavF').hidden = !nFilters();
     $('gnav').classList.toggle('has-f', nFilters() > 0);
     $('gnav').hidden = !nav;
-    renderTiles(); renderGuide();
+    renderGuide();
     spy(); reveal();
   }
 

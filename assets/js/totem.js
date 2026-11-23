@@ -102,6 +102,10 @@
     return h + '<div class="pg-rule"></div>';
   }
 
+  function leadBold(t) {
+    var m = String(t).match(/^(.+?[.!?])(\s+[\s\S]*)?$/);
+    return m ? '<b>' + esc(m[1]) + '</b>' + esc(m[2] || '') : esc(t);
+  }
   function promoHTML(p) {
     return '<div class="promo' + (p.image ? '' : ' no-ph') + '">' +
       (p.image ? '<img class="promo-ph" alt="" src="' + esc(AA.src(p.image)) + '">' : '<img class="promo-logo" alt="" src="' + AA.ROOT + 'assets/img/logo/logo-600.webp">') +
@@ -123,8 +127,8 @@
     // prima pagina: allergie e intolleranze, come nel menu
     if (!only.length) {
       var inf = DATA.info || {};
-      out.push({ group: 'allergeni', html: '<div class="pg pg-alg"><div class="pg-top"><p class="pg-group">Allergeni</p></div>' +
-        '<h2 class="pg-title">Allergie e intolleranze</h2>' + (inf.allergenNote ? '<p class="pg-sub">' + esc(inf.allergenNote) + '</p>' : '') +
+      out.push({ group: 'allergeni', html: '<div class="pg pg-alg">' +
+        '<h2 class="pg-title">Allergeni</h2>' + (inf.allergenNote ? '<p class="pg-sub">' + leadBold(inf.allergenNote) + '</p>' : '') +
         '<div class="pg-rule"></div><p class="pg-note">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011).</p>' +
         '<ol class="alg-grid">' + AA.ALLERGENS.map(function (a) { return '<li><span>' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol></div>' });
     }
@@ -209,7 +213,7 @@
     if (info.coverCharge) bits.push('<span><b>Coperto</b> ' + AA.price(info.coverCharge) + '</span>');
     if (info.wifi && info.wifi.network) bits.push('<span><b>Wi‑Fi</b> ' + esc(info.wifi.network) + ', password ' + esc(info.wifi.password) + '</span>');
     bits.push('<span><b>*</b> ' + esc(info.frozenLegend || 'Prodotto surgelato') + '</span>');
-    bits.push('<span><b>1–14</b> allergeni: chiedete al personale</span>');
+    bits.push('<span class="i-alg"><b>1–14</b> allergeni: chiedete al personale</span>');
     $('info').innerHTML = bits.join('');
     $('tvTouch').hidden = !c.touch;
   }
@@ -274,9 +278,39 @@
     resumeTimer = setTimeout(function () { paused = false; show(idx + 1); }, 45000);
   }
 
+  /* ---------- Schermo d'attesa (totem touch): le categorie in grande, un tocco apre il menu lì ---------- */
+  var ATTRACT = false, promoT = null;
+  function buildAttract() {
+    ATTRACT = true;
+    clearTimeout(timer); clearTimeout(resumeTimer); clearInterval(promoT);
+    document.body.classList.add('attract');
+    var groups = DATA.groups.filter(function (g) { return g.id !== 'aggiunte' && AA.sectionsOf(DATA, g.id, 'totem').length; });
+    var promos = AA.activePromos(DATA, 'totem');
+    var h = '<div class="att">' +
+      '<div class="att-h"><h2>Che cosa ti va stasera?</h2><p class="att-cta"><span aria-hidden="true"></span>Tocca una categoria per iniziare</p></div>' +
+      '<div class="att-grid">' + groups.map(function (g, i) {
+        return '<button type="button" class="att-tile" data-g="' + esc(g.id) + '" style="--d:' + (-i * 3.7).toFixed(1) + 's">' +
+          (g.image ? '<img alt="" src="' + esc(AA.src(g.image)) + '">' : '<i class="att-ph">' + AA.archSVG() + '</i>') +
+          '<b>' + esc(g.name) + '</b></button>';
+      }).join('') + '</div>' +
+      (promos.length ? '<div class="att-promos">' + promos.map(function (p, i) {
+        return '<div class="att-promo' + (i === 0 ? ' on' : '') + '">' + (p.image ? '<img alt="" src="' + esc(AA.src(p.image)) + '">' : '') +
+          '<div>' + (p.kicker ? '<small>' + esc(p.kicker) + '</small>' : '') + '<b>' + esc(p.title) + '</b>' + (p.text ? '<span>' + esc(p.text) + '</span>' : '') + '</div></div>';
+      }).join('') + '</div>' : '') +
+      '<button type="button" class="att-alg" data-g="allergeni"><b>Allergie o intolleranze?</b> Comunicatele al personale prima di ordinare.</button>' +
+      '</div>';
+    stage.innerHTML = h;
+    var cards = stage.querySelectorAll('.att-promo'), pi = 0;
+    if (cards.length > 1 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) promoT = setInterval(function () {
+      cards[pi].classList.remove('on'); pi = (pi + 1) % cards.length; cards[pi].classList.add('on');
+    }, 6000);
+  }
+
   function rebuild(keepPlace) {
     var cur = pages[idx];
     renderChrome();
+    if (cfg().touch && !(params.get('solo') || '')) { buildAttract(); return; }
+    ATTRACT = false; document.body.classList.remove('attract'); clearInterval(promoT);
     pages = paginate();
     var target = 0;
     if (keepPlace && cur) {
@@ -297,7 +331,13 @@
   });
   var sx = null;
   stage.addEventListener('pointerdown', function (e) { sx = e.clientX; });
+  stage.addEventListener('click', function (e) {
+    if (!ATTRACT) return;
+    var b = e.target.closest('[data-g]');
+    openMenu(b ? b.dataset.g : '');
+  });
   stage.addEventListener('pointerup', function (e) {
+    if (ATTRACT) { sx = null; return; }
     if (sx === null) return;
     var dx = e.clientX - sx; sx = null;
     if (DATA && cfg().touch) { var pg = pages[idx]; openMenu(pg && !pg.promo ? pg.group : ''); return; }

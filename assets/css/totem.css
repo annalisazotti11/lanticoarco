@@ -161,3 +161,42 @@ body:not(.tema-scuro) .tv::before, body:not(.tema-scuro) .tv-sparks { display: n
 .alg-grid li { display: flex; align-items: center; gap: .9rem; }
 .alg-grid span { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1.5px solid var(--tv-line-2, rgba(110, 84, 68, .3)); display: grid; place-items: center; font-weight: 600; font-size: 1.2rem; color: var(--tv-muted); }
 @media (min-aspect-ratio: 11/10) { .alg-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* ---------- Schermo d'attesa (totem touch) ---------- */
+body.attract .tv-progress, body.attract #tvTouch, body.attract #groups { display: none !important; }
+.att { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 1.6rem; padding: 2.4rem 3rem 1.4rem; }
+.att-h h2 { font-family: var(--font-display); font-weight: 600; font-size: 5rem; line-height: .95; letter-spacing: -.045em; }
+.att-cta { display: inline-flex; align-items: center; gap: 1.4rem; padding-left: .6rem; margin-top: .9rem; font-size: 1.5rem; font-weight: 600; color: var(--tv-muted); }
+.att-cta span { position: relative; width: 1rem; height: 1rem; border-radius: 50%; background: var(--tv-fg); }
+.att-cta span::after { content: ""; position: absolute; inset: -.5rem; border-radius: 50%; border: 2px solid var(--tv-fg); animation: attPulse 2s ease-out infinite; }
+@keyframes attPulse { from { transform: scale(.5); opacity: .8; } to { transform: scale(1.8); opacity: 0; } }
+.att-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 1fr; gap: 1.2rem; }
+.att-tile { position: relative; overflow: hidden; border: 0; border-radius: 1.8rem; padding: 0; background: var(--tv-ph); color: #fff; text-align: left; cursor: pointer; isolation: isolate; font: inherit; }
+.att-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: attKb 22s ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+@keyframes attKb { from { transform: scale(1.02) translate3d(0, 0, 0); } to { transform: scale(1.12) translate3d(-2%, -1.5%, 0); } }
+.att-tile::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 40%, rgba(16, 10, 6, .78) 100%); }
+.att-tile b { position: absolute; z-index: 2; left: 1.6rem; right: 1.6rem; bottom: 1.3rem; font-family: var(--font-display); font-weight: 600; font-size: 2.5rem; line-height: 1; letter-spacing: -.035em; text-shadow: 0 2px 16px rgba(0, 0, 0, .35); }
+.att-tile:active { transform: scale(.98); }
+.att-ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--tv-ph-arch); }
+.att-ph svg { width: 34%; height: auto; }
+.att-promos { position: relative; flex: none; height: 7.4rem; }
+.att-promo { position: absolute; inset: 0; display: flex; align-items: center; gap: 1.4rem; padding: .9rem 1.6rem .9rem .9rem; border-radius: 1.6rem; background: var(--tv-card); border: 1px solid var(--tv-line); opacity: 0; transform: translateY(.6rem); transition: opacity .8s ease, transform .8s ease; }
+.att-promo.on { opacity: 1; transform: none; }
+.att-promo img { width: 5.6rem; height: 5.6rem; border-radius: 1.1rem; object-fit: cover; flex: none; }
+.att-promo small { display: block; font-size: 1rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--tv-muted); }
+.att-promo b { display: block; font-family: var(--font-display); font-weight: 600; font-size: 1.9rem; letter-spacing: -.03em; line-height: 1.1; }
+.att-promo span { display: block; font-size: 1.15rem; color: var(--tv-muted); margin-top: .15rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.att-alg { flex: none; border: 0; background: none; color: var(--tv-muted); font: inherit; font-size: 1.3rem; text-align: center; padding: .2rem; cursor: pointer; }
+.att-alg b { color: var(--tv-fg); font-weight: 600; }
+@media (min-aspect-ratio: 11/10) {
+  .att { padding: 1.6rem 3rem 1rem; gap: 1.1rem; }
+  .att-h { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; }
+  .att-h h2 { font-size: 3.6rem; }
+  .att-cta { margin-top: 0; }
+  .att-grid { grid-template-columns: repeat(4, 1fr); }
+  .att-tile b { font-size: 2rem; }
+  .att-promos { height: 6rem; }
+  .att-promo img { width: 4.4rem; height: 4.4rem; }
+}
+@media (prefers-reduced-motion: reduce) { .att-tile img, .att-cta span::after { animation: none; } }
+body.attract .i-alg { display: none; }
