@@ -7102,7 +7102,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-74.webp",
      "frozen": false,
@@ -7116,7 +7118,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-3.webp",
      "frozen": false,
@@ -7130,7 +7134,9 @@
      "price": 1.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-131.webp",
      "frozen": false,
@@ -7144,7 +7150,9 @@
      "price": 1.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-85.webp",
      "frozen": false,
@@ -7158,7 +7166,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-34.webp",
      "frozen": false,
@@ -7172,7 +7182,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7186,7 +7198,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-149.webp",
      "frozen": false,
@@ -7200,7 +7214,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-116.webp",
      "frozen": false,
@@ -7214,7 +7230,9 @@
      "price": 2,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-36.webp",
      "frozen": false,
@@ -7228,7 +7246,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-158.webp",
      "frozen": false,
@@ -7242,7 +7262,9 @@
      "price": 2,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7256,7 +7278,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-156.webp",
      "frozen": false,
@@ -7270,7 +7294,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7284,7 +7310,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
@@ -7298,7 +7326,9 @@
      "price": 4,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "",
      "frozen": false,
