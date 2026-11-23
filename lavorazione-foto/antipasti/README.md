@@ -72,11 +72,11 @@ Esiste già la **[Pull Request #1](https://github.com/annalisazotti11/lanticoarc
 ### Verifica visiva individuale delle sette immagini
 
 - **Peperone crusco (media-161):** scontorno riuscito, ma sorgente solo 200×150; forte pixelatura a grande formato. Da usare soltanto come miniatura finché non c'è una foto più definita.
-- **Prosciutto cotto (media-78):** il bordo inferiore del piatto quadrato risulta irregolare; **da correggere prima del merge**.
+- **Prosciutto cotto (media-78):** **corretto e verificato** il 23/11/2026 sul branch: sagoma del piatto ripulita, senza inventare dettagli delle fette. Il vecchio ritaglio è stato sostituito solo nel ramo di revisione.
 - **Prosciutto crudo alla barese (media-73):** disposizione e recipiente conservati; scontorno sostanzialmente accettabile, ricontrollare la posata al bordo.
 - **Tagliere formaggi murgiani (media-113):** composizione e tagliere conservati; qualitativamente accettabile come foto da menu.
 - **Tagliere salumi misti (media-99):** composizione conservata e sfondo eliminato; accettabile come foto da menu.
-- **Taralli scaldatelli (media-137):** margini del piatto non ben regolari e bordi della carta/taglio evidenti; **da correggere prima del merge**.
+- **Taralli scaldatelli (media-137):** **corretto e verificato** il 23/11/2026 sul branch: sagoma del piatto più completa, telo giallo esterno escluso; piccoli limiti di definizione nella fonte originale.
 - **Verdure miste sott'olio (media-140):** scontorno corretto ma sorgente solo 200×150; molto pixelata a grande formato, preferire una sorgente originale migliore.
 
-**Decisione:** lasciare la PR #1 in bozza e non pubblicare finché le foto con difetti di contorno non sono corrette. Procedere una foto per volta con verifica del risultato. La lista precedente si riferisce alle immagini che hanno uno sfondo nella versione `main`; le bozze PNG esistono già sul ramo di revisione.
+**Decisione aggiornata:** le due foto con difetti di contorno sono state corrette una alla volta e verificate visivamente. La PR #1 resta in bozza perché le fonti 200×150 (peperone crusco e verdure miste) meritano un controllo sul formato di visualizzazione prima di rendere pubblica l'intera serie. Procedere con pubblicazione solo dopo verifica dell'anteprima sito. La lista precedente si riferisce alle immagini che hanno uno sfondo nella versione `main`; le bozze PNG esistono già sul ramo di revisione.
