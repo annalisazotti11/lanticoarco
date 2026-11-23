@@ -7186,7 +7186,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [],
      "image": "img/menu/media-149.webp",
      "frozen": false,
@@ -7499,7 +7501,9 @@
      "price": 3,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [
       "glutine"
      ],
@@ -7650,7 +7654,9 @@
      "price": 2.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "analcolico"
+     ],
      "allergens": [
       "glutine"
      ],

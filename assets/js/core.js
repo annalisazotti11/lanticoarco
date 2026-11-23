@@ -33,7 +33,8 @@
     { code: 'piccante', label: 'Piccante', short: 'Piccante' },
     { code: 'novita', label: 'Novità', short: 'Novità' },
     { code: 'della-casa', label: 'Consigliata dalla casa', short: 'Della casa' },
-    { code: 'alcolico', label: 'Alcolico', short: 'Alcolico' }
+    { code: 'alcolico', label: 'Alcolico', short: 'Alcolico' },
+    { code: 'analcolico', label: 'Analcolico', short: 'Analcolico' }
   ];
   var TAG_BY_CODE = {};
   TAGS.forEach(function (t) { TAG_BY_CODE[t.code] = t; });

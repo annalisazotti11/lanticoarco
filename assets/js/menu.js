@@ -519,7 +519,7 @@
 
   /* Filtri */
   function renderFilters() {
-    $('fTags').innerHTML = AA.TAGS.filter(function (t) { return t.code !== 'della-casa' && t.code !== 'novita' && t.code !== 'alcolico'; }).map(function (t) {
+    $('fTags').innerHTML = AA.TAGS.filter(function (t) { return t.code !== 'della-casa' && t.code !== 'novita' && t.code !== 'alcolico' && t.code !== 'analcolico'; }).map(function (t) {
       return '<button type="button" class="chip" data-tag="' + t.code + '" aria-pressed="' + (state.tags.indexOf(t.code) >= 0) + '">' + esc(t.label) + '</button>';
     }).join('');
     $('fAllergens').innerHTML = AA.ALLERGENS.map(function (a) {
