@@ -97,15 +97,11 @@
     }
     var open = filtering() || !!OPEN[sec.id];
     var ph = items.filter(function (it) { return it.cutout; })[0] || items.filter(function (it) { return it.image; })[0];
-    var prices = items.map(function (it) { return it.prices && it.prices.length ? Number(it.prices[0].price) : Number(it.price); }).filter(function (v) { return isFinite(v) && v > 0; });
-    var min = prices.length ? Math.min.apply(null, prices) : null;
-    var noun = groupId === 'pizze' ? (items.length === 1 ? 'pizza' : 'pizze') : (items.length === 1 ? 'proposta' : 'proposte');
     var name = sec.name;
     return '<section class="sec acc' + (open ? ' open' : '') + '" id="' + esc(sec.id) + '">' +
       '<button type="button" class="acc-h" data-acc="' + esc(sec.id) + '" aria-expanded="' + open + '" aria-controls="' + esc(sec.id) + '-b">' +
       (ph ? '<span class="acc-ph' + (ph.cutout ? ' cut' : '') + '"><img alt="" loading="lazy" src="' + esc(AA.src(ph.cutout || ph.image)) + '"></span>' : '<span class="acc-ph ph-empty">' + AA.archSVG() + '</span>') +
-      '<span class="acc-tx"><b>' + esc(name) + '</b><small>' + items.length + ' ' + noun + (min ? ' · da ' + AA.price(min) : '') + '</small>' +
-      (sec.subtitle ? '<i>' + esc(sec.subtitle) + '</i>' : '') + '</span>' +
+      '<span class="acc-tx"><b>' + esc(name) + '</b>' + (sec.subtitle ? '<small>' + esc(sec.subtitle) + '</small>' : '') + '</span>' +
       '<span class="acc-ch">' + CHEV + '</span></button>' +
       '<div class="acc-b" id="' + esc(sec.id) + '-b"><div class="acc-in"' + (open ? '' : ' inert') + '>' + extra + sectionBody(sec, items) + '</div></div></section>';
   }
@@ -150,7 +146,7 @@
       DATA.sections.forEach(function (s) { if (s.group === g.id && s.visible) n += s.items.filter(matches).length; });
       return '<a class="tile' + (g.image ? '' : ' no-img') + '" href="#g-' + esc(g.id) + '">' +
         (g.image ? '<img alt="" loading="lazy" src="' + esc(AA.src(g.image)) + '">' : '') +
-        '<span><b>' + esc(g.name) + '</b><small>' + n + (n === 1 ? ' proposta' : ' proposte') + '</small></span></a>';
+        '<span><b>' + esc(g.name) + '</b></span></a>';
     }).join('');
   }
 
@@ -158,7 +154,7 @@
   function allergensHTML() {
     var i = DATA.info || {};
     return '<section class="grp grp-alg" id="g-allergeni"><h2 class="grp-t">Allergeni</h2><div class="alg-box">' +
-      '<p class="alg-lead"><b>Allergie o intolleranze? Ditecelo sempre.</b> ' + esc(i.allergenNote || '') + '</p>' +
+      '<p class="alg-lead"><b>Allergie e intolleranze</b> ' + esc(i.allergenNote || '') + '</p>' +
       '<p class="alg-how">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011):</p>' +
       '<ol class="alg-legend alg-top">' + AA.ALLERGENS.map(function (a) { return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol>' +
       '<button type="button" class="b-ghost alg-f" id="algFilter">Escludi un allergene dal menu</button></div></section>';
