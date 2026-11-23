@@ -15,7 +15,7 @@
 <link rel="preload" href="assets/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/base.css?v=f547ae7d">
-<link rel="stylesheet" href="assets/css/site.css?v=5ff3e04c">
+<link rel="stylesheet" href="assets/css/site.css?v=c0fc045c">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -100,25 +100,26 @@
       <li><b><span data-bind="rating">4,6</span>/5</b><span><span data-bind="ratingCount">72</span> recensioni su Facebook</span></li>
       <li><b>1.595 metri</b><span>la pizza più lunga del mondo, Expo 2015</span></li>
     </ul>
-    <header class="pa-head">
-      <h2 class="h2" data-rv>Com’è fatta la nostra pizza.</h2>
-      <p class="lead" data-rv style="--d:.1s">Una pizza vera, appena uscita dal forno a legna d’ulivo. Ogni parte ha una provenienza precisa.</p>
-    </header>
-    <div class="pa" id="anat" data-rv style="--d:.12s">
-      <figure class="pa-pic">
-        <img src="assets/img/pizza-giro.webp" alt="Una pizza appena uscita dal forno: cornicione, pomodoro, mozzarella e cime di rapa" width="1440" height="1080" loading="lazy" decoding="async">
-        <button type="button" class="pa-pin" data-k="0" style="--x:43%;--y:84%;--o:0" aria-label="Impasto">1</button>
-        <button type="button" class="pa-pin" data-k="1" style="--x:20%;--y:50%;--o:1" aria-label="Pomodoro">2</button>
-        <button type="button" class="pa-pin" data-k="2" style="--x:41%;--y:53%;--o:2" aria-label="Latticini">3</button>
-        <button type="button" class="pa-pin" data-k="3" style="--x:57%;--y:28%;--o:3" aria-label="Ingredienti">4</button>
-      </figure>
-      <ol class="pa-list">
-        <li data-k="0" style="--o:0"><i>1</i><div><b>Impasto</b><p>Farine bio di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio. Nessun miglioratore. E puoi sceglierlo tra <a href="#impasti"><span data-n="impasti">nove</span> impasti</a>.</p></div></li>
-        <li data-k="1" style="--o:1"><i>2</i><div><b>Pomodoro</b><p>Tra le scelte, i pomodorini di Torre Guaceto, presidio Slow Food, e il pomodoro nickel free.</p></div></li>
-        <li data-k="2" style="--o:2"><i>3</i><div><b>Latticini</b><p>Mozzarella a siero innesto, bufala aggiunta all’uscita dal forno, provolone della Murgia.</p></div></li>
-        <li data-k="3" style="--o:3"><i>4</i><div><b>Ingredienti</b><p>Prodotti bio, a km&nbsp;0 e del territorio: <span data-n="ingredienti">113</span> da aggiungere come preferisci.</p></div></li>
-      </ol>
-      <p class="pa-cta"><a class="btn btn-cream" href="menu/">Guarda il menu</a><a class="pa-own" href="menu/#crea">Crea la tua pizza</a></p>
+    <div class="an" id="anat">
+      <div class="an-in">
+        <p class="an-over">La nostra pizza</p>
+        <h2 class="an-h">Poche cose,<br><em>scelte bene.</em></h2>
+        <figure class="an-shot" id="anShot">
+          <div class="an-cam"><img src="assets/img/pizza-giro.webp" alt="Una pizza appena uscita dal forno a legna: cornicione, pomodoro, mozzarella e cime di rapa" width="1440" height="1080" loading="lazy" decoding="async"></div>
+          <svg class="an-wire" aria-hidden="true"><path id="anWire" pathLength="1"/></svg>
+          <i class="an-dot" id="anDot" aria-hidden="true"></i>
+          <div class="an-lens" id="anLens" aria-hidden="true"><img src="assets/img/pizza-giro.webp" alt="" loading="lazy" decoding="async"></div>
+          <span class="an-name" id="anName" aria-hidden="true"></span>
+        </figure>
+        <ul class="an-picks" id="anPicks" aria-label="Com'è fatta la nostra pizza"><li><button type="button" data-k="0"><i class="an-ic"><svg class="an-ring" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" pathLength="100"/></svg><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21.5V5.5"/><path d="M12 6c-.9-1-.9-2.6 0-3.6.9 1 .9 2.6 0 3.6z"/><path d="M12 9.4c-2.2 0-3.6-1.3-3.6-3.3 2.2 0 3.6 1.3 3.6 3.3zM12 9.4c2.2 0 3.6-1.3 3.6-3.3-2.2 0-3.6 1.3-3.6 3.3z"/><path d="M12 13.4c-2.2 0-3.6-1.3-3.6-3.3 2.2 0 3.6 1.3 3.6 3.3zM12 13.4c2.2 0 3.6-1.3 3.6-3.3-2.2 0-3.6 1.3-3.6 3.3z"/><path d="M12 17.4c-2.2 0-3.6-1.3-3.6-3.3 2.2 0 3.6 1.3 3.6 3.3zM12 17.4c2.2 0 3.6-1.3 3.6-3.3-2.2 0-3.6 1.3-3.6 3.3z"/></svg></i><span>Impasto</span></button></li><li><button type="button" data-k="1"><i class="an-ic"><svg class="an-ring" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" pathLength="100"/></svg><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="14.2" r="6.8"/><path d="M12 8.6L8.6 7.2M12 8.6l3.4-1.4M12 8.6l-2 2.4M12 8.6l2 2.4M12 8.6V4.2"/><path d="M7.9 13.6c.3-1.2 1-2.1 2.1-2.6"/></svg></i><span>Pomodoro</span></button></li><li><button type="button" data-k="2"><i class="an-ic"><svg class="an-ring" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" pathLength="100"/></svg><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4.6 15.3c0-3.4 3.3-5.8 7.4-5.8s7.4 2.4 7.4 5.8-3.3 4.4-7.4 4.4-7.4-1-7.4-4.4z"/><path d="M10.4 9.7c-.6-1.6 0-3.3 1.6-4.3 1.6 1 2.2 2.7 1.6 4.3"/><path d="M8 14.4c.4-1 1.2-1.7 2.3-2"/></svg></i><span>Mozzarella</span></button></li><li><button type="button" data-k="3"><i class="an-ic"><svg class="an-ring" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" pathLength="100"/></svg><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4.5 19.5C4.5 11.2 9.6 5 19.5 4.5c-.4 9.7-6.7 15-15 15z"/><path d="M4.5 19.5l10-10"/><path d="M8.3 15.7l-.4-3.1M11.2 12.8l-.3-2.9M8.3 15.7l3.1.4M11.2 12.8l2.9.3"/></svg></i><span>Ingredienti</span></button></li></ul>
+        <div class="an-det" id="anDet" aria-live="polite">
+          <p class="an-from" id="anFrom">Murgia · Trapani</p>
+          <h3 class="an-t" id="anT">L’impasto</h3>
+          <p class="an-p" id="anP">Farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio.</p>
+          <a class="an-a" id="anA" href="#impasti">Scegli tra nove impasti</a>
+        </div>
+        <p class="an-cta"><a class="btn btn-cream" href="menu/">Guarda il menu</a><a class="an-own" href="menu/#crea">Crea la tua pizza</a></p>
+      </div>
     </div>
 
     <div class="im-grid" id="impasti">
@@ -265,6 +266,6 @@
 
 <script src="assets/vendor/lenis.min.js"></script>
 <script src="assets/js/core.js?v=35b178f0"></script>
-<script src="assets/js/site.js?v=50e871d0"></script>
+<script src="assets/js/site.js?v=55784a73"></script>
 </body>
 </html>

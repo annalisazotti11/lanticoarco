@@ -478,27 +478,87 @@
     var extras = [];
     data.sections.forEach(function (x) { if (x.group === 'aggiunte' && x.visible !== false) extras = extras.concat(AA.visibleItems(x)); });
     document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
+    anatomy(extras.length);
   }
-  /* I numeri sulla foto e le righe accanto si accendono insieme: passando sopra, toccando, o con la tastiera */
-  (function anatomy() {
-    var box = $('anat'); if (!box) return;
-    var pins = [].slice.call(box.querySelectorAll('.pa-pin')), rows = [].slice.call(box.querySelectorAll('.pa-list li'));
-    var cur = -1;
-    function set(k) {
-      if (k === cur) return; cur = k;
-      box.classList.toggle('focus', k >= 0);
-      pins.forEach(function (p) { var on = Number(p.dataset.k) === k; p.classList.toggle('on', on); p.setAttribute('aria-pressed', on); });
-      rows.forEach(function (r) { r.classList.toggle('on', Number(r.dataset.k) === k); });
+  /* La pizza da vicino: un punto si accende sul dettaglio, una linea si disegna fino alla lente, la lente lo ingrandisce.
+     Avanza da sola, a tempo, finché la sezione è sullo schermo; toccando un'icona si ferma e comanda chi guarda. */
+  function anatomy(nIngr) {
+    var shot = $('anShot'); if (!shot || shot.dataset.ready) return;
+    shot.dataset.ready = '1';
+    var DUR = 5200, M = 2.4;
+    var D = [
+      { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio.', a: 'Scegli tra nove impasti', href: '#impasti' },
+      { x: .2, y: .5, n: 'Pomodoro', from: 'Torre Guaceto · Presidio Slow Food', t: 'Il pomodoro', p: 'I pomodorini di Torre Guaceto, sulla costa di Brindisi. Su richiesta, anche il pomodoro nickel free.' },
+      { x: .44, y: .56, n: 'Mozzarella', from: 'Siero innesto · Bufala DOP', t: 'La mozzarella', p: 'Mozzarella a siero innesto e provolone della Murgia. La bufala arriva sulla pizza all’uscita dal forno.' },
+      { x: .6, y: .3, n: 'Ingredienti', from: 'Bio · Km 0 · Slow Food', t: 'Gli ingredienti', p: (nIngr ? nIngr + ' ingredienti' : 'Tanti ingredienti') + ' da aggiungere come preferisci. Molti biologici, molti del nostro territorio.', a: 'Crea la tua pizza', href: AA.ROOT + 'menu/#crea' }
+    ];
+    var lens = $('anLens'), lensImg = lens.querySelector('img'), dot = $('anDot'), wire = $('anWire'), nameEl = $('anName'), det = $('anDet');
+    var lis = [].slice.call(document.querySelectorAll('#anPicks li'));
+    var cur = -1, auto = !reduce, timer = null, swapT = null, seqT = [];
+    function later(fn, ms) { seqT.push(setTimeout(fn, ms)); }
+    function place(k) {
+      var W = shot.clientWidth, H = shot.clientHeight, ir = 4 / 3, dw = W, dh = H, ox = 0, oy = 0;
+      if (W / H > ir) { dh = W / ir; oy = (H - dh) / 2; } else { dw = H * ir; ox = (W - dw) / 2; }
+      var Dm = Math.round(Math.max(120, Math.min(W, H) * (W > 900 ? .38 : .44))), r = Dm / 2, pad = 14;
+      var p = D[k], px = ox + p.x * dw, py = oy + p.y * dh;
+      // la lente va dove c'è spazio, lontana dal punto quanto basta perché la linea si veda
+      var best = null, L = r + Math.max(64, Math.min(W, H) * .2);
+      for (var i = 0; i < 16; i++) {
+        var an = i / 16 * Math.PI * 2, cx = px + Math.cos(an) * L, cy = py + Math.sin(an) * L;
+        var inside = cx - r >= pad && cx + r <= W - pad && cy - r - 10 >= pad && cy + r + 10 <= H - pad;
+        var score = (inside ? 1000 : 0) - Math.hypot(cx - W / 2, cy - H / 2) * .6 - (cy < py ? 0 : 20);
+        if (!best || score > best.s) best = { s: score, x: cx, y: cy };
+      }
+      var lx = clamp(best.x, r + pad, W - r - pad), ly = clamp(best.y, r + pad + 10, H - r - pad - 10);
+      lens.style.width = lens.style.height = Dm + 'px'; lens.style.left = (lx - r) + 'px'; lens.style.top = (ly - r) + 'px';
+      lensImg.style.width = dw * M + 'px'; lensImg.style.height = dh * M + 'px';
+      lensImg.style.transform = 'translate3d(' + (r - p.x * dw * M).toFixed(1) + 'px,' + (r - p.y * dh * M).toFixed(1) + 'px,0)';
+      dot.style.left = px + 'px'; dot.style.top = py + 'px';
+      var d = Math.hypot(lx - px, ly - py) || 1, ex = lx - (lx - px) / d * r, ey = ly - (ly - py) / d * r;
+      wire.setAttribute('d', 'M' + (px + (lx - px) / d * 9).toFixed(1) + ',' + (py + (ly - py) / d * 9).toFixed(1) + 'L' + ex.toFixed(1) + ',' + ey.toFixed(1));
+      nameEl.textContent = p.n; nameEl.style.left = lx + 'px'; nameEl.style.top = (py > ly ? ly - r - 14 : ly + r - 16) + 'px';
     }
-    function bindEl(el) {
-      var k = Number(el.dataset.k);
-      el.addEventListener('mouseenter', function () { set(k); });
-      el.addEventListener('focusin', function () { set(k); });
-      el.addEventListener('click', function (e) { if (e.target.closest('a')) return; set(cur === k && e.pointerType !== 'mouse' ? -1 : k); });
+    function frame(k) {
+      seqT.forEach(clearTimeout); seqT = [];
+      var on = shot.classList.contains('s1');
+      if (reduce) { place(k); shot.classList.add('s1', 's2', 's3'); return; }
+      shot.classList.remove('s3'); later(function () { shot.classList.remove('s2'); }, on ? 120 : 0);
+      later(function () {
+        shot.classList.remove('s1'); place(k);
+        later(function () { shot.classList.add('s1'); }, 30);
+        later(function () { shot.classList.add('s2'); }, 380);
+        later(function () { shot.classList.add('s3'); }, 820);
+      }, on ? 520 : 0);
     }
-    pins.concat(rows).forEach(bindEl);
-    box.addEventListener('mouseleave', function () { set(-1); });
-  })();
+    function text(k) {
+      var p = D[k];
+      function put() {
+        $('anFrom').textContent = p.from; $('anT').textContent = p.t; $('anP').textContent = p.p;
+        var a = $('anA'); a.hidden = !p.a; if (p.a) { a.textContent = p.a; a.href = p.href; }
+        det.classList.remove('out');
+      }
+      if (reduce) { put(); return; }
+      det.classList.add('out'); clearTimeout(swapT); swapT = setTimeout(put, 300);
+    }
+    function go(k) {
+      cur = k; frame(k); text(k);
+      lis.forEach(function (li, i) {
+        li.classList.toggle('on', i === k); li.querySelector('button').setAttribute('aria-pressed', i === k);
+        li.classList.remove('run'); if (auto && i === k) { void li.offsetWidth; li.classList.add('run'); }
+      });
+    }
+    function next() { if (!auto) return; go((cur + 1) % D.length); timer = setTimeout(next, DUR); }
+    lis.forEach(function (li, i) { li.querySelector('button').addEventListener('click', function () { auto = false; clearTimeout(timer); go(i); }); });
+    var img = shot.querySelector('.an-cam img');
+    function ready(fn) { if (img.complete) fn(); else img.addEventListener('load', fn, { once: true }); }
+    if (reduce) { ready(function () { go(0); }); return; }
+    new IntersectionObserver(function (es) {
+      if (!auto) return;
+      if (es[0].isIntersecting) { if (!timer) timer = setTimeout(function () { ready(next); }, cur < 0 ? 900 : 400); }
+      else { clearTimeout(timer); timer = null; }
+    }, { threshold: .5 }).observe(shot);
+    window.addEventListener('resize', function () { if (cur >= 0) place(cur); });
+  }
 
   /* ================= Dati vivi ================= */
   function bind(info) {
@@ -589,5 +649,5 @@
     if (ann) { $('notice').hidden = false; $('notice').textContent = ann; }
     doughs(data); pizzas(data); promos(data); product(data);
     watchCounts();
-  }).catch(function () {});
+  }).catch(function () { anatomy(0); });
 })();
