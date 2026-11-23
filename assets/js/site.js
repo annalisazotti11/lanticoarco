@@ -1,4 +1,4 @@
-/* Sito: si entra da un arco di fuoco, la storia si accende scorrendo, dati vivi dal gestionale */
+/* Sito: si entra da un arco di fuoco, la pizza sale sopra il fuoco, dati vivi dal gestionale */
 (function () {
   'use strict';
   var AA = window.AA, esc = AA.esc;
@@ -140,7 +140,7 @@
     fireC.style.transform = (g.wide ? '' : 'translateY(13%) ') + z; sparkC.style.transform = z;
     copy.style.transform = 'translate3d(0,' + (-g.p * 90).toFixed(1) + 'px,0)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
-    // mentre la storia sale, il fuoco si abbassa: profondità, niente vuoti
+    // mentre la pizza sale, il fuoco si abbassa: profondità, niente vuoti
     fade.style.opacity = (prog * .62).toFixed(3);
   }
   function queueHero() { if (!raf) raf = requestAnimationFrame(paintHero); }
@@ -248,7 +248,12 @@
   var revealIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { rootMargin: '0px 0px -14% 0px' });
-  chapters.forEach(function (c) { revealIO.observe(c); });
+  // la pizza è lunga: lì ogni blocco compare quando arriva davvero sullo schermo
+  chapters.forEach(function (c) {
+    if (c.id === 'pizza') c.querySelectorAll(':scope > *').forEach(function (el) { revealIO.observe(el); });
+    else revealIO.observe(c);
+  });
+  if (reduce) document.querySelectorAll('#pizza > *').forEach(function (el) { el.classList.add('in'); });
 
   /* ================= Storia: la miccia accende gli anni ================= */
   var sparkTrail = (function () {
@@ -330,6 +335,7 @@
     var items = AA.visibleItems(sec);
     var list = $('imList'), info = $('imInfo'), photo = $('imPhoto'), cur = -1, timer, user = false;
     $('imCount').textContent = NUM[items.length] || items.length;
+    document.querySelectorAll('[data-n="impasti"]').forEach(function (el) { el.textContent = (NUM[items.length] || String(items.length)).toLowerCase(); });
     var LOOK = [
       [/carbone/i, ['#3b3532', '#121010']],
       [/canapa/i, ['#c6b48c', '#8d7c58'], '#4e4232'],
@@ -359,10 +365,9 @@
       cur = i;
       var it = items[i];
       list.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', Number(b.dataset.i) === i); });
-      var p = it.price == null ? 'Supplemento da chiedere in sala' : (Number(it.price) === 0 ? 'Compreso nel prezzo della pizza' : AA.price(it.price, { signed: true }) + ' sul prezzo della pizza');
       info.classList.remove('swap'); void info.offsetWidth; info.classList.add('swap');
       var lk = look(it), name = it.name.replace(/^Impasto\s+/i, '').replace(/^./, function (c) { return c.toUpperCase(); });
-      info.innerHTML = '<h3>' + esc(name) + '</h3><p>' + esc(shortOf(it)) + '</p>' + (p ? '<span class="im-price">' + p + '</span>' : '');
+      info.innerHTML = '<h3>' + esc(name) + '</h3><p>' + esc(shortOf(it)) + '</p>';
       var frame = photo.parentNode;
       frame.className = 'im-photo' + (it.image ? '' : ' dough' + (lk[2] ? ' seeds' : ''));
       frame.setAttribute('style', swStyle(lk));
@@ -377,7 +382,9 @@
     var first = 0;
     for (var k = 0; k < items.length; k++) if (items[k].image) { first = k; break; }
     show(first);
-    if (!reduce) timer = setInterval(function () { if (!user && $('impasti').classList.contains('in')) show((cur + 1) % items.length); }, 4200);
+    var seen = false;
+    new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }, { threshold: .4 }).observe($('impasti'));
+    if (!reduce) timer = setInterval(function () { if (!user && seen && document.visibilityState === 'visible') show((cur + 1) % items.length); }, 4200);
   }
 
   /* ================= Pizze: che voglia hai? ================= */
@@ -410,9 +417,6 @@
       var tb = tabs[t], it = tb.items[i];
       $('pzName').textContent = it.name;
       $('pzDesc').textContent = it.desc || '';
-      var pr = it.price;
-      if (it.prices && it.prices.length) pr = Math.min.apply(null, it.prices.map(function (p) { return Number(p.price) || Infinity; }));
-      $('pzPrice').textContent = pr != null && isFinite(pr) ? (it.prices && it.prices.length ? 'da ' : '') + AA.price(pr) : '';
       $('pzTags').innerHTML = (it.tags || []).map(function (c) { var tg = AA.TAG_BY_CODE[c]; return tg ? '<span>' + esc(tg.short) + '</span>' : ''; }).join('') + (it.featured ? '<span>Preferita</span>' : '');
       $('pzCount').textContent = (i + 1) + ' / ' + tb.items.length;
       var img = $('pzImg');
@@ -469,115 +473,31 @@
     if (list.length > 1 && !reduce) setInterval(function () { k = (k + 1) % list.length; paint(); }, 5000);
   }
 
-  /* ================= Il prodotto: com'è fatta la nostra pizza ================= */
+  /* ================= La pizza: com'è fatta, punto per punto ================= */
   function product(data) {
     var extras = [];
     data.sections.forEach(function (x) { if (x.group === 'aggiunte' && x.visible !== false) extras = extras.concat(AA.visibleItems(x)); });
     document.querySelectorAll('[data-n="ingredienti"]').forEach(function (el) { if (extras.length) el.textContent = extras.length; });
-    buildScene();
   }
-  /* La pizza vista da vicino, su un palco scuro: la foto intera resta in vista e una lente ci scorre sopra.
-     Accanto, un elenco fisso: si accende la riga del dettaglio sotto la lente, il testo non si muove mai.
-     Lo scroll dà il ritmo, ma la scena lo segue con una molla: niente scatti quando cambia il tipo di scroll. */
-  function buildScene() {
-    var wrap = $('build'), stage = $('buildStage'), frame = $('buildFrame'), img = $('buildPhoto'), lens = $('buildLens'), tag = $('buildTag'), hint = $('buildHint'), text = $('buildText');
-    if (!wrap || !frame || !img || wrap.dataset.ready) return;
-    wrap.dataset.ready = '1';
-    var lensImg = lens.querySelector('img');
-    var rows = [].slice.call(document.querySelectorAll('#buildSteps li'));
-    var names = rows.map(function (li) { return li.querySelector('b').textContent.trim(); });
-    var bar = $('buildBar'), N = rows.length, END = N + .6, state = -2;
-    var PTS = [{ x: .43, y: .84 }, { x: .2, y: .5 }, { x: .41, y: .53 }, { x: .57, y: .28 }]; // Impasto, Pomodoro, Latticini, Ingredienti
-    var M = 2.5, IW = 1440, IH = 1080;
-    function ease(u) { u = clamp(u, 0, 1); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
-    function focusAt(t) {
-      if (t >= N - 1) return PTS[N - 1];
-      var i = clamp(Math.floor(t), 0, N - 2), k = ease((t - i - .55) / .45);
-      return { x: PTS[i].x + (PTS[i + 1].x - PTS[i].x) * k, y: PTS[i].y + (PTS[i + 1].y - PTS[i].y) * k };
+  /* I numeri sulla foto e le righe accanto si accendono insieme: passando sopra, toccando, o con la tastiera */
+  (function anatomy() {
+    var box = $('anat'); if (!box) return;
+    var pins = [].slice.call(box.querySelectorAll('.pa-pin')), rows = [].slice.call(box.querySelectorAll('.pa-list li'));
+    var cur = -1;
+    function set(k) {
+      if (k === cur) return; cur = k;
+      box.classList.toggle('focus', k >= 0);
+      pins.forEach(function (p) { var on = Number(p.dataset.k) === k; p.classList.toggle('on', on); p.setAttribute('aria-pressed', on); });
+      rows.forEach(function (r) { r.classList.toggle('on', Number(r.dataset.k) === k); });
     }
-    var W = 0, H = 0, D = 0, dW = 0, dH = 0, ox = 0, oy = 0, tagW = 0, last = -1;
-    function measure() {
-      W = frame.clientWidth; H = frame.clientHeight;
-      var c = Math.max(W / IW, H / IH); dW = IW * c; dH = IH * c;
-      ox = (W - dW) * (W > 600 ? .62 : .5); oy = (H - dH) * .5;
-      img.style.width = dW + 'px'; img.style.height = dH + 'px'; img.style.left = ox + 'px'; img.style.top = oy + 'px';
-      D = Math.round(clamp(Math.min(W, H) * .44, 120, 300));
-      lens.style.width = lens.style.height = D + 'px';
-      lensImg.style.width = (dW * M) + 'px'; lensImg.style.height = (dH * M) + 'px';
-      if (tag.textContent) tagW = tag.offsetWidth;
+    function bindEl(el) {
+      var k = Number(el.dataset.k);
+      el.addEventListener('mouseenter', function () { set(k); });
+      el.addEventListener('focusin', function () { set(k); });
+      el.addEventListener('click', function (e) { if (e.target.closest('a')) return; set(cur === k && e.pointerType !== 'mouse' ? -1 : k); });
     }
-    function render(t) {
-      var vis = ease((t - .1) / .32) * (1 - ease((t - (N - .1)) / .35)); // la lente si apre all'inizio e si chiude alla fine: resta la pizza intera
-      var f = focusAt(t);
-      var z = 1 + .08 * vis;
-      var cx0 = -(dW * (z - 1)) / 2, cy0 = -(dH * (z - 1)) / 2;
-      var px = (W / 2 - (ox + cx0 + f.x * dW * z)) * .45 * vis, py = (H / 2 - (oy + cy0 + f.y * dH * z)) * .45 * vis;
-      var tx = clamp(cx0 + px, W - ox - dW * z, -ox), ty = clamp(cy0 + py, H - oy - dH * z, -oy);
-      img.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0) scale(' + z.toFixed(4) + ')';
-      var pad = 14, sx = clamp(ox + tx + f.x * dW * z, D / 2 + pad, W - D / 2 - pad), sy = clamp(oy + ty + f.y * dH * z, D / 2 + pad, H - D / 2 - pad);
-      lens.style.transform = 'translate3d(' + (sx - D / 2).toFixed(1) + 'px,' + (sy - D / 2).toFixed(1) + 'px,0) scale(' + (.4 + .6 * vis).toFixed(4) + ')';
-      lens.style.opacity = vis.toFixed(3);
-      lensImg.style.transform = 'translate3d(' + (D / 2 - f.x * dW * M).toFixed(1) + 'px,' + (D / 2 - f.y * dH * M).toFixed(1) + 'px,0)';
-      var below = sy + D / 2 + 46 < H, ty2 = below ? sy + D / 2 + 12 : sy - D / 2 - 44;
-      tag.style.transform = 'translate3d(' + (sx - tagW / 2).toFixed(1) + 'px,' + ty2.toFixed(1) + 'px,0)';
-      tag.style.opacity = (vis * vis).toFixed(3);
-      if (bar) bar.style.transform = 'scaleX(' + clamp(t / END, 0, 1).toFixed(4) + ')';
-      if (hint) hint.style.opacity = (1 - ease(t / .35)).toFixed(3);
-    }
-    // i = riga accesa; N = finito: tutte le righe accese, la pizza intera
-    function setState(i) {
-      rows.forEach(function (li, k) { li.classList.toggle('on', k === i); li.setAttribute('aria-current', k === i ? 'true' : 'false'); });
-      text.classList.toggle('done', i >= N);
-      if (i < N) { tag.textContent = names[i]; tagW = tag.offsetWidth; }
-    }
-    measure();
-    if (reduce) { wrap.classList.add('static'); setState(N); render(END); return; }
-    var span = function () { return Math.max(1, wrap.offsetHeight - window.innerHeight); };
-    var target = 0, cur = 0, running = false, lt = 0;
-    function apply(t) {
-      var k = t >= N - .05 ? N : clamp(Math.floor(t), 0, N - 1);
-      if (state >= 0 && state < N && k !== state && Math.abs(t - (state + (k > state ? 1 : 0))) < .04) k = state; // isteresi: niente sfarfallii sul confine
-      if (k !== state) { state = k; setState(k); }
-      if (Math.abs(t - last) > .0003) { last = t; render(t); }
-    }
-    function tick(now) {
-      var dt = Math.min(.05, (now - lt) / 1000); lt = now;
-      cur += (target - cur) * (1 - Math.exp(-dt / .11));
-      if (Math.abs(target - cur) < .0005) { cur = target; running = false; }
-      apply(cur);
-      if (running) requestAnimationFrame(tick);
-    }
-    var lastE = -1;
-    function onScroll() {
-      var r = wrap.getBoundingClientRect(), vh = window.innerHeight;
-      if (r.top > vh * 1.2 || r.bottom < -vh * .2) return;
-      var e = ease(clamp(1 - r.top / (vh * .85), 0, 1));
-      if (Math.abs(e - lastE) > .001 || (e === 1 && lastE !== 1)) {
-        lastE = e;
-        stage.style.transform = e >= 1 ? '' : 'translate3d(0,' + ((1 - e) * 40).toFixed(1) + 'px,0) scale(' + (.92 + .08 * e).toFixed(4) + ')';
-      }
-      target = clamp(-r.top / span(), 0, 1) * END;
-      if (!running) { running = true; lt = performance.now(); requestAnimationFrame(tick); }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', function () { measure(); last = -1; apply(cur); onScroll(); });
-    if (!img.complete) img.addEventListener('load', function () { measure(); last = -1; apply(cur); });
-    // toccare una riga porta la lente su quel dettaglio
-    rows.forEach(function (li, k) {
-      li.addEventListener('click', function () {
-        var top = wrap.getBoundingClientRect().top + window.scrollY + (k + .7) / END * span();
-        scrollToY(Math.round(top));
-      });
-    });
-    onScroll(); cur = target; apply(cur);
-  }
-
-  /* La sala: la foto si assesta quando entra nello schermo */
-  (function band() {
-    var b = document.querySelector('.band'); if (!b) return;
-    if (reduce || !('IntersectionObserver' in window)) { b.classList.add('in'); return; }
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { b.classList.add('in'); io.disconnect(); } }); }, { threshold: .2 });
-    io.observe(b);
+    pins.concat(rows).forEach(bindEl);
+    box.addEventListener('mouseleave', function () { set(-1); });
   })();
 
   /* ================= Dati vivi ================= */
@@ -606,12 +526,12 @@
 
   /* ================= Capitoli in alto: dove sei e quanto manca ================= */
   (function chapters() {
-    var ids = ['storia', 'prodotto', 'senza-glutine', 'impasti', 'pizze', 'vieni'];
+    var ids = ['pizza', 'senza-glutine', 'pizze', 'storia', 'vieni'];
     var els = ids.map(function (id) { return $(id); });
     if (els.some(function (e) { return !e; })) return;
     var links = {};
     document.querySelectorAll('.nav-links a[data-ch], .chap a[data-ch]').forEach(function (a) { (links[a.dataset.ch] = links[a.dataset.ch] || []).push(a); });
-    var bar = $('chap'), inner = bar.querySelector('.chap-in'), hero = $('fuoco'), navEl = $('nav'), storyEl = $('storia');
+    var bar = $('chap'), inner = bar.querySelector('.chap-in'), hero = $('fuoco'), navEl = $('nav'), storyEl = $('pizza');
     var cur = null, raf = 0;
     function setH() { document.documentElement.style.setProperty('--navh', navEl.offsetHeight + 'px'); }
     function upd() {

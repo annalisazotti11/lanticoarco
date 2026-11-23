@@ -134,7 +134,7 @@ body.locked { overflow: hidden; }
 @keyframes spinR { to { transform: rotate(360deg); } }
 
 /* ---------- 2 · La storia: una miccia che accende gli anni ---------- */
-.ch-storia { padding-bottom: clamp(80px, 12vh, 140px); z-index: 3; margin-top: -60vh; margin-top: -60svh; background: var(--bg) url(../img/grana.png); border-radius: clamp(28px, 4vw, 48px) clamp(28px, 4vw, 48px) 0 0; box-shadow: 0 -40px 80px -30px rgba(10, 6, 4, .55); }
+.ch-storia { padding-bottom: clamp(80px, 12vh, 140px); background: var(--bg) url(../img/grana.png); }
 .st-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 7vw, 130px); align-items: start; }
 .st-side { position: sticky; top: 130px; }
 .st-side .lead { margin-top: 22px; }
@@ -365,9 +365,6 @@ body.locked { overflow: hidden; }
 .tl-stat span { font-variant-numeric: tabular-nums; }
 
 /* ---------- 3 · Il prodotto: com'è fatta la nostra pizza ---------- */
-.ch-prod { background: var(--bg-2) url(../img/grana.png); border-top: 1px solid var(--line); padding-top: clamp(80px, 11vh, 130px); padding-bottom: clamp(56px, 8vh, 90px); overflow-x: clip; }
-.pr-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px clamp(32px, 6vw, 100px); align-items: end; }
-.pr-head .lead { margin-bottom: .3em; }
 /* la pizza si prepara mentre scorri: disegno a strati che diventa la foto */
 
 .pr-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px clamp(24px, 4vw, 60px); margin-top: clamp(26px, 4vh, 44px); padding-top: clamp(18px, 3vh, 26px); border-top: 1px solid var(--line); }
@@ -378,7 +375,6 @@ body.locked { overflow: hidden; }
 .pr-partners { list-style: none; padding: 0; margin: 0; display: flex; gap: 8px; }
 .pr-partners li { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 7px 14px; display: grid; place-items: center; height: 60px; min-width: 84px; }
 .pr-partners img { height: 44px; width: auto; max-width: 90px; object-fit: contain; }
-.ch-prod > .next { margin-top: clamp(22px, 3.4vh, 36px); }
 .gf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) auto; align-items: center; gap: 22px clamp(24px, 4vw, 60px); margin-top: clamp(26px, 5vh, 56px); padding: clamp(22px, 3vw, 34px); border-radius: 28px; background: var(--bg); border: 1px solid var(--line); scroll-margin-top: 96px; }
 .gf h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.04em; line-height: .98; font-size: clamp(1.9rem, 3vw, 2.8rem); }
 .gf-t p { margin-top: 10px; color: var(--ink-2); line-height: 1.5; max-width: 40ch; }
@@ -394,7 +390,6 @@ body.locked { overflow: hidden; }
 .pz-own b { color: var(--cream); }
 
 @media (max-width: 960px) {
-  .pr-head { grid-template-columns: 1fr; }
 }
 @media (max-width: 960px) {
   .pr-foot { flex-direction: column; align-items: flex-start; }
@@ -462,14 +457,6 @@ body.locked { overflow: hidden; }
 @media (min-width: 1680px) { html { font-size: 112.5%; } }
 
 /* ---------- Pausa: la sala a tutto schermo ---------- */
-.band { position: relative; height: 86vh; height: 86svh; min-height: 460px; max-height: 980px; overflow: hidden; background: var(--night); color: var(--cream); }
-.band-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; transform: scale(1.1); transition: transform 2.4s var(--ease-out); }
-.band.in .band-img { transform: none; }
-.band::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(22, 16, 12, .25) 0%, rgba(22, 16, 12, 0) 30%, rgba(22, 16, 12, .1) 52%, rgba(22, 16, 12, .82) 100%); }
-.band-t { position: absolute; z-index: 1; left: var(--pad); right: var(--pad); bottom: clamp(36px, 8vh, 90px); }
-.band-q { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.045em; line-height: .95; font-size: clamp(2.4rem, 5.4vw, 5.6rem); max-width: 15ch; text-wrap: balance; }
-.band-s { margin-top: 16px; font-size: 1rem; font-weight: 500; color: rgba(248, 237, 220, .8); }
-@media (prefers-reduced-motion: reduce) { .band-img { transform: none; transition: none; } }
 
 /* ---------- Piè di pagina ---------- */
 .sf { background: var(--night); color: var(--cream); padding: clamp(72px, 12vh, 130px) var(--pad) 28px; }
@@ -493,99 +480,104 @@ body.locked { overflow: hidden; }
 
 /* PC: i passaggi della pizza come indice verticale, ordinato */
 
-/* ---------- Si scorre: la storia sale come un foglio sopra il fuoco, che si abbassa ---------- */
+/* ---------- Si scorre: la pizza sale come un foglio sopra il fuoco, che si abbassa ---------- */
 .hero-fade { position: absolute; inset: 0; z-index: 1; background: #0e0805; opacity: 0; pointer-events: none; will-change: opacity; }
-@media (prefers-reduced-motion: reduce) { .ch-storia { margin-top: 0; border-radius: 0; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .ch-pizza { margin-top: 0; border-radius: 0; box-shadow: none; } }
 
 /* ---------- La pizza da vicino: un palco scuro, la foto che sfuma nel buio, il testo color panna ---------- */
-.build { position: relative; height: 300vh; height: 300svh; margin-top: clamp(14px, 3vh, 34px); }
-.build-stick { position: sticky; top: 0; height: 100vh; height: 100svh; padding: 86px 0 18px; display: flex; }
-.build-stage { position: relative; flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, .74fr) minmax(0, 1.26fr); align-items: center; background: var(--night); color: var(--cream); border-radius: clamp(24px, 3vw, 40px); overflow: hidden; isolation: isolate; transform-origin: 50% 40%; will-change: transform; }
-.build-text { position: relative; z-index: 5; min-width: 0; padding: clamp(28px, 4vw, 64px); padding-right: 0; }
-.build-art { position: absolute; top: 0; right: 0; bottom: 0; width: 68%; }
-.build-frame { position: absolute; inset: 0; overflow: hidden; }
-.build-photo { position: absolute; left: 0; top: 0; max-width: none; transform-origin: 0 0; will-change: transform; }
-.build-pic { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, .5) 10%, #000 26%); mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, .5) 10%, #000 26%); }
-.build-frame::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(0deg, rgba(22, 16, 12, .55), transparent 22%), linear-gradient(180deg, rgba(22, 16, 12, .45), transparent 18%); }
-.build-lens { position: absolute; z-index: 3; left: 0; top: 0; width: 220px; height: 220px; border-radius: 50%; overflow: hidden; opacity: 0; transform-origin: 50% 50%; will-change: transform, opacity; box-shadow: 0 0 0 2px rgba(255, 247, 234, .95), 0 0 0 10px rgba(255, 247, 234, .1), 0 30px 60px -14px rgba(0, 0, 0, .8); background: #1a120d; }
-.build-lens img { position: absolute; left: 0; top: 0; max-width: none; transform-origin: 0 0; will-change: transform; }
-.build-lens::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, .2), transparent 38%), radial-gradient(circle, transparent 62%, rgba(10, 6, 4, .3) 100%); pointer-events: none; }
-.build-tag { position: absolute; z-index: 4; left: 0; top: 0; opacity: 0; will-change: transform, opacity; background: var(--cream); color: var(--ink); font-weight: 600; font-size: .86rem; line-height: 1; padding: 8px 13px; border-radius: 999px; white-space: nowrap; box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .7); pointer-events: none; }
 
 /* elenco fisso: si accende la riga del dettaglio sotto la lente, il testo non si muove mai */
-.build-h { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.045em; line-height: .95; font-size: clamp(2.1rem, 3.2vw, 3.2rem); color: var(--cream); max-width: 9ch; margin-bottom: clamp(20px, 3.5vh, 36px); }
-.build-list { list-style: none; margin: 0; padding: 0; max-width: 40ch; }
-.build-list li { position: relative; padding: clamp(9px, 1.5vh, 14px) 0 clamp(9px, 1.5vh, 14px) 24px; border-top: 1px solid rgba(248, 237, 220, .14); cursor: pointer; opacity: .42; transition: opacity .6s var(--ease-out); }
-.build-list li:last-child { border-bottom: 1px solid rgba(248, 237, 220, .14); }
-.build-list li::before { content: ""; position: absolute; left: 0; top: calc(clamp(9px, 1.5vh, 14px) + .5em); width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid rgba(248, 237, 220, .7); transition: background .5s, transform .5s var(--ease-out); }
-.build-list li:hover { opacity: .75; }
-.build-list li.on, .build-text.done .build-list li { opacity: 1; }
-.build-list li.on::before, .build-text.done .build-list li::before { background: var(--cream); transform: scale(1.15); }
-.build-list b { display: block; font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.03em; font-size: clamp(1.2rem, 1.6vw, 1.45rem); line-height: 1.1; color: var(--cream); }
-.build-list span { display: block; margin-top: 3px; font-size: .94rem; line-height: 1.45; color: rgba(248, 237, 220, .78); }
-.build-list span span { display: inline; margin: 0; }
-.build-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: clamp(20px, 3.5vh, 34px); }
-.build-cta .btn { min-height: 50px; padding: 0 24px; }
-.build-own { color: var(--cream); font-weight: 600; text-underline-offset: 5px; text-decoration-color: rgba(248, 237, 220, .4); }
-.build-own:hover { text-decoration-color: var(--cream); }
-.build.static .build-list li { opacity: 1; cursor: default; }
 @media (max-height: 820px) and (min-width: 961px) {
-  .build-h { font-size: clamp(1.7rem, 2.4vw, 2.2rem); margin-bottom: 12px; max-width: none; }
-  .build-list span { font-size: .88rem; }
-  .build-list b { font-size: 1.12rem; }
-  .build-text { padding-top: 24px; padding-bottom: 24px; }
-  .build-cta { margin-top: 16px; }
-  .build-cta .btn { min-height: 44px; }
 }
 @media (max-width: 1180px) and (min-width: 961px) {
-  .build-stage { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
-  .build-art { width: 60%; }
 }
 @media (max-width: 960px) {
-  .build-text { flex: none; padding: 6px 20px 22px; }
-  .build-cta { display: none; }
-  .build-h { display: none; }
-  .build-list { max-width: none; }
-  .build-list li { padding: 11px 0 11px 20px; display: grid; grid-template-rows: auto 0fr; transition: grid-template-rows .55s var(--ease-out), opacity .5s var(--ease-out); }
-  .build-list li.on { grid-template-rows: auto 1fr; }
-  .build-list li > span { overflow: hidden; min-height: 0; opacity: 0; transition: opacity .35s; }
-  .build-list li.on > span { opacity: 1; transition: opacity .6s var(--ease-out) .12s; }
-  .build.static .build-list li { grid-template-rows: auto 1fr; }
-  .build.static .build-list li > span { opacity: 1; }
-  .build-list li::before { top: calc(11px + .45em); width: 7px; height: 7px; }
-  .build-list b { font-size: 1.12rem; }
-  .build-list span { font-size: .9rem; line-height: 1.4; margin-top: 0; }
-  .build-list li.on > span { padding-top: 4px; }
-  .build-cta { margin-top: 14px; gap: 10px 16px; flex-wrap: nowrap; }
-  .build-cta .btn { min-height: 44px; padding: 0 18px; font-size: .92rem; }
 }
 /* avanzamento e invito a scorrere: si capisce che qui lo scroll guida la scena */
-.build-prog { display: none; position: absolute; z-index: 6; left: clamp(28px, 4vw, 64px); right: clamp(28px, 4vw, 64px); bottom: 22px; height: 2px; border-radius: 2px; background: rgba(248, 237, 220, .14); overflow: hidden; }
-.build-prog i { display: block; height: 100%; background: var(--cream); transform-origin: 0 50%; transform: scaleX(0); will-change: transform; }
-.build-hint { position: absolute; z-index: 6; right: clamp(28px, 4vw, 64px); bottom: 38px; font-size: .86rem; font-weight: 500; color: rgba(248, 237, 220, .7); display: flex; align-items: center; gap: 10px; pointer-events: none; will-change: opacity; }
-.build-hint::after { content: ""; width: 1px; height: 22px; background: linear-gradient(rgba(248, 237, 220, .8), transparent); animation: drip 2.2s var(--ease-out) infinite; transform-origin: top; }
 /* senza animazioni: tutto in vista */
-.build.static { height: auto; }
-.build.static .build-stick { position: static; height: auto; padding: 0; }
-.build.static .build-stage { grid-template-columns: 1fr 1fr; align-items: start; }
-.build.static .build-art { position: relative; width: auto; aspect-ratio: 4 / 3; order: 2; }
-@media (max-width: 1180px) { .build-stick { padding-top: 138px; } }
 @media (max-height: 760px) and (min-width: 961px) {
 }
 /* tablet e telefono: la foto in alto che sfuma nel buio, il testo sotto, sullo stesso palco */
 @media (max-width: 960px) {
-  .build { height: 270vh; height: 270svh; }
-  .build-stick { padding: 114px 0 10px; }
-  .build-stage { display: flex; flex-direction: column; align-items: stretch; border-radius: 28px; margin: 0 calc(-1 * var(--pad) + 10px); }
-  .build-stick { align-items: flex-start; }
-  .build-art { position: relative; flex: none; width: min(100%, calc((100svh - 400px) * 4 / 3)); aspect-ratio: 4 / 3; align-self: center; }
-  .build-pic { -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%); }
-  .build-frame::after { background: linear-gradient(180deg, rgba(22, 16, 12, .4), transparent 16%); }
-  .build-prog { display: none; }
-  .build-hint { left: 14px; right: auto; top: 14px; bottom: auto; font-size: .8rem; padding: 7px 12px; border-radius: 999px; background: rgba(16, 10, 7, .62); }
-  .build-hint::after { display: none; }
-  .build.static .build-stage { display: grid; grid-template-columns: 1fr; margin: 0; }
-  .build.static .build-art { order: 0; }
-  .build.static .build-text { padding: 22px; }
 }
-.build.static .build-art { position: sticky; top: 100px; align-self: start; }
+
+
+/* ---------- 2 · La pizza: sale come un foglio sopra il fuoco ---------- */
+.ch-pizza { z-index: 3; margin-top: -60vh; margin-top: -60svh; padding-top: clamp(40px, 6vh, 64px); background: var(--bg-2) url(../img/grana.png); border-radius: clamp(28px, 4vw, 48px) clamp(28px, 4vw, 48px) 0 0; box-shadow: 0 -40px 80px -30px rgba(10, 6, 4, .55); overflow-x: clip; }
+/* le prove, subito */
+.proof { list-style: none; margin: 0 0 clamp(56px, 9vh, 110px); padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.proof li { display: grid; gap: 3px; padding: 16px 20px; align-content: center; }
+.proof li + li { border-left: 1px solid var(--line); }
+.proof b { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.03em; font-size: clamp(1.15rem, 1.6vw, 1.45rem); line-height: 1.1; }
+.proof li > span { color: var(--ink-2); font-size: .9rem; line-height: 1.35; }
+.pa-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 18px clamp(32px, 6vw, 100px); align-items: end; }
+.pa-head .lead { margin-bottom: .3em; }
+.h3 { font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.045em; line-height: .98; font-size: clamp(2.1rem, 3.6vw, 3.4rem); text-wrap: balance; }
+
+/* la pizza, intera, con i quattro punti */
+.pa { margin-top: clamp(28px, 5vh, 52px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); grid-template-rows: 1fr auto; column-gap: clamp(28px, 4vw, 64px); background: var(--night); color: var(--cream); border-radius: clamp(24px, 3vw, 40px); overflow: hidden; }
+.pa-pic { position: relative; grid-row: 1 / 3; margin: 0; min-width: 0; min-height: clamp(460px, 64vh, 660px); overflow: hidden; }
+.pa-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: filter .6s var(--ease-out), transform 1.6s var(--ease-out); transform: scale(1.04); }
+.pa.in .pa-pic img { transform: none; }
+.pa-pic::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent 70%, rgba(22, 16, 12, .9) 100%); }
+.pa.focus .pa-pic img { filter: brightness(.72) saturate(.9); }
+.pa-pin { position: absolute; z-index: 2; left: var(--x); top: var(--y); width: 38px; height: 38px; margin: -19px 0 0 -19px; border: 0; border-radius: 50%; background: var(--cream); color: var(--ink); font-family: var(--fd), system-ui, sans-serif; font-weight: 700; font-size: 1rem; display: grid; place-items: center; cursor: pointer; box-shadow: 0 0 0 6px rgba(255, 247, 234, .22), 0 10px 24px -8px rgba(0, 0, 0, .7); transform: scale(0); transition: transform .7s var(--ease-out), box-shadow .4s; transition-delay: calc(.5s + var(--o) * .18s); }
+.pa.in .pa-pin { transform: none; }
+.pa.in .pa-pin:hover, .pa.in .pa-pin.on { transform: scale(1.18); transition-delay: 0s; box-shadow: 0 0 0 10px rgba(255, 247, 234, .28), 0 14px 30px -8px rgba(0, 0, 0, .8); }
+.pa-pin:focus-visible { outline: 2px solid var(--cream); outline-offset: 6px; }
+.pa-list { list-style: none; margin: 0; padding: clamp(28px, 4vw, 56px) clamp(24px, 4vw, 56px) 0 0; counter-reset: none; align-self: center; }
+.pa-list li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 14px; padding: clamp(12px, 1.8vh, 18px) 0; border-top: 1px solid rgba(248, 237, 220, .14); cursor: default; transition: opacity .4s var(--ease-out); opacity: 0; transform: translateY(14px); transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); transition-delay: calc(.35s + var(--o) * .12s); }
+.pa-list li:last-child { border-bottom: 1px solid rgba(248, 237, 220, .14); }
+.pa.in .pa-list li { opacity: 1; transform: none; }
+.pa.in.focus .pa-list li { opacity: .45; transition-delay: 0s; }
+.pa.in.focus .pa-list li.on { opacity: 1; }
+.pa-list i { font-style: normal; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid rgba(248, 237, 220, .55); display: grid; place-items: center; font-weight: 700; font-size: .88rem; margin-top: 1px; transition: background .3s, color .3s; }
+.pa-list li.on i { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.pa-list b { display: block; font-family: var(--fd), system-ui, sans-serif; font-weight: var(--fdw); letter-spacing: -.03em; font-size: clamp(1.2rem, 1.6vw, 1.45rem); line-height: 1.15; }
+.pa-list p { margin-top: 4px; font-size: .95rem; line-height: 1.5; color: rgba(248, 237, 220, .78); }
+.pa-list a { color: var(--cream); font-weight: 600; text-underline-offset: 3px; }
+.pa-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; padding: clamp(20px, 3vh, 30px) clamp(24px, 4vw, 56px) clamp(28px, 4vw, 48px) 0; }
+.pa-cta .btn { min-height: 50px; padding: 0 24px; }
+.pa-own { color: var(--cream); font-weight: 600; text-underline-offset: 5px; text-decoration-color: rgba(248, 237, 220, .4); }
+.pa-own:hover { text-decoration-color: var(--cream); }
+
+/* gli impasti, dentro la pizza */
+.ch-pizza .im-grid { margin-top: clamp(64px, 11vh, 130px); scroll-margin-top: 110px; }
+.ch-pizza .im-visual { width: min(100%, 480px); }
+.ch-pizza .im-body .h3 { margin-bottom: 0; }
+.ch-pizza > .pr-foot { margin-top: clamp(48px, 8vh, 90px); }
+.ch-pizza > .next { margin-top: clamp(22px, 3.4vh, 36px); }
+.ch-pizza { padding-bottom: clamp(36px, 6vh, 64px); }
+
+/* senza glutine: il suo spazio, subito dopo */
+.ch-gf { background: var(--bg-2) url(../img/grana.png); padding-top: 0; }
+.ch-gf .gf { margin-top: 0; scroll-margin-top: 110px; }
+
+@media (max-width: 1100px) and (min-width: 961px) {
+  .pa { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+}
+@media (max-width: 960px) {
+  .ch-pizza { padding-top: 26px; }
+  .proof { grid-template-columns: 1fr; margin-bottom: 52px; border-bottom: 0; }
+  .proof li { padding: 12px 2px; grid-template-columns: auto 1fr; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--line); }
+  .proof li + li { border-left: 0; }
+  .proof b { font-size: 1.08rem; white-space: nowrap; }
+  .pa-head { grid-template-columns: 1fr; }
+  .pa { grid-template-columns: 1fr; grid-template-rows: auto; margin-left: calc(-1 * var(--pad) + 10px); margin-right: calc(-1 * var(--pad) + 10px); border-radius: 28px; }
+  .pa-pic { grid-row: auto; min-height: 0; aspect-ratio: 4 / 3; }
+  .pa-pic::after { background: linear-gradient(180deg, transparent 72%, rgba(22, 16, 12, .85) 100%); }
+  .pa-pin { width: 32px; height: 32px; margin: -16px 0 0 -16px; font-size: .9rem; }
+  .pa-list { padding: 6px 20px 0; }
+  .pa-list li { grid-template-columns: 28px minmax(0, 1fr); gap: 12px; }
+  .pa-list i { width: 28px; height: 28px; }
+  .pa-list b { font-size: 1.12rem; }
+  .pa-list p { font-size: .92rem; }
+  .pa-cta { padding: 18px 20px 24px; gap: 10px 18px; }
+  .pa-cta .btn { min-height: 46px; }
+  .ch-pizza .im-grid { margin-top: 64px; }
+  .ch-pizza .im-visual { width: min(76vw, 360px); }
+  .ch-gf { padding-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pa-pin, .pa-list li, .pa-pic img { transform: none !important; opacity: 1 !important; transition: none !important; }
+}

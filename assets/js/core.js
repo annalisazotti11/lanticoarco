@@ -152,12 +152,12 @@
       return { open: true, text: 'Aperto ora, fino alle ' + info.openTo };
     }
     if (days.indexOf(d) >= 0 && m < from) {
-      return { open: false, text: 'Apriamo oggi alle ' + info.openFrom };
+      return { open: false, text: 'Stasera siamo aperti, dalle ' + info.openFrom };
     }
     for (var k = 1; k <= 7; k++) {
       var nd = (d + k) % 7;
       if (days.indexOf(nd) >= 0) {
-        return { open: false, text: 'Chiuso. Riapriamo ' + (k === 1 ? 'domani' : DAYS[nd]) + ' alle ' + info.openFrom };
+        return { open: false, text: (days.indexOf(d) >= 0 ? 'Per stasera abbiamo chiuso. ' : 'Oggi riposo. ') + 'Ci vediamo ' + (k === 1 ? 'domani' : DAYS[nd]) + ' dalle ' + info.openFrom };
       }
     }
     return null;
