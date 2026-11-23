@@ -44,8 +44,11 @@ def get_session():
 DISH_SHAPES = {
     "media-161.webp": ("ellipse", [45, 20, 166, 120]),
     "media-78.webp": ("polygon", [
-        (127, 141), (347, 137), (387, 154), (403, 323),
-        (388, 340), (109, 340), (94, 323), (97, 185),
+        # Contorno del piatto ricontrollato sulla foto originale 500x500.
+        (118, 126), (357, 125), (380, 139), (399, 170),
+        (419, 225), (426, 324), (421, 347), (406, 365),
+        (382, 375), (113, 378), (90, 371), (77, 353),
+        (71, 328), (74, 219), (85, 174), (103, 141),
     ]),
     "media-137.webp": ("polygon", [
         (109, 161), (355, 160), (386, 177), (395, 352),
@@ -133,10 +136,14 @@ def prepare(src: Path, out: Path, session) -> dict:
 
 
 def main():
+    # Una foto per volta: in questo passaggio rifiniamo solo il prosciutto cotto.
+    only_item_id = "i433"
     session = get_session()
     records = []
     changes = {}
     for item_id, original, slug in ITEMS:
+        if item_id != only_item_id:
+            continue
         src = SOURCE / original
         out = DEST / f"{slug}.png"
         if not src.is_file():
@@ -161,7 +168,7 @@ def main():
     MENU.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     DEST.mkdir(parents=True, exist_ok=True)
     AUDIT.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("Preparate 7 fotografie. Verificare tutti i ritagli prima del merge.")
+    print("Foto selezionata preparata. Verificare il ritaglio prima del merge.")
 
 
 if __name__ == "__main__":
