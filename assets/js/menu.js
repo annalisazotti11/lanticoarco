@@ -213,7 +213,6 @@
       box.hidden = true; return;
     }
     var groups = groupsWithContent();
-    if (kioskMode) groups = groups.filter(function(g) { return DATA.sections.some(function(s) { return s.group === g.id && s.visible && s.totem !== false && s.items.some(matches); }); });
     var hasPizza = groups.some(function (g) { return g.id === 'pizze'; });
     var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
     groups = groups.slice().sort(function (a,b) { var x = order.indexOf(a.id), y = order.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
@@ -739,7 +738,7 @@
         if (its[i].offsetParent && r.bottom > line + 8) { anchor = its[i].dataset.item; off = r.top; break; }
       }
       var fa = anchor && findItem(anchor);
-      if (fa) OPEN[fa.sec.id] = true; // la tendina del piatto che stavi guardando resta aperta
+      if (fa) { OPEN[fa.sec.id] = true; if (fa.sec.group !== 'impasti') browseGroup = fa.sec.group; }
     }
     state.tags = []; state.noAllergens = [];
     renderFilters(); applyFilters();
@@ -890,6 +889,7 @@
     });
     if (state.tags.length) { dropHash(); updateFilterUI(); return; }
     if (location.hash === '#crea') { openBuilder(null); return; }
+    if (location.hash === '#g-impasti' && doughSection()) { dropHash(); openSheet($('sheet'), doughsHTML()); return; }
     // #piatto-i554: dal totem, apre il comparto del piatto e la sua scheda
     var pm = location.hash.match(/^#piatto-(.+)$/);
     if (pm) {
