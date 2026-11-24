@@ -642,3 +642,8 @@ html.kiosk.menu-v7 .ex-grid .ex-card .ex-arrow{display:grid!important;width:26px
  html.kiosk.menu-v7 .ex-grid .ex-card,html.kiosk.menu-v7 .ex-grid .ex-card:last-child:nth-child(odd),html.kiosk.menu-v7 .ex-grid .ex-card:last-child:nth-child(4n+1){min-height:88px;grid-template-columns:64px minmax(0,1fr) 22px}
  html.kiosk.menu-v7 .ex-grid .ex-card .ex-photo{width:64px;height:64px}
 }
+
+/* Prevent implicit tracks in the editorial feature stack. */
+html.menu-v7 .ex-special .ex-feature,html.menu-v7 .ex-special .ex-build{grid-column:auto;grid-row:auto}
+html.kiosk.menu-v7 .ex-special .ex-feature{grid-column:auto;grid-row:auto}
+html.menu-v7 .ex-special .ex-feature:focus-visible{outline:3px solid #86452f;outline-offset:3px}
