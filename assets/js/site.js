@@ -20,28 +20,34 @@
 
   document.querySelectorAll('[data-years]').forEach(function (el) { el.textContent = new Date().getFullYear() - 2001; });
 
-  /* ================= Il fuoco: sintetizzato dal nostro forno (volta disegnata, la nostra brace vera, fiamme vere) ================= */
+  /* ================= Il forno: ripresa della brace, senza volta e pavimento sintetici ================= */
   var stick = $('heroStick');
   function isWide() { return stick.clientWidth >= 960; }
   var fireCtl = (function fire() {
     var c = $('fire');
     if (!c) return null;
-    // senza WebGL, o con il movimento ridotto: un fotogramma fermo dello stesso fuoco
-    function still() { c.style.background = '#0e0806 url(' + AA.ROOT + 'assets/video/fuoco-' + (isWide() ? '16' : '9') + '.jpg) center / cover no-repeat'; }
-    function src(name) {
-      var v = document.createElement('video');
-      v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
-      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true'); v.className = 'fire-src';
-      v.innerHTML = '<source src="' + AA.ROOT + 'assets/video/' + name + '.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/' + name + '.mp4" type="video/mp4">';
-      c.parentNode.appendChild(v);
-      return v;
+    var film = $('fireFilm');
+    if (!film || reduce) return null;
+    var started = false, failed = false, requested = false;
+    function reveal() { if (!failed && !film.paused && film.readyState >= 2) c.classList.add('film-ready'); }
+    film.addEventListener('playing', reveal);
+    film.addEventListener('error', function () { failed = true; c.classList.remove('film-ready'); });
+    function load() {
+      if (started) return;
+      started = true;
+      film.muted = true;
+      film.innerHTML = '<source src="' + AA.ROOT + 'assets/video/brace.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/brace.mp4" type="video/mp4">';
+      film.load();
     }
-    if (reduce || !window.FireS) { still(); window.addEventListener('resize', still); return null; }
-    var f = null;
-    // il fuoco un po' a lato: a destra del titolo su PC, leggermente a destra sul telefono
-    try { f = new window.FireS(c, src('brace'), src('fiamma'), function (a) { return a > 1 ? { x: .23, y: .27, s: .6 } : { x: .16, y: .3, s: .42 }; }); } catch (e) { f = null; }
-    if (!f || !f.ok) { still(); window.addEventListener('resize', still); return null; }
-    return { play: function () { f.play(); }, pause: function () { f.pause(); } };
+    return {
+      play: function () {
+        if (failed || requested) return;
+        requested = true; load();
+        var p = film.play();
+        if (p && p.catch) p.catch(function () { if (requested) { requested = false; c.classList.remove('film-ready'); } });
+      },
+      pause: function () { requested = false; if (started) film.pause(); }
+    };
   })();
 
   /* La scena non aggiunge particelle artificiali al filmato del forno. */

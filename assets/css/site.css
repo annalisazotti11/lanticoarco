@@ -631,3 +631,37 @@ body.locked { overflow: hidden; }
   .hero-k, .hero-s, .hero-copy .promo-float { display: none !important; }
   .hero-cta { margin-top: 26px; }
 }
+
+/* Hero v2: un'unica ripresa naturale, con sfondo di riserva e inquadrature responsive. */
+.arch #fire.fire-film {
+  position: absolute; inset: 0; overflow: hidden;
+  transform-origin: 70% 65%;
+  background: #140d09 url("../video/fuoco-16.jpg") center / cover no-repeat;
+}
+.arch #fireFilm {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  object-fit: cover; object-position: center 56%;
+  opacity: 0; transition: opacity .4s ease;
+  filter: saturate(.84) contrast(1.04) brightness(.92);
+}
+.arch .film-ready #fireFilm { opacity: 1; }
+.arch .arch-shade {
+  background: linear-gradient(90deg, rgba(15, 10, 7, .96) 0%, rgba(15, 10, 7, .79) 28%, rgba(15, 10, 7, .22) 64%, transparent 100%),
+    linear-gradient(0deg, rgba(15, 10, 7, .40), transparent 40%, transparent 78%, rgba(15, 10, 7, .25));
+}
+.hero-t { text-shadow: 0 2px 24px rgba(0,0,0,.42); }
+@media (min-width: 960px) {
+  .arch #fireFilm { width: 76%; left: 24%; right: 0; object-position: center 58%; }
+}
+@media (max-width: 959px) {
+  .arch #fire.fire-film { background-image: url("../video/fuoco-9.jpg"); transform-origin: 60% 76%; }
+  .arch #fireFilm { object-position: 57% center; }
+  .arch .arch-shade {
+    background: linear-gradient(180deg, rgba(15,10,7,.72) 0%, rgba(15,10,7,.66) 36%, rgba(15,10,7,.42) 66%, rgba(15,10,7,.2) 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arch #fireFilm { display: none; }
+  .hero.on .hero-t .ln > span { animation: none; transform: none; }
+  .hero.on .hero-cta, .hero.on .hero-status { transition: none; }
+}
