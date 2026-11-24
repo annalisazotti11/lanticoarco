@@ -1,0 +1,17 @@
+[
+  {
+    "source": "img/menu/media-137.webp",
+    "output": "img/menu/antipasti-rifiniti/taralli-scaldatelli.png",
+    "source_size": [
+      500,
+      500
+    ],
+    "output_size": [
+      1024,
+      1024
+    ],
+    "foreground_coverage": 0.3092,
+    "note": "Scontorno automatico da verificare visivamente prima della pubblicazione",
+    "item_id": "i443"
+  }
+]

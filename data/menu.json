@@ -662,7 +662,7 @@
      "allergens": [
       "arachidi"
      ],
-     "image": "img/menu/media-161.webp",
+     "image": "img/menu/antipasti-rifiniti/peperone-crusco-senise.png",
      "frozen": false,
      "available": true,
      "featured": false
@@ -699,7 +699,7 @@
       "senza-lattosio"
      ],
      "allergens": [],
-     "image": "img/menu/media-78.webp",
+     "image": "img/menu/antipasti-rifiniti/prosciutto-cotto.png",
      "frozen": false,
      "available": true,
      "featured": false
@@ -713,7 +713,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "img/menu/media-73.webp",
+     "image": "img/menu/antipasti-rifiniti/prosciutto-crudo-alla-barese.png",
      "frozen": false,
      "available": true,
      "featured": false
@@ -860,7 +860,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "img/menu/media-113.webp",
+     "image": "img/menu/antipasti-rifiniti/tagliere-formaggi-murgiani.png",
      "frozen": false,
      "available": true,
      "featured": false
@@ -890,7 +890,7 @@
       "piccante"
      ],
      "allergens": [],
-     "image": "img/menu/media-99.webp",
+     "image": "img/menu/antipasti-rifiniti/tagliere-salumi-misti.png",
      "frozen": false,
      "available": true,
      "featured": false
@@ -920,7 +920,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-137.webp",
+     "image": "img/menu/antipasti-rifiniti/taralli-scaldatelli.png",
      "frozen": false,
      "available": true,
      "featured": false
@@ -936,7 +936,7 @@
      "allergens": [
       "solfiti"
      ],
-     "image": "img/menu/media-140.webp",
+     "image": "img/menu/antipasti-rifiniti/verdure-miste-sottolio.png",
      "frozen": false,
      "available": true,
      "featured": false
