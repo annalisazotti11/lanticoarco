@@ -1,0 +1,73 @@
+name: Traduci le novità del menù
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/menu.json'
+      - 'data/menu-i18n-baseline.json'
+      - 'scripts/update-menu-translations.py'
+      - '.github/workflows/menu-translations.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '41 */6 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: menu-translations-refresh
+  cancel-in-progress: false
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Read previous public translations
+        id: plan
+        shell: bash
+        run: |
+          if git ls-remote --exit-code --heads origin menu-translations >/dev/null 2>&1; then
+            git fetch origin menu-translations
+            git show FETCH_HEAD:menu-i18n-auto.json > "$RUNNER_TEMP/menu-i18n-previous.json"
+          fi
+          pending=$(python3 scripts/update-menu-translations.py --previous "$RUNNER_TEMP/menu-i18n-previous.json" --output "$RUNNER_TEMP/menu-i18n-auto.json" --plan)
+          echo "pending=$pending" >> "$GITHUB_OUTPUT"
+          if [ -f "$RUNNER_TEMP/menu-i18n-previous.json" ]; then echo "first=false" >> "$GITHUB_OUTPUT"; else echo "first=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-python@v5
+        if: steps.plan.outputs.pending != '0' || steps.plan.outputs.first == 'true'
+        with:
+          python-version: '3.11'
+      - uses: actions/cache@v4
+        if: steps.plan.outputs.pending != '0' || steps.plan.outputs.first == 'true'
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.cache/stanza
+            ~/.cache/pip
+          key: argos-menu-italian-v1
+      - name: Install offline translation engine
+        if: steps.plan.outputs.pending != '0' || steps.plan.outputs.first == 'true'
+        run: python -m pip install 'argostranslate==1.11.1'
+      - name: Translate only new text
+        shell: bash
+        run: |
+          extra=()
+          if [ "${{ steps.plan.outputs.first }}" = "true" ]; then extra+=(--self-test); fi
+          python3 scripts/update-menu-translations.py --previous "$RUNNER_TEMP/menu-i18n-previous.json" --output "$RUNNER_TEMP/menu-i18n-auto.json" --source-sha "$(git rev-parse HEAD)" "${extra[@]}"
+      - name: Publish public translation cache
+        shell: bash
+        run: |
+          git config user.name "L'Antico Arco Translations"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin menu-translations >/dev/null 2>&1; then
+            git fetch origin menu-translations
+            git switch --detach FETCH_HEAD
+          else
+            git switch --orphan menu-translations
+          fi
+          cp "$RUNNER_TEMP/menu-i18n-auto.json" menu-i18n-auto.json
+          git add menu-i18n-auto.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Aggiorna traduzioni incrementali del menu"
+          git push origin HEAD:refs/heads/menu-translations

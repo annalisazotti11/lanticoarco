@@ -7,3 +7,8 @@ html.kiosk.kiosk-v11 .aa-language{min-height:56px;padding:0 12px;margin-left:0}
 html.kiosk.kiosk-v11 .aa-language select{font-size:.87rem;min-height:54px;max-width:150px}
 @media(max-width:700px){.aa-language{gap:3px;padding:0 5px}.aa-language select{width:58px;max-width:58px;font-size:.75rem}.aa-language svg{width:17px;height:17px}html.kiosk.kiosk-v11 .aa-language{min-height:44px;padding:0 5px}html.kiosk.kiosk-v11 .aa-language select{width:65px;min-height:42px;font-size:.76rem}}
 @media(max-width:390px){html:not(.kiosk) .top{padding-inline:8px;gap:4px}.aa-language svg{display:none}.aa-language select{width:55px}.top-logo{max-width:84px}.top-logo img{max-width:100%;object-fit:contain}}
+
+html.menu-v5:lang(en) #filterBtn::after{content:"Filters"}
+html.menu-v5:lang(fr) #filterBtn::after{content:"Filtres"}
+html.menu-v5:lang(es) #filterBtn::after{content:"Filtros"}
+html.menu-v5:lang(de) #filterBtn::after{content:"Filter"}
