@@ -203,6 +203,7 @@
     if (!box || new URLSearchParams(location.search).has('totem')) return;
     clear.hidden = !$('q').value;
     result.hidden = !filtering();
+    $('promos').hidden = filtering() || !AA.activePromos(DATA, 'menu').length;
     if (filtering()) {
       var n = DATA.sections.filter(function (s) { return s.visible; }).reduce(function (sum, s) { return sum + s.items.filter(matches).length; }, 0);
       result.textContent = n === 1 ? '1 voce corrispondente' : n + ' voci corrispondenti';
@@ -781,6 +782,10 @@
   function bind() {
     var t;
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
+    if ($('menuFind')) $('menuFind').addEventListener('click', function () {
+      window.scrollTo({top: 0, behavior: 'instant'});
+      $('q').focus({preventScroll: true});
+    });
     if ($('qClear')) $('qClear').addEventListener('click', function () { clearTimeout(t); $('q').value = ''; state.q = ''; render(); $('q').focus(); });
     if ($('menuExplore')) $('menuExplore').addEventListener('click', function (e) {
       if (e.target.closest('[data-ex-dough]') && doughSection()) openSheet($('sheet'), doughsHTML());

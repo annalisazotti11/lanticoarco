@@ -98,3 +98,8 @@ html:not(.kiosk) .promo-t{white-space:normal;overflow:visible;text-overflow:clip
 html:not(.kiosk) .promo>div{min-width:0}
 @media(min-width:760px){html:not(.kiosk) .ex-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}html:not(.kiosk) .ex-card{grid-template-rows:126px 1fr;min-height:184px}html:not(.kiosk) .ex-copy strong{font-size:1.02rem}}
 @media(max-width:360px){html:not(.kiosk) .ex-card{grid-template-rows:86px 1fr;min-height:149px}html:not(.kiosk) .ex-copy{padding-left:9px}html:not(.kiosk) .ex-copy strong{font-size:.87rem}html:not(.kiosk) .ex-arrow{width:18px;margin-right:5px}html:not(.kiosk) .ex-alert{padding:8px;gap:7px}}
+
+/* V2.1 — ricerca accessibile anche quando si consulta una categoria. */
+html.kiosk .menu-find{display:none!important}
+html:not(.kiosk) .menu-find{background:#fbf7f1;border-color:#d8c6b1}
+html:not(.kiosk) .searchbar input:focus{scroll-margin-top:calc(var(--menu-top) + 16px)}
