@@ -446,7 +446,7 @@
 
   /* ================= Capitoli in alto: dove sei e quanto manca ================= */
   (function chapters() {
-    var ids = ['pizza', 'senza-glutine', 'pizze', 'storia', 'vieni'];
+    var ids = ['pizza', 'senza-glutine', 'pizze', 'storia', 'album', 'vieni'];
     var els = ids.map(function (id) { return $(id); });
     if (els.some(function (e) { return !e; })) return;
     var links = {};
@@ -652,4 +652,19 @@
  function request(){if(!raf)raf=requestAnimationFrame(paint)}
  addEventListener('scroll',request,{passive:true});addEventListener('resize',request);addEventListener('pageshow',request);if(mq.addEventListener)mq.addEventListener('change',request);
  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(request);request();
+})();
+
+/* V16: native swipe rail and a local image lightbox. */
+(function(){
+ var rail=document.getElementById('albumRail'),dialog=document.getElementById('albumDialog');if(!rail||!dialog)return;
+ var prev=document.getElementById('albumPrev'),next=document.getElementById('albumNext'),full=document.getElementById('albumFull'),caption=document.getElementById('albumCaption'),fp=document.getElementById('fullPrev'),fn=document.getElementById('fullNext'),cards=Array.from(rail.querySelectorAll('[data-album-photo]')),current=0,lastFocus=null,mq=matchMedia('(prefers-reduced-motion: reduce)'),pending=false;
+ function clamp(v){return Math.max(0,Math.min(1,v))}
+ function paint(){pending=false;var max=Math.max(0,rail.scrollWidth-rail.clientWidth),p=max?clamp(rail.scrollLeft/max):0,thumb=Math.min(1,rail.clientWidth/Math.max(1,rail.scrollWidth));rail.parentElement.style.setProperty('--album-thumb',(thumb*100)+'%');rail.parentElement.style.setProperty('--album-offset',(thumb?((1-thumb)*p/thumb)*100:0)+'%');prev.disabled=rail.scrollLeft<=2;next.disabled=rail.scrollLeft>=max-2;var vh=innerHeight;cards.forEach(function(card,i){var r=card.getBoundingClientRect(),q=mq.matches?1:clamp((vh*.96-r.top)/(vh*.35)-Math.min(i*.06,.2));card.style.setProperty('--album-reveal',q.toFixed(3))})}
+ function request(){if(!pending){pending=true;requestAnimationFrame(paint)}}
+ function scroll(d){rail.scrollBy({left:d*(cards[0].offsetWidth+16),behavior:mq.matches?'auto':'smooth'})}
+ prev.addEventListener('click',function(){scroll(-1)});next.addEventListener('click',function(){scroll(1)});rail.addEventListener('scroll',request,{passive:true});
+ function show(i){current=Math.max(0,Math.min(cards.length-1,i));var img=cards[current].querySelector('img');full.src=img.currentSrc||img.src;full.alt=img.alt;caption.textContent=img.alt;fp.disabled=current===0;fn.disabled=current===cards.length-1}
+ rail.addEventListener('click',function(e){var btn=e.target.closest('[data-photo]');if(!btn)return;lastFocus=btn;show(Number(btn.dataset.photo));if(dialog.showModal)dialog.showModal();else window.open(full.src,'_blank','noopener')});
+ dialog.querySelector('.v16-close').addEventListener('click',function(){dialog.close()});dialog.addEventListener('click',function(e){if(e.target===dialog)dialog.close()});dialog.addEventListener('close',function(){if(lastFocus)lastFocus.focus({preventScroll:true})});fp.addEventListener('click',function(){show(current-1)});fn.addEventListener('click',function(){show(current+1)});dialog.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();show(current+(e.key==='ArrowLeft'?-1:1))}});
+ rail.parentElement.classList.add('v16-motion');addEventListener('scroll',request,{passive:true});addEventListener('resize',request);paint();
 })();
