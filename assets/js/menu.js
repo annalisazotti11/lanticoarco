@@ -201,6 +201,7 @@
   function renderExplore() {
     var box = $('menuExplore'), result = $('menuResults'), clear = $('qClear');
     if (!box || new URLSearchParams(location.search).has('totem')) return;
+    if ($('menuIndex')) $('menuIndex').hidden = filtering();
     clear.hidden = !$('q').value;
     result.hidden = !filtering();
     $('promos').hidden = filtering() || !AA.activePromos(DATA, 'menu').length;
@@ -216,7 +217,8 @@
     var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var cards = groups.map(function (g) {
       var sections = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
-      var subtitle = g.id === 'impasti' ? 'Scegli il tuo impasto' : sections.length > 1 ? sections.length + ' categorie' : '';
+      var count = sections.reduce(function (sum, s) { return sum + s.items.filter(matches).length; }, 0);
+      var subtitle = g.id === 'impasti' ? count + ' impasti' : count + (count === 1 ? ' proposta' : ' proposte');
       var photo = g.image || '';
       var art = photo ? '<span class="ex-photo"><img src="' + esc(AA.src(photo)) + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="ex-photo ex-none">' + AA.archSVG() + '</span>';
       var contents = art + '<span class="ex-copy"><strong>' + esc(g.name) + '</strong>' + (subtitle ? '<small>' + esc(subtitle) + '</small>' : '') + '</span><span class="ex-arrow">' + arrow + '</span>';
@@ -782,9 +784,26 @@
   function bind() {
     var t;
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
+    if ($('menuIndex')) $('menuIndex').addEventListener('click', function () {
+      var ex = $('menuExplore');
+      if (ex && !ex.hidden) {
+        var top = $('top').getBoundingClientRect().height;
+        window.scrollTo({top: Math.max(0, window.scrollY + ex.getBoundingClientRect().top - top - 8), behavior: reduceMotion() ? 'auto' : 'smooth'});
+      }
+    });
     if ($('menuFind')) $('menuFind').addEventListener('click', function () {
       window.scrollTo({top: 0, behavior: 'instant'});
       $('q').focus({preventScroll: true});
+    });
+    $('q').addEventListener('keydown', function (e) {
+      if (new URLSearchParams(location.search).has('totem') || e.key !== 'Enter') return;
+      e.preventDefault(); clearTimeout(t); state.q = $('q').value.trim(); render();
+      if (state.q) {
+        $('q').blur();
+        var nav = $('gnav'), target = nav.hidden ? $('contenuto') : nav;
+        var offset = $('top').getBoundingClientRect().height;
+        window.scrollTo({top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - offset), behavior: reduceMotion() ? 'auto' : 'smooth'});
+      }
     });
     if ($('qClear')) $('qClear').addEventListener('click', function () { clearTimeout(t); $('q').value = ''; state.q = ''; render(); $('q').focus(); });
     if ($('menuExplore')) $('menuExplore').addEventListener('click', function (e) {
