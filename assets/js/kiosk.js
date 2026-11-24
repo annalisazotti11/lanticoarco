@@ -20,8 +20,8 @@
     // la pagina è larga quanto lo schermo diviso l'ingrandimento: così, ingrandita, lo riempie senza uscire
     root.style.width = z === 1 ? '' : (window.innerWidth / z).toFixed(1) + 'px';
   }
-  scale();
-  window.addEventListener('resize', scale);
+  // V5: layout touch nativo; niente zoom artificiale della pagina.
+  if (!root.classList.contains('menu-v5')) { scale(); window.addEventListener('resize', scale); }
 
   // i link che porterebbero fuori dal menu (sito, privacy, telefono, mappe) non si aprono
   document.addEventListener('click', function (e) {
@@ -30,7 +30,7 @@
     var h = a.getAttribute('href');
     if (h.charAt(0) === '#' || a.hasAttribute('data-open-builder')) return;
     e.preventDefault();
-    if (a.classList.contains('top-logo')) toTop();
+    if (a.classList.contains('top-logo')) { var index = document.getElementById('menuIndex'); if (index && !index.hidden) index.click(); else toTop(); }
   }, true);
   document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
@@ -39,7 +39,7 @@
   // "Inizio" riporta sempre allo schermo con le categorie; la freccia torna in cima, e compare scorrendo
   var home = document.createElement('button');
   home.type = 'button'; home.className = 'k-home';
-  home.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Inizio';
+  home.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Cartellone';
   home.onclick = function () { location.href = '../totem/'; };
   document.body.appendChild(home);
   var up = document.createElement('button');

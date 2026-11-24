@@ -9,6 +9,8 @@
   var NUMW = ['zero', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci', 'undici', 'dodici'];
   var DATA = null;
   var state = { q: '', tags: [], noAllergens: [] };
+  var browseGroup = null; // indice, singola categoria o ricerca globale
+  var kioskMode = new URLSearchParams(location.search).has('totem');
   var $ = function (id) { return document.getElementById(id); };
 
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
@@ -19,7 +21,7 @@
   function matches(item) {
     if (item.available === false) return false;
     if (state.tags.length && !state.tags.every(function (t) { return hasTag(item, t); })) return false;
-    if (state.noAllergens.length && (item.allergens || []).some(function (a) { return state.noAllergens.indexOf(a) >= 0; })) return false;
+    if (state.noAllergens.length && (!(item.allergens || []).length || (item.allergens || []).some(function (a) { return state.noAllergens.indexOf(a) >= 0; }))) return false;
     if (state.q) {
       var hay = norm(item.name + ' ' + item.desc + ' ' + item.note);
       return norm(state.q).split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
@@ -200,8 +202,8 @@
   /* Indice fotografico: usa esclusivamente categorie e immagini del menu pubblicato. */
   function renderExplore() {
     var box = $('menuExplore'), result = $('menuResults'), clear = $('qClear');
-    if (!box || new URLSearchParams(location.search).has('totem')) return;
-    if ($('menuIndex')) $('menuIndex').hidden = filtering();
+    if (!box) return;
+    if ($('menuIndex')) $('menuIndex').hidden = false;
     clear.hidden = !$('q').value;
     result.hidden = !filtering();
     $('promos').hidden = filtering() || !AA.activePromos(DATA, 'menu').length;
@@ -211,6 +213,7 @@
       box.hidden = true; return;
     }
     var groups = groupsWithContent();
+    if (kioskMode) groups = groups.filter(function(g) { return DATA.sections.some(function(s) { return s.group === g.id && s.visible && s.totem !== false && s.items.some(matches); }); });
     var hasPizza = groups.some(function (g) { return g.id === 'pizze'; });
     var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
     groups = groups.slice().sort(function (a,b) { var x = order.indexOf(a.id), y = order.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
@@ -231,6 +234,28 @@
     box.hidden = !groups.length;
   }
 
+  function applyBrowse() {
+    var search = filtering(), home = !search && !browseGroup;
+    document.body.dataset.menuView = search ? 'search' : home ? 'index' : 'category';
+    $('menuExplore').hidden = !home || !$('menuExplore').childElementCount;
+    $('promos').hidden = !home || !AA.activePromos(DATA, 'menu').length;
+    $('gnav').hidden = home || !$('gnavIn').childElementCount;
+    $('contenuto').hidden = home;
+    $('contenuto').querySelectorAll('.grp').forEach(function(g) { g.hidden = !search && !home && g.id !== 'g-' + browseGroup; });
+    if ($('menuIndex')) $('menuIndex').hidden = home;
+    if (browseGroup && !search) { spySet(browseGroup); renderSub(browseGroup); }
+  }
+  function goIndex() {
+    browseGroup = null; state.q = ''; state.tags = []; state.noAllergens = [];
+    $('q').value = ''; dropHash(); updateFilterUI(); render();
+    try { history.replaceState(null, '', location.pathname + location.search); } catch(e) {}
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  function chooseGroup(id) {
+    browseGroup = id; applyBrowse();
+    if (!filtering()) { spySet(id); renderSub(id); }
+  }
+
   var SUBS = {};   // per ogni gruppo: le sue sottocategorie (seconda fila della barra)
   function render() {
     var html = filtering() ? '' : allergensHTML(), nav = filtering() ? '' : '<a href="#g-allergeni" data-g="allergeni">Allergeni</a>';
@@ -249,7 +274,7 @@
       SUBS[g.id] = false && secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
     });
     var hasDishes = html.indexOf('class="grp" id="g-') >= 0;
-    $('contenuto').innerHTML = hasDishes ? html : '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
+    $('contenuto').innerHTML = hasDishes || (!filtering() && browseGroup === 'allergeni') ? html : '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
     $('gnavIn').innerHTML = nav;
     var af = $('algFilter'); if (af) af.onclick = function () { $('filterBtn').click(); };
     $('gnavF').innerHTML = filterChip();
@@ -257,7 +282,7 @@
     $('gnav').classList.toggle('has-f', nFilters() > 0);
     $('gnav').hidden = !nav;
     subCur = null; subGrp = null;
-    renderExplore(); spy(); reveal();
+    renderExplore(); applyBrowse(); spy(); reveal();
   }
   /* Seconda fila: le sottocategorie del gruppo che stai guardando */
   var subGrp = null, subCur = null;
@@ -308,7 +333,9 @@
   function spyCalc() {
     spyRaf = 0;
     if (spyLock) return;
-    var grps = document.querySelectorAll('#contenuto .grp'); if (!grps.length) return;
+    if ($('contenuto').hidden) return;
+    if (!filtering() && browseGroup) { spySet(browseGroup); renderSub(browseGroup); return; }
+    var grps = document.querySelectorAll('#contenuto .grp:not([hidden])'); if (!grps.length) return;
     var line = spyLine(), id = grps[0].id.slice(2);
     grps.forEach(function (g) { if (g.getBoundingClientRect().top <= line) id = g.id.slice(2); });
     // in fondo alla pagina le ultime categorie non arrivano sotto la barra: vale l'ultima visibile
@@ -337,6 +364,7 @@
         var el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
         e.preventDefault();
         var grp = el.classList.contains('grp') ? el : el.closest('.grp'), id = grp ? grp.id.slice(2) : '';
+        if (id && !filtering()) chooseGroup(id);
         spySet(id); renderSub(id); var fs = el.classList.contains('grp') ? el.querySelector('.sec') : el; if (fs) setSub(fs.id); spyLock = id;
         clearTimeout(spyLockT); spyLockT = setTimeout(function () { spyLock = null; spyCalc(); }, 1200);
         // la barra a fine corsa sta ferma in alto: conta la sua posizione finale, non quella di adesso
@@ -386,7 +414,7 @@
       (it.tags && it.tags.length ? '<div class="item-meta">' + tagsHTML(it.tags) + '</div>' : '') +
       (algs.length ? '<h3 class="d-h">Allergeni</h3><ul class="d-algs">' + algs.map(function (a) {
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
-      }).join('') + '</ul>' : '') +
+      }).join('') + '</ul>' : '<p class="d-note">Allergeni: informazioni da confermare con il personale.</p>') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
       (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza</button>'
         : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
@@ -785,11 +813,7 @@
     var t;
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
     if ($('menuIndex')) $('menuIndex').addEventListener('click', function () {
-      var ex = $('menuExplore');
-      if (ex && !ex.hidden) {
-        var top = $('top').getBoundingClientRect().height;
-        window.scrollTo({top: Math.max(0, window.scrollY + ex.getBoundingClientRect().top - top - 8), behavior: reduceMotion() ? 'auto' : 'smooth'});
-      }
+      clearTimeout(t); goIndex();
     });
     if ($('menuFind')) $('menuFind').addEventListener('click', function () {
       window.scrollTo({top: 0, behavior: 'instant'});
@@ -851,11 +875,15 @@
     });
     var tagHash = location.hash.slice(1);
     if (tagHash && AA.TAG_BY_CODE[tagHash]) { state.tags = [tagHash]; }
+    else if (tagHash.indexOf('g-') === 0) { browseGroup = tagHash.slice(2); if (!DATA.groups.some(function(g){return g.id === browseGroup;}) && browseGroup !== 'allergeni') browseGroup = null; if (browseGroup === 'impasti') browseGroup = null; }
+    else if (tagHash.indexOf('piatto-') === 0) { var found = findItem(decodeURIComponent(tagHash.slice(7))); if (found && found.sec.group !== 'impasti') browseGroup = found.sec.group; }
+    else { var linked = DATA.sections.filter(function(s){return s.id === tagHash && s.visible;})[0]; if (linked && linked.group !== 'impasti') { browseGroup = linked.group; OPEN[linked.id] = true; } }
     renderHeader(); render(); renderFooter(); bind(); bindBuilder();
     // un link a #senza-glutine (o a un altro filtro) mentre sei già nel menu
     window.addEventListener('hashchange', function () {
       var h = location.hash.slice(1);
       if (!h || !AA.TAG_BY_CODE[h]) return;
+      browseGroup = null;
       state.tags = [h]; state.noAllergens = [];
       renderFilters(); applyFilters();
       window.scrollTo(0, 0);
