@@ -194,7 +194,7 @@
     var info = DATA.info, c = cfg();
     $('tvSub').textContent = 'Cellamare, dal ' + (info.since || 2001);
     document.body.classList.toggle('tema-scuro', c.theme === 'scuro');
-    var url = (DATA.settings && DATA.settings.menuUrl) || new URL('../menu/', location.href).href;
+    var url = (DATA.settings && DATA.settings.menuUrl) || 'https://annalisazotti11.github.io/lanticoarco/menu/';
     if (c.showQr && url && window.qrcode) {
       $('tvQrCode').innerHTML = AA.qrSVG(url, { margin: 1 });
       $('tvQr').hidden = false;
@@ -359,7 +359,7 @@
   /* ---------- Interazione (schermo touch) ----------
      Con lo schermo touch il cartellone fa da attesa: un tocco apre il menu da sfogliare,
      sulla categoria che si stava guardando. Senza touch, i tocchi sfogliano le pagine. */
-  function openMenu(group) { location.href = '../menu/?totem' + (group ? '#g-' + encodeURIComponent(group) : ''); }
+  function openMenu(group) { location.href = '../menu/index.html?totem' + (group ? '#g-' + encodeURIComponent(group) : ''); }
   $('groups').addEventListener('click', function (e) {
     var b = e.target.closest('button');
     if (!b) return;
@@ -373,7 +373,7 @@
     if (!ATTRACT || e.target.closest('#fs')) return;
     var on = stage.querySelector('.car-s.on');
     var it = e.target.closest('.car') && on && on.dataset.item;
-    location.href = '../menu/?totem' + (it ? '#piatto-' + encodeURIComponent(it) : '');
+    location.href = '../menu/index.html?totem' + (it ? '#piatto-' + encodeURIComponent(it) : '');
   });
   stage.addEventListener('pointerup', function (e) {
     if (ATTRACT) { sx = null; return; }
