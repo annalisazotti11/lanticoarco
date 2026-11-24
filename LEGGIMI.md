@@ -1,0 +1,1 @@
+Anteprima autonoma pubblica del menu V4 (non totem), con codice effettivo e dati dello snapshot 6eb61413da9cb1dd4fd8f3bcc7f12292e3d15f4a. Scaricare l'HTML e aprirlo in un browser. Immagini delle categorie incorporate; altre fotografie e font dal sito pubblico. Nessuna pubblicazione.
