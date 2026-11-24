@@ -40,7 +40,7 @@
   var home = document.createElement('button');
   home.type = 'button'; home.className = 'k-home';
   home.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Cartellone';
-  home.onclick = function () { location.href = '../totem/'; };
+  home.onclick = function () { if(window.AAKiosk11)window.AAKiosk11.requestExit();else location.href = '../totem/'; };
   document.body.appendChild(home);
   var up = document.createElement('button');
   up.type = 'button'; up.className = 'k-up'; up.hidden = true; up.setAttribute('aria-label', 'Torna su');
@@ -64,8 +64,10 @@
   // dopo un po' senza tocchi torna al cartellone
   var t = null;
   function wake() { clearTimeout(t); t = setTimeout(function () { location.href = '../totem/'; }, IDLE); }
-  ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll', 'input'].forEach(function (ev) { window.addEventListener(ev, wake, { passive: true, capture: true }); });
-  wake();
+  if (!root.classList.contains('kiosk-v11')) {
+    ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll', 'input'].forEach(function (ev) { window.addEventListener(ev, wake, { passive: true, capture: true }); });
+    wake();
+  }
 
   // schermo sempre acceso
   function keepAwake() {

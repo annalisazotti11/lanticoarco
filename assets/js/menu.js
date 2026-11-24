@@ -10,7 +10,9 @@
   var DATA = null;
   var state = { q: '', tags: [], noAllergens: [] };
   var browseGroup = null; // indice, singola categoria o ricerca globale
-  var kioskMode = new URLSearchParams(location.search).has('totem');
+  var kioskParams = new URLSearchParams(location.search);
+  var kioskV11 = kioskParams.has('totem') && kioskParams.has('v11');
+  if (kioskV11) document.documentElement.classList.add('kiosk-v11');
   var $ = function (id) { return document.getElementById(id); };
 
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
@@ -62,7 +64,18 @@
     var note = String(it.note || '').match(/^Senza glutine\s*\+\s*€\s*(\d+(?:[,.]\d+)?)$/i);
     return note ? {label:'Senza glutine',price:Number(note[1].replace(',','.'))} : null;
   }
+  function kioskSelectable(sec) { return sec.group !== 'impasti' && sec.group !== 'aggiunte'; }
+  function kioskCard(it,sec) {
+    var formats = it.prices || [], known = formats.map(function(p){return p.price;}).filter(function(p){return p !== null && p !== '' && Number.isFinite(Number(p));}).map(Number);
+    var p = formats.length ? (known.length ? 'Da ' + AA.price(Math.min.apply(null,known)) : 'Da confermare') : knownPrice(it) ? AA.price(unitPrice(it)) : 'Da confermare';
+    var badges = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags);
+    var image = it.image ? '<img src="' + esc(AA.src(it.image)) + '" alt="" loading="lazy" decoding="async">' : '<span class="k11-ph-empty" aria-hidden="true">' + AA.archSVG() + '</span>';
+    var action = canChooseExtras(sec) ? '<button class="k11-card-action" type="button" data-open-builder="' + esc(it.id) + '" aria-label="' + (sec.group === 'pizze' ? 'Personalizza ' : 'Aggiunte per ') + esc(it.name) + '">' + (sec.group === 'pizze' ? 'Personalizza' : 'Aggiunte') + ' <span aria-hidden="true">+</span></button>' :
+      '<button class="k11-card-action" type="button" data-item="' + esc(it.id) + '" aria-label="Scegli ' + esc(it.name) + '">' + (formats.length || (sec.supplements || []).length || itemVariant(it) ? 'Scegli opzioni' : 'Dettagli e selezione') + ' <span aria-hidden="true">›</span></button>';
+    return '<li class="item k11-product"><button type="button" data-item="' + esc(it.id) + '" class="k11-product-open"><span class="k11-product-photo">' + image + '</span><span class="k11-product-copy"><strong>' + hl(it.name) + (it.frozen ? ' *' : '') + '</strong>' + (badges ? '<span class="k11-product-tags">' + badges + '</span>' : '') + '<span class="k11-product-price"><b class="num">' + p + '</b><small>' + (needsAllergenReview(it) ? 'Allergeni da verificare' : 'Ingredienti e allergeni') + '</small></span></span></button>' + action + '</li>';
+  }
   function itemHTML(it, sec) {
+    if (kioskV11 && kioskSelectable(sec)) return kioskCard(it,sec);
     var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags);
     var algs = algsHTML(it);
     return '<li class="item' + (canChooseExtras(sec) ? ' item-pizza' : '') + '"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
@@ -252,12 +265,30 @@
     box.hidden = !groups.length;
   }
 
+  function kioskNavigation() {
+    var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
+    var available = groupsWithContent().map(function(g){return g.id;});
+    var html = '<button type="button" class="k11-nav-home" data-k11-home aria-label="Categorie iniziali"><span aria-hidden="true">⌂</span><b>Inizio</b></button>';
+    order.forEach(function(id) {
+      var g = DATA.groups.filter(function(g){return g.id===id;})[0]; if (!g) return;
+      var label = '<span class="k11-side-photo">' + (g.image ? '<img src="' + esc(AA.src(g.image)) + '" alt="" loading="lazy">' : AA.archSVG()) + '</span><b>' + esc(g.name) + '</b>';
+      if (id === 'impasti' && !filtering()) html += '<button type="button" data-k11-dough>' + label + '</button>';
+      else if (available.indexOf(id) >= 0) html += '<a href="#g-' + esc(id) + '" data-g="' + esc(id) + '">' + label + '</a>';
+      else html += '<button type="button" disabled>' + label + '</button>';
+    });
+    return html + '<button type="button" data-k11-allergens><span class="k11-side-photo k11-side-icon" aria-hidden="true">i</span><b>Allergeni</b></button>';
+  }
   function applyBrowse() {
     var search = filtering(), home = !search && !browseGroup;
     document.body.dataset.menuView = search ? 'search' : home ? 'index' : 'category';
     $('menuExplore').hidden = !home || !$('menuExplore').childElementCount;
     $('promos').hidden = !home || !AA.activePromos(DATA, 'menu').length;
-    $('gnav').hidden = home || !$('gnavIn').childElementCount;
+    $('gnav').hidden = !kioskV11 && (home || !$('gnavIn').childElementCount);
+    if (kioskV11) {
+      $('gnavSub').hidden = home;
+      var homeBtn = $('gnavIn').querySelector('[data-k11-home]'); if (homeBtn) homeBtn.setAttribute('aria-current',home ? 'true' : 'false');
+      if (home) spySet(null);
+    }
     $('contenuto').hidden = home;
     $('contenuto').querySelectorAll('.grp').forEach(function(g) { g.hidden = !search && !home && g.id !== 'g-' + browseGroup; });
     if ($('menuIndex')) $('menuIndex').hidden = home;
@@ -282,23 +313,23 @@
       if (g.id === 'impasti' && !filtering()) return;
       var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
       var common = commonSupp(secs);
-      var inner = secs.map(function (s) { return sectionHTML(s, !common.length, secs.length > 1); }).join('');
+      var inner = secs.map(function (s) { return sectionHTML(s, !common.length, secs.length > 1 && !kioskV11); }).join('');
       if (!inner) return;
       var top = '';
       if (g.id === 'pizze' && !filtering()) top += doughStrip();
       if (false && common.length && !filtering()) top += '<p class="gsupp"><b>Su ogni pizza</b> ' + common.map(function (x) { return esc(x.label.toLowerCase()) + ' <span class="num">' + AA.price(x.price, { signed: true }) + '</span>'; }).join(' · ') + '. Le altre varianti le trovi in “Personalizza”, nella scheda di ogni pizza.</p>';
       html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + top + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
-      SUBS[g.id] = false && secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
+      SUBS[g.id] = kioskV11 && secs.length > 1 ? { secs: secs.map(function (s) { return [s.id, shortSec(s.name)]; }) } : { line: (secs[0] && secs[0].subtitle) || '' };
     });
     var hasDishes = html.indexOf('class="grp" id="g-') >= 0;
     $('contenuto').innerHTML = hasDishes || (!filtering() && browseGroup === 'allergeni') ? html : '<p class="empty">Nessun piatto corrisponde. Prova con un\'altra parola o azzera i filtri.</p>';
-    $('gnavIn').innerHTML = nav;
+    $('gnavIn').innerHTML = kioskV11 ? kioskNavigation() : nav;
     var af = $('algFilter'); if (af) af.onclick = function () { $('filterBtn').click(); };
     $('gnavF').innerHTML = filterChip();
     $('gnavF').hidden = !nFilters();
     $('gnav').classList.toggle('has-f', nFilters() > 0);
-    $('gnav').hidden = !nav;
+    $('gnav').hidden = !kioskV11 && !nav;
     subCur = null; subGrp = null;
     renderExplore(); applyBrowse(); spy(); reveal();
   }
@@ -340,19 +371,19 @@
   /* Categoria visibile nella barra: è quella che sta subito sotto la barra, non quella a metà schermo.
      Toccando una voce la scelta resta ferma finché la pagina non ha finito di scorrere. */
   var spyCur = null, spyLock = null, spyLockT = null, spyRaf = 0, spyBound = false;
-  function spyLine() { var n = $('gnav'); return (n && !n.hidden ? n.getBoundingClientRect().bottom : 70) + 16; }
+  function spyLine() { if (kioskV11) return $('top').offsetHeight + ($('gnavSub').hidden ? 0 : $('gnavSub').offsetHeight) + 12; var n = $('gnav'); return (n && !n.hidden ? n.getBoundingClientRect().bottom : 70) + 16; }
   function spySet(id) {
     if (id === spyCur) return;
     spyCur = id;
     var nav = $('gnavIn'), a = null;
     nav.querySelectorAll('a').forEach(function (x) { var on = x.dataset.g === id; x.setAttribute('aria-current', on ? 'true' : 'false'); if (on) a = x; });
-    if (a) nav.scrollTo({ left: a.offsetLeft - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' });
+    if (a && !kioskV11) nav.scrollTo({ left: a.offsetLeft - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' });
   }
   function spyCalc() {
     spyRaf = 0;
     if (spyLock) return;
     if ($('contenuto').hidden) return;
-    if (!filtering() && browseGroup) { spySet(browseGroup); renderSub(browseGroup); return; }
+    if (!filtering() && browseGroup) { spySet(browseGroup); renderSub(browseGroup); if (!kioskV11) return; }
     var grps = document.querySelectorAll('#contenuto .grp:not([hidden])'); if (!grps.length) return;
     var line = spyLine(), id = grps[0].id.slice(2);
     grps.forEach(function (g) { if (g.getBoundingClientRect().top <= line) id = g.id.slice(2); });
@@ -387,7 +418,7 @@
         clearTimeout(spyLockT); spyLockT = setTimeout(function () { spyLock = null; spyCalc(); }, 1200);
         // la barra a fine corsa sta ferma in alto: conta la sua posizione finale, non quella di adesso
         var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1; // sul totem la pagina è ingrandita
-        var stuck = n && !n.hidden ? ((parseFloat(getComputedStyle(n).top) || 0) + n.offsetHeight) * z : 70;
+        var stuck = kioskV11 ? $('top').offsetHeight + ($('gnavSub').hidden ? 0 : $('gnavSub').offsetHeight) : n && !n.hidden ? ((parseFloat(getComputedStyle(n).top) || 0) + n.offsetHeight) * z : 70;
         var y = window.scrollY + el.getBoundingClientRect().top - stuck - 4;
         window.scrollTo({ top: Math.max(0, Math.round(y)), behavior: reduceMotion() ? 'auto' : 'smooth' });
         if (history.replaceState) history.replaceState(null, '', '#' + el.id);
@@ -410,15 +441,39 @@
   function openSheet(el, html) {
     lastFocus = document.activeElement;
     if (html != null) $('sheetBody').innerHTML = html;
+    if (kioskV11 && el.id === 'sheet' && $('k11DetailPrice')) updateKioskDetailTotal();
     el.hidden = false; document.body.style.overflow = 'hidden';
     el.querySelector('.sheet-card').scrollTop = 0;
     el.querySelector('.sheet-card').focus({preventScroll:true});
   }
   function closeSheet(el) {
-    el.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus();
+    el.hidden = true; document.body.style.overflow = ''; if (lastFocus && lastFocus.isConnected) lastFocus.focus(kioskV11 ? {preventScroll:true} : undefined);
     if (el.id === 'builder' && location.hash === '#crea') { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
   }
 
+  function kioskDetailChoice(it,sec) {
+    if (!kioskV11 || !kioskSelectable(sec)) return '';
+    var formats = it.prices || [], supp = canChooseExtras(sec) ? [] : (sec.supplements || []).slice(), own = itemVariant(it);
+    if (own && !supp.some(function(s){return s.label===own.label;})) supp.push(own);
+    var h = '<section class="k11-detail-actions" data-k11-detail="' + esc(it.id) + '"><h3>Scegli e aggiungi alla selezione</h3>';
+    if (formats.length) h += '<fieldset class="k11-choice"><legend>Formato</legend>' + formats.map(function(p,i){return '<label><input type="radio" name="k11fmt" value="' + i + '"' + (i===0?' checked':'') + '><span>' + esc(p.label) + '</span><b class="num">' + (p.price==null || p.price===''?'Da confermare':AA.price(p.price)) + '</b></label>';}).join('') + '</fieldset>';
+    if (supp.length) h += '<fieldset class="k11-choice"><legend>Varianti facoltative</legend>' + supp.map(function(s,i){return '<label><input type="checkbox" name="k11variant" value="' + i + '"><span>' + esc(s.label) + '</span><b class="num">' + deltaLabel(s.price) + '</b></label>';}).join('') + '</fieldset>';
+    return h + '<div class="k11-detail-total"><span>Prezzo selezionato</span><strong id="k11DetailPrice" aria-live="polite">—</strong></div><button type="button" class="b-fire k11-detail-add" data-k11-add-detail>Aggiungi alla selezione <span aria-hidden="true">+</span></button><p class="d-note">Per allergie o intolleranze confermate sempre ingredienti e possibili tracce con il personale.</p></section>';
+  }
+  function kioskDetailLine() {
+    var box = $('sheet').querySelector('[data-k11-detail]'); if (!box) return null;
+    var f = findItem(box.dataset.k11Detail); if (!f || f.item.available===false) return null;
+    var it = f.item, sec=f.sec, raw=it.price, details=[], fmt=box.querySelector('[name="k11fmt"]:checked');
+    if (fmt && it.prices && it.prices[Number(fmt.value)]) {var p=it.prices[Number(fmt.value)]; raw=p.price; details.push(p.label);}
+    var unknown = raw==null || raw==='' || !Number.isFinite(Number(raw)), total=unknown?0:Number(raw);
+    var supp=canChooseExtras(sec)?[]:(sec.supplements || []).slice(), own=itemVariant(it);
+    if (own && !supp.some(function(s){return s.label===own.label;})) supp.push(own);
+    box.querySelectorAll('[name="k11variant"]:checked').forEach(function(el){var s=supp[Number(el.value)];if(!s)return;var ok=s.price!=null&&s.price!==''&&Number.isFinite(Number(s.price));if(ok)total+=Number(s.price);else unknown=true;details.push(s.label+(ok?' ('+deltaLabel(s.price)+')':' (da confermare)'));});
+    return {id:it.id,name:it.name,image:it.image||'',unit:Math.max(0,Math.round(total*100)/100),unknown:unknown,details:details,allergens:AA.allergenNums(it.allergens).map(function(a){return a.label;}),review:needsAllergenReview(it)||box.querySelectorAll('[name="k11variant"]:checked').length>0};
+  }
+  function updateKioskDetailTotal() {
+    var line = kioskDetailLine(), el=$('k11DetailPrice'); if (line && el) el.textContent = AA.price(line.unit)+(line.unknown?' + da confermare':'');
+  }
   function detailHTML(it, sec) {
     var price = priceHTML(it, sec);
     if (/class="tbc"/.test(price)) price = '<span class="d-tbc">Prezzo: chiedi al personale</span>';
@@ -438,7 +493,7 @@
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
       (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza questa pizza <span aria-hidden="true">✦</span></button>'
         : (sec.group === 'cicci' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Scegli le aggiunte <span aria-hidden="true">+</span></button>' : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : ''))) +
-      '</div>';
+      kioskDetailChoice(it,sec) + '</div>';
   }
 
 
@@ -703,7 +758,7 @@
     if (costs && st.ing.some(needsAllergenReview)) costs.insertAdjacentHTML('beforeend','<p class="b-caution">Da verificare con il personale: ' + esc(st.ing.filter(needsAllergenReview).map(function(it){return it.name;}).join(', ')) + '.</p>');
     foot.innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Parziale noto + supplementi da confermare' : (B.extrasOnly ? 'Totale piatto' : 'Totale pizza')) + '</p><p class="bf-p num" aria-live="polite">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
       (parts.length ? '<p class="bf-s">' + esc(cap(parts.join('; '))) + '</p>' : '') + '</div>' +
-      '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
+      '<div class="bf-r"><button type="button" class="b-fire" data-b="' + (kioskV11 ? 'k11add' : 'waiter') + '">' + (kioskV11 ? 'Aggiungi alla selezione' : 'Mostra al cameriere') + '</button></div>';
     if (previousTotal !== undefined && previousTotal !== foot.dataset.total) {
       foot.classList.remove('bump'); void foot.offsetWidth; foot.classList.add('bump');
     }
@@ -755,6 +810,12 @@
       if (g === 'extra') { var j = B.sel.indexOf(v); if (j >= 0) B.sel.splice(j, 1); else B.sel.push(v); }
       if (g === 'preset') { B.presets[Number(v)].ids.forEach(function (id) { if (B.sel.indexOf(id) < 0) B.sel.push(id); }); }
       if (g === 'reset') { var first = B.starts[0]; B.start = first; B.dough = B.doughs.filter(function (d) { return knownPrice(d) && Number(d.price) === 0; })[0] || B.doughs[0] || null; B.baseOpt = null; B.mods = []; B.sel = []; B.removed = []; B.picking = false; renderBuilder(); return; }
+      if (g === 'k11add' && kioskV11 && window.AAKiosk11) {
+        var st = builderState(), it = B.start.item, det = st.lines.slice(1).map(function(l){return (l[0]?l[0]+': ':'')+l[1]+(l[2]!==null && l[2]!==0?' ('+deltaLabel(l[2])+')':l[2]===null?' (da confermare)':'');});
+        if (st.rem.length) det.push('Senza: '+st.rem.join(', '));
+        var line = {id:it.id,name:it.name,image:it.image||'',unit:st.total,unknown:B.tbc,details:det,allergens:AA.allergenNums(st.algs).map(function(a){return a.label;}),review:needsAllergenReview(it)||(B.dough&&needsAllergenReview(B.dough))||st.ing.some(needsAllergenReview)||st.rem.length>0||!!B.baseOpt||B.mods.length>0};
+        closeSheet($('builder')); window.AAKiosk11.add(line); return;
+      }
       if (g === 'waiter') { showWaiter(); return; }
       if (g === 'close') return;
       syncBuilderButtons();
@@ -930,12 +991,21 @@
       });
       $('extraNone').hidden = !!count;
     });
+    if (kioskV11) $('gnav').addEventListener('click',function(e) {
+      if (e.target.closest('[data-k11-home]')) goIndex();
+      if (e.target.closest('[data-k11-dough]') && doughSection()) openSheet($('sheet'),doughsHTML());
+      if (e.target.closest('[data-k11-allergens]')) openSheet($('sheet'),'<div class="d-body"><h2 id="sheetTitle" class="d-name">Allergeni</h2><p class="d-note">'+esc(DATA.info.allergenNote || 'Comunicate sempre allergie e intolleranze al personale.')+'</p><ul class="d-algs">'+AA.ALLERGENS.map(function(a){return '<li><span class="alg">'+a.n+'</span>'+esc(a.label)+'</li>';}).join('')+'</ul><p class="d-note">Le schede da verificare e le possibili tracce non garantiscono l’assenza di allergeni.</p></div>');
+    });
     $('contenuto').addEventListener('click', function (e) {
       var m = e.target.closest('[data-acc]'); if (m) { toggleAcc(m.dataset.acc); return; }
       if (e.target.closest('[data-doughs]')) { openSheet($('sheet'), doughsHTML()); return; }
       var b = e.target.closest('[data-item]'); if (!b) return;
       var f = findItem(b.dataset.item); if (f) openSheet($('sheet'), detailHTML(f.item, f.sec));
     });
+    if(kioskV11) {
+      $('sheet').addEventListener('change',function(e){if(e.target.matches('[name="k11fmt"],[name="k11variant"]'))updateKioskDetailTotal();});
+      $('sheet').addEventListener('click',function(e){if(!e.target.closest('[data-k11-add-detail]')||!window.AAKiosk11)return;var line=kioskDetailLine();if(line){closeSheet($('sheet'));window.AAKiosk11.add(line);}});
+    }
     document.querySelectorAll('.sheet').forEach(function (sh) {
       sh.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeSheet(sh); });
     });
@@ -975,6 +1045,11 @@
     else if (tagHash.indexOf('g-') === 0) { browseGroup = tagHash.slice(2); if (!DATA.groups.some(function(g){return g.id === browseGroup;}) && browseGroup !== 'allergeni') browseGroup = null; if (browseGroup === 'impasti') browseGroup = null; }
     else if (tagHash.indexOf('piatto-') === 0) { var found = findItem(decodeURIComponent(tagHash.slice(7))); if (found && found.sec.group !== 'impasti') browseGroup = found.sec.group; }
     else { var linked = DATA.sections.filter(function(s){return s.id === tagHash && s.visible;})[0]; if (linked && linked.group !== 'impasti') { browseGroup = linked.group; OPEN[linked.id] = true; } }
+    if (kioskV11) {
+      // The subsection bar belongs to the content, not the fixed category sidebar.
+      $('gnav').after($('gnavSub'));
+      var search = $('searchbar'), holder = $('k11Search'); if (holder && search) holder.appendChild(search);
+    }
     renderHeader(); render(); renderFooter(); bind(); bindBuilder();
     // un link a #senza-glutine (o a un altro filtro) mentre sei già nel menu
     window.addEventListener('hashchange', function () {
