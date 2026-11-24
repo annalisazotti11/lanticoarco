@@ -40,7 +40,7 @@
   var home = document.createElement('button');
   home.type = 'button'; home.className = 'k-home';
   home.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>Cartellone';
-  home.onclick = function () { location.href = '../totem/'; };
+  home.onclick = function () { location.href = '../totem/index.html'; };
   document.body.appendChild(home);
   var up = document.createElement('button');
   up.type = 'button'; up.className = 'k-up'; up.hidden = true; up.setAttribute('aria-label', 'Torna su');
@@ -53,7 +53,7 @@
   function addQr(data) {
     var intro = document.querySelector('.intro');
     if (!intro || !window.qrcode || document.querySelector('.k-qr')) return;
-    var url = (data && data.settings && data.settings.menuUrl) || new URL('../menu/', location.href).href;
+    var url = (data && data.settings && data.settings.menuUrl) || 'https://annalisazotti11.github.io/lanticoarco/menu/';
     var box = document.createElement('div');
     box.className = 'k-qr';
     box.innerHTML = '<div class="k-qr-code">' + AA.qrSVG(url, { margin: 1 }) + '</div><p><b>Il menu sul tuo telefono</b>Inquadra il codice con la fotocamera.</p>';
@@ -63,7 +63,7 @@
 
   // dopo un po' senza tocchi torna al cartellone
   var t = null;
-  function wake() { clearTimeout(t); t = setTimeout(function () { location.href = '../totem/'; }, IDLE); }
+  function wake() { clearTimeout(t); t = setTimeout(function () { location.href = '../totem/index.html'; }, IDLE); }
   ['pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll', 'input'].forEach(function (ev) { window.addEventListener(ev, wake, { passive: true, capture: true }); });
   wake();
 
