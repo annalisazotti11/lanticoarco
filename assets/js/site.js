@@ -240,7 +240,7 @@
     show(first);
     var seen = false;
     new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }, { threshold: .4 }).observe($('impasti'));
-    if (!reduce) timer = setInterval(function () { if (!user && seen && document.visibilityState === 'visible') show((cur + 1) % items.length); }, 4200);
+    // Impasti: cambia solo su scelta del cliente.
   }
 
   /* ================= Pizze: che voglia hai? ================= */
@@ -309,7 +309,7 @@
       if (Math.abs(dx) > 40) (dx < 0 ? $('pzNext') : $('pzPrev')).click();
     });
     setTab(0); paint();
-    if (!reduce) timer = setInterval(function () { if ($('pizze').classList.contains('in')) swapTo(function () { i = (i + 1) % tabs[t].items.length; }); }, 6000);
+    // Pizze: cambia solo su scelta del cliente.
   }
 
   /* ================= Inserzioni nell'apertura ================= */
@@ -408,40 +408,10 @@
       ready(function () { go(0); });
       return;
     }
-    // la scena si ferma sotto la barra in alto; il binario è lungo quanto serve per i quattro dettagli
-    var top0 = 0;
-    function layout() {
-      var nav = $('nav'), chap = $('chap');
-      top0 = (nav ? nav.offsetHeight : 0) + (chap && getComputedStyle(chap).display !== 'none' ? chap.offsetHeight : 0);
-      var free = window.innerHeight - top0 - stick.offsetHeight;
-      top0 += Math.max(0, Math.min(free / 2, 40));
-      stick.style.setProperty('--an-top', top0 + 'px'); stick.style.top = top0 + 'px';
-      shot.style.setProperty('--an-top', top0 + 'px');
-      track.style.height = Math.round(stick.offsetHeight + window.innerHeight * STEP * D.length) + 'px';
-    }
-    function range() { return Math.max(1, track.offsetHeight - stick.offsetHeight); }
-    var seen = false, pend = 0;
-    function onScroll() {
-      pend = 0;
-      var r = track.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > window.innerHeight) return;
-      var t = clamp((top0 - r.top) / range(), 0, .9999) * D.length;
-      var k = Math.floor(t);
-      if (cur >= 0 && k !== cur && Math.abs(t - Math.round(t)) < .06) k = cur; // un margine sul confine: niente sfarfallii
-      if (!seen) { seen = true; ready(function () { go(k); }); }
-      else if (k !== cur) go(k);
-      var on = lis[k]; if (on) on.style.setProperty('--f', clamp(t - k, 0, 1).toFixed(3));
-    }
-    lis.forEach(function (li, i) {
-      li.querySelector('button').addEventListener('click', function () {
-        var r = track.getBoundingClientRect();
-        scrollToY(Math.round(window.scrollY + r.top - top0 + (i + .5) / D.length * range()));
-      });
-    });
-    layout();
-    window.addEventListener('scroll', function () { if (!pend) pend = requestAnimationFrame(onScroll); }, { passive: true });
-    window.addEventListener('resize', function () { layout(); if (cur >= 0) place(cur); onScroll(); });
-    onScroll();
+    lis.forEach(function (li, i) { li.querySelector('button').addEventListener('click', function () { go(i); }); });
+    ready(function () { go(0); });
+    window.addEventListener('resize', function () { if (cur >= 0) place(cur); });
+
   }
 
   /* ================= Dati vivi ================= */
@@ -533,5 +503,5 @@
     if (ann) { $('notice').hidden = false; $('notice').textContent = ann; }
     doughs(data); pizzas(data); promos(data); product(data);
     watchCounts();
-  }).catch(function () { anatomy(0); });
+  }).catch(function () { var hours = $('hours'); if (hours) hours.hidden = false; var w = $('week'); if (w) w.hidden = true; anatomy(0); });
 })();
