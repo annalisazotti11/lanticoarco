@@ -396,7 +396,7 @@
     if (html != null) $('sheetBody').innerHTML = html;
     el.hidden = false; document.body.style.overflow = 'hidden';
     el.querySelector('.sheet-card').scrollTop = 0;
-    el.querySelector('.sheet-card').focus();
+    el.querySelector('.sheet-card').focus({preventScroll:true});
   }
   function closeSheet(el) {
     el.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus();
@@ -697,8 +697,8 @@
       '<p class="w-a">Per una pizza personalizzata, confermate allergeni e possibili tracce con il personale; le modifiche non garantiscono l’assenza di allergeni.</p>' +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
     $('waiter').hidden = false;
-    $('wBack').onclick = function () { $('waiter').hidden = true; };
-    $('wBack').focus({ focusVisible: false });
+    $('wBack').onclick = function () { $('waiter').hidden = true; var f = $('bFoot').querySelector('[data-b="waiter"]'); if (f) f.focus({preventScroll:true}); };
+    $('wBack').focus({ preventScroll: true });
   }
   function bindBuilder() {
     $('builder').addEventListener('click', function (e) {
