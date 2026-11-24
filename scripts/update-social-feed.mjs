@@ -21,7 +21,7 @@ if(account.id!==page||!account.instagram_business_account?.id)throw Error('La pa
 if(account.instagram_business_account.username?.toLowerCase()!=='pizzerialanticoarco')throw Error('Il profilo Instagram collegato non corrisponde a quello previsto');
 const ig=account.instagram_business_account.id;if(!/^\d+$/.test(ig))throw Error('ID Instagram non valido');
 const [f,g]=await Promise.all([
- graph(page+'/posts','id,message,created_time,permalink_url,full_picture,attachments{media_type,type}',18),
+ graph(page+'/published_posts','id,message,created_time,permalink_url,full_picture,attachments{media_type,type}',18),
  graph(ig+'/media','id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_type,media_url,thumbnail_url}',18)
 ]);
 if(!Array.isArray(f.data)||!Array.isArray(g.data))throw Error('Risposta Meta inattesa');
