@@ -11,7 +11,7 @@
   var state = { q: '', tags: [], noAllergens: [] };
   var browseGroup = null; // indice, singola categoria o ricerca globale
   var kioskParams = new URLSearchParams(location.search);
-  var kioskV11 = kioskParams.has('totem') && kioskParams.has('v11');
+  var kioskV11 = kioskParams.has('totem') && !kioskParams.has('legacy');
   if (kioskV11) document.documentElement.classList.add('kiosk-v11');
   var $ = function (id) { return document.getElementById(id); };
 
