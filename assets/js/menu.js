@@ -18,10 +18,11 @@
 
   var CAN_GF = {}; // piatti che si possono fare con l'impasto senza glutine (variante della sottocategoria)
   function hasTag(item, t) { return (item.tags || []).indexOf(t) >= 0 || (t === 'senza-glutine' && CAN_GF[item.id]); }
+  function needsAllergenReview(it) { return it.allergenReview === true || (!(it.allergens || []).length && it.allergenReview !== false); }
   function matches(item) {
     if (item.available === false) return false;
     if (state.tags.length && !state.tags.every(function (t) { return hasTag(item, t); })) return false;
-    if (state.noAllergens.length && (!(item.allergens || []).length || (item.allergens || []).some(function (a) { return state.noAllergens.indexOf(a) >= 0; }))) return false;
+    if (state.noAllergens.length && (needsAllergenReview(item) || (item.allergens || []).some(function (a) { return state.noAllergens.indexOf(a) >= 0; }))) return false;
     if (state.q) {
       var hay = norm(item.name + ' ' + item.desc + ' ' + item.note);
       return norm(state.q).split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
@@ -36,11 +37,11 @@
     });
     return t;
   }
-  function algsHTML(codes) {
-    var list = AA.allergenNums(codes);
-    if (!list.length) return '';
-    return '<span class="algs" aria-label="Allergeni: ' + list.map(function (a) { return a.label; }).join(', ') + '"><span aria-hidden="true">Allergeni ' +
-      list.map(function (a) { return a.n; }).join(' · ') + '</span></span>';
+  function algsHTML(it) {
+    var list = AA.allergenNums(it.allergens), review = needsAllergenReview(it);
+    if (!list.length) return review ? '<span class="algs">Allergeni da verificare</span>' : '<span class="algs">Nessuno dichiarato</span>';
+    return '<span class="algs" aria-label="Allergeni e possibili tracce: ' + list.map(function (a) { return a.label; }).join(', ') + (review ? '; scheda da verificare' : '') + '"><span aria-hidden="true">Allergeni ' +
+      list.map(function (a) { return a.n; }).join(' · ') + (review ? ' · da verificare' : '') + '</span></span>';
   }
   function tagsHTML(tags) {
     return (tags || []).map(function (t) { var d = AA.TAG_BY_CODE[t]; return d ? '<span class="tag tag-' + t + '">' + esc(d.short) + '</span>' : ''; }).join('');
@@ -54,7 +55,7 @@
 
   function itemHTML(it, sec) {
     var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags);
-    var algs = algsHTML(it.allergens);
+    var algs = algsHTML(it);
     return '<li class="item"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
       '<span class="item-main">' +
       '<span class="item-name">' + hl(it.name) + (it.frozen ? '<span class="frz" title="' + esc(DATA.info.frozenLegend) + '">*</span>' : '') + '</span>' +
@@ -70,7 +71,7 @@
       return '<button class="card" type="button" data-item="' + esc(it.id) + '">' +
         (it.image ? '<img class="card-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '<span class="card-ph ph-empty">' + AA.archSVG() + '</span>') +
         '<span class="card-name" style="display:block">' + hl(doughName(it.name)) + '</span>' +
-        '<span class="card-price" style="display:block">' + priceHTML(it, sec) + '</span></button>';
+        '<span class="card-price" style="display:block">' + priceHTML(it, sec) + '</span>' + algsHTML(it) + '</button>';
     }).join('') + '</div>';
   }
   function chipsHTML(items) {
@@ -79,7 +80,7 @@
     return Object.keys(by).sort(function (a, b) { return Number(a) - Number(b); }).map(function (k) {
       return '<div class="chipgrp"><h4>' + AA.price(Number(k), { signed: true }) + '</h4><ul>' + by[k].map(function (it) {
         var al = AA.allergenNums(it.allergens).map(function (a) { return a.n; }).join(',');
-        return '<li>' + hl(it.name) + (al ? '<sup>' + al + '</sup>' : '') + '</li>';
+        return '<li>' + hl(it.name) + (al ? '<sup>' + al + '</sup>' : '') + (needsAllergenReview(it) ? '<sup title="Allergeni da verificare" aria-label="Allergeni da verificare">?</sup>' : '') + '</li>';
       }).join('') + '</ul></div>';
     }).join('');
   }
@@ -194,7 +195,7 @@
     var i = DATA.info || {};
     return '<section class="grp grp-alg" id="g-allergeni"><h2 class="grp-t">Allergeni</h2><div class="alg-box">' +
       '<p class="alg-lead">' + leadBold(i.allergenNote || '') + '</p>' +
-      '<p class="alg-how">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011):</p>' +
+      '<p class="alg-how">I numeri accanto a ogni piatto indicano gli allergeni segnalati negli ingredienti e/o possibili tracce (Reg. UE 1169/2011). Il simbolo ? indica una scheda da verificare:</p>' +
       '<ol class="alg-legend alg-top">' + AA.ALLERGENS.map(function (a) { return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol>' +
       '<button type="button" class="b-ghost alg-f" id="algFilter">Escludi un allergene dal menu</button></div></section>';
   }
@@ -415,9 +416,10 @@
       (it.desc ? '<p class="d-desc">' + esc(it.desc) + '</p>' : '') +
       (it.note ? '<p class="item-note">' + esc(it.note) + '</p>' : '') +
       (it.tags && it.tags.length ? '<div class="item-meta">' + tagsHTML(it.tags) + '</div>' : '') +
-      (algs.length ? '<h3 class="d-h">Allergeni</h3><ul class="d-algs">' + algs.map(function (a) {
+      (algs.length ? '<h3 class="d-h">Allergeni indicati e/o possibili tracce</h3><ul class="d-algs">' + algs.map(function (a) {
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
-      }).join('') + '</ul>' : '<p class="d-note">Allergeni: informazioni da confermare con il personale.</p>') +
+      }).join('') + '</ul>' : (!needsAllergenReview(it) ? '<p class="d-note">Nessun allergene dichiarato nella scheda; verificare le eventuali tracce.</p>' : '')) +
+      (needsAllergenReview(it) ? '<p class="d-note"><b>Allergeni da verificare:</b> scheda incompleta. Confermate ingredienti, etichette e possibili tracce con il personale prima di ordinare.</p>' : '') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
       (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza</button>'
         : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
@@ -633,7 +635,8 @@
       (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + esc(cap(st.rem.join(', '))) + '</dd></div>' : '') +
       (st.ing.length ? '<div><dt>In più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
       '</dl><p class="w-p num">' + AA.price(st.total) + '</p>' +
-      (algs.length ? '<p class="w-a">Allergeni ' + algs.map(function (a) { return a.n; }).join(' · ') + '</p>' : '') +
+      (algs.length ? '<p class="w-a">Allergeni indicati e/o possibili tracce ' + algs.map(function (a) { return a.n; }).join(' · ') + '</p>' : '') +
+      '<p class="w-a">Per una pizza personalizzata, confermate allergeni e possibili tracce con il personale; le modifiche non garantiscono l’assenza di allergeni.</p>' +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
     $('waiter').hidden = false;
     $('wBack').onclick = function () { $('waiter').hidden = true; };

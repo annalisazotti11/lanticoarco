@@ -29,9 +29,10 @@
       return d ? '<span class="tg tg-' + t + '">' + esc(d.short) + '</span>' : '';
     }).join('');
   }
-  function algHTML(codes) {
-    var l = AA.allergenNums(codes);
-    return l.length ? '<span class="al">' + l.map(function (a) { return '<span>' + a.n + '</span>'; }).join('') + '</span>' : '';
+  function needsAllergenReview(it) { return it.allergenReview === true || (!(it.allergens || []).length && it.allergenReview !== false); }
+  function algHTML(it) {
+    var l = AA.allergenNums(it.allergens), review = needsAllergenReview(it);
+    return (l.length ? '<span class="al">' + l.map(function (a) { return '<span>' + a.n + '</span>'; }).join('') + '</span>' : '') + (review ? '<span>Allergeni da verificare</span>' : '');
   }
   function priceHTML(it, sec) {
     if (it.prices && it.prices.length) return AA.itemPriceHTML(it, '');
@@ -46,7 +47,7 @@
       ph = it.image ? '<img class="row-ph" alt="" src="' + esc(AA.src(it.image)) + '">'
         : '<span class="row-ph empty">' + AA.archSVG() + '</span>';
     }
-    var meta = tagsHTML(it.tags) + algHTML(it.allergens);
+    var meta = tagsHTML(it.tags) + algHTML(it);
     return '<div class="row' + (usePh ? ' ph' : '') + '">' + ph + '<div>' +
       '<p class="row-name">' + esc(it.name) + (it.frozen ? '<span class="frz">*</span>' : '') + '</p>' +
       (it.desc ? '<p class="row-desc">' + esc(it.desc) + '</p>' : '') +
@@ -61,7 +62,7 @@
       for (var i = 0; i < items.length; i += 3) {
         rows.push('<div class="cards-row">' + items.slice(i, i + 3).map(function (it) {
           return '<div>' + (it.image ? '<img class="cd-ph" alt="" src="' + esc(AA.src(it.image)) + '">' : '<span class="cd-ph empty">' + AA.archSVG() + '</span>') +
-            '<p class="cd-name">' + esc(it.name) + '</p><p class="cd-price num">' + priceHTML(it, sec) + '</p></div>';
+            '<p class="cd-name">' + esc(it.name) + '</p><p class="cd-price num">' + priceHTML(it, sec) + '</p>' + algHTML(it) + '</div>';
         }).join('') + '</div>');
       }
       return rows;
@@ -72,7 +73,7 @@
       return Object.keys(by).sort(function (a, b) { return a - b; }).map(function (k) {
         return '<div class="chg"><h4>' + AA.price(Number(k), { signed: true }) + '</h4><ul>' + by[k].map(function (it) {
           var al = AA.allergenNums(it.allergens).map(function (a) { return a.n; }).join(',');
-          return '<li>' + esc(it.name) + (al ? '<sup>' + al + '</sup>' : '') + '</li>';
+          return '<li>' + esc(it.name) + (al ? '<sup>' + al + '</sup>' : '') + (needsAllergenReview(it) ? '<sup>?</sup>' : '') + '</li>';
         }).join('') + '</ul></div>';
       });
     }
@@ -129,7 +130,7 @@
       var inf = DATA.info || {};
       out.push({ group: 'allergeni', html: '<div class="pg pg-alg">' +
         '<h2 class="pg-title">Allergeni</h2>' + (inf.allergenNote ? '<p class="pg-sub">' + leadBold(inf.allergenNote) + '</p>' : '') +
-        '<div class="pg-rule"></div><p class="pg-note">I numeri accanto a ogni piatto indicano gli allergeni presenti (Reg. UE 1169/2011).</p>' +
+        '<div class="pg-rule"></div><p class="pg-note">I numeri indicano allergeni segnalati negli ingredienti e/o possibili tracce (Reg. UE 1169/2011). Il simbolo ? indica una scheda da verificare.</p>' +
         '<ol class="alg-grid">' + AA.ALLERGENS.map(function (a) { return '<li><span>' + a.n + '</span>' + esc(a.label) + '</li>'; }).join('') + '</ol></div>' });
     }
 

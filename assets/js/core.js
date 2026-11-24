@@ -7,7 +7,7 @@
   var CACHE_KEY = 'aa-menu-cache';
 
   var ALLERGENS = [
-    { n: 1, code: 'glutine', label: 'Glutine', long: 'Cereali contenenti glutine' },
+    { n: 1, code: 'glutine', label: 'Cereali contenenti glutine', long: 'Cereali contenenti glutine (es. frumento e orzo)' },
     { n: 2, code: 'crostacei', label: 'Crostacei', long: 'Crostacei e prodotti a base di crostacei' },
     { n: 3, code: 'uova', label: 'Uova', long: 'Uova e prodotti a base di uova' },
     { n: 4, code: 'pesce', label: 'Pesce', long: 'Pesce e prodotti a base di pesce' },

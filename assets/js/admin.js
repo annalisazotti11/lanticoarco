@@ -263,7 +263,7 @@
         Object.assign(c.it, clone(a.it)); setOrDel(c.it, 'price', keep.price); setOrDel(c.it, 'available', keep.available);
       };
       if (stable(ra) !== stable(rb)) {
-        var LBL = { name: 'nome', desc: 'ingredienti', image: 'foto', cutout: 'foto', tags: 'etichette', allergens: 'allergeni', prices: 'formati', note: 'nota', featured: 'evidenza', frozen: 'surgelato' }, what = [];
+        var LBL = { name: 'nome', desc: 'ingredienti', image: 'foto', cutout: 'foto', tags: 'etichette', allergens: 'allergeni', allergenReview: 'verifica allergeni', prices: 'formati', note: 'nota', featured: 'evidenza', frozen: 'surgelato' }, what = [];
         Object.keys(Object.assign({}, ra, rb)).forEach(function (k) { var l = LBL[k] || 'altri dettagli'; if (stable(ra[k]) !== stable(rb[k]) && what.indexOf(l) < 0) what.push(l); });
         var txt = what.length === 1 && what[0] === 'nome' ? (a.it.name || 'Piatto') + ' diventa «' + n + '»'
           : n + ': ' + (what.length === 1 ? ({ ingredienti: 'cambiano gli ingredienti', foto: 'cambia la foto', etichette: 'cambiano le etichette', allergeni: 'cambiano gli allergeni', formati: 'cambiano i formati', nota: 'cambia la nota', evidenza: 'cambia la voce in evidenza', surgelato: 'cambia la voce surgelato' })[what[0]] || 'cambia la scheda' : 'cambiano ' + what.slice(0, -1).join(', ') + ' e ' + what[what.length - 1]);
@@ -754,7 +754,7 @@
   function itemPreview(it, sec) {
     var price = it.prices && it.prices.length ? AA.itemPriceHTML(it, '') : (it.price == null || it.price === '' ? '<span class="tbc">Prezzo da confermare</span>' : (sec.deltaPrices ? (Number(it.price) === 0 ? 'Compreso' : AA.price(it.price, { signed: true })) : AA.price(it.price)));
     var tags = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + (it.tags || []).map(function (t) { var d = AA.TAG_BY_CODE[t]; return d ? '<span class="tag">' + esc(d.short) + '</span>' : ''; }).join('');
-    var algs = AA.allergenNums(it.allergens).map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('');
+    var algs = AA.allergenNums(it.allergens).map(function (a) { return '<span class="alg">' + a.n + '</span>'; }).join('') + (it.allergenReview === true || (!(it.allergens || []).length && it.allergenReview !== false) ? '<span class="tag">Allergeni da verificare</span>' : '');
     return '<div class="pv"><p class="pv-lbl">Così lo vedono i clienti</p><div class="pv-item' + (it.available === false ? ' is-off' : '') + '"><div class="pv-main"><p class="pv-n">' + esc(it.name || 'Nome del piatto') + (it.frozen ? '<span class="frz">*</span>' : '') + '</p>' +
       (it.desc ? '<p class="pv-d">' + esc(it.desc) + '</p>' : '') + (tags || algs ? '<p class="pv-m">' + tags + algs + '</p>' : '') + '<p class="pv-pr">' + price + '</p></div>' +
       (it.image ? '<img alt="" src="' + esc(AA.src(it.image)) + '">' : '') + '</div>' + (it.available === false ? '<p class="pv-off">Esaurito: ora i clienti non lo vedono.</p>' : '') + '</div>';
@@ -784,7 +784,10 @@
     h += '<label class="line"><span><b>Tra le preferite</b><small>Segnata nel menu, mostrata in home e nel carosello del cartellone</small></span><label class="sw"><input type="checkbox" data-fb="featured"' + (it.featured ? ' checked' : '') + '><span></span></label></label>';
     h += '<div class="fld"><span>Caratteristiche</span>' + chips(AA.TAGS.filter(function (t) { return t.code !== 'della-casa'; }), it.tags || [], 'data-tag') + '<small class="muted">Con «Novità» il piatto gira anche nel carosello del cartellone.</small></div>';
     var na = (it.allergens || []).length;
-    h += '<details class="more-in"' + (na ? '' : ' open') + '><summary>Allergeni' + (na ? ' (' + na + ')' : '') + '</summary>' + chips(AA.ALLERGENS, it.allergens || [], 'data-alg') + '</details>';
+    var ar = it.allergenReview === true || (!na && it.allergenReview !== false);
+    h += '<details class="more-in"' + (ar ? ' open' : '') + '><summary>Allergeni' + (na ? ' (' + na + ')' : '') + (ar ? ' — da verificare' : '') + '</summary>' + chips(AA.ALLERGENS, it.allergens || [], 'data-alg') +
+      (ar && it.allergenReviewHint ? '<p class="muted">' + esc(it.allergenReviewHint) + '</p>' : '') +
+      '<label class="line"><span><b>Scheda allergeni da verificare</b><small>Togli la spunta solo dopo aver controllato ricetta, etichette e possibili contaminazioni.</small></span><label class="sw"><input type="checkbox" data-fb="allergenReview"' + (ar ? ' checked' : '') + '><span></span></label></label></details>';
     h += '<details class="more-in"><summary>Altre opzioni</summary>' +
       '<label class="fld">Nota breve<input data-f="note" value="' + esc(it.note) + '" placeholder="es. Disponibile anche senza glutine"></label>' +
       '<label class="line"><span><b>Prodotto surgelato</b><small>Mostra l\'asterisco *</small></span><label class="sw"><input type="checkbox" data-fb="frozen"' + (it.frozen ? ' checked' : '') + '><span></span></label></label>' +
