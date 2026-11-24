@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="it">
+<html lang="it" class="menu-v5 menu-v7">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,13 +12,16 @@
 <link rel="preload" href="../assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/css/base.css?v=f547ae7d">
 <link rel="stylesheet" href="../assets/css/menu.css?v=2785ff9c">
+<link rel="stylesheet" href="../assets/css/menu-v1.css?v=7.1">
 </head>
 <body>
 <a class="sr-only" href="#contenuto">Vai al menu</a>
 
 <header class="top" id="top">
   <a class="top-logo" href="../" aria-label="L'Antico Arco Pizzeria, vai al sito"><img src="../assets/img/logo/logo-600.webp" alt="" width="600" height="388"></a>
-  <div class="top-r">
+  <div class="top-r"><a class="menu-site" href="../">Torna al sito <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <button class="ico menu-index" type="button" id="menuIndex" aria-label="Torna alle categorie" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="4" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="14" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="6" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span>Categorie</span></button>
+    <button class="ico menu-find" type="button" id="menuFind" aria-label="Cerca nel menù"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     <button class="ico" type="button" id="filterBtn" aria-label="Filtri" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg><span class="ico-n" id="filterCount" hidden></span></button>
   </div>
 </header>
@@ -26,13 +29,17 @@
 <div class="notice" id="notice" hidden></div>
 
 <section class="intro">
-  <div class="intro-row"><h1 class="intro-t">Menu</h1><p class="intro-k" id="status">Pizzeria L'Antico Arco, Cellamare</p></div>
+  <div class="intro-row"><span class="menu-eyebrow">Pizzeria di famiglia · dal 2001</span><h1 class="intro-t"><span class="menu-title-public">Il nostro <em>menù</em></span><span class="menu-title-kiosk">Menu</span></h1><p class="intro-k" id="status">Pizzeria L'Antico Arco, Cellamare</p></div>
   <div class="searchbar" id="searchbar">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     <label class="sr-only" for="q">Cerca nel menu</label>
     <input id="q" type="search" placeholder="Cerca un piatto o un ingrediente" autocomplete="off" enterkeyhint="search">
+    <button type="button" class="q-clear" id="qClear" aria-label="Cancella ricerca" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   </div>
+  <p class="menu-results" id="menuResults" role="status" hidden></p>
 </section>
+
+<section class="menu-explore" id="menuExplore" aria-labelledby="exploreTitle" hidden></section>
 
 <section class="promos" id="promos" aria-label="In evidenza" hidden></section>
 
@@ -66,7 +73,7 @@
     <div class="chips" id="fTags"></div>
     <h3 class="f-h">Escludi i piatti con</h3>
     <div class="chips" id="fAllergens"></div>
-    <p class="f-warn">Il filtro allergeni si basa sulle schede del menu: in caso di allergia chiedete sempre conferma al personale. Molte pizze si possono preparare senza glutine o senza lattosio.</p>
+    <p class="f-warn">Il filtro si basa sulle schede del menù ed esclude le voci senza allergeni indicati. Non garantisce l’assenza di allergeni o tracce: chiedete sempre conferma al personale. Molte pizze si possono preparare senza glutine o senza lattosio.</p>
     <div class="f-actions">
       <button type="button" class="b-ghost" id="fReset">Azzera</button>
       <button type="button" class="b-fire" id="fApply">Mostra tutto il menu</button>
@@ -87,7 +94,7 @@
 <div class="waiter" id="waiter" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden></div>
 <script src="../assets/vendor/qrcode.js"></script>
 <script src="../assets/js/core.js?v=ddc6390b"></script>
-<script src="../assets/js/menu.js?v=eec9f42d"></script>
-<script src="../assets/js/kiosk.js?v=da9a915e"></script>
+<script src="../assets/js/menu.js?v=menu-v7"></script>
+<script src="../assets/js/kiosk.js?v=menu-v5"></script>
 </body>
 </html>

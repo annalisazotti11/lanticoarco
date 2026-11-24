@@ -94,12 +94,13 @@
     var tH = mk(), tF = mk(), hok = 0, fok = 0;
     var U = {}; ['R', 'T', 'F0', 'SC', 'HB', 'FL', 'HOK', 'FOK'].forEach(function (n) { U[n] = gl.getUniformLocation(pr, n); });
     gl.uniform1i(U.HB, 0); gl.uniform1i(U.FL, 1);
-    var running = false, t0 = performance.now();
+    var running = false, raf = null, t0 = performance.now();
     // risoluzione di calcolo: nitida ma leggera (al massimo ~1,4 milioni di punti)
     function size() { var cw = canvas.clientWidth || 1, ch = canvas.clientHeight || 1, d = Math.min(window.devicePixelRatio || 1, 2);
       var s = Math.min(.75 * d, Math.sqrt(1.4e6 / (cw * ch))); canvas.width = Math.max(1, Math.round(cw * s)); canvas.height = Math.max(1, Math.round(ch * s)); gl.viewport(0, 0, canvas.width, canvas.height); }
     function up(v, unit, tex) { if (v.readyState < 2) return 0; gl.activeTexture(unit); gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v); return 1; }
     function frame(now) {
+      raf = null;
       if (!running) return;
       hok = up(heartV, gl.TEXTURE0, tH) || hok; fok = up(flameV, gl.TEXTURE1, tF) || fok;
       var a = canvas.width / canvas.height, P = place(a);
@@ -107,11 +108,11 @@
       gl.uniform2f(U.F0, P.x * a, P.y); gl.uniform1f(U.SC, P.s);
       gl.uniform1f(U.HOK, hok); gl.uniform1f(U.FOK, fok);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      requestAnimationFrame(frame);
+      raf = requestAnimationFrame(frame);
     }
     size(); window.addEventListener('resize', size);
-    this.play = function () { if (!running) { running = true; [heartV, flameV].forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }); requestAnimationFrame(frame); } };
-    this.pause = function () { running = false; heartV.pause(); flameV.pause(); };
+    this.play = function () { if (!running) { running = true; [heartV, flameV].forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }); raf = requestAnimationFrame(frame); } };
+    this.pause = function () { running = false; if (raf !== null) { cancelAnimationFrame(raf); raf = null; } heartV.pause(); flameV.pause(); };
   }
   window.FireS = FireS;
 })();
