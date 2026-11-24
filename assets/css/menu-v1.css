@@ -61,3 +61,40 @@ html:not(.kiosk) .grp, html:not(.kiosk) .sec { scroll-margin-top: calc(var(--men
   html:not(.kiosk) .searchbar { padding-inline: 12px; gap: 7px; }
   html:not(.kiosk) .searchbar input { font-size: .9rem; }
 }
+
+/* V2 — accesso visivo, ricerca e leggibilità. Solo telefono, tablet, computer. */
+html.kiosk .menu-explore,html.kiosk .menu-results,html.kiosk .q-clear { display:none!important; }
+html:not(.kiosk) .menu-explore{max-width:860px;margin:0 auto;padding:12px var(--menu-gutter) 8px}
+html:not(.kiosk) .menu-explore [hidden]{display:none!important}
+html:not(.kiosk) .q-clear{width:36px;height:36px;border:0;background:#efe5d8;color:#47382d;border-radius:50%;flex:none;display:grid;place-items:center;padding:0}
+html:not(.kiosk) .q-clear svg{width:18px;height:18px}
+html:not(.kiosk) .searchbar input::-webkit-search-cancel-button{-webkit-appearance:none}
+html:not(.kiosk) .menu-results{margin-top:10px;font-size:.88rem;color:#6e5f53;font-weight:600}
+html:not(.kiosk) .ex-alert{display:flex;align-items:center;gap:9px;padding:11px 13px;border:1px solid #d9c9b6;border-radius:14px;background:#fffaf4;font-size:.8rem;line-height:1.35;color:#5a4738}
+html:not(.kiosk) .ex-alert p{flex:1;min-width:0}
+html:not(.kiosk) .ex-alert b{font-weight:650}
+html:not(.kiosk) .ex-info{display:grid;place-items:center;width:23px;height:23px;border:1px solid #907761;color:#5a4738;flex:none;border-radius:50%;font-family:Georgia,serif;font-weight:700;font-size:16px}
+html:not(.kiosk) .ex-alert a{display:inline-flex;align-items:center;flex:none;min-height:44px;font-size:.78rem;font-weight:650;text-decoration:underline;text-underline-offset:3px}
+html:not(.kiosk) .ex-alert a svg,html:not(.kiosk) .ex-arrow svg,html:not(.kiosk) .ex-build svg{width:17px;height:17px;flex:none}
+html:not(.kiosk) .ex-heading{margin:20px 0 12px}
+html:not(.kiosk) .ex-heading h2{font:400 clamp(1.7rem,4vw,2.1rem)/1.15 Georgia,serif;letter-spacing:-.035em;color:#34251b}
+html:not(.kiosk) .ex-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+html:not(.kiosk) .ex-card{position:relative;display:grid;grid-template-rows:104px 1fr;grid-template-columns:minmax(0,1fr) auto;min-width:0;min-height:157px;border:1px solid #e2d4c2;border-radius:17px;overflow:hidden;text-align:left;background:#fbf7f1;color:#34251b;text-decoration:none;padding:0;font:inherit;box-shadow:0 4px 12px #34251b08;transition:box-shadow .2s,border-color .2s}
+html:not(.kiosk) .ex-card:hover{border-color:#bfa58b;box-shadow:0 6px 15px #34251b15}
+html:not(.kiosk) .ex-card:active{border-color:#8f6c50}
+html:not(.kiosk) .ex-photo{grid-column:1/-1;min-width:0;overflow:hidden;background:#eaddcc}
+html:not(.kiosk) .ex-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+html:not(.kiosk) .ex-none{display:grid;place-items:center;color:#9f7d60;background:linear-gradient(140deg,#e8d7c3,#f4ebdf)}
+html:not(.kiosk) .ex-none svg{width:38px;height:38px}
+html:not(.kiosk) .ex-copy{padding:11px 0 11px 12px;min-width:0;align-self:center;overflow-wrap:anywhere}
+html:not(.kiosk) .ex-copy strong{display:block;font-size:.95rem;font-weight:650;line-height:1.22}
+html:not(.kiosk) .ex-copy small{display:block;color:#6e5f53;font-size:.75rem;line-height:1.3;margin-top:4px}
+html:not(.kiosk) .ex-arrow{align-self:center;display:grid;place-items:center;width:27px;height:27px;margin-right:8px;color:#72543f}
+html:not(.kiosk) .ex-build{margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:18px;padding:15px 19px;background:#34251b;color:#fff5e8;text-decoration:none;min-height:64px}
+html:not(.kiosk) .ex-build b{display:block;font-weight:650}
+html:not(.kiosk) .ex-build small{display:block;font-size:.8rem;color:#e1cdb9;margin-top:2px}
+html:not(.kiosk) .ex-build svg{width:22px;height:22px}
+html:not(.kiosk) .promo-t{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.3}
+html:not(.kiosk) .promo>div{min-width:0}
+@media(min-width:760px){html:not(.kiosk) .ex-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}html:not(.kiosk) .ex-card{grid-template-rows:126px 1fr;min-height:184px}html:not(.kiosk) .ex-copy strong{font-size:1.02rem}}
+@media(max-width:360px){html:not(.kiosk) .ex-card{grid-template-rows:86px 1fr;min-height:149px}html:not(.kiosk) .ex-copy{padding-left:9px}html:not(.kiosk) .ex-copy strong{font-size:.87rem}html:not(.kiosk) .ex-arrow{width:18px;margin-right:5px}html:not(.kiosk) .ex-alert{padding:8px;gap:7px}}

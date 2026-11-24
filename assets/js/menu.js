@@ -197,6 +197,37 @@
       '<button type="button" class="b-ghost alg-f" id="algFilter">Escludi un allergene dal menu</button></div></section>';
   }
 
+  /* Indice fotografico: usa esclusivamente categorie e immagini del menu pubblicato. */
+  function renderExplore() {
+    var box = $('menuExplore'), result = $('menuResults'), clear = $('qClear');
+    if (!box || new URLSearchParams(location.search).has('totem')) return;
+    clear.hidden = !$('q').value;
+    result.hidden = !filtering();
+    if (filtering()) {
+      var n = DATA.sections.filter(function (s) { return s.visible; }).reduce(function (sum, s) { return sum + s.items.filter(matches).length; }, 0);
+      result.textContent = n === 1 ? '1 voce corrispondente' : n + ' voci corrispondenti';
+      box.hidden = true; return;
+    }
+    var groups = groupsWithContent();
+    var hasPizza = groups.some(function (g) { return g.id === 'pizze'; });
+    var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
+    groups = groups.slice().sort(function (a,b) { var x = order.indexOf(a.id), y = order.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
+    var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var cards = groups.map(function (g) {
+      var sections = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
+      var subtitle = g.id === 'impasti' ? 'Scegli il tuo impasto' : sections.length > 1 ? sections.length + ' categorie' : '';
+      var photo = g.image || '';
+      var art = photo ? '<span class="ex-photo"><img src="' + esc(AA.src(photo)) + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="ex-photo ex-none">' + AA.archSVG() + '</span>';
+      var contents = art + '<span class="ex-copy"><strong>' + esc(g.name) + '</strong>' + (subtitle ? '<small>' + esc(subtitle) + '</small>' : '') + '</span><span class="ex-arrow">' + arrow + '</span>';
+      if (g.id === 'impasti') return '<button class="ex-card" type="button" data-ex-dough>' + contents + '</button>';
+      return '<a class="ex-card" href="#g-' + esc(g.id) + '">' + contents + '</a>';
+    }).join('');
+    box.innerHTML = '<div class="ex-alert"><span class="ex-info" aria-hidden="true">i</span><p><b>Allergie o intolleranze?</b> Comunicale sempre al personale.</p><a href="#g-allergeni">Allergeni ' + arrow + '</a></div>' +
+      '<div class="ex-heading"><h2 id="exploreTitle">Esplora il menù</h2></div><div class="ex-grid">' + cards + '</div>' +
+      (hasPizza ? '<a class="ex-build" href="#crea" data-open-builder><span><b>Crea la tua pizza</b><small>Scegli impasto e ingredienti</small></span>' + arrow + '</a>' : '');
+    box.hidden = !groups.length;
+  }
+
   var SUBS = {};   // per ogni gruppo: le sue sottocategorie (seconda fila della barra)
   function render() {
     var html = filtering() ? '' : allergensHTML(), nav = filtering() ? '' : '<a href="#g-allergeni" data-g="allergeni">Allergeni</a>';
@@ -223,7 +254,7 @@
     $('gnav').classList.toggle('has-f', nFilters() > 0);
     $('gnav').hidden = !nav;
     subCur = null; subGrp = null;
-    spy(); reveal();
+    renderExplore(); spy(); reveal();
   }
   /* Seconda fila: le sottocategorie del gruppo che stai guardando */
   var subGrp = null, subCur = null;
@@ -750,6 +781,10 @@
   function bind() {
     var t;
     $('q').addEventListener('input', function (e) { clearTimeout(t); t = setTimeout(function () { state.q = e.target.value.trim(); render(); }, 140); });
+    if ($('qClear')) $('qClear').addEventListener('click', function () { clearTimeout(t); $('q').value = ''; state.q = ''; render(); $('q').focus(); });
+    if ($('menuExplore')) $('menuExplore').addEventListener('click', function (e) {
+      if (e.target.closest('[data-ex-dough]') && doughSection()) openSheet($('sheet'), doughsHTML());
+    });
     $('contenuto').addEventListener('click', function (e) {
       var m = e.target.closest('[data-acc]'); if (m) { toggleAcc(m.dataset.acc); return; }
       if (e.target.closest('[data-doughs]')) { openSheet($('sheet'), doughsHTML()); return; }

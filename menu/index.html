@@ -12,7 +12,7 @@
 <link rel="preload" href="../assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/css/base.css?v=f547ae7d">
 <link rel="stylesheet" href="../assets/css/menu.css?v=2785ff9c">
-<link rel="stylesheet" href="../assets/css/menu-v1.css?v=1">
+<link rel="stylesheet" href="../assets/css/menu-v1.css?v=2">
 </head>
 <body>
 <a class="sr-only" href="#contenuto">Vai al menu</a>
@@ -32,8 +32,12 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
     <label class="sr-only" for="q">Cerca nel menu</label>
     <input id="q" type="search" placeholder="Cerca un piatto o un ingrediente" autocomplete="off" enterkeyhint="search">
+    <button type="button" class="q-clear" id="qClear" aria-label="Cancella ricerca" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   </div>
+  <p class="menu-results" id="menuResults" role="status" hidden></p>
 </section>
+
+<section class="menu-explore" id="menuExplore" aria-labelledby="exploreTitle" hidden></section>
 
 <section class="promos" id="promos" aria-label="In evidenza" hidden></section>
 
@@ -88,7 +92,7 @@
 <div class="waiter" id="waiter" role="dialog" aria-modal="true" aria-labelledby="wTitle" hidden></div>
 <script src="../assets/vendor/qrcode.js"></script>
 <script src="../assets/js/core.js?v=ddc6390b"></script>
-<script src="../assets/js/menu.js?v=eec9f42d"></script>
+<script src="../assets/js/menu.js?v=menu-v2"></script>
 <script src="../assets/js/kiosk.js?v=da9a915e"></script>
 </body>
 </html>
