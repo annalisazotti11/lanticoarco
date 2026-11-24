@@ -505,3 +505,18 @@
     watchCounts();
   }).catch(function () { var hours = $('hours'); if (hours) hours.hidden = false; var w = $('week'); if (w) w.hidden = true; anatomy(0); });
 })();
+
+
+/* V10: single-frame scroll sampling, no scroll hijack. The archive is visible without JS. */
+(function(){
+ var page=document.querySelector('.site-v10');if(!page||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ var targets=[].slice.call(page.querySelectorAll('[data-cinema]')), films=[].slice.call(page.querySelectorAll('[data-film]')),visible=new Set(),pending=false;
+ page.classList.add('cinema-ready');
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('cinema-wait');e.target.classList.add('cinema-in');io.unobserve(e.target)}})},{threshold:.1,rootMargin:'0px 0px 20px 0px'});
+ targets.forEach(function(el){if(el.getBoundingClientRect().top>innerHeight+30)el.classList.add('cinema-wait');io.observe(el)});
+ var active=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)visible.add(e.target);else visible.delete(e.target)});request()},{rootMargin:'80px'});
+ films.forEach(function(el){active.observe(el)});
+ function paint(){pending=false;visible.forEach(function(el){var r=el.getBoundingClientRect(),p=Math.max(-1,Math.min(1,(innerHeight*.5-r.top-r.height*.5)/Math.max(innerHeight,r.height)));el.style.setProperty('--film-y',(p*5).toFixed(2)+'px')})}
+ function request(){if(!pending){pending=true;requestAnimationFrame(paint)}}
+ addEventListener('scroll',request,{passive:true});addEventListener('resize',request);request();
+})();
