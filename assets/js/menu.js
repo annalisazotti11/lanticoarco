@@ -88,6 +88,12 @@
       (it.image ? '<img class="item-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '') +
       '</button>' + (canChooseExtras(sec) && it.available !== false ? '<button type="button" class="item-customize" data-open-builder="' + esc(it.id) + '" aria-label="' + (sec.group === 'pizze' ? 'Personalizza ' : 'Aggiunte per ') + esc(it.name) + '"><span>' + (sec.group === 'pizze' ? 'Personalizza' : 'Scegli le aggiunte') + '</span><span aria-hidden="true">+</span></button>' : '') + '</li>';
   }
+  function kioskDoughCards(items, sec) {
+    return '<div class="k11-dough-grid">' + items.map(function(it) {
+      var photo = it.image ? '<img src="' + esc(AA.src(it.image)) + '" alt="" loading="lazy" decoding="async">' : '<span class="k11-ph-empty" aria-hidden="true">' + AA.archSVG() + '</span>';
+      return '<article class="item k11-dough-card" id="k11-dough-' + esc(it.id) + '"><div class="k11-dough-photo">' + photo + '</div><div class="k11-dough-copy"><div class="k11-dough-heading"><h4>' + hl(doughName(it.name)) + '</h4><strong class="num">' + priceHTML(it,sec) + '</strong></div><p>' + hl(it.desc || '') + '</p>' + algsHTML(it) + '</div></article>';
+    }).join('') + '</div>';
+  }
   function cardsHTML(items, sec) {
     return '<div class="cards">' + items.map(function (it) {
       return '<button class="card" type="button" data-item="' + esc(it.id) + '">' +
@@ -121,7 +127,8 @@
   var OPEN = {};   // sottocategorie aperte
   var CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function sectionBody(sec, items) {
-    return sec.layout === 'cards' && !state.q ? cardsHTML(items, sec)
+    return kioskV11 && sec.group === 'impasti' ? kioskDoughCards(items,sec)
+      : sec.layout === 'cards' && !state.q ? cardsHTML(items, sec)
       : sec.layout === 'chips' ? chipsHTML(items)
       : '<ul class="items">' + items.map(function (it) { return itemHTML(it, sec); }).join('') + '</ul>';
   }
@@ -168,8 +175,8 @@
     var its = d.items.filter(function (it) { return it.available !== false; });
     if (!its.length) return '';
     var w = NUMW[its.length] || its.length;
-    return '<button type="button" class="dstrip" data-doughs><span class="dstrip-phs">' + its.slice(0, 5).map(function (it) { return '<i' + (it.image ? '' : ' class="dl-none"') + '>' + doughPh(it) + '</i>'; }).join('') + '</span>' +
-      '<span class="dstrip-tx"><b>' + esc(w.charAt(0).toUpperCase() + w.slice(1)) + ' impasti, su ogni pizza</b><small>Dal classico al carbone vegetale: scopri quale fa per te</small></span>' + CHEV + '</button>';
+    return (kioskV11 ? '<a class="dstrip k11-dough-link" href="#g-impasti">' : '<button type="button" class="dstrip" data-doughs>') + '<span class="dstrip-phs">' + its.slice(0, 5).map(function (it) { return '<i' + (it.image ? '' : ' class="dl-none"') + '>' + doughPh(it) + '</i>'; }).join('') + '</span>' +
+      '<span class="dstrip-tx"><b>' + esc(w.charAt(0).toUpperCase() + w.slice(1)) + ' impasti, su ogni pizza</b><small>Dal classico al carbone vegetale: scopri quale fa per te</small></span>' + CHEV + (kioskV11 ? '</a>' : '</button>');
   }
   function doughsHTML() {
     var d = doughSection();
@@ -254,7 +261,7 @@
       var contents = art + title + '<span class="ex-arrow">' + arrow + '</span>';
       if (g.id === 'pizze') {
         featured = '<a class="ex-card ex-feature" href="#g-pizze">' + art + '<span class="ex-copy"><strong>' + esc(g.name) + '</strong><small>Gourmet, classiche, bianche e vegan</small></span><span class="ex-arrow">' + arrow + '</span></a>';
-      } else if (g.id === 'impasti') {
+      } else if (g.id === 'impasti' && !kioskV11) {
         rest.push('<button class="ex-card" type="button" data-ex-dough>' + contents + '</button>');
       } else {
         rest.push('<a class="ex-card" href="#g-' + esc(g.id) + '">' + contents + '</a>');
@@ -272,8 +279,7 @@
     order.forEach(function(id) {
       var g = DATA.groups.filter(function(g){return g.id===id;})[0]; if (!g) return;
       var label = '<span class="k11-side-photo">' + (g.image ? '<img src="' + esc(AA.src(g.image)) + '" alt="" loading="lazy">' : AA.archSVG()) + '</span><b>' + esc(g.name) + '</b>';
-      if (id === 'impasti' && !filtering()) html += '<button type="button" data-k11-dough>' + label + '</button>';
-      else if (available.indexOf(id) >= 0) html += '<a href="#g-' + esc(id) + '" data-g="' + esc(id) + '">' + label + '</a>';
+      if (available.indexOf(id) >= 0) html += '<a href="#g-' + esc(id) + '" data-g="' + esc(id) + '">' + label + '</a>';
       else html += '<button type="button" disabled>' + label + '</button>';
     });
     return html + '<button type="button" data-k11-allergens><span class="k11-side-photo k11-side-icon" aria-hidden="true">i</span><b>Allergeni</b></button>';
@@ -301,7 +307,12 @@
     window.scrollTo({top:0,behavior:'auto'});
   }
   function chooseGroup(id) {
+    var changed = browseGroup !== id;
     browseGroup = id; applyBrowse();
+    if (kioskV11 && changed) {
+      var g = document.getElementById('g-' + id);
+      if (g) {g.classList.remove('k11-category-in'); void g.offsetWidth; g.classList.add('k11-category-in');}
+    }
     if (!filtering()) { spySet(id); renderSub(id); }
   }
 
@@ -310,13 +321,14 @@
     var html = filtering() ? '' : allergensHTML(), nav = filtering() ? '' : '<a href="#g-allergeni" data-g="allergeni">Allergeni</a>';
     SUBS = { allergeni: { line: 'Comunicate sempre allergie e intolleranze' } };
     groupsWithContent().forEach(function (g) {
-      if (g.id === 'impasti' && !filtering()) return;
+      if (g.id === 'impasti' && !filtering() && !kioskV11) return;
       var secs = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
       var common = commonSupp(secs);
       var inner = secs.map(function (s) { return sectionHTML(s, !common.length, secs.length > 1 && !kioskV11); }).join('');
       if (!inner) return;
       var top = '';
       if (g.id === 'pizze' && !filtering()) top += doughStrip();
+      if (kioskV11 && g.id === 'impasti' && !filtering()) top += '<div class="k11-dough-intro"><div><span class="k11-eyebrow">LA NOSTRA FIRMA</span><p>Scegli l’impasto dalla personalizzazione di qualsiasi pizza. I prezzi indicano il supplemento.</p></div><a href="#g-pizze">Vai alle pizze <span aria-hidden="true">→</span></a></div>';
       if (false && common.length && !filtering()) top += '<p class="gsupp"><b>Su ogni pizza</b> ' + common.map(function (x) { return esc(x.label.toLowerCase()) + ' <span class="num">' + AA.price(x.price, { signed: true }) + '</span>'; }).join(' · ') + '. Le altre varianti le trovi in “Personalizza”, nella scheda di ogni pizza.</p>';
       html += '<section class="grp" id="g-' + esc(g.id) + '"><h2 class="grp-t">' + esc(g.name) + '</h2>' + top + inner + (g.id === 'pizze' && !filtering() ? builderCTA() : '') + '</section>';
       nav += '<a href="#g-' + esc(g.id) + '" data-g="' + esc(g.id) + '">' + esc(g.name) + '</a>';
@@ -1042,9 +1054,9 @@
     });
     var tagHash = location.hash.slice(1);
     if (tagHash && AA.TAG_BY_CODE[tagHash]) { state.tags = [tagHash]; }
-    else if (tagHash.indexOf('g-') === 0) { browseGroup = tagHash.slice(2); if (!DATA.groups.some(function(g){return g.id === browseGroup;}) && browseGroup !== 'allergeni') browseGroup = null; if (browseGroup === 'impasti') browseGroup = null; }
-    else if (tagHash.indexOf('piatto-') === 0) { var found = findItem(decodeURIComponent(tagHash.slice(7))); if (found && found.sec.group !== 'impasti') browseGroup = found.sec.group; }
-    else { var linked = DATA.sections.filter(function(s){return s.id === tagHash && s.visible;})[0]; if (linked && linked.group !== 'impasti') { browseGroup = linked.group; OPEN[linked.id] = true; } }
+    else if (tagHash.indexOf('g-') === 0) { browseGroup = tagHash.slice(2); if (!DATA.groups.some(function(g){return g.id === browseGroup;}) && browseGroup !== 'allergeni') browseGroup = null; if (browseGroup === 'impasti' && !kioskV11) browseGroup = null; }
+    else if (tagHash.indexOf('piatto-') === 0) { var found = findItem(decodeURIComponent(tagHash.slice(7))); if (found && (found.sec.group !== 'impasti' || kioskV11)) browseGroup = found.sec.group; }
+    else { var linked = DATA.sections.filter(function(s){return s.id === tagHash && s.visible;})[0]; if (linked && (linked.group !== 'impasti' || kioskV11)) { browseGroup = linked.group; OPEN[linked.id] = true; } }
     if (kioskV11) {
       // The subsection bar belongs to the content, not the fixed category sidebar.
       $('gnav').after($('gnavSub'));
@@ -1062,13 +1074,14 @@
     });
     if (state.tags.length) { dropHash(); updateFilterUI(); return; }
     if (location.hash === '#crea') { openBuilder(null); return; }
-    if (location.hash === '#g-impasti' && doughSection()) { dropHash(); openSheet($('sheet'), doughsHTML()); return; }
+    if (!kioskV11 && location.hash === '#g-impasti' && doughSection()) { dropHash(); openSheet($('sheet'), doughsHTML()); return; }
     // #piatto-i554: dal totem, apre il comparto del piatto e la sua scheda
     var pm = location.hash.match(/^#piatto-(.+)$/);
     if (pm) {
       var pf = findItem(decodeURIComponent(pm[1]));
       dropHash();
       if (pf) {
+        if (kioskV11 && pf.sec.group === 'impasti') { var card = document.getElementById('k11-dough-' + pf.item.id); if(card)card.scrollIntoView({block:'center'}); return; }
         toggleAcc(pf.sec.id, true);
         var pel = document.querySelector('#contenuto [data-item="' + pf.item.id + '"]');
         if (pel) pel.scrollIntoView({ block: 'center' });

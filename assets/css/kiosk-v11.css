@@ -185,3 +185,60 @@ html.kiosk.kiosk-v11 .k-qr-item+.k-qr-item{border-left:1px solid #ddcbb7;padding
 html.kiosk.kiosk-v11 .k-qr-code{width:clamp(78px,10vw,110px);height:clamp(78px,10vw,110px);flex:none;background:#fff}
 html.kiosk.kiosk-v11 .k-qr-item p,html.kiosk.kiosk-v11 .k-qr-item b{font-size:clamp(.68rem,1.4vw,.96rem);line-height:1.3}
 @media(max-width:520px){html.kiosk.kiosk-v11 .k-qr-pair{grid-template-columns:1fr}html.kiosk.kiosk-v11 .k-qr-item+.k-qr-item{border-left:0;border-top:1px solid #ddcbb7;padding:10px 0 0}}
+
+/* V11.3 — visual polish, responsive portrait-first, and inline dough catalogue. */
+html.kiosk.kiosk-v11{--k11-bg:#f7f0e6;--k11-line:#dfd0bf;--k11-paper:#fffdf8}
+html.kiosk.kiosk-v11 body{background:radial-gradient(ellipse at 82% 0%,#fffaf1 0%,#f7f0e6 45%,#eee2d3 100%);background-attachment:fixed}
+html.kiosk.kiosk-v11 .top{background:#fffdf8;border-bottom-color:#e1d0ba;box-shadow:0 3px 14px #39291c12}
+html.kiosk.kiosk-v11 #searchbar{background:#f5efe5;border-color:#e3d4c2;border-radius:18px}
+html.kiosk.kiosk-v11 #searchbar:focus-within{border-color:#a8754b;box-shadow:0 0 0 3px #ad805022}
+html.kiosk.kiosk-v11 #gnav{background:linear-gradient(160deg,#3e291d,#503627 62%,#39261c);border:0;box-shadow:4px 0 16px #33231816}
+html.kiosk.kiosk-v11 .gnav-in a,html.kiosk.kiosk-v11 .gnav-in button{color:#f9ebd9;border-color:transparent;border-radius:13px;position:relative;font-weight:650}
+html.kiosk.kiosk-v11 .gnav-in [aria-current="true"]{background:#f8ecd9;color:#3e291d;border-color:#ebcfaa;box-shadow:0 4px 14px #1b110e40}
+html.kiosk.kiosk-v11 .gnav-in [aria-current="true"]::after{content:"";position:absolute;right:0;top:20%;bottom:20%;width:4px;border-radius:4px;background:#ad784c}
+html.kiosk.kiosk-v11 .gnav-in [aria-current="true"] .k11-side-photo{border-color:#c79b74}
+html.kiosk.kiosk-v11 .k11-side-photo{border-color:#957455;background:#d8c2a9}
+html.kiosk.kiosk-v11 #gnavSub:not([hidden]){background:#f7f0e6f5;border-bottom-color:#decfbc;box-shadow:0 5px 10px #39291b08;gap:10px}
+html.kiosk.kiosk-v11 #gnavSub a{border-radius:999px;padding-inline:19px;min-height:48px;transition:background .22s,color .22s,transform .16s}
+html.kiosk.kiosk-v11 .intro-t{color:#39271b}
+html.kiosk.kiosk-v11 .ex-special .ex-feature{border-radius:23px;overflow:hidden;isolation:isolate;box-shadow:0 8px 22px #38271b26}
+html.kiosk.kiosk-v11 .ex-special .ex-feature::after{display:block;content:"";position:absolute;inset:0;background:linear-gradient(0deg,#23160fe8 0%,#23160f30 60%,transparent 100%);z-index:0;pointer-events:none}
+html.kiosk.kiosk-v11 .ex-special .ex-feature .ex-copy{position:relative;z-index:1}
+html.kiosk.kiosk-v11 .ex-special .ex-feature .ex-photo img{animation:k11-hero-motion 1s cubic-bezier(.16,1,.3,1) both}
+@keyframes k11-hero-motion{from{transform:scale(1.06)}to{transform:scale(1)}}
+html.kiosk.kiosk-v11 .ex-grid .ex-card,html.kiosk.kiosk-v11 .ex-grid .ex-card:last-child:nth-child(odd),html.kiosk.kiosk-v11 .ex-grid .ex-card:last-child:nth-child(4n+1){background:#fffdf8;border-color:#e4d4bf;border-radius:17px;box-shadow:0 5px 14px #39291c0d;position:relative;transition:transform .18s ease,box-shadow .25s ease}
+html.kiosk.kiosk-v11 .ex-grid .ex-card .ex-photo img{transition:transform .4s cubic-bezier(.16,1,.3,1)}
+html.kiosk.kiosk-v11 .grp-t{font-size:clamp(2.2rem,4.6vw,4rem);position:relative;padding-bottom:15px;letter-spacing:-.035em}
+html.kiosk.kiosk-v11 .grp-t::after{content:"";display:block;width:54px;height:3px;border-radius:3px;background:#b58050;margin-top:12px}
+html.kiosk.kiosk-v11 .sec-h{padding:12px 0 11px;border-bottom:1px solid #d9c5ae}
+html.kiosk.kiosk-v11 .k11-product{border-radius:20px;border-color:#e3d3be;background:#fffdf8;box-shadow:0 7px 18px #39291c0c;transition:box-shadow .22s,transform .18s}
+html.kiosk.kiosk-v11 .k11-product-photo{aspect-ratio:1.65;max-height:230px}
+html.kiosk.kiosk-v11 .k11-product-photo:has(.k11-ph-empty){aspect-ratio:1.65;height:auto;max-height:230px}
+html.kiosk.kiosk-v11 .k11-ph-empty{background:radial-gradient(ellipse at center,#f8eddd,#e8d7c2)}
+html.kiosk.kiosk-v11 .k11-card-action{background:#f3e7d6;border-top-color:#e9d9c5;color:#5d3b24}
+html.kiosk.kiosk-v11 .k11-card-action span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e6ceb0}
+html.kiosk.kiosk-v11 .k11-bottom{background:#fffdf8;box-shadow:0 -7px 24px #39291c16}
+html.kiosk.kiosk-v11 .k11-cart-open{background:linear-gradient(135deg,#754d31,#533522);border-radius:16px}
+html.kiosk.kiosk-v11 .k11-dough-link{text-decoration:none;cursor:pointer;border-radius:17px}
+html.kiosk.kiosk-v11 .k11-dough-intro{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:18px;border:1px solid #e4d0b5;background:#fff9ef;border-radius:17px;margin-bottom:20px}
+html.kiosk.kiosk-v11 .k11-dough-intro p{font-size:clamp(.83rem,1.6vw,1rem);color:#725039;margin-top:6px}
+html.kiosk.kiosk-v11 .k11-dough-intro a{flex:none;text-decoration:none;color:#fff9ed;background:#63422b;padding:13px 16px;border-radius:13px;font-weight:650;min-height:48px;display:flex;align-items:center;gap:10px;font-size:.86rem}
+html.kiosk.kiosk-v11 .k11-dough-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,20px)}
+html.kiosk.kiosk-v11 .k11-dough-card{opacity:1;transform:none;background:#fffdf8;border:1px solid #e2d2bd;border-radius:20px;overflow:hidden;box-shadow:0 5px 18px #39291c10;display:flex;flex-direction:column}
+html.kiosk.kiosk-v11 .k11-dough-photo{aspect-ratio:1.7;max-height:250px;background:#e9d9c6;overflow:hidden}
+html.kiosk.kiosk-v11 .k11-dough-photo img{width:100%;height:100%;object-fit:cover}
+html.kiosk.kiosk-v11 .k11-dough-copy{padding:clamp(13px,2vw,21px);display:grid;gap:10px}
+html.kiosk.kiosk-v11 .k11-dough-heading{display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px;justify-content:space-between}
+html.kiosk.kiosk-v11 .k11-dough-heading h4{font-size:clamp(1.05rem,2vw,1.45rem);line-height:1.2;color:#3c291d}
+html.kiosk.kiosk-v11 .k11-dough-heading strong{padding:7px 10px;border-radius:10px;background:#ead6bb;color:#553724;font-size:.85rem}
+html.kiosk.kiosk-v11 .k11-dough-copy p{font-size:clamp(.82rem,1.45vw,1rem);line-height:1.5;color:#594639}
+html.kiosk.kiosk-v11 .k11-dough-copy .algs{font-size:.73rem}
+html.kiosk.kiosk-v11 .k11-dough-card.in{animation:k11-product-in .42s cubic-bezier(.16,1,.3,1) both}
+html.kiosk.kiosk-v11 .k11-category-in{animation:k11-category-in .37s cubic-bezier(.16,1,.3,1) both}
+@keyframes k11-category-in{from{opacity:.55;translate:0 8px}to{opacity:1;translate:0 0}}
+html.kiosk.kiosk-v11 :is(.gnav-in a,.gnav-in button,.k11-card-action,.k11-cart-open,.ex-card,.k11-dough-link):active{transform:scale(.975)}
+html.kiosk.kiosk-v11 :is(.gnav-in a,.gnav-in button,.k11-card-action,.k11-cart-open,.ex-card,.k11-dough-link):focus-visible{outline:3px solid #c28b55;outline-offset:3px}
+@media(hover:hover) and (pointer:fine){html.kiosk.kiosk-v11 .k11-product:hover{box-shadow:0 10px 24px #39291c20}html.kiosk.kiosk-v11 .ex-grid .ex-card:hover .ex-photo img{transform:scale(1.05)}}
+@media(max-width:620px){html.kiosk.kiosk-v11 .k11-dough-grid{grid-template-columns:1fr}html.kiosk.kiosk-v11 .k11-dough-intro{align-items:stretch;flex-direction:column}html.kiosk.kiosk-v11 .k11-dough-intro a{justify-content:space-between}}
+@media(max-height:780px) and (orientation:landscape){html.kiosk.kiosk-v11 .k11-product-photo,html.kiosk.kiosk-v11 .k11-product-photo:has(.k11-ph-empty){max-height:175px}html.kiosk.kiosk-v11 .k11-dough-photo{max-height:195px}}
+@media(prefers-reduced-motion:reduce){html.kiosk.kiosk-v11 *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
