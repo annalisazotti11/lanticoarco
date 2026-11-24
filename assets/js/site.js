@@ -520,3 +520,16 @@
  function request(){if(!pending){pending=true;requestAnimationFrame(paint)}}
  addEventListener('scroll',request,{passive:true});addEventListener('resize',request);request();
 })();
+
+/* V11: accessible, user-controlled timeline. No automatic scrolling or timer. */
+(function(){
+ var root=document.getElementById('historyTimeline');if(!root)return;
+ var slides=Array.from(root.querySelectorAll('.timeline-slide')),buttons=Array.from(root.querySelectorAll('[data-year-index]')),rail=root.querySelector('.timeline-rail'),controls=root.querySelector('.timeline-controls'),prev=document.getElementById('historyPrev'),next=document.getElementById('historyNext'),count=document.getElementById('historyCount'),cur=0,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(!slides.length||slides.length!==buttons.length)return;
+ function show(index,focus){cur=Math.max(0,Math.min(slides.length-1,index));slides.forEach(function(sl,i){sl.hidden=i!==cur;sl.classList.toggle('active',i===cur)});buttons.forEach(function(b,i){b.setAttribute('aria-pressed',String(i===cur))});prev.disabled=cur===0;next.disabled=cur===slides.length-1;count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');var btn=buttons[cur];if(rail.scrollWidth>rail.clientWidth)rail.scrollTo({left:Math.max(0,btn.offsetLeft-(rail.clientWidth-btn.offsetWidth)/2),behavior:reduce?'auto':'smooth'});if(focus)btn.focus({preventScroll:true})}
+ root.classList.add('timeline-ready');controls.hidden=false;show(0,false);
+ buttons.forEach(function(b,i){b.addEventListener('click',function(){show(i,false)})});
+ prev.addEventListener('click',function(){show(cur-1,false)});next.addEventListener('click',function(){show(cur+1,false)});
+ rail.addEventListener('keydown',function(e){if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();show(e.key==='Home'?0:e.key==='End'?slides.length-1:cur+(e.key==='ArrowRight'?1:-1),true)}});
+ var x=0,y=0,stage=document.getElementById('timelineStage');stage.addEventListener('touchstart',function(e){x=e.touches[0].clientX;y=e.touches[0].clientY},{passive:true});stage.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-x,dy=e.changedTouches[0].clientY-y;if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.5)show(cur+(dx<0?1:-1),false)},{passive:true});
+})();
