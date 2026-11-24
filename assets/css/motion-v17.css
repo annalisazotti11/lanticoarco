@@ -1,0 +1,57 @@
+/* L'Antico Arco — motion V17 / menu V8. Enhancements are decorative only. */
+.aa-motion-progress{position:fixed;top:0;left:0;width:100%;height:3px;z-index:240;pointer-events:none;transform-origin:left center;transform:scaleX(var(--aa-progress,0));background:linear-gradient(90deg,#6d432c,#e4aa70 75%,#f7d6a6);box-shadow:0 0 8px #d99b6166}
+.site-v17 .v16-dialog[open]{animation:aa-gallery-in .36s cubic-bezier(.2,.8,.2,1) both}
+.site-v17 .v16-dialog[open]::backdrop{animation:aa-fade-in .24s ease-out both}
+.site-v17 .v16-dialog>img.aa-photo-change{animation:aa-photo-in .32s ease-out both}
+.site-v17 .v16-zoom{transition:background .22s,color .22s,transform .32s cubic-bezier(.2,.8,.2,1)}
+.site-v17 .v16-photo button::after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #f5d7ac80;border-radius:inherit;opacity:0;transition:opacity .3s;background:radial-gradient(ellipse at var(--aa-x,50%) var(--aa-y,50%),#ffda9726,transparent 62%)}
+.site-v17 .v16-photo button:focus-visible::after,.site-v17 .v16-photo button:hover::after{opacity:1}
+.site-v17 .v16-photo button:focus-visible .v16-zoom,.site-v17 .v16-photo button:hover .v16-zoom{transform:scale(1.12);background:#fff9eb;color:#6d432c}
+.site-v17 .social-latest-card img{transition:filter .32s,box-shadow .32s,transform .38s cubic-bezier(.2,.8,.2,1)}
+.site-v17 .social-latest-card:hover img,.site-v17 .social-latest-card:focus-visible img{transform:translateY(-3px);box-shadow:0 11px 24px #38231525;filter:saturate(1.06)}
+.site-v17 #fuoco .primary,.site-v17 .sf-menu{isolation:isolate;position:relative;overflow:hidden}
+.site-v17 #fuoco .primary::after,.site-v17 .sf-menu::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 25%,#fff8e488 50%,transparent 75%);transform:translateX(-110%);z-index:-1}
+.site-v17 #fuoco .primary:focus-visible::after,.site-v17 #fuoco .primary:hover::after,.site-v17 .sf-menu:focus-visible::after,.site-v17 .sf-menu:hover::after{animation:aa-shine .75s ease-out both}
+.site-v17 .aa-enter{animation:aa-editorial-in .5s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:var(--aa-delay,0ms)}
+@keyframes aa-shine{to{transform:translateX(110%)}}
+@keyframes aa-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes aa-gallery-in{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes aa-photo-in{from{opacity:.65;transform:scale(.987)}to{opacity:1;transform:scale(1)}}
+@keyframes aa-editorial-in{from{opacity:.65;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* Menu: quick, touch-first movement; no layout or selection changes. */
+html.menu-v8 .intro-row{animation:aa-menu-title .4s cubic-bezier(.2,.8,.2,1) both}
+html.menu-v8 .ex-grid .ex-card,html.menu-v8 .ex-build,html.menu-v8 .item-btn,html.menu-v8 .acc-h{transition:background .2s,color .2s,box-shadow .2s,transform .18s cubic-bezier(.2,.8,.2,1)}
+html.menu-v8 .ex-photo img,html.menu-v8 .item-ph{transition:transform .35s cubic-bezier(.2,.8,.2,1),filter .25s}
+html.menu-v8 .ex-arrow,html.menu-v8 .ex-build>svg{transition:transform .25s cubic-bezier(.2,.8,.2,1),color .25s,background .25s}
+html.menu-v8 .ex-special .ex-feature{transition:box-shadow .3s,transform .25s}
+html.menu-v8 .ex-special .ex-feature .ex-photo{overflow:hidden}
+html.menu-v8 .ex-special .ex-feature::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at var(--aa-x,50%) var(--aa-y,45%),#f5b66d30,transparent 60%);opacity:0;transition:opacity .25s}
+html.menu-v8 .ex-card:active,html.menu-v8 .ex-build:active,html.menu-v8 .item-btn:active,html.menu-v8 .acc-h:active{transform:scale(.985)}
+html.menu-v8 .ico:active,html.menu-v8 .chip:active,html.menu-v8 .bchip:active,html.menu-v8 .b-fire:active,html.menu-v8 .b-ghost:active{transform:scale(.96)}
+html.menu-v8 .ico,html.menu-v8 .b-fire,html.menu-v8 .b-ghost{transition:transform .18s,background .2s,box-shadow .2s}
+html.menu-v8 .chip,html.menu-v8 .bchip{transition:transform .18s,background .18s,color .18s,border-color .18s}
+html.menu-v8 .chip[aria-pressed="true"],html.menu-v8 .bchip[aria-pressed="true"]{box-shadow:0 3px 9px #36231720}
+html.menu-v8 .gnav-in a[aria-current="true"]{box-shadow:0 3px 7px #36231724}
+html.menu-v8 .searchbar:focus-within{box-shadow:0 0 0 2px #b9865366;transition:box-shadow .24s}
+html.menu-v8 .aa-enter{animation:aa-menu-in .32s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:var(--aa-delay,0ms)}
+html.menu-v8 .sheet:not([hidden]) .d-ph{animation:aa-photo-in .35s ease-out both}
+html.menu-v8 .acc.open .acc-h{border-color:#b99c81}
+@media(hover:hover) and (pointer:fine){
+ html.menu-v8 .ex-card:hover .ex-photo img,html.menu-v8 .item-btn:hover .item-ph{transform:scale(1.055)}
+ html.menu-v8 .ex-card:hover .ex-arrow,html.menu-v8 .ex-build:hover>svg{transform:translateX(3px)}
+ html.menu-v8 .ex-special .ex-feature:hover{box-shadow:0 10px 28px #39231938}
+ html.menu-v8 .ex-special .ex-feature:hover::before{opacity:1}
+}
+@keyframes aa-menu-title{from{opacity:.8;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes aa-menu-in{from{opacity:.83;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* A low-power touchscreen must not render a blurred backdrop or heavy effects. */
+html.kiosk.menu-v8 .sheet-bg{backdrop-filter:none;-webkit-backdrop-filter:none}
+html.kiosk.menu-v8 .aa-enter{animation-duration:.23s;animation-delay:0ms}
+html.kiosk.menu-v8 .ex-card:hover .ex-photo img,html.kiosk.menu-v8 .item-btn:hover .item-ph{transform:none}
+html.kiosk.menu-v8 .ex-special .ex-feature:hover::before{opacity:0}
+@media(prefers-reduced-motion:reduce){
+ .aa-motion-progress{box-shadow:none}
+ .site-v17 .aa-enter,html.menu-v8 .aa-enter,html.menu-v8 .intro-row,.site-v17 .v16-dialog[open],.site-v17 .v16-dialog[open]::backdrop,.site-v17 .v16-dialog>img.aa-photo-change{animation:none!important;transform:none!important;opacity:1!important}
+ .site-v17 #fuoco .primary::after,.site-v17 .sf-menu::after,.site-v17 .v16-photo button::after,html.menu-v8 .ex-special .ex-feature::before{display:none}
+}
