@@ -197,3 +197,8 @@ body.attract { cursor: pointer; }
   .att-go { padding: 1.2rem 2rem; font-size: 1.9rem; }
 }
 @media (prefers-reduced-motion: reduce) { .car-s img, .car-s.on img { transition: none; transform: none; } .att-go span::after { animation: none; } }
+
+.tv-head{gap:clamp(.4rem,1vw,1.2rem)}
+.tv-brand{margin-right:auto}
+.tv-qr{gap:.5rem}.tv-qr p{font-size:clamp(.64rem,1.15vw,1rem)}.tv-qr-code{width:clamp(4.5rem,7vw,7.4rem);height:clamp(4.5rem,7vw,7.4rem)}
+@media(max-width:600px){.tv-head{padding:1rem}.tv-qr{flex-direction:column-reverse;text-align:center;gap:.25rem}.tv-qr p{order:0;font-size:.65rem}.tv-qr-code{width:4.2rem;height:4.2rem;padding:.25rem}}

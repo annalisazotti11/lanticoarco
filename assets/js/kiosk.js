@@ -56,7 +56,8 @@
     var url = (data && data.settings && data.settings.menuUrl) || new URL('../menu/', location.href).href;
     var box = document.createElement('div');
     box.className = 'k-qr';
-    box.innerHTML = '<div class="k-qr-code">' + AA.qrSVG(url, { margin: 1 }) + '</div><p><b>Il menu sul tuo telefono</b>Inquadra il codice con la fotocamera.</p>';
+    var maps = (data && data.info && data.info.mapsUrl) || '';
+    box.innerHTML = '<div class="k-qr-pair"><div class="k-qr-item"><div class="k-qr-code">' + AA.qrSVG(url, { margin: 2 }) + '</div><p><b>Menù sul telefono</b>Inquadra il codice</p></div>' + (maps ? '<div class="k-qr-item"><div class="k-qr-code">' + AA.qrSVG(maps, { margin: 2 }) + '</div><p><b>Lasciaci una recensione</b>Apri Google Maps</p></div>' : '') + '</div>';
     intro.appendChild(box);
   }
   AA.loadMenu().then(addQr).catch(function () { addQr(null); });
