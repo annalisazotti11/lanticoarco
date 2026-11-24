@@ -44,42 +44,9 @@
     return { play: function () { f.play(); }, pause: function () { f.pause(); } };
   })();
 
-  /* ================= Scintille ================= */
-  var sparkCtl = (function sparks() {
-    var c = $('sparks');
-    if (!c || reduce) return null;
-    var ctx = c.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W, H, ps = [], running = false;
-    function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
-    function spawn(initial) {
-      var cx = isWide() ? .73 : .66, spread = isWide() ? .07 : .1;
-      return {
-        x: W * (cx - spread + Math.random() * spread * 2), y: initial ? H * (.15 + Math.random() * .6) : H * (isWide() ? .45 : .52) + Math.random() * H * (isWide() ? .22 : .18),
-        vy: .5 + Math.random() * 1.5, vx: (Math.random() - .5) * .4, r: .6 + Math.random() * 1.8,
-        life: 0, max: 200 + Math.random() * 360, ph: Math.random() * 6.28, hue: 18 + Math.random() * 26
-      };
-    }
-    function init() { size(); var n = Math.min(60, Math.round(W / 22)); ps = []; for (var i = 0; i < n; i++) ps.push(spawn(true)); }
-    function tick() {
-      if (!running) return;
-      ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = 'lighter';
-      for (var i = 0; i < ps.length; i++) {
-        var p = ps[i];
-        p.life++; p.y -= p.vy; p.ph += .03; p.x += p.vx + Math.sin(p.ph) * .35;
-        var k = 1 - p.life / p.max, fl = .65 + Math.sin(p.life * .25 + p.ph) * .35;
-        if (k <= 0 || p.y < -20) { ps[i] = spawn(false); continue; }
-        var al = k * fl * .9;
-        ctx.fillStyle = 'hsla(' + p.hue + ',100%,60%,' + (al * .14) + ')';
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 5, 0, 6.283); ctx.fill();
-        ctx.fillStyle = 'hsla(' + (p.hue + 15) + ',100%,' + (70 + k * 15) + '%,' + al + ')';
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
-      }
-      requestAnimationFrame(tick);
-    }
-    init();
-    window.addEventListener('resize', function () { clearTimeout(c._t); c._t = setTimeout(init, 200); });
-    return { play: function () { if (!running) { running = true; tick(); } }, pause: function () { running = false; } };
-  })();
+  /* La scena non aggiunge particelle artificiali al filmato del forno. */
+  var sparkCtl = null;
+  if ($('sparks')) $('sparks').style.display = 'none';
 
   /* ================= Si entra dall'arco ================= */
   var fireC = $('fire'), sparkC = $('sparks');
@@ -163,19 +130,24 @@
   else {
     var t0 = performance.now();
     (function openArch(now) {
-      openT = clamp((now - t0) / 1700, 0, 1);
+      openT = clamp((now - t0) / 1000, 0, 1);
       paintHero();
       if (openT < 1) requestAnimationFrame(openArch);
     })(t0);
-    if (fireC.animate) fireC.animate([{ filter: 'brightness(.12) saturate(.5)' }, { filter: 'brightness(.5) saturate(.8)', offset: .45 }, { filter: 'brightness(1) saturate(1)' }], { duration: 1900, delay: 150, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'backwards' });
-    setTimeout(function () { hero.classList.add('on'); }, 700);
+    if (fireC.animate) fireC.animate([{ filter: 'brightness(.65)' }, { filter: 'brightness(1)' }], { duration: 750, delay: 0, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'backwards' });
+    setTimeout(function () { hero.classList.add('on'); }, 200);
   }
   onScrollHero();
-  new IntersectionObserver(function (es) {
-    var vis = es[0].isIntersecting;
-    if (fireCtl) { if (vis) fireCtl.play(); else fireCtl.pause(); }
-    if (sparkCtl) { if (vis) sparkCtl.play(); else sparkCtl.pause(); }
-  }).observe(stick);
+  var heroVisible = false;
+  function syncFire() {
+    if (!fireCtl) return;
+    if (heroVisible && document.visibilityState !== 'hidden') fireCtl.play();
+    else fireCtl.pause();
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { heroVisible = es[0].isIntersecting; syncFire(); }).observe(stick);
+  } else { heroVisible = true; syncFire(); }
+  document.addEventListener('visibilitychange', syncFire);
 
   /* ================= Titoli che entrano parola per parola ================= */
   function splitWords(el) {
