@@ -29,9 +29,16 @@
     var film = $('fireFilm');
     if (!film || reduce) return null;
     var started = false, failed = false, requested = false;
-    function reveal() { if (!failed && !film.paused && film.readyState >= 2) c.classList.add('film-ready'); }
+    var toggle = $('heroFilmToggle'), userPaused = false;
+    function updateToggle() {
+      if (!toggle) return;
+      toggle.hidden = failed || !started;
+      toggle.textContent = film.paused ? 'Riproduci il video' : 'Metti in pausa il video';
+    }
+    function reveal() { if (!failed && !film.paused && film.readyState >= 2) c.classList.add('film-ready'); updateToggle(); }
     film.addEventListener('playing', reveal);
-    film.addEventListener('error', function () { failed = true; c.classList.remove('film-ready'); });
+    film.addEventListener('pause', updateToggle);
+    film.addEventListener('error', function () { failed = true; c.classList.remove('film-ready'); updateToggle(); });
     function load() {
       if (started) return;
       started = true;
@@ -39,15 +46,18 @@
       film.innerHTML = '<source src="' + AA.ROOT + 'assets/video/forno-reale.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/forno-reale.mp4" type="video/mp4">';
       film.load();
     }
-    return {
-      play: function () {
-        if (failed || requested) return;
-        requested = true; load();
-        var p = film.play();
-        if (p && p.catch) p.catch(function () { if (requested) { requested = false; c.classList.remove('film-ready'); } });
-      },
-      pause: function () { requested = false; if (started) film.pause(); }
-    };
+    function play() {
+      if (failed || requested || userPaused) return;
+      requested = true; load(); updateToggle();
+      var p = film.play();
+      if (p && p.catch) p.catch(function () { if (requested) { requested = false; c.classList.remove('film-ready'); updateToggle(); } });
+    }
+    function pause() { requested = false; if (started) film.pause(); updateToggle(); }
+    if (toggle) toggle.addEventListener('click', function () {
+      if (film.paused) { userPaused = false; play(); }
+      else { userPaused = true; pause(); }
+    });
+    return { play: play, pause: pause };
   })();
 
   /* La scena non aggiunge particelle artificiali al filmato del forno. */
@@ -110,6 +120,8 @@
     fireC.style.transform = z; sparkC.style.transform = z;
     copy.style.transform = 'translate3d(0,' + (-g.p * 90).toFixed(1) + 'px,0)';
     enter.style.visibility = g.p > .05 ? 'hidden' : '';
+    var filmToggle = $('heroFilmToggle');
+    if (filmToggle) filmToggle.style.visibility = g.p > .05 ? 'hidden' : '';
     // mentre la pizza sale, il fuoco si abbassa: profondità, niente vuoti
     fade.style.opacity = (prog * .62).toFixed(3);
   }

@@ -670,3 +670,36 @@ body.locked { overflow: hidden; }
   .hero.on .hero-t .ln > span { animation: none; transform: none; }
   .hero.on .hero-cta, .hero.on .hero-status { transition: none; }
 }
+
+
+/* Hero v2.04 — il filmato autentico resta leggibile e controllabile. */
+.arch #fire::before, .arch #fireFilm {
+  width: 70%; height: 94%; top: 3%; right: 0;
+  -webkit-mask-image: radial-gradient(ellipse 84% 80% at 56% 53%, #000 55%, transparent 99%);
+  mask-image: radial-gradient(ellipse 84% 80% at 56% 53%, #000 55%, transparent 99%);
+}
+.arch #fireFilm { inset: 3% 0 auto auto; }
+.arch .arch-shade {
+  background: linear-gradient(90deg, #140d09 0%, rgba(20,13,9,.96) 25%, rgba(20,13,9,.38) 49%, transparent 77%),
+    linear-gradient(0deg, rgba(20,13,9,.42), transparent 18%, transparent 85%, rgba(20,13,9,.16));
+}
+.hero-film-toggle {
+  position: absolute; z-index: 3; right: max(24px, 5vw); bottom: max(20px, env(safe-area-inset-bottom));
+  min-height: 44px; padding: 0 15px; border: 1px solid rgba(248,237,220,.5);
+  background: rgba(20,13,9,.88); color: #fff7ea; border-radius: 999px;
+  font: inherit; font-size: .8rem; cursor: pointer;
+}
+.hero-film-toggle[hidden] { display: none !important; }
+.hero-film-toggle:focus-visible { outline: 2px solid #fff7ea; outline-offset: 4px; }
+@media (max-width: 959px) {
+  .arch #fire::before, .arch #fireFilm {
+    width: 100%; height: 50%; right: 0; top: auto; bottom: 3%;
+    -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 53%, #000 55%, transparent 99%);
+    mask-image: radial-gradient(ellipse 85% 75% at 50% 53%, #000 55%, transparent 99%);
+  }
+  .arch .arch-shade {
+    background: linear-gradient(180deg, #140d09 0%, rgba(20,13,9,.96) 28%, rgba(20,13,9,.36) 55%, transparent 76%, rgba(20,13,9,.30));
+  }
+  .hero-film-toggle { right: 16px; bottom: max(12px, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-film-toggle { display: none !important; } }
