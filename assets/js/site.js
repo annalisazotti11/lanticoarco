@@ -20,152 +20,21 @@
 
   document.querySelectorAll('[data-years]').forEach(function (el) { el.textContent = new Date().getFullYear() - 2001; });
 
-  /* ================= Il forno: ripresa della brace, senza volta e pavimento sintetici ================= */
-  var stick = $('heroStick');
-  function isWide() { return stick.clientWidth >= 960; }
-  var fireCtl = (function fire() {
-    var c = $('fire');
-    if (!c) return null;
-    var film = $('fireFilm');
-    if (!film || reduce) return null;
-    var started = false, failed = false, requested = false;
-    var toggle = $('heroFilmToggle'), userPaused = false;
-    function updateToggle() {
-      if (!toggle) return;
-      toggle.hidden = failed || !started;
-      toggle.textContent = film.paused ? 'Riproduci il video' : 'Metti in pausa il video';
+  /* Hero V8: movimento soltanto durante lo scroll; fotografia fissa a riposo. */
+  (function heroV8() {
+    var hero = $('fuoco'), scene = $('heroStick'), nav = $('nav'), pending = false;
+    if (!hero || !scene || !nav) return;
+    function update() {
+      pending = false;
+      var range = hero.offsetHeight - scene.offsetHeight;
+      var p = range <= 1 || reduce ? 0 : clamp((nav.offsetHeight - hero.getBoundingClientRect().top) / range, 0, 1);
+      hero.style.setProperty('--p', p.toFixed(4));
     }
-    function reveal() { if (!failed && !film.paused && film.readyState >= 2) c.classList.add('film-ready'); updateToggle(); }
-    film.addEventListener('playing', reveal);
-    film.addEventListener('pause', updateToggle);
-    film.addEventListener('error', function () { failed = true; c.classList.remove('film-ready'); updateToggle(); });
-    function load() {
-      if (started) return;
-      started = true;
-      film.muted = true;
-      film.innerHTML = '<source src="' + AA.ROOT + 'assets/video/forno-reale.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/forno-reale.mp4" type="video/mp4">';
-      film.load();
-    }
-    function play() {
-      if (failed || requested || userPaused) return;
-      requested = true; load(); updateToggle();
-      var p = film.play();
-      if (p && p.catch) p.catch(function () { if (requested) { requested = false; c.classList.remove('film-ready'); updateToggle(); } });
-    }
-    function pause() { requested = false; if (started) film.pause(); updateToggle(); }
-    if (toggle) toggle.addEventListener('click', function () {
-      if (film.paused) { userPaused = false; play(); }
-      else { userPaused = true; pause(); }
-    });
-    return { play: play, pause: pause };
+    function request() { if (!pending) { pending = true; requestAnimationFrame(update); } }
+    window.addEventListener('scroll', request, {passive:true});
+    window.addEventListener('resize', request);
+    update();
   })();
-
-  /* La scena non aggiunge particelle artificiali al filmato del forno. */
-  var sparkCtl = null;
-  if ($('sparks')) $('sparks').style.display = 'none';
-
-  /* ================= Si entra dall'arco ================= */
-  var fireC = $('fire'), sparkC = $('sparks');
-  var hero = $('fuoco'), arch = $('arch'), archPath = $('archPath'), copy = $('heroCopy'), enter = $('heroEnter');
-  var fade = $('heroFade');
-  var openT = reduce ? 1 : 0, prog = 0;
-  function archShape() {
-    var W = stick.clientWidth, H = stick.clientHeight, wide = W >= 960;
-    var mx = wide ? Math.max(28, W * .045) : 12;
-    var top = wide ? 96 : 74;
-    var aw = W - mx * 2, ah = H - top;
-    var ry = wide ? Math.min(aw * .2, ah * .34) : Math.min(aw * .5, ah * .3);
-    var o = openT >= 1 ? 1 : 1 - Math.pow(2, -10 * openT), p = easeOut(prog);
-    var w = lerp(aw * .3, aw, o), h = lerp(ah * .28, ah, o);
-    var s = 1 + p * .7;
-    w *= s; h *= s;
-    var rY = ry * (w / aw);
-    var left = (W - w) / 2, topY = H - h;
-    return { W: W, H: H, left: left, top: topY, w: w, h: h, rx: w / 2, ry: Math.min(rY, h), wide: wide, p: p, ctop: top + ry * .78 };
-  }
-  function pathFor(g, d) {
-    var l = g.left - d, r = g.left + g.w + d, cy = g.top + g.ry, rx = g.rx + d, ry = g.ry + d;
-    return 'M' + l + ',' + (g.H + 2) + 'L' + l + ',' + cy + 'A' + rx + ',' + ry + ' 0 0 1 ' + r + ',' + cy + 'L' + r + ',' + (g.H + 2);
-  }
-  function linesFor(g) {
-    var d = g.wide ? 34 : 16, out = pathFor(g, 0) + pathFor(g, d);
-    var cx = g.left + g.w / 2, cy = g.top + g.ry, N = g.wide ? 19 : 13;
-    for (var i = 1; i < N; i++) {
-      var a = Math.PI * i / N, co = Math.cos(a), si = Math.sin(a);
-      out += 'M' + (cx - g.rx * co) + ',' + (cy - g.ry * si) + 'L' + (cx - (g.rx + d) * co) + ',' + (cy - (g.ry + d) * si);
-    }
-    var step = g.wide ? 58 : 40;
-    for (var y = cy + step; y < g.H; y += step) {
-      out += 'M' + (g.left - d) + ',' + y + 'L' + g.left + ',' + y + 'M' + (g.left + g.w) + ',' + y + 'L' + (g.left + g.w + d) + ',' + y;
-    }
-    return out;
-  }
-  var raf = 0, lastKey = '';
-  function paintHero() {
-    raf = 0;
-    var g = archShape();
-    // l'arco cambia solo durante l'apertura e il primo tratto di scroll: dopo non si ricalcola nulla
-    var key = Math.round(g.w) + ',' + Math.round(g.h) + ',' + g.W + ',' + g.H;
-    if (key !== lastKey) {
-      lastKey = key;
-      var dPath = 'M' + g.left + ',' + (g.H + 2) + 'L' + g.left + ',' + (g.top + g.ry) + 'A' + g.rx + ',' + g.ry + ' 0 0 1 ' + (g.left + g.w) + ',' + (g.top + g.ry) + 'L' + (g.left + g.w) + ',' + (g.H + 2) + 'Z';
-      arch.style.clipPath = 'path("' + dPath + '")';
-      var lo = clamp(easeOut(openT) * (1 - g.p * 1.6), 0, 1);
-      if (lo > 0) archPath.setAttribute('d', linesFor(g));
-      archPath.style.opacity = String(lo);
-      if (g.p < .001 && openT >= 1) { stick.style.setProperty('--ax', Math.max(0, g.left) + 'px'); stick.style.setProperty('--ctop', g.ctop + 'px'); }
-    }
-    copy.style.opacity = String(clamp(1 - g.p * 2.2, 0, 1));
-    var z = 'scale(' + (1 + g.p * .16).toFixed(4) + ')';
-    fireC.style.transform = z; sparkC.style.transform = z;
-    copy.style.transform = 'translate3d(0,' + (-g.p * 90).toFixed(1) + 'px,0)';
-    enter.style.visibility = g.p > .05 ? 'hidden' : '';
-    var filmToggle = $('heroFilmToggle');
-    if (filmToggle) filmToggle.style.visibility = g.p > .05 ? 'hidden' : '';
-    // mentre la pizza sale, il fuoco si abbassa: profondità, niente vuoti
-    fade.style.opacity = (prog * .62).toFixed(3);
-  }
-  function queueHero() { if (!raf) raf = requestAnimationFrame(paintHero); }
-  // anche qui la scena segue lo scroll con una molla: l'ingresso nell'arco è morbido, non a scatti
-  var hTarget = 0, hRun = false, hLt = 0;
-  function heroTick(now) {
-    var dt = Math.min(.05, (now - hLt) / 1000); hLt = now;
-    prog += (hTarget - prog) * (1 - Math.exp(-dt / .12));
-    if (Math.abs(hTarget - prog) < .0006) { prog = hTarget; hRun = false; }
-    paintHero();
-    if (hRun) requestAnimationFrame(heroTick);
-  }
-  function onScrollHero() {
-    var r = hero.getBoundingClientRect(), range = hero.offsetHeight - stick.offsetHeight;
-    if (r.bottom < -50) return;
-    hTarget = range > 0 ? clamp(-r.top / range, 0, 1) : 0;
-    if (reduce) { prog = hTarget; queueHero(); return; }
-    if (!hRun) { hRun = true; hLt = performance.now(); requestAnimationFrame(heroTick); }
-  }
-  window.addEventListener('scroll', onScrollHero, { passive: true });
-  window.addEventListener('resize', queueHero);
-  if (reduce) { paintHero(); hero.classList.add('on'); }
-  else {
-    var t0 = performance.now();
-    (function openArch(now) {
-      openT = clamp((now - t0) / 1000, 0, 1);
-      paintHero();
-      if (openT < 1) requestAnimationFrame(openArch);
-    })(t0);
-    if (fireC.animate) fireC.animate([{ filter: 'brightness(.65)' }, { filter: 'brightness(1)' }], { duration: 750, delay: 0, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'backwards' });
-    setTimeout(function () { hero.classList.add('on'); }, 200);
-  }
-  onScrollHero();
-  var heroVisible = false;
-  function syncFire() {
-    if (!fireCtl) return;
-    if (heroVisible && document.visibilityState !== 'hidden') fireCtl.play();
-    else fireCtl.pause();
-  }
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) { heroVisible = es[0].isIntersecting; syncFire(); }).observe(stick);
-  } else { heroVisible = true; syncFire(); }
-  document.addEventListener('visibilitychange', syncFire);
 
   /* ================= Titoli che entrano parola per parola ================= */
   function splitWords(el) {
