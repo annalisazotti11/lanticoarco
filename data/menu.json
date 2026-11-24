@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-24T15:10:35.417Z",
+ "updatedAt": "2026-11-24T19:05:39.204Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -1785,7 +1785,7 @@
     },
     {
      "label": "Base bianca",
-     "price": 0.5
+     "price": -0.5
     },
     {
      "label": "Doppio pomodoro",
@@ -2352,7 +2352,7 @@
     },
     {
      "label": "Base bianca",
-     "price": 0.5
+     "price": -0.5
     },
     {
      "label": "Doppio pomodoro",
@@ -4684,6 +4684,18 @@
     {
      "label": "Senza glutine",
      "price": 2.5
+    },
+    {
+     "label": "Pizzella",
+     "price": -1
+    },
+    {
+     "label": "Base bianca",
+     "price": -0.5
+    },
+    {
+     "label": "Doppio pomodoro",
+     "price": 0.5
     }
    ],
    "layout": "list",

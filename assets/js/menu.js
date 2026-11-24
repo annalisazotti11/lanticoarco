@@ -56,7 +56,7 @@
   function itemHTML(it, sec) {
     var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags);
     var algs = algsHTML(it);
-    return '<li class="item"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
+    return '<li class="item' + (sec.group === 'pizze' ? ' item-pizza' : '') + '"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
       '<span class="item-main">' +
       '<span class="item-name">' + hl(it.name) + (it.frozen ? '<span class="frz" title="' + esc(DATA.info.frozenLegend) + '">*</span>' : '') + '</span>' +
       (it.desc ? '<span class="item-desc">' + hl(it.desc) + '</span>' : '') +
@@ -64,7 +64,7 @@
       (meta ? '<span class="item-meta">' + meta + '</span>' : '') +
       '<span class="item-foot"><span class="item-price num">' + priceHTML(it, sec) + '</span>' + algs + '</span></span>' +
       (it.image ? '<img class="item-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '') +
-      '</button></li>';
+      '</button>' + (sec.group === 'pizze' && it.available !== false ? '<button type="button" class="item-customize" data-open-builder="' + esc(it.id) + '" aria-label="Personalizza ' + esc(it.name) + '"><span>Personalizza</span><span aria-hidden="true">✦</span></button>' : '') + '</li>';
   }
   function cardsHTML(items, sec) {
     return '<div class="cards">' + items.map(function (it) {
@@ -150,7 +150,7 @@
         var p = it.price === null || it.price === undefined || it.price === '' ? '' : (Number(it.price) === 0 ? 'Compreso' : AA.price(it.price, { signed: true }));
         return '<li><i class="dl-ph' + (it.image ? '' : ' dl-none') + '">' + doughPh(it) + '</i><div><b>' + esc(doughName(it.name)) + '</b><span>' + esc(it.desc || '') + '</span></div>' + (p ? '<em class="num">' + p + '</em>' : '') + '</li>';
       }).join('') + '</ul>' +
-      '<button type="button" class="b-fire d-custom" data-open-builder>Crea la tua pizza con l’impasto che vuoi</button></div>';
+      '<p class="d-note">Per scegliere l’impasto, apri la personalizzazione di una pizza nel menù.</p></div>';
   }
 
   function groupsWithContent() {
@@ -172,7 +172,7 @@
     var steps = [
       ['g-impasti', 'Scegli l\'impasto', 'Il classico è compreso' + (min ? ', gli altri da ' + AA.price(min) + ' in più' : '') + '.'],
       ['g-pizze', 'Poi la pizza', 'Gourmet, classiche, bianche o vegan. Le più amate sono segnate come “Preferita”.'],
-      hasExtra ? ['crea', 'Oppure creala tu', 'Scegli impasto e ingredienti: ti diciamo subito quanto costa.'] : null
+      hasExtra ? ['g-pizze', 'Personalizza la pizza', 'Apri una pizza e scegli impasto, aggiunte e varianti.'] : null
     ].filter(function (x) { return x && (x[0] === 'crea' || document.getElementById(x[0])); });
     if (!steps.length) { box.hidden = true; return; }
     box.innerHTML = '<div class="guide-in"><div class="guide-h"><h2 id="guideT">Prima volta da noi?</h2><button type="button" class="guide-x" id="guideX">Ho capito</button></div><ol>' +
@@ -214,7 +214,6 @@
       box.hidden = true; return;
     }
     var groups = groupsWithContent();
-    var hasPizza = groups.some(function (g) { return g.id === 'pizze'; });
     var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
     groups = groups.slice().sort(function (a,b) { var x = order.indexOf(a.id), y = order.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
     var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -232,9 +231,8 @@
         rest.push('<a class="ex-card" href="#g-' + esc(g.id) + '">' + contents + '</a>');
       }
     });
-    var build = hasPizza ? '<a class="ex-build" href="#crea" data-open-builder><span><b>Crea la tua pizza</b><small>Scegli impasto e ingredienti</small></span>' + arrow + '</a>' : '';
     box.innerHTML = '<div class="ex-alert"><p><b>Allergie o intolleranze?</b> Comunicale sempre al personale.</p><a href="#g-allergeni">Allergeni ' + arrow + '</a></div>' +
-      '<div class="ex-heading"><h2 id="exploreTitle">Scegli una categoria</h2></div><div class="ex-editorial' + (featured ? '' : ' no-feature') + '">' + (featured ? '<div class="ex-special">' + featured + build + '</div>' : '') + '<div class="ex-grid">' + rest.join('') + '</div></div>';
+      '<div class="ex-heading"><h2 id="exploreTitle">Scegli una categoria</h2></div><div class="ex-editorial' + (featured ? '' : ' no-feature') + '">' + (featured ? '<div class="ex-special">' + featured + '</div>' : '') + '<div class="ex-grid">' + rest.join('') + '</div></div>';
     box.hidden = !groups.length;
   }
 
@@ -421,7 +419,7 @@
       }).join('') + '</ul>' : (!needsAllergenReview(it) ? '<p class="d-note">Nessun allergene dichiarato nella scheda; verificare le eventuali tracce.</p>' : '')) +
       (needsAllergenReview(it) ? '<p class="d-note"><b>Allergeni da verificare:</b> scheda incompleta. Confermate ingredienti, etichette e possibili tracce con il personale prima di ordinare.</p>' : '') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
-      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza</button>'
+      (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza questa pizza <span aria-hidden="true">✦</span></button>'
         : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
       '</div>';
   }
@@ -453,16 +451,44 @@
     }
     return null;
   }
-  function builderOptions(sec) {
-    var base = [], mods = [];
+  function tomatoBase(item) {
+    return recipeOf(item).filter(function (r) { return norm(r) === 'pomodoro'; })[0] || null;
+  }
+  function builderOptions(sec, item) {
+    var base = [], mods = [], red = !!tomatoBase(item);
     var dsec = doughSection();
     var gfDough = dsec && dsec.items.some(function (d) { return /senza glutine/i.test(d.name) && d.available !== false; });
-    (sec.supplements || []).forEach(function (sp, i) {
+    var sections = pizzaSections(), supplements = sec.supplements || [];
+    function configured(label, preferSection) {
+      var own = supplements.filter(function (sp) { return norm(sp.label) === norm(label); })[0];
+      if (own && !preferSection) return own;
+      var chosen = sections.filter(function (s) { return s.id === preferSection; })[0];
+      return (chosen && (chosen.supplements || []).filter(function (sp) { return norm(sp.label) === norm(label); })[0]) || own ||
+        sections.reduce(function (a, s) { return a || (s.supplements || []).filter(function (sp) { return norm(sp.label) === norm(label); })[0]; }, null);
+    }
+    function addBase(id, label, preferSection) {
+      var sp = configured(label, preferSection);
+      if (sp) base.push({ id: id, label: sp.label, price: Number(sp.price) || 0 });
+    }
+    if (red) { addBase('base-white', 'Base bianca'); addBase('base-double', 'Doppio pomodoro', sec.id === 's50' ? 's49' : null); }
+    else { addBase('base-red', 'Base pomodoro', 's50'); addBase('base-double', 'Doppio pomodoro', 's50'); }
+    supplements.forEach(function (sp, i) {
       if (gfDough && /senza glutine/i.test(sp.label)) return;
-      var o = { id: 'o' + i, label: sp.label, price: Number(sp.price) || 0 };
-      if (/^base\s|doppio pomodoro/i.test(sp.label)) base.push(o); else mods.push(o);
+      if (/^base\s|doppio pomodoro/i.test(sp.label)) return;
+      mods.push({ id: 'o' + i, label: sp.label, price: Number(sp.price) || 0 });
     });
     return { base: base, mods: mods };
+  }
+  function setBase(value) {
+    B.baseOpt = value || null;
+    var tomato = tomatoBase(B.start.item);
+    if (!tomato) return;
+    B.removed = B.removed.filter(function (r) { return r !== tomato; });
+    if (B.baseOpt === 'base-white') B.removed.push(tomato);
+  }
+  function knownPrice(it) {
+    var p = it.prices && it.prices.length ? it.prices[0].price : it.price;
+    return p !== null && p !== undefined && p !== '' && Number.isFinite(Number(p));
   }
   function bCfg() { return (DATA.settings && DATA.settings.builder) || {}; }
   function openBuilder(itemId) {
@@ -486,11 +512,12 @@
     }).filter(Boolean);
     var popular = (cfg.popular || DEF_POPULAR).map(function (n) { return byName[norm(n)]; }).filter(Boolean);
     var doughs = dsec ? AA.visibleItems(dsec) : [];
-    var defDough = doughs.filter(function (d) { return !Number(d.price); })[0] || doughs[0] || null;
+    var defDough = doughs.filter(function (d) { return knownPrice(d) && Number(d.price) === 0; })[0] || doughs[0] || null;
     B = { from: itemId ? starts[0] : null, starts: starts, start: starts[0], doughs: doughs, dough: defDough, baseOpt: null, mods: [], extras: extras, sel: [], removed: [], presets: presets, popular: popular, q: '', picking: false };
     renderBuilder();
     openSheet($('builder'));
-    try { history.replaceState(null, '', '#crea'); } catch (e) {}
+    $('bBody').scrollTop = 0;
+    // Keep the category URL and scroll position when the editor is opened.
   }
   function chip(group, id, label, price, on, extra) {
     return '<button type="button" class="bchip' + (extra || '') + '" data-b="' + group + '" data-v="' + esc(id) + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
@@ -524,18 +551,21 @@
   }
   function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
   function renderBuilder() {
-    var opt = builderOptions(B.start.sec);
-    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza' : 'Crea la tua pizza') + '<button type="button" class="b-reset" data-b="reset">Ricomincia</button></p>' +
-      '<h2 class="b-t" id="bTitle">' + esc(B.start.item.name) + '</h2></div>';
+    var opt = builderOptions(B.start.sec, B.start.item);
+    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza la tua pizza' : 'Crea la tua pizza') + '<button type="button" class="b-reset" data-b="reset">Ricomincia</button></p>' +
+      '<div class="b-hero">' + (B.start.item.image ? '<img src="' + esc(AA.src(B.start.item.image)) + '" alt="" decoding="async">' : '') +
+      '<div><h2 class="b-t" id="bTitle">' + esc(B.start.item.name) + '</h2><p>Prezzo di partenza <b class="num">' + (knownPrice(B.start.item) ? AA.price(unitPrice(B.start.item)) : 'da confermare') + '</b></p></div></div>' +
+      '<p class="b-caution">Per allergie o intolleranze, conferma sempre le modifiche con il personale. Il configuratore non garantisce l’assenza di allergeni.</p></div>';
     var rec = recipeOf(B.start.item);
-    h += '<section class="b-step"><h3><b>1</b>Si parte da</h3><div class="bchips">' + B.starts.map(function (st) {
+    h += '<section class="b-step"><h3><b>1</b>Ingredienti della ricetta</h3>';
+    if (!B.from) h += '<div class="bchips b-starts">' + B.starts.map(function (st) {
       return chip('start', st.item.id, st.item.name, AA.price(unitPrice(st.item)), st.item.id === B.start.item.id);
-    }).join('') + '<button type="button" class="' + (B.from ? 'b-change' : 'bchip b-other') + '" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '"><span>' + (B.from ? 'Cambia pizza' : 'Un’altra pizza') + '</span></button></div>' +
-      '<div class="b-pick" id="bPick"' + (B.picking ? '' : ' hidden') + '><label class="b-search"><span class="sr-only">Cerca una pizza</span><input type="search" id="bPickQ" placeholder="Cerca per nome o ingrediente, es. bufala" autocomplete="off"></label><div class="b-pks" id="bPickList">' + (B.picking ? pickList('') : '') + '</div></div>';
+    }).join('') + '<button type="button" class="bchip b-other" data-b="pick" aria-expanded="' + (B.picking ? 'true' : 'false') + '">Un’altra pizza</button></div>' +
+      '<div class="b-pick" id="bPick"' + (B.picking ? '' : ' hidden') + '><label class="b-search"><span class="sr-only">Cerca una pizza</span><input type="search" id="bPickQ" placeholder="Cerca una pizza" autocomplete="off"></label><div class="b-pks" id="bPickList">' + (B.picking ? pickList('') : '') + '</div></div>';
     if (rec.length) {
-      h += '<p class="b-sub">Nella ricetta: tocca per togliere, il prezzo non cambia</p><div class="bchips" id="bRec">' + rec.map(function (r) {
-        var off = B.removed.indexOf(r) >= 0;
-        return '<button type="button" class="bchip b-rec' + (off ? ' off' : '') + '" data-b="rm" data-v="' + esc(r) + '" aria-pressed="' + (off ? 'false' : 'true') + '" aria-label="' + esc(cap(r)) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo') + '"><span>' + esc(cap(r)) + '</span><i aria-hidden="true"></i></button>';
+      h += '<p class="b-sub">Tocca − per togliere, + per rimettere. Le rimozioni non cambiano il prezzo, tranne il pomodoro della base.</p><div class="b-recipe" id="bRec">' + rec.map(function (r) {
+        var off = B.removed.indexOf(r) >= 0, tomato = r === tomatoBase(B.start.item), white = opt.base.filter(function (o) { return o.id === 'base-white'; })[0];
+        return '<button type="button" class="bchip b-rec' + (off ? ' off' : '') + '" data-b="rm" data-v="' + esc(r) + '" aria-pressed="' + (off ? 'false' : 'true') + '" aria-label="' + esc(cap(r)) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo') + '"><span class="b-rec-label"><b>' + esc(cap(r)) + '</b><small>' + (tomato && white ? 'Base: ' + AA.price(white.price, { signed: true }) + ' se tolto' : 'Compreso nella ricetta') + '</small></span><span class="b-rec-icon" aria-hidden="true">' + (off ? '+' : '−') + '</span></button>';
       }).join('') + '</div>';
     }
     h += '</section>';
@@ -545,13 +575,13 @@
       }).join('') + '</div></section>';
     }
     if (opt.base.length) {
-      h += '<section class="b-step"><h3><b>3</b>La base</h3><div class="bchips">' + chip('base', '', 'Come da ricetta', '', !B.baseOpt) + opt.base.map(function (o) {
-        return chip('base', o.id, o.label, AA.price(o.price, { signed: true }), B.baseOpt === o.id);
+      h += '<section class="b-step"><h3><b>3</b>La base</h3><div class="bchips">' + chip('base', '', 'Come da ricetta', 'Compreso', !B.baseOpt) + opt.base.map(function (o) {
+        return chip('base', o.id, o.label, deltaLabel(o.price), B.baseOpt === o.id);
       }).join('') + '</div></section>';
     }
     if (opt.mods.length) {
       h += '<section class="b-step"><h3><b>' + (opt.base.length ? 4 : 3) + '</b>Formato e intolleranze</h3><div class="bchips">' + opt.mods.map(function (o) {
-        return chip('mod', o.id, o.label, AA.price(o.price, { signed: true }), B.mods.indexOf(o.id) >= 0);
+        return chip('mod', o.id, o.label, deltaLabel(o.price), B.mods.indexOf(o.id) >= 0);
       }).join('') + '</div></section>';
     }
     var n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
@@ -579,9 +609,9 @@
         return chip('extra', it.id, it.name, '', B.sel.indexOf(it.id) >= 0, ' small');
       }).join('') + '</div></div>';
     });
-    h += '</div></section>';
+    h += '</div></section><section class="b-step b-summary" aria-labelledby="bSummaryTitle"><h3 id="bSummaryTitle"><b>' + (n + 1) + '</b>Riepilogo prezzo</h3><div id="bCosts"></div></section>';
     $('bBody').innerHTML = h;
-    $('bPickQ').addEventListener('input', function (e) { $('bPickList').innerHTML = pickList(e.target.value.trim()); });
+    if ($('bPickQ')) $('bPickQ').addEventListener('input', function (e) { $('bPickList').innerHTML = pickList(e.target.value.trim()); });
     if (B.picking) setTimeout(function () { var q = $('bPickQ'); if (q) q.focus({ preventScroll: true }); }, 50);
     $('bAllT').addEventListener('click', function () {
       var open = $('bAll').hidden; $('bAll').hidden = !open; this.setAttribute('aria-expanded', open);
@@ -595,33 +625,62 @@
     updateBuilder();
   }
   function builderState() {
-    var opt = builderOptions(B.start.sec);
-    B.tbc = false;
-    var lines = [], total = unitPrice(B.start.item);
-    var algs = (B.start.item.allergens || []).slice();
-    lines.push(['Si parte da', B.start.item.name, unitPrice(B.start.item)]);
+    var opt = builderOptions(B.start.sec, B.start.item);
+    B.tbc = !knownPrice(B.start.item);
+    var lines = [['Pizza', B.start.item.name, knownPrice(B.start.item) ? unitPrice(B.start.item) : null]];
+    var total = unitPrice(B.start.item), algs = (B.start.item.allergens || []).slice();
     if (B.dough) {
-      var dp = Number(B.dough.price) || 0; total += dp;
-      if (B.dough.price == null || B.dough.price === '') B.tbc = true;
+      var dp = knownPrice(B.dough) ? unitPrice(B.dough) : null;
+      if (dp === null) B.tbc = true; else total += dp;
       lines.push(['Impasto', doughName(B.dough.name), dp]);
       (B.dough.allergens || []).forEach(function (a) { algs.push(a); });
     }
     var bo = opt.base.filter(function (o) { return o.id === B.baseOpt; })[0];
     if (bo) { total += bo.price; lines.push(['Base', bo.label, bo.price]); }
-    opt.mods.forEach(function (o) { if (B.mods.indexOf(o.id) >= 0) { total += o.price; lines.push(['', o.label, o.price]); } });
+    opt.mods.forEach(function (o) { if (B.mods.indexOf(o.id) >= 0) { total += o.price; lines.push(['Variante', o.label, o.price]); } });
     var ing = B.sel.map(function (id) { return B.extras.filter(function (x) { return x.id === id; })[0]; }).filter(Boolean);
-    ing.forEach(function (it) { total += unitPrice(it); (it.allergens || []).forEach(function (a) { algs.push(a); }); });
+    ing.forEach(function (it) {
+      var p = knownPrice(it) ? unitPrice(it) : null;
+      if (p === null) B.tbc = true; else total += p;
+      lines.push(['Aggiunta', it.name, p]);
+      (it.allergens || []).forEach(function (a) { algs.push(a); });
+    });
     var rec = recipeOf(B.start.item), rem = B.removed.filter(function (r) { return rec.indexOf(r) >= 0; });
-    return { total: Math.max(0, total), lines: lines, ing: ing, rem: rem, algs: algs.filter(function (a, i) { return algs.indexOf(a) === i; }) };
+    return { total: Math.max(0, Math.round(total * 100) / 100), lines: lines, ing: ing, rem: rem, algs: algs.filter(function (a, i) { return algs.indexOf(a) === i; }) };
+  }
+  function priceLine(l, i) {
+    return l[2] === null ? 'Da confermare' : i === 0 ? AA.price(l[2]) : deltaLabel(l[2]);
+  }
+  function syncBuilderButtons() {
+    var body = $('bBody');
+    body.querySelectorAll('[data-b="dough"]').forEach(function (x) { x.setAttribute('aria-pressed', !!B.dough && x.dataset.v === B.dough.id); });
+    body.querySelectorAll('[data-b="base"]').forEach(function (x) { x.setAttribute('aria-pressed', (x.dataset.v || null) === B.baseOpt); });
+    body.querySelectorAll('[data-b="mod"]').forEach(function (x) { x.setAttribute('aria-pressed', B.mods.indexOf(x.dataset.v) >= 0); });
+    body.querySelectorAll('[data-b="extra"]').forEach(function (x) { x.setAttribute('aria-pressed', B.sel.indexOf(x.dataset.v) >= 0); });
+    body.querySelectorAll('[data-b="rm"]').forEach(function (x) {
+      var off = B.removed.indexOf(x.dataset.v) >= 0;
+      x.classList.toggle('off', off); x.setAttribute('aria-pressed', !off);
+      x.setAttribute('aria-label', cap(x.dataset.v) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo'));
+      x.querySelector('.b-rec-icon').textContent = off ? '+' : '−';
+    });
   }
   function updateBuilder() {
     var st = builderState();
     var parts = [];
     if (st.rem.length) parts.push('senza ' + st.rem.join(', '));
     if (st.ing.length) parts.push('+ ' + st.ing.map(function (i) { return i.name.toLowerCase(); }).join(', '));
-    $('bFoot').innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Totale indicativo, impasto da chiedere' : 'Totale indicativo') + '</p><p class="bf-p num">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
+    var foot = $('bFoot'), previousTotal = foot.dataset.total;
+    foot.dataset.total = String(st.total) + (B.tbc ? '?' : '');
+    var costs = $('bCosts');
+    if (costs) costs.innerHTML = '<dl class="b-cost-lines">' + st.lines.map(function (l, i) {
+      return '<div><dt><small>' + esc(l[0]) + '</small>' + esc(l[1]) + '</dt><dd class="num">' + esc(priceLine(l, i)) + '</dd></div>';
+    }).join('') + (st.rem.length ? '<div><dt><small>Da togliere</small>' + esc(cap(st.rem.join(', '))) + '</dt><dd>—</dd></div>' : '') + '</dl><p class="b-cost-total"><b>' + (B.tbc ? 'Parziale noto' : 'Totale pizza') + '</b><strong class="num">' + AA.price(st.total) + (B.tbc ? ' + da confermare' : '') + '</strong></p>';
+    foot.innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Parziale noto + supplementi da confermare' : 'Totale pizza') + '</p><p class="bf-p num" aria-live="polite">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
       (parts.length ? '<p class="bf-s">' + esc(cap(parts.join('; '))) + '</p>' : '') + '</div>' +
       '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
+    if (previousTotal !== undefined && previousTotal !== foot.dataset.total) {
+      foot.classList.remove('bump'); void foot.offsetWidth; foot.classList.add('bump');
+    }
     var mine = $('bMine');
     if (mine) mine.innerHTML = st.ing.length ? '<p class="b-sub">Aggiunti da te. Tocca per togliere</p><div class="bchips">' + st.ing.map(function (it) {
       return '<button type="button" class="bchip b-mine" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="true" aria-label="' + esc(it.name) + ', tocca per toglierlo"><span>' + esc(it.name) + '</span><em class="num">' + AA.price(unitPrice(it), { signed: true }) + '</em><i aria-hidden="true"></i></button>';
@@ -631,10 +690,9 @@
     var st = builderState();
     var algs = AA.allergenNums(st.algs);
     $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + '</h2><dl class="w-l">' +
-      st.lines.slice(1).map(function (l) { return '<div><dt>' + esc(l[0] || 'Variante') + '</dt><dd>' + esc(l[1]) + '</dd></div>'; }).join('') +
+      st.lines.map(function (l, i) { return '<div><dt>' + esc(l[0]) + '</dt><dd>' + esc(l[1]) + '<span class="w-line-price num">' + esc(priceLine(l, i)) + '</span></dd></div>'; }).join('') +
       (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + esc(cap(st.rem.join(', '))) + '</dd></div>' : '') +
-      (st.ing.length ? '<div><dt>In più</dt><dd>' + st.ing.map(function (i) { return esc(i.name); }).join(', ') + '</dd></div>' : '') +
-      '</dl><p class="w-p num">' + AA.price(st.total) + '</p>' +
+      '</dl><p class="w-p num">' + AA.price(st.total) + (B.tbc ? '<small>+ supplementi da confermare</small>' : '<small>Totale pizza</small>') + '</p>' +
       (algs.length ? '<p class="w-a">Allergeni indicati e/o possibili tracce ' + algs.map(function (a) { return a.n; }).join(' · ') + '</p>' : '') +
       '<p class="w-a">Per una pizza personalizzata, confermate allergeni e possibili tracce con il personale; le modifiche non garantiscono l’assenza di allergeni.</p>' +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
@@ -646,45 +704,39 @@
     $('builder').addEventListener('click', function (e) {
       var b = e.target.closest('[data-b]'); if (!b) return;
       var g = b.dataset.b, v = b.dataset.v;
-      if (g === 'start') { B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.removed = []; B.picking = false; renderBuilder(); return; }
+      if (g === 'start') { B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.sel = []; B.removed = []; B.picking = false; renderBuilder(); return; }
       if (g === 'pick') { B.picking = !B.picking; renderBuilder(); return; }
       if (g === 'pickit') {
         var hit = allPizzas().filter(function (x) { return x.item.id === v; })[0];
         if (hit) {
           if (B.from) B.starts = [hit];
           else if (!B.starts.some(function (x) { return x.item.id === v; })) B.starts.unshift(hit);
-          B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.removed = []; B.picking = false; renderBuilder();
+          B.start = B.starts.filter(function (x) { return x.item.id === v; })[0]; B.baseOpt = null; B.mods = []; B.sel = []; B.removed = []; B.picking = false; renderBuilder();
           var t = $('bBody'); if (t) t.scrollTo({ top: 0, behavior: 'smooth' });
         }
         return;
       }
       if (g === 'rm') {
-        var r = B.removed.indexOf(v); if (r >= 0) B.removed.splice(r, 1); else B.removed.push(v);
-        var off = B.removed.indexOf(v) >= 0;
-        b.classList.toggle('off', off); b.setAttribute('aria-pressed', off ? 'false' : 'true');
-        b.setAttribute('aria-label', cap(v) + (off ? ', tolto: tocca per rimetterlo' : ', tocca per toglierlo'));
-        updateBuilder(); return;
+        var r = B.removed.indexOf(v);
+        if (v === tomatoBase(B.start.item) && builderOptions(B.start.sec, B.start.item).base.some(function (o) { return o.id === 'base-white'; })) setBase(r >= 0 ? null : 'base-white');
+        else if (r >= 0) B.removed.splice(r, 1); else B.removed.push(v);
+        syncBuilderButtons(); updateBuilder(); return;
       }
       if (g === 'dough') B.dough = B.doughs.filter(function (d) { return d.id === v; })[0];
-      if (g === 'base') B.baseOpt = v || null;
+      if (g === 'base') setBase(v);
       if (g === 'mod') { var k = B.mods.indexOf(v); if (k >= 0) B.mods.splice(k, 1); else B.mods.push(v); }
       if (g === 'extra') { var j = B.sel.indexOf(v); if (j >= 0) B.sel.splice(j, 1); else B.sel.push(v); }
       if (g === 'preset') { B.presets[Number(v)].ids.forEach(function (id) { if (B.sel.indexOf(id) < 0) B.sel.push(id); }); }
-      if (g === 'reset') { var first = B.starts[0]; B.start = first; B.dough = B.doughs.filter(function (d) { return !Number(d.price); })[0] || B.doughs[0] || null; B.baseOpt = null; B.mods = []; B.sel = []; B.removed = []; B.picking = false; renderBuilder(); return; }
+      if (g === 'reset') { var first = B.starts[0]; B.start = first; B.dough = B.doughs.filter(function (d) { return knownPrice(d) && Number(d.price) === 0; })[0] || B.doughs[0] || null; B.baseOpt = null; B.mods = []; B.sel = []; B.removed = []; B.picking = false; renderBuilder(); return; }
       if (g === 'waiter') { showWaiter(); return; }
       if (g === 'close') return;
-      // aggiorna solo gli stati dei pulsanti
-      $('bBody').querySelectorAll('[data-b="dough"]').forEach(function (x) { x.setAttribute('aria-pressed', B.dough && x.dataset.v === B.dough.id); });
-      $('bBody').querySelectorAll('[data-b="base"]').forEach(function (x) { x.setAttribute('aria-pressed', (x.dataset.v || null) === B.baseOpt); });
-      $('bBody').querySelectorAll('[data-b="mod"]').forEach(function (x) { x.setAttribute('aria-pressed', B.mods.indexOf(x.dataset.v) >= 0); });
-      $('bBody').querySelectorAll('[data-b="extra"]').forEach(function (x) { x.setAttribute('aria-pressed', B.sel.indexOf(x.dataset.v) >= 0); });
+      syncBuilderButtons();
       updateBuilder();
-      if (g === 'preset' || g === 'extra') { var f = $('bFoot'); f.classList.remove('bump'); void f.offsetWidth; f.classList.add('bump'); }
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('waiter').hidden) $('waiter').hidden = true; });
   }
   function builderCTA() {
-    return '<button type="button" class="bcta" data-open-builder><span class="bcta-t">Crea la tua pizza</span><span class="bcta-s">Scegli impasto, base e ingredienti. Il prezzo lo vedi subito.</span><span class="bcta-i" aria-hidden="true">+</span></button>';
+    return '<aside class="bcta-section" aria-label="Crea una pizza da zero"><span class="bcta-k">Vuoi qualcosa di diverso?</span><button type="button" class="bcta" data-open-builder><span class="bcta-t">Crea la tua pizza</span><span class="bcta-s">Componila da una base, scegli l’impasto e gli ingredienti. Vedi il totale in tempo reale.</span><span class="bcta-i" aria-hidden="true">+</span></button></aside>';
   }
 
   /* Filtri */

@@ -1,0 +1,102 @@
+/* V18 / Menu V9 — stronger visual motion and a touch-first pizza configurator. */
+@keyframes aa-v18-lift{from{opacity:.2;translate:0 22px}to{opacity:1;translate:0 0}}
+@keyframes aa-v18-curtain{from{clip-path:inset(0 100% 0 0 round 16px)}to{clip-path:inset(0 0 0 0 round 0)}}
+@keyframes aa-v18-photo{from{transform:scale(1.12);filter:saturate(.85)}to{transform:scale(1);filter:saturate(1)}}
+@keyframes aa-v18-beam{0%{translate:-125% 0;opacity:0}30%{opacity:.8}85%,100%{translate:125% 0;opacity:0}}
+@keyframes aa-v18-warm{0%,100%{opacity:.18;transform:scale(1)}48%{opacity:.64;transform:scale(1.14)}}
+@keyframes aa-v18-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes aa-v18-price{0%{transform:scale(.97);color:#86452f}55%{transform:scale(1.06)}100%{transform:none;color:inherit}}
+
+/* Site: cinematic detail without replacing the existing scroll choreography. */
+.site-v18 #fuoco.hero-v8 .scene::after{content:"";position:absolute;inset:-10%;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 81% 55%,#faa45135,transparent 47%);mix-blend-mode:screen;animation:aa-v18-warm 5.5s ease-in-out 2 both}
+.site-v18 .v18-hero-frame{position:absolute;z-index:1;inset:12px;pointer-events:none;border:1px solid #f4d9b53b;border-radius:4px 30px 4px 4px;mask-image:linear-gradient(150deg,#000,transparent 45%,transparent 78%,#000)}
+.site-v18 .v18-hero-frame::after{content:"";position:absolute;top:0;left:0;height:2px;width:42%;background:linear-gradient(90deg,transparent,#f6c58d,transparent);animation:aa-v18-beam 2s .3s ease-out both}
+.site-v18 .v16-photo button.v18-arrived img{animation:aa-v18-curtain .85s cubic-bezier(.16,1,.3,1) both}
+.site-v18 .v16-photo button.v18-arrived+figcaption{animation:aa-v18-lift .6s .18s both}
+.site-v18 .v16-album-head.v18-arrived,.site-v18 .v16-social.v18-arrived{position:relative}
+.site-v18 .v16-album-head.v18-arrived::after,.site-v18 .v16-social.v18-arrived::after{content:"";position:absolute;bottom:-9px;left:0;width:100%;height:1px;background:linear-gradient(90deg,#b77d4b,transparent);transform-origin:left;animation:aa-v18-line .95s cubic-bezier(.16,1,.3,1) both;pointer-events:none}
+.site-v18 .pr-partners li.v18-arrived{animation:aa-v18-lift .7s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--v18-delay,0ms)}
+.site-v18 .v16-photo button:hover img{filter:saturate(1.08)}
+
+/* Menu index: one large moving pizza image, no creator on the first screen. */
+html.menu-v9 .ex-special{grid-template-columns:minmax(0,1fr)}
+html.kiosk.menu-v9 .ex-special{grid-template-columns:minmax(0,1fr)}
+html.menu-v9 .ex-special .ex-feature{isolation:isolate;box-shadow:0 18px 38px -22px #3923198a}
+html.menu-v9 .ex-special .ex-feature.aa-enter .ex-photo img{animation:aa-v18-photo 1.35s cubic-bezier(.16,1,.3,1) backwards}
+html.menu-v9 .ex-special .ex-feature.aa-enter .ex-copy{animation:aa-v18-lift .65s .15s cubic-bezier(.16,1,.3,1) backwards}
+html.menu-v9 .ex-special .ex-feature.aa-enter::before{background:linear-gradient(110deg,transparent 25%,#ffe0b436 46%,transparent 65%);animation:aa-v18-beam 1.05s .12s ease-out both;opacity:1;z-index:2}
+html.menu-v9 .ex-grid .aa-enter,html.menu-v9 .acc-h.aa-enter{animation:aa-v18-lift .48s cubic-bezier(.16,1,.3,1) backwards;animation-delay:var(--aa-delay,0ms)}
+html.menu-v9 .ex-grid .ex-card:hover .ex-photo img{transform:scale(1.11)}
+html.menu-v9 .ex-grid .ex-card:hover .ex-copy strong{color:#86452f}
+html.menu-v9 .ex-grid .ex-card .ex-copy strong{transition:color .24s}
+html.menu-v9 .item-pizza{display:flex;flex-direction:column;gap:0}
+html.menu-v9 .item-pizza .item-btn{flex:1;min-height:0;height:auto;border-radius:15px 15px 0 0}
+html.menu-v9 .item-customize{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:8px 14px;border:1px solid #dcc9b6;border-top:0;border-radius:0 0 15px 15px;background:#f0e4d4;color:#6d432c;font-weight:650;font-size:.86rem;text-align:left;transition:background .2s,color .2s,transform .2s}
+html.menu-v9 .item-customize span:last-child{font-size:1.2rem;transition:transform .3s}
+html.menu-v9 .item-customize:focus-visible,html.menu-v9 .item-customize:hover{background:#e6d4bf;color:#38271a}
+html.menu-v9 .item-customize:hover span:last-child{transform:rotate(45deg)}
+html.menu-v9 .item-customize:active{transform:scale(.98)}
+html.menu-v9 .item-pizza.in .item-ph{animation:aa-v18-photo .62s cubic-bezier(.16,1,.3,1) backwards}
+html.menu-v9 .item-pizza.in .item-customize{animation:aa-v18-lift .4s .08s ease-out backwards}
+html.kiosk.menu-v9 .item-customize{min-height:54px;font-size:1rem;padding-inline:18px}
+html.menu-v9 .bcta-section{margin-top:clamp(38px,7vw,72px);padding-top:30px;border-top:1px solid #b89d82}
+html.menu-v9 .bcta-k{display:block;color:#86452f;font-size:.77rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+html.menu-v9 .bcta-section .bcta{margin-top:12px;background:linear-gradient(135deg,#39271b,#705030);border:0;min-height:105px}
+html.menu-v9 .bcta-section .bcta-i{transition:transform .3s}
+html.menu-v9 .bcta-section .bcta:hover .bcta-i{transform:rotate(90deg)}
+
+/* Configurator: recipe rows with explicit remove / restore control, strong selection states. */
+html.menu-v9 #builder .sheet-card{max-width:720px;max-height:92vh;max-height:92dvh;overflow:hidden;display:flex;flex-direction:column}
+html.menu-v9 #builder #bBody{min-height:0;flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain}
+html.menu-v9 #builder .b-foot{position:relative;bottom:auto;flex:0 0 auto}
+html.menu-v9 #builder .b-head{margin-bottom:14px}
+html.menu-v9 #builder .b-hero{display:flex;align-items:center;gap:15px;margin-top:14px;animation:aa-v18-lift .4s ease-out both}
+html.menu-v9 .b-hero img{width:92px;height:92px;object-fit:cover;border-radius:14px;flex:none;background:#e8d8c5}
+html.menu-v9 .b-hero .b-t{font-size:clamp(1.65rem,4vw,2.55rem);line-height:1.05;overflow-wrap:anywhere}
+html.menu-v9 .b-hero p{margin-top:7px;color:#655447;font-size:.88rem}
+html.menu-v9 .b-hero p b{color:#34251b}
+html.menu-v9 .b-caution{margin-top:15px;padding:9px 11px;border-left:3px solid #b98653;background:#f2e6d6;color:#62503d;font-size:.78rem;line-height:1.4}
+html.menu-v9 .b-step{margin-top:23px;padding-top:17px}
+html.menu-v9 .b-step h3{font-size:1.08rem;color:#38271b}
+html.menu-v9 .b-step h3>b{background:#80583f;color:#fff7ec}
+html.menu-v9 .b-recipe{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+html.menu-v9 .b-recipe .b-rec{display:flex;justify-content:space-between;gap:9px;align-items:center;min-width:0;min-height:60px;padding:9px 10px;border-radius:12px;text-align:left;background:#fffaf3;border:1px solid #d9c8b5;color:#34251b;box-shadow:none}
+html.menu-v9 .b-rec-label{min-width:0;flex:1}
+html.menu-v9 .b-rec-label b{display:block;font-size:.87rem;line-height:1.25;overflow-wrap:anywhere}
+html.menu-v9 .b-rec-label small{display:block;font-size:.68rem;line-height:1.25;font-weight:500;color:#786557;margin-top:3px}
+html.menu-v9 .b-rec-icon{flex:none;display:grid;place-items:center;border:1px solid #b69a7d;border-radius:50%;width:29px;height:29px;line-height:1;background:#f4ebdf;color:#593b28;font-size:1.25rem;font-weight:600;transition:transform .25s,background .2s;color:#593b28}
+html.menu-v9 .b-recipe .b-rec.off{background:#eee5db;border-style:dashed;color:#6e5f53}
+html.menu-v9 .b-rec.off .b-rec-label{text-decoration:none}
+html.menu-v9 .b-rec.off .b-rec-label b{text-decoration:line-through}
+html.menu-v9 .b-rec.off .b-rec-icon{background:#fffaf3;text-decoration:none}
+html.menu-v9 .b-recipe .b-rec:active .b-rec-icon{transform:scale(.86)}
+html.menu-v9 .bchips .bchip{border-radius:12px;min-height:44px;transition:background .24s,color .22s,border-color .22s,transform .18s,box-shadow .22s}
+html.menu-v9 .bchips .bchip[aria-pressed="true"]{background:#5c3c26;border-color:#5c3c26;color:#fff7ec;box-shadow:0 5px 12px #34251b25}
+html.menu-v9 .bchips .bchip[aria-pressed="true"] em{color:#e8d7c0}
+html.menu-v9 .b-summary{padding-bottom:12px}
+html.menu-v9 .b-cost-lines{margin:8px 0 0;padding:8px 12px;border:1px solid #e0cdb7;border-radius:14px;background:#fffaf4}
+html.menu-v9 .b-cost-lines>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #eadbc9}
+html.menu-v9 .b-cost-lines>div:last-child{border-bottom:0}
+html.menu-v9 .b-cost-lines dt{font-size:.88rem;line-height:1.3;color:#34251b}
+html.menu-v9 .b-cost-lines dt small{display:block;color:#776458;font-size:.72rem}
+html.menu-v9 .b-cost-lines dd{margin:0;font-size:.86rem;font-weight:700;text-align:right;flex:none}
+html.menu-v9 .b-cost-total{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px;padding:13px;border-radius:12px;background:#e8d8c3;color:#34251b}
+html.menu-v9 .b-cost-total strong{font-size:1.18rem;text-align:right}
+html.menu-v9 .b-foot{box-shadow:0 -5px 24px #39251b22;border-top:2px solid #b98653;background:#fffaf4}
+html.menu-v9 .b-foot .bf-p{font-size:clamp(1.8rem,6vw,2.3rem);color:#39271b;transform-origin:left center}
+html.menu-v9 .b-foot.bump .bf-p{animation:aa-v18-price .43s cubic-bezier(.2,.8,.2,1)}
+html.menu-v9 .b-foot .bf-k{line-height:1.3}
+html.menu-v9 .b-foot .bf-s{max-width:32ch}
+html.menu-v9 .w-line-price{display:block;font-size:.8em;color:#80583f;font-weight:600;margin-top:2px}
+html.menu-v9 .waiter .w-p{flex-wrap:wrap}
+html.kiosk.menu-v9 .b-recipe .b-rec{min-height:70px;padding:12px}
+html.kiosk.menu-v9 .b-rec-icon{width:36px;height:36px}
+html.kiosk.menu-v9 .bchips .bchip{min-height:52px;font-size:1rem}
+@media(max-width:390px){html.menu-v9 .b-recipe{grid-template-columns:1fr}html.menu-v9 .b-hero img{width:68px;height:68px}html.menu-v9 .b-foot .bf-s{max-width:18ch}}
+@media(max-width:760px){.site-v18 .v18-hero-frame{inset:6px}.site-v18 #fuoco.hero-v8 .scene::after{background:radial-gradient(ellipse at 66% 25%,#faa45135,transparent 45%)}}
+html.kiosk.menu-v9 .ex-special .ex-feature.aa-enter .ex-photo img{animation-duration:.55s}
+html.kiosk.menu-v9 .ex-special .ex-feature.aa-enter::before{animation:none;opacity:0}
+html.kiosk.menu-v9 .ex-grid .aa-enter,html.kiosk.menu-v9 .acc-h.aa-enter{animation-duration:.3s;animation-delay:0ms}
+html.kiosk.menu-v9 .item-pizza.in .item-ph{animation-duration:.35s}
+html.kiosk.menu-v9 .item-pizza.in .item-customize{animation-duration:.24s;animation-delay:0ms}
+@media(prefers-reduced-motion:reduce){.site-v18 #fuoco.hero-v8 .scene::after,.site-v18 .v18-hero-frame::after,html.menu-v9 .ex-special .ex-feature.aa-enter::before{display:none!important}.site-v18 .v18-arrived, .site-v18 .v18-arrived img,html.menu-v9 .aa-enter,html.menu-v9 .aa-enter .ex-photo img,html.menu-v9 .aa-enter .ex-copy{animation:none!important;opacity:1!important;clip-path:none!important;translate:none!important}}
