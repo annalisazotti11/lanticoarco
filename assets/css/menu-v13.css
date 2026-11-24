@@ -266,3 +266,19 @@ html.menu-v13.kiosk.kiosk-v11 :is(.k13-section-pick,.k13-home-quick button,.k13-
 
 html.menu-v13.kiosk.kiosk-v11 #promos:not([hidden]){display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 @media(max-width:760px){html.menu-v13.kiosk.kiosk-v11 #promos:not([hidden]){grid-template-columns:1fr}}
+
+/* V13.1 — final ergonomic pass after the 1080×1920 builder preview. */
+html.menu-v13.kiosk.kiosk-v11 #builder .b-caution{font-size:.89rem;line-height:1.45;padding:10px 12px;border-radius:10px}
+html.menu-v13.kiosk.kiosk-v11 #builder .b-recipe .b-rec{min-height:65px;padding:10px 12px}
+html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-label b{font-size:clamp(.92rem,1.53vw,1.05rem);line-height:1.25}
+html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-label small{font-size:clamp(.75rem,1.19vw,.86rem);line-height:1.32}
+html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-icon{width:34px;height:34px;font-size:1.3rem}
+html.menu-v13.kiosk.kiosk-v11 #builder .bchip em{font-size:clamp(.8rem,1.18vw,.88rem)}
+html.menu-v13.kiosk.kiosk-v11 #builder .b-search input{min-height:52px;font-size:1rem}
+html.menu-v13.kiosk.kiosk-v11 #builder .bf-r .b-fire{background:#63452d;color:#fffaf0;box-shadow:0 3px 12px #44301c20}
+html.menu-v13.kiosk.kiosk-v11 #builder .b-cost-total{background:#eadcc9}
+html.menu-v13.kiosk.kiosk-v11 #promos .promo-k{font-size:.81rem}
+html.menu-v13.kiosk.kiosk-v11 #promos .promo-t{font-size:clamp(1rem,1.65vw,1.15rem)}
+html.menu-v13.kiosk.kiosk-v11 #promos .promo{min-height:97px}
+html.menu-v13.kiosk.kiosk-v11 .k13-home-link{min-height:37px}
+@media(max-width:600px){html.menu-v13.kiosk.kiosk-v11 #builder .b-recipe .b-rec{min-height:57px}html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-label b{font-size:.92rem}html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-label small{font-size:.75rem}html.menu-v13.kiosk.kiosk-v11 #builder .bf-r .b-fire{min-height:53px}html.menu-v13.kiosk.kiosk-v11 #builder .b-foot{min-height:84px}}

@@ -446,7 +446,7 @@
         // la barra a fine corsa sta ferma in alto: conta la sua posizione finale, non quella di adesso
         var n = $('gnav'), z = n && n.offsetHeight ? n.getBoundingClientRect().height / n.offsetHeight : 1; // sul totem la pagina è ingrandita
         var stuck = kioskV11 ? $('top').offsetHeight + kioskRailOffset() + ($('gnavSub').hidden ? 0 : $('gnavSub').offsetHeight) : n && !n.hidden ? ((parseFloat(getComputedStyle(n).top) || 0) + n.offsetHeight) * z : 70;
-        var y = window.scrollY + el.getBoundingClientRect().top - stuck - 4;
+        var y = window.scrollY + el.getBoundingClientRect().top - stuck - 12;
         window.scrollTo({ top: Math.max(0, Math.round(y)), behavior: reduceMotion() ? 'auto' : 'smooth' });
         if (history.replaceState) history.replaceState(null, '', '#' + el.id);
       });
