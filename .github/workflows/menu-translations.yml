@@ -48,7 +48,7 @@ jobs:
           key: argos-menu-italian-v1
       - name: Install offline translation engine
         if: steps.plan.outputs.pending != '0' || steps.plan.outputs.first == 'true'
-        run: python -m pip install 'argostranslate==1.11.1'
+        run: python -m pip install 'argostranslate==1.11.0'
       - name: Translate only new text
         shell: bash
         run: |
