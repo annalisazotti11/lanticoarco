@@ -217,19 +217,23 @@
     var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
     groups = groups.slice().sort(function (a,b) { var x = order.indexOf(a.id), y = order.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
     var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    var cards = groups.map(function (g) {
-      var sections = DATA.sections.filter(function (s) { return s.group === g.id && s.visible && s.items.some(matches); });
-      var count = sections.reduce(function (sum, s) { return sum + s.items.filter(matches).length; }, 0);
-      var subtitle = g.id === 'impasti' ? count + ' impasti' : count + (count === 1 ? ' proposta' : ' proposte');
+    var featured = '', rest = [];
+    groups.forEach(function (g) {
       var photo = g.image || '';
       var art = photo ? '<span class="ex-photo"><img src="' + esc(AA.src(photo)) + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="ex-photo ex-none">' + AA.archSVG() + '</span>';
-      var contents = art + '<span class="ex-copy"><strong>' + esc(g.name) + '</strong>' + (subtitle ? '<small>' + esc(subtitle) + '</small>' : '') + '</span><span class="ex-arrow">' + arrow + '</span>';
-      if (g.id === 'impasti') return '<button class="ex-card" type="button" data-ex-dough>' + contents + '</button>';
-      return '<a class="ex-card' + (g.id === 'pizze' ? ' ex-feature' : '') + (g.id === 'aggiunte' ? ' ex-extra' : '') + '" href="#g-' + esc(g.id) + '">' + contents + '</a>';
-    }).join('');
-    box.innerHTML = '<div class="ex-alert"><span class="ex-info" aria-hidden="true">i</span><p><b>Allergie o intolleranze?</b> Comunicale sempre al personale.</p><a href="#g-allergeni">Allergeni ' + arrow + '</a></div>' +
-      '<div class="ex-heading"><h2 id="exploreTitle">Cosa ti va <em>oggi?</em></h2><span class="ex-hint">Scegli una categoria</span></div><div class="ex-grid">' + cards + '</div>' +
-      (hasPizza ? '<a class="ex-build" href="#crea" data-open-builder><span><b>Crea la tua pizza</b><small>Scegli impasto e ingredienti</small></span>' + arrow + '</a>' : '');
+      var title = '<span class="ex-copy"><strong>' + esc(g.name) + '</strong></span>';
+      var contents = art + title + '<span class="ex-arrow">' + arrow + '</span>';
+      if (g.id === 'pizze') {
+        featured = '<a class="ex-card ex-feature" href="#g-pizze">' + art + '<span class="ex-copy"><strong>' + esc(g.name) + '</strong><small>Gourmet, classiche, bianche e vegan</small></span><span class="ex-arrow">' + arrow + '</span></a>';
+      } else if (g.id === 'impasti') {
+        rest.push('<button class="ex-card" type="button" data-ex-dough>' + contents + '</button>');
+      } else {
+        rest.push('<a class="ex-card" href="#g-' + esc(g.id) + '">' + contents + '</a>');
+      }
+    });
+    var build = hasPizza ? '<a class="ex-build" href="#crea" data-open-builder><span><b>Crea la tua pizza</b><small>Scegli impasto e ingredienti</small></span>' + arrow + '</a>' : '';
+    box.innerHTML = '<div class="ex-alert"><p><b>Allergie o intolleranze?</b> Comunicale sempre al personale.</p><a href="#g-allergeni">Allergeni ' + arrow + '</a></div>' +
+      '<div class="ex-heading"><h2 id="exploreTitle">Scegli una categoria</h2></div><div class="ex-editorial' + (featured ? '' : ' no-feature') + '">' + (featured ? '<div class="ex-special">' + featured + build + '</div>' : '') + '<div class="ex-grid">' + rest.join('') + '</div></div>';
     box.hidden = !groups.length;
   }
 
