@@ -36,7 +36,7 @@
       if (started) return;
       started = true;
       film.muted = true;
-      film.innerHTML = '<source src="' + AA.ROOT + 'assets/video/brace.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/brace.mp4" type="video/mp4">';
+      film.innerHTML = '<source src="' + AA.ROOT + 'assets/video/forno-reale.webm" type="video/webm"><source src="' + AA.ROOT + 'assets/video/forno-reale.mp4" type="video/mp4">';
       film.load();
     }
     return {
@@ -103,7 +103,7 @@
       var lo = clamp(easeOut(openT) * (1 - g.p * 1.6), 0, 1);
       if (lo > 0) archPath.setAttribute('d', linesFor(g));
       archPath.style.opacity = String(lo);
-      if (g.p < .001) { stick.style.setProperty('--ax', Math.max(0, g.left) + 'px'); stick.style.setProperty('--ctop', g.ctop + 'px'); }
+      if (g.p < .001 && openT >= 1) { stick.style.setProperty('--ax', Math.max(0, g.left) + 'px'); stick.style.setProperty('--ctop', g.ctop + 'px'); }
     }
     copy.style.opacity = String(clamp(1 - g.p * 2.2, 0, 1));
     var z = 'scale(' + (1 + g.p * .16).toFixed(4) + ')';

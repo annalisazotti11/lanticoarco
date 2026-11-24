@@ -632,33 +632,38 @@ body.locked { overflow: hidden; }
   .hero-cta { margin-top: 26px; }
 }
 
-/* Hero v2: un'unica ripresa naturale, con sfondo di riserva e inquadrature responsive. */
+/* Hero v2.03 — forno reale della pizzeria, senza geometrie inventate. */
 .arch #fire.fire-film {
   position: absolute; inset: 0; overflow: hidden;
-  transform-origin: 70% 65%;
-  background: #140d09 url("../video/fuoco-16.jpg") center / cover no-repeat;
+  transform-origin: 68% 60%; background: #140d09;
 }
-.arch #fireFilm {
-  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-  object-fit: cover; object-position: center 56%;
-  opacity: 0; transition: opacity .4s ease;
-  filter: saturate(.84) contrast(1.04) brightness(.92);
+.arch #fire::before, .arch #fireFilm {
+  position: absolute; display: block; right: 0; top: 5%; width: 78%; height: 90%;
+  object-fit: contain; object-position: center; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 72% 68% at 56% 49%, #000 42%, transparent 99%);
+  mask-image: radial-gradient(ellipse 72% 68% at 56% 49%, #000 42%, transparent 99%);
 }
+.arch #fire::before {
+  content: ""; background: url("../video/forno-reale.jpg") center / contain no-repeat;
+}
+.arch #fireFilm { inset: 5% 0 auto auto; opacity: 0; transition: opacity .35s ease; }
 .arch .film-ready #fireFilm { opacity: 1; }
 .arch .arch-shade {
-  background: linear-gradient(90deg, rgba(15, 10, 7, .96) 0%, rgba(15, 10, 7, .79) 28%, rgba(15, 10, 7, .22) 64%, transparent 100%),
-    linear-gradient(0deg, rgba(15, 10, 7, .40), transparent 40%, transparent 78%, rgba(15, 10, 7, .25));
+  background: linear-gradient(90deg, #140d09 0%, rgba(20,13,9,.9) 22%, rgba(20,13,9,.44) 48%, transparent 76%),
+    linear-gradient(0deg, rgba(20,13,9,.6), transparent 22%, transparent 78%, rgba(20,13,9,.25));
 }
 .hero-t { text-shadow: 0 2px 24px rgba(0,0,0,.42); }
-@media (min-width: 960px) {
-  .arch #fireFilm { width: 76%; left: 24%; right: 0; object-position: center 58%; }
-}
 @media (max-width: 959px) {
-  .arch #fire.fire-film { background-image: url("../video/fuoco-9.jpg"); transform-origin: 60% 76%; }
-  .arch #fireFilm { object-position: 57% center; }
-  .arch .arch-shade {
-    background: linear-gradient(180deg, rgba(15,10,7,.72) 0%, rgba(15,10,7,.66) 36%, rgba(15,10,7,.42) 66%, rgba(15,10,7,.2) 100%);
+  .arch #fire.fire-film { transform-origin: 55% 76%; }
+  .arch #fire::before, .arch #fireFilm {
+    width: 110%; height: 52%; right: -5%; top: auto; bottom: 3%; left: auto;
+    -webkit-mask-image: radial-gradient(ellipse 70% 66% at 50% 55%, #000 43%, transparent 99%);
+    mask-image: radial-gradient(ellipse 70% 66% at 50% 55%, #000 43%, transparent 99%);
   }
+  .arch .arch-shade {
+    background: linear-gradient(180deg, #140d09 0%, rgba(20,13,9,.9) 26%, rgba(20,13,9,.28) 60%, transparent 76%, rgba(20,13,9,.36) 100%);
+  }
+  .hero-copy { top: max(120px, 18%); }
 }
 @media (prefers-reduced-motion: reduce) {
   .arch #fireFilm { display: none; }
