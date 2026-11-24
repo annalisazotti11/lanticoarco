@@ -16,6 +16,7 @@
   var $ = function (id) { return document.getElementById(id); };
 
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  function localizedSearch(s) { return window.AAI18n ? window.AAI18n.searchText(s) : s; }
   function filtering() { return !!(state.q || state.tags.length || state.noAllergens.length); }
 
   var CAN_GF = {}; // piatti che si possono fare con l'impasto senza glutine (variante della sottocategoria)
@@ -26,14 +27,14 @@
     if (state.tags.length && !state.tags.every(function (t) { return hasTag(item, t); })) return false;
     if (state.noAllergens.length && (needsAllergenReview(item) || (item.allergens || []).some(function (a) { return state.noAllergens.indexOf(a) >= 0; }))) return false;
     if (state.q) {
-      var hay = norm(item.name + ' ' + item.desc + ' ' + item.note);
+      var hay = norm(localizedSearch(item.name + ' ' + item.desc + ' ' + item.note));
       return norm(state.q).split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
     }
     return true;
   }
   function hl(text) {
     var t = esc(text);
-    if (!state.q) return t;
+    if (!state.q || (window.AAI18n && window.AAI18n.language !== 'it')) return t;
     state.q.trim().split(/\s+/).filter(function (w) { return w.length > 1; }).forEach(function (w) {
       t = t.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>');
     });
@@ -107,7 +108,7 @@
     return nums.length ? 'Allergeni ' + nums.join(' · ') + (needsAllergenReview(it) ? ' · da verificare' : '') : needsAllergenReview(it) ? 'Allergeni da verificare' : 'Nessun allergene dichiarato';
   }
   function extraListButton(it, showPrice) {
-    return '<li class="extra-entry" data-extra-search="' + esc(norm(it.name)) + '"><button type="button" data-item="' + esc(it.id) + '" class="extra-entry-btn"><span><strong>' + hl(it.name) + '</strong><small>' + esc(extraAllergenText(it)) + '</small></span><span class="extra-entry-price num">' + (showPrice ? AA.price(it.price, {signed:true}) : '') + '<span aria-hidden="true">›</span></span></button></li>';
+    return '<li class="extra-entry" data-extra-search="' + esc(it.name) + '"><button type="button" data-item="' + esc(it.id) + '" class="extra-entry-btn"><span><strong>' + hl(it.name) + '</strong><small>' + esc(extraAllergenText(it)) + '</small></span><span class="extra-entry-price num">' + (showPrice ? AA.price(it.price, {signed:true}) : '') + '<span aria-hidden="true">›</span></span></button></li>';
   }
   function chipsHTML(items) {
     var plant = items.filter(plantAlternative).sort(extraOrder), by = {};
@@ -629,7 +630,7 @@
   }
   function pickList(q) {
     q = norm(q || '');
-    var hits = allPizzas().filter(function (x) { return !q || norm(x.item.name + ' ' + (x.item.desc || '')).indexOf(q) >= 0; }).slice(0, 12);
+    var hits = allPizzas().filter(function (x) { return !q || norm(localizedSearch(x.item.name + ' ' + (x.item.desc || ''))).indexOf(q) >= 0; }).slice(0, 12);
     if (!hits.length) return '<p class="b-none">Nessuna pizza con queste parole.</p>';
     return hits.map(function (x) {
       return '<button type="button" class="b-pk" data-b="pickit" data-v="' + esc(x.item.id) + '"><b>' + esc(x.item.name) + '</b><span>' + esc(x.item.desc || '') + '</span><em class="num">' + AA.price(unitPrice(x.item)) + '</em></button>';
@@ -997,7 +998,7 @@
       box.querySelectorAll('.extra-catalog-group').forEach(function(g) {
         var found = 0;
         g.querySelectorAll('[data-extra-search]').forEach(function(el) {
-          el.hidden = !!q && el.dataset.extraSearch.indexOf(q) < 0; if (!el.hidden) found++;
+          el.hidden = !!q && norm(localizedSearch(el.dataset.extraSearch)).indexOf(q) < 0; if (!el.hidden) found++;
         });
         g.hidden = !found; count += found;
       });

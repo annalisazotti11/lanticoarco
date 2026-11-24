@@ -198,9 +198,9 @@
     var url = (DATA.settings && DATA.settings.menuUrl) || new URL('../menu/', location.href).href;
     if (c.showQr && url && window.qrcode) {
       $('tvQrCode').innerHTML = AA.qrSVG(url, { margin: 1 });
-      var reviewUrl = DATA.info && DATA.info.mapsUrl;
+      var reviewUrl = "https://search.google.com/local/writereview?placeid=ChIJhysMvM7BRxMRJVI7vmv50eQ";
       var reviewBox = document.getElementById('tvReview');
-      if (reviewUrl && reviewBox) { document.getElementById('tvReviewCode').innerHTML = AA.qrSVG(reviewUrl, { margin: 2 }); reviewBox.hidden = false; }
+      if (reviewUrl && reviewBox) { document.getElementById('tvReviewCode').innerHTML = AA.qrSVG(reviewUrl, { margin: 4 }); reviewBox.dataset.reviewUrl=reviewUrl; reviewBox.hidden = false; }
       $('tvQr').hidden = false;
     } else $('tvQr').hidden = true;
     var ann = AA.announcement(DATA);

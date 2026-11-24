@@ -1,0 +1,9 @@
+/* Local language menu, designed for touch and mobile. */
+.aa-language{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 9px;background:#fffaf4;border:1px solid #ddcbb7;color:#553724;border-radius:13px;box-shadow:0 2px 7px #39291c0b;position:relative}
+.aa-language svg{width:21px;height:21px;flex:none;pointer-events:none}
+.aa-language select{background:transparent;border:0;color:inherit;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;max-width:123px;min-height:42px;padding:0 2px;outline:0}
+.aa-language:focus-within{outline:3px solid #b78759;outline-offset:2px}
+html.kiosk.kiosk-v11 .aa-language{min-height:56px;padding:0 12px;margin-left:0}
+html.kiosk.kiosk-v11 .aa-language select{font-size:.87rem;min-height:54px;max-width:150px}
+@media(max-width:700px){.aa-language{gap:3px;padding:0 5px}.aa-language select{width:58px;max-width:58px;font-size:.75rem}.aa-language svg{width:17px;height:17px}html.kiosk.kiosk-v11 .aa-language{min-height:44px;padding:0 5px}html.kiosk.kiosk-v11 .aa-language select{width:65px;min-height:42px;font-size:.76rem}}
+@media(max-width:390px){html:not(.kiosk) .top{padding-inline:8px;gap:4px}.aa-language svg{display:none}.aa-language select{width:55px}.top-logo{max-width:84px}.top-logo img{max-width:100%;object-fit:contain}}
