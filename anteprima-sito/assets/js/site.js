@@ -409,7 +409,13 @@
       return;
     }
     lis.forEach(function (li, i) { li.querySelector('button').addEventListener('click', function () { go(i); }); });
-    ready(function () { go(0); });
+    ready(function () {
+      var large=matchMedia('(min-width: 960px) and (min-height: 700px)'), pending=false, last=-1;
+      function layout(){var active=large.matches;track.classList.toggle('an-scroll-active',active);if(active){var vh=innerHeight,top=($('nav')?.offsetHeight||102)+16;track.style.setProperty('--an-top',top+'px');track.style.setProperty('--an-travel',Math.round(vh*1.16)+'px');track.style.setProperty('--an-scene',stick.offsetHeight+'px')}else{track.style.removeProperty('--an-top');track.style.removeProperty('--an-travel');last=-1}request()}
+      function update(){pending=false;if(!large.matches)return;var r=track.getBoundingClientRect(),range=track.offsetHeight-stick.offsetHeight,top=($('nav')?.offsetHeight||102)+16;if(range<1)return;var p=clamp((top-r.top)/range,0,1),k=Math.min(D.length-1,Math.floor(p*D.length));if(k!==last){last=k;if(k!==cur)go(k)}}
+      function request(){if(!pending){pending=true;requestAnimationFrame(update)}}
+      go(0);layout();addEventListener('scroll',request,{passive:true});addEventListener('resize',layout);
+    });
     window.addEventListener('resize', function () { if (cur >= 0) place(cur); });
 
   }
@@ -533,4 +539,45 @@
  if(mq.addEventListener)mq.addEventListener('change',request);
  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(request);
  paint();
+})();
+
+/* V13: vertically read the story; images stay in view and follow the active year. */
+(function(){
+ var wrap=document.getElementById('storyScroll'),view=document.getElementById('storyView'),rail=document.getElementById('verticalTimeline'),images=document.getElementById('storyImages');
+ if(!wrap||!view||!rail||!images)return;
+ var motion=matchMedia('(prefers-reduced-motion: reduce)'),small=matchMedia('(max-width: 760px)'),events=Array.from(rail.querySelectorAll('.v12-event')),frames=[],pending=false,current=-1;
+ if(!events.length)return;
+ events.forEach(function(el,i){
+   var source=el.querySelector('.timeline-media'),frame=source.cloneNode(true);
+   frame.classList.add('story-frame');frame.classList.toggle('active',i===0);
+   frame.querySelectorAll('img').forEach(function(img){img.loading='eager';img.alt='';img.removeAttribute('id')});
+   images.appendChild(frame);frames.push(frame);
+ });
+ function clamp(v){return Math.max(0,Math.min(1,v))}
+ function layout(){
+   var nav=document.getElementById('nav'),chap=document.getElementById('chap'),top=(nav?nav.offsetHeight:90)+14;
+   if(chap&&getComputedStyle(chap).display!=='none')top+=chap.offsetHeight;
+   wrap.style.setProperty('--story-top',top+'px');
+   var enabled=!motion.matches&&innerHeight>=620;
+   wrap.classList.toggle('story-enhanced',enabled);view.hidden=!enabled;
+   if(enabled){current=-1;paint()}else{events.forEach(function(el){el.classList.remove('story-active')})}
+ }
+ function paint(){
+   pending=false;if(!wrap.classList.contains('story-enhanced'))return;
+   var line=small.matches?view.getBoundingClientRect().bottom+Math.min(84,innerHeight*.10):innerHeight*.48;
+   var index=0;events.forEach(function(el,i){if(el.getBoundingClientRect().top<=line)index=i});
+   if(index!==current){
+     current=index;frames.forEach(function(f,i){f.classList.toggle('active',i===index)});
+     events.forEach(function(el,i){el.classList.toggle('story-active',i===index)});
+     document.getElementById('storyViewYear').textContent=events[index].querySelector('.v12-year>span:last-child').textContent;
+     document.getElementById('storyViewCount').textContent=String(index+1).padStart(2,'0')+' / '+String(events.length).padStart(2,'0');
+   }
+   var rr=rail.getBoundingClientRect(),last=events[events.length-1].getBoundingClientRect(),span=Math.max(1,last.top-rr.top);
+   wrap.style.setProperty('--story-progress',clamp((line-rr.top)/span).toFixed(4));
+ }
+ function request(){if(!pending){pending=true;requestAnimationFrame(paint)}}
+ addEventListener('scroll',request,{passive:true});addEventListener('resize',layout);addEventListener('pageshow',layout);
+ if(motion.addEventListener)motion.addEventListener('change',layout);
+ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(layout);
+ layout();
 })();
