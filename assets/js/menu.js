@@ -225,10 +225,10 @@
       var art = photo ? '<span class="ex-photo"><img src="' + esc(AA.src(photo)) + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="ex-photo ex-none">' + AA.archSVG() + '</span>';
       var contents = art + '<span class="ex-copy"><strong>' + esc(g.name) + '</strong>' + (subtitle ? '<small>' + esc(subtitle) + '</small>' : '') + '</span><span class="ex-arrow">' + arrow + '</span>';
       if (g.id === 'impasti') return '<button class="ex-card" type="button" data-ex-dough>' + contents + '</button>';
-      return '<a class="ex-card' + (g.id === 'pizze' ? ' ex-feature' : '') + '" href="#g-' + esc(g.id) + '">' + contents + '</a>';
+      return '<a class="ex-card' + (g.id === 'pizze' ? ' ex-feature' : '') + (g.id === 'aggiunte' ? ' ex-extra' : '') + '" href="#g-' + esc(g.id) + '">' + contents + '</a>';
     }).join('');
     box.innerHTML = '<div class="ex-alert"><span class="ex-info" aria-hidden="true">i</span><p><b>Allergie o intolleranze?</b> Comunicale sempre al personale.</p><a href="#g-allergeni">Allergeni ' + arrow + '</a></div>' +
-      '<div class="ex-heading"><h2 id="exploreTitle">Scegli una categoria</h2><span class="ex-hint">Tutte le nostre proposte</span></div><div class="ex-grid">' + cards + '</div>' +
+      '<div class="ex-heading"><h2 id="exploreTitle">Cosa ti va <em>oggi?</em></h2><span class="ex-hint">Scegli una categoria</span></div><div class="ex-grid">' + cards + '</div>' +
       (hasPizza ? '<a class="ex-build" href="#crea" data-open-builder><span><b>Crea la tua pizza</b><small>Scegli impasto e ingredienti</small></span>' + arrow + '</a>' : '');
     box.hidden = !groups.length;
   }
