@@ -517,8 +517,10 @@
  function clamp(n){return Math.max(0,Math.min(1,n))}
  function paint(){
    scheduled=false;var vh=innerHeight,reduce=mq.matches;
+   var max=Math.max(1,document.documentElement.scrollHeight-vh);page.style.setProperty('--read-progress',clamp(scrollY/max).toFixed(4));
    nodes.forEach(function(el){
      var r=el.getBoundingClientRect(),p=reduce?1:clamp((vh*.96-r.top)/(vh*.30));
+     if (!r.width || !r.height) return;
      if(el.contains(document.activeElement))p=1;
      el.style.setProperty('--unfold',p.toFixed(3));
    });

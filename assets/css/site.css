@@ -1152,3 +1152,16 @@ body.locked { overflow: hidden; }
  .site-v12 .an-shot{border-radius:4px 38px 4px 4px}
 }
 @media(prefers-reduced-motion:reduce){.site-v12.unfold-ready [data-unfold],.site-v12.unfold-ready .proof,.site-v12.unfold-ready .pr-foot,.site-v12.unfold-ready .v12-story-row .timeline-copy,.site-v12.unfold-ready .v12-story-row .timeline-media,.site-v12.unfold-ready .sf-cols{opacity:1!important;translate:none!important;clip-path:none!important}.site-v12 .v12-story-row .timeline-media>img:first-child{transform:none}}
+
+/* V12.1 — aperture of the images, a continuous reading indicator and mobile refinement. */
+.site-v12 .nav::after{content:"";position:absolute;bottom:0;left:0;width:100%;height:2px;background:#a66b46;transform:scaleX(var(--read-progress,0));transform-origin:left;pointer-events:none}
+.site-v12.unfold-ready [data-aperture]{clip-path:inset(0 0 calc((1 - var(--unfold,1))*12%) 0 round 4px 72px 4px 4px)}
+.site-v12 .section-kicker,.site-v12 .an-over{letter-spacing:.13em;font-size:.72rem}
+.site-v12 .an-head .an-h em,.site-v12 .im-body .h3 em,.site-v12 .gf h3 em{font-style:italic;font-weight:400}
+.site-v12 .vi-main .btn,.site-v12 .gf-b,.site-v12 .v12-story-close .btn{min-height:52px}
+.site-v12 .v12-story-row .timeline-copy{min-width:0}
+.site-v12 .v12-story-row .timeline-media{min-width:0}
+.site-v12 .v12-year{overflow-wrap:normal;word-break:normal}
+.site-v12 .v12-year>span:last-child{overflow-wrap:normal}
+@media(max-width:620px){.site-v12.unfold-ready [data-aperture]{clip-path:inset(0 0 calc((1 - var(--unfold,1))*12%) 0 round 4px 38px 4px 4px)}.site-v12 .v12-story-row .timeline-type-art small{font-size:.58rem;letter-spacing:.11em}}
+@media(prefers-reduced-motion:reduce){.site-v12.unfold-ready [data-aperture]{clip-path:none!important}}
