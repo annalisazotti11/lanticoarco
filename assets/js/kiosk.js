@@ -51,7 +51,7 @@
 
   // QR: il menu sul proprio telefono
   function addQr(data) {
-    var intro = document.querySelector('.intro');
+    var intro = root.classList.contains('kiosk-v11') && document.getElementById('k13Support') || document.querySelector('.intro');
     if (!intro || !window.qrcode || document.querySelector('.k-qr')) return;
     var url = (data && data.settings && data.settings.menuUrl) || new URL('../menu/', location.href).href;
     var box = document.createElement('div');
