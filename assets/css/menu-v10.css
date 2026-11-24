@@ -1,0 +1,43 @@
+/* Catalogo aggiunte: una sola voce per prodotto, consultabile e ricercabile. */
+html.menu-v10 .extra-catalog{margin:12px 0 24px;display:grid;gap:17px}
+html.menu-v10 .extra-find{display:block}
+html.menu-v10 .extra-find input{width:100%;padding:13px 15px;border:1px solid #d2bca6;border-radius:13px;background:#fffaf4;color:#34251b;font-size:1rem;box-shadow:0 3px 12px #3923190d}
+html.menu-v10 .extra-find input:focus{outline:2px solid #b98653;outline-offset:2px}
+html.menu-v10 .extra-catalog-group{padding:15px;border:1px solid #e0d0be;border-radius:18px;background:#fbf7f1}
+html.menu-v10 .extra-catalog-group h4{margin:0 0 10px;font-size:1.12rem;color:#593c27;font-weight:700}
+html.menu-v10 .extra-plants{background:#f3eadc;border-color:#c9af93}
+html.menu-v10 .extra-plants h4{font:400 clamp(1.45rem,3vw,1.9rem)/1.1 Georgia,serif;letter-spacing:-.025em;color:#38271b}
+html.menu-v10 .extra-group-note{margin:-3px 0 12px;font-size:.82rem;color:#6e5f53}
+html.menu-v10 .extra-catalog-group ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+html.menu-v10 .extra-entry{min-width:0}
+html.menu-v10 .extra-entry-btn{width:100%;height:100%;min-height:61px;display:flex;justify-content:space-between;gap:9px;align-items:center;text-align:left;padding:11px 12px;border:1px solid #e3d3c0;border-radius:11px;background:#fffaf4;color:#38271b;transition:background .2s,border-color .2s,transform .2s}
+html.menu-v10 .extra-entry-btn strong{display:block;font-size:.9rem;font-weight:650;line-height:1.25;overflow-wrap:anywhere}
+html.menu-v10 .extra-entry-btn small{display:block;font-size:.72rem;line-height:1.3;color:#786557;margin-top:4px}
+html.menu-v10 .extra-entry-price{display:flex;align-items:center;gap:7px;flex:none;font-size:.86rem;font-weight:700;color:#86452f}
+html.menu-v10 .extra-entry-price span{font-size:1.25rem;line-height:1;transition:transform .2s}
+html.menu-v10 .extra-entry-btn:hover{background:#f2e6d6;border-color:#b89d82}
+html.menu-v10 .extra-entry-btn:hover .extra-entry-price span{transform:translateX(3px)}
+html.menu-v10 .extra-entry-btn:active{transform:scale(.98)}
+html.menu-v10 .extra-empty{font-size:.9rem;color:#655447;padding:16px;line-height:1.4}
+html.menu-v10 .item-variant{display:inline-block;color:#80583f;font-size:.82rem;font-weight:650}
+html.menu-v10 .b-alt-panel{margin-top:16px;padding:13px;background:#f1e6d5;border:1px solid #d6bda1;border-radius:14px}
+html.menu-v10 .b-alt-panel h4{margin:0;color:#593b28;font-size:1.1rem}
+html.menu-v10 .b-alt-panel .b-sub{margin:5px 0 10px;font-size:.76rem}
+html.menu-v10 .b-alt-panel .bchips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+html.menu-v10 .b-extra-choice{min-width:0;justify-content:space-between;text-align:left;gap:8px}
+html.menu-v10 .b-extra-choice span{min-width:0;overflow-wrap:anywhere}
+html.menu-v10 .b-extra-choice b{font-weight:600;font-size:.85rem}
+html.menu-v10 .b-extra-choice em{flex:none;font-size:.77rem;white-space:nowrap}
+html.menu-v10 .b-extra-plant{min-height:70px;align-items:center;background:#fffaf4;border-color:#d4bda3}
+html.menu-v10 .b-extra-plant small{display:block;font-size:.66rem;color:#786557;line-height:1.3;margin-top:4px}
+html.menu-v10 .b-extra-plant[aria-pressed="true"] small{color:#e8d7c0}
+html.menu-v10 .b-extra-plant[aria-pressed="true"]::before{display:none}
+html.menu-v10 .b-grp[data-extra-group]{padding-top:8px}
+html.kiosk.menu-v10 .extra-entry-btn{min-height:78px;padding:14px}
+html.kiosk.menu-v10 .extra-entry-btn strong{font-size:1.07rem}
+html.kiosk.menu-v10 .extra-entry-btn small{font-size:.84rem}
+html.kiosk.menu-v10 .extra-find input{font-size:1.12rem;min-height:54px}
+html.kiosk.menu-v10 .b-extra-plant{min-height:84px}
+@media(max-width:600px){html.menu-v10 .extra-catalog-group ul{grid-template-columns:1fr}html.menu-v10 .extra-catalog-group{padding:12px}}
+@media(max-width:400px){html.menu-v10 .b-alt-panel .bchips{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html.menu-v10 .extra-entry-btn,html.menu-v10 .extra-entry-price span{transition:none}}

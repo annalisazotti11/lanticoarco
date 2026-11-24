@@ -53,18 +53,27 @@
     return AA.price(it.price);
   }
 
+  function canChooseExtras(sec) { return sec.group === 'pizze' || sec.group === 'cicci'; }
+  function plantAlternative(it) { return ['x206','x214','x217','x220'].indexOf(it.id) >= 0; }
+  function veganRecipe(item, sec) { return ['s47','s51','s52'].indexOf(sec.id) >= 0 || (item.tags || []).indexOf('vegana') >= 0; }
+  function extraOrder(a, b) { return a.name.localeCompare(b.name, 'it', { sensitivity: 'base' }); }
+  function itemVariant(it) {
+    // Optional price on a single dish, not a supplement for its entire section.
+    var note = String(it.note || '').match(/^Senza glutine\s*\+\s*€\s*(\d+(?:[,.]\d+)?)$/i);
+    return note ? {label:'Senza glutine',price:Number(note[1].replace(',','.'))} : null;
+  }
   function itemHTML(it, sec) {
     var meta = (it.featured ? '<span class="tag tag-pref">Preferita</span>' : '') + tagsHTML(it.tags);
     var algs = algsHTML(it);
-    return '<li class="item' + (sec.group === 'pizze' ? ' item-pizza' : '') + '"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
+    return '<li class="item' + (canChooseExtras(sec) ? ' item-pizza' : '') + '"><button class="item-btn" type="button" data-item="' + esc(it.id) + '">' +
       '<span class="item-main">' +
       '<span class="item-name">' + hl(it.name) + (it.frozen ? '<span class="frz" title="' + esc(DATA.info.frozenLegend) + '">*</span>' : '') + '</span>' +
       (it.desc ? '<span class="item-desc">' + hl(it.desc) + '</span>' : '') +
-      (it.note ? '<span class="item-note">' + esc(it.note) + '</span>' : '') +
+      (itemVariant(it) ? '<span class="item-note item-variant">Variante disponibile: ' + esc(itemVariant(it).label) + ' <b>' + AA.price(itemVariant(it).price,{signed:true}) + '</b></span>' : it.note ? '<span class="item-note">' + esc(it.note) + '</span>' : '') +
       (meta ? '<span class="item-meta">' + meta + '</span>' : '') +
       '<span class="item-foot"><span class="item-price num">' + priceHTML(it, sec) + '</span>' + algs + '</span></span>' +
       (it.image ? '<img class="item-ph" loading="lazy" alt="" src="' + esc(AA.src(it.image)) + '">' : '') +
-      '</button>' + (sec.group === 'pizze' && it.available !== false ? '<button type="button" class="item-customize" data-open-builder="' + esc(it.id) + '" aria-label="Personalizza ' + esc(it.name) + '"><span>Personalizza</span><span aria-hidden="true">✦</span></button>' : '') + '</li>';
+      '</button>' + (canChooseExtras(sec) && it.available !== false ? '<button type="button" class="item-customize" data-open-builder="' + esc(it.id) + '" aria-label="' + (sec.group === 'pizze' ? 'Personalizza ' : 'Aggiunte per ') + esc(it.name) + '"><span>' + (sec.group === 'pizze' ? 'Personalizza' : 'Scegli le aggiunte') + '</span><span aria-hidden="true">+</span></button>' : '') + '</li>';
   }
   function cardsHTML(items, sec) {
     return '<div class="cards">' + items.map(function (it) {
@@ -74,15 +83,22 @@
         '<span class="card-price" style="display:block">' + priceHTML(it, sec) + '</span>' + algsHTML(it) + '</button>';
     }).join('') + '</div>';
   }
+  function extraAllergenText(it) {
+    var nums = AA.allergenNums(it.allergens).map(function (a) { return a.n; });
+    return nums.length ? 'Allergeni ' + nums.join(' · ') + (needsAllergenReview(it) ? ' · da verificare' : '') : needsAllergenReview(it) ? 'Allergeni da verificare' : 'Nessun allergene dichiarato';
+  }
+  function extraListButton(it, showPrice) {
+    return '<li class="extra-entry" data-extra-search="' + esc(norm(it.name)) + '"><button type="button" data-item="' + esc(it.id) + '" class="extra-entry-btn"><span><strong>' + hl(it.name) + '</strong><small>' + esc(extraAllergenText(it)) + '</small></span><span class="extra-entry-price num">' + (showPrice ? AA.price(it.price, {signed:true}) : '') + '<span aria-hidden="true">›</span></span></button></li>';
+  }
   function chipsHTML(items) {
-    var by = {};
-    items.forEach(function (it) { var k = String(it.price); (by[k] = by[k] || []).push(it); });
-    return Object.keys(by).sort(function (a, b) { return Number(a) - Number(b); }).map(function (k) {
-      return '<div class="chipgrp"><h4>' + AA.price(Number(k), { signed: true }) + '</h4><ul>' + by[k].map(function (it) {
-        var al = AA.allergenNums(it.allergens).map(function (a) { return a.n; }).join(',');
-        return '<li>' + hl(it.name) + (al ? '<sup>' + al + '</sup>' : '') + (needsAllergenReview(it) ? '<sup title="Allergeni da verificare" aria-label="Allergeni da verificare">?</sup>' : '') + '</li>';
-      }).join('') + '</ul></div>';
+    var plant = items.filter(plantAlternative).sort(extraOrder), by = {};
+    items.filter(function (it) { return !plantAlternative(it); }).forEach(function (it) { var k = String(it.price); (by[k] = by[k] || []).push(it); });
+    var html = '<div class="extra-catalog"><label class="extra-find"><span class="sr-only">Cerca nelle aggiunte</span><input type="search" id="extraFind" placeholder="Cerca un’aggiunta…" autocomplete="off"></label><p id="extraNone" class="extra-empty" hidden>Nessuna aggiunta trovata.</p>';
+    if (plant.length) html += '<section class="extra-catalog-group extra-plants"><h4>Alternative vegetali</h4><p class="extra-group-note">Verificare etichetta e possibili tracce con il personale.</p><ul>' + plant.map(function (it) { return extraListButton(it, true); }).join('') + '</ul></section>';
+    html += Object.keys(by).sort(function (a, b) { return Number(a) - Number(b); }).map(function (k) {
+      return '<section class="extra-catalog-group"><h4 class="num">' + AA.price(Number(k), {signed:true}) + '</h4><ul>' + by[k].slice().sort(extraOrder).map(function (it) { return extraListButton(it, false); }).join('') + '</ul></section>';
     }).join('');
+    return html + '</div>';
   }
   function suppHTML(sec) {
     return (sec.supplements || []).length ? '<ul class="suppl">' + sec.supplements.map(function (s) {
@@ -412,7 +428,8 @@
       '<h2 class="d-name" id="sheetTitle">' + esc(it.name) + (it.frozen ? '<span class="frz">*</span>' : '') + '</h2>' +
       '<div class="d-price num">' + price + '</div>' +
       (it.desc ? '<p class="d-desc">' + esc(it.desc) + '</p>' : '') +
-      (it.note ? '<p class="item-note">' + esc(it.note) + '</p>' : '') +
+      (it.note && !itemVariant(it) ? '<p class="item-note">' + esc(it.note) + '</p>' : '') +
+      (itemVariant(it) ? '<h3 class="d-h">Varianti</h3>' + suppHTML({supplements:[itemVariant(it)]}) : '') +
       (it.tags && it.tags.length ? '<div class="item-meta">' + tagsHTML(it.tags) + '</div>' : '') +
       (algs.length ? '<h3 class="d-h">Allergeni indicati e/o possibili tracce</h3><ul class="d-algs">' + algs.map(function (a) {
         return '<li><span class="alg">' + a.n + '</span>' + esc(a.label) + '</li>';
@@ -420,7 +437,7 @@
       (needsAllergenReview(it) ? '<p class="d-note"><b>Allergeni da verificare:</b> scheda incompleta. Confermate ingredienti, etichette e possibili tracce con il personale prima di ordinare.</p>' : '') +
       (it.frozen ? '<p class="d-note">* ' + esc(DATA.info.frozenLegend) + '</p>' : '') +
       (sec.group === 'pizze' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Personalizza questa pizza <span aria-hidden="true">✦</span></button>'
-        : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : '')) +
+        : (sec.group === 'cicci' ? '<button type="button" class="b-fire d-custom" data-open-builder="' + esc(it.id) + '">Scegli le aggiunte <span aria-hidden="true">+</span></button>' : ((sec.supplements || []).length ? '<h3 class="d-h">Varianti</h3>' + suppHTML(sec) : ''))) +
       '</div>';
   }
 
@@ -455,6 +472,7 @@
     return recipeOf(item).filter(function (r) { return norm(r) === 'pomodoro'; })[0] || null;
   }
   function builderOptions(sec, item) {
+    if (sec.group !== 'pizze') return {base:[],mods:[]};
     var base = [], mods = [], red = !!tomatoBase(item);
     var dsec = doughSection();
     var gfDough = dsec && dsec.items.some(function (d) { return /senza glutine/i.test(d.name) && d.available !== false; });
@@ -494,7 +512,7 @@
   function openBuilder(itemId) {
     var secs = pizzaSections();
     var starts = [];
-    if (itemId) { var f = findItem(itemId); if (f) starts.push(f); }
+    if (itemId) { var f = findItem(itemId); if (f && canChooseExtras(f.sec) && f.item.available !== false) starts.push(f); else return; }
     if (!starts.length) ['Margherita', 'Marinara'].forEach(function (n) {
       var f = findByName(n, secs);
       if (f && !starts.some(function (x) { return x.item.id === f.item.id; })) starts.push(f);
@@ -511,9 +529,10 @@
       return ids.every(Boolean) ? { name: p.name, ids: ids } : null;
     }).filter(Boolean);
     var popular = (cfg.popular || DEF_POPULAR).map(function (n) { return byName[norm(n)]; }).filter(Boolean);
-    var doughs = dsec ? AA.visibleItems(dsec) : [];
+    var extrasOnly = starts[0].sec.group !== 'pizze';
+    var doughs = !extrasOnly && dsec ? AA.visibleItems(dsec) : [];
     var defDough = doughs.filter(function (d) { return knownPrice(d) && Number(d.price) === 0; })[0] || doughs[0] || null;
-    B = { from: itemId ? starts[0] : null, starts: starts, start: starts[0], doughs: doughs, dough: defDough, baseOpt: null, mods: [], extras: extras, sel: [], removed: [], presets: presets, popular: popular, q: '', picking: false };
+    B = { extrasOnly: extrasOnly, from: itemId ? starts[0] : null, starts: starts, start: starts[0], doughs: doughs, dough: defDough, baseOpt: null, mods: [], extras: extras, sel: [], removed: [], presets: presets, popular: popular, q: '', picking: false };
     renderBuilder();
     openSheet($('builder'));
     $('bBody').scrollTop = 0;
@@ -550,12 +569,33 @@
     }).join('');
   }
   function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
+  function extraChip(it, detail) {
+    var on = B.sel.indexOf(it.id) >= 0;
+    return '<button type="button" class="bchip b-extra-choice' + (detail ? ' b-extra-plant' : '') + '" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="' + on + '"><span><b>' + esc(it.name) + '</b>' + (detail ? '<small>' + esc(extraAllergenText(it)) + '</small>' : '') + '</span><em class="num">' + deltaLabel(it.price) + '</em></button>';
+  }
+  function extraPicker(n) {
+    var veg = veganRecipe(B.start.item,B.start.sec), plant = B.extras.filter(plantAlternative).sort(extraOrder);
+    var popular = veg ? [] : B.popular.filter(function (it) { return !plantAlternative(it); });
+    var rest = B.extras.filter(function (it) { return !plantAlternative(it) && !popular.some(function (p) { return p.id === it.id; }); });
+    var h = '<section class="b-step"><h3><b>' + n + '</b>Aggiunte</h3><div id="bMine"></div><label class="b-search b-search-all"><span class="sr-only">Cerca un ingrediente</span><input type="search" id="bQ" placeholder="Cerca un’aggiunta" autocomplete="off"></label><div id="bPicker">';
+    if (plant.length) h += '<div class="b-alt-panel" data-extra-group><h4>Alternative vegetali</h4><p class="b-sub">Scegli tra i prodotti indicati nel listino. Conferma la confezione, le tracce e l’idoneità al personale.</p><div class="bchips">' + plant.map(function (it) { return extraChip(it,true); }).join('') + '</div></div>';
+    if (popular.length) h += '<div class="b-grp" data-extra-group><h4>I più scelti</h4><div class="bchips">' + popular.map(function(it) { return extraChip(it,false); }).join('') + '</div></div>';
+    h += '<button type="button" class="b-allt" id="bAllT" aria-expanded="false" aria-controls="bAll">' + (veg ? 'Altre aggiunte (non tutte vegetali)' : 'Altre aggiunte') + CHEV + '</button><div id="bAll" hidden>';
+    var by = {};
+    rest.forEach(function(it) { var k = String(unitPrice(it)); (by[k] = by[k] || []).push(it); });
+    Object.keys(by).sort(function(a,b) {return Number(a)-Number(b);}).forEach(function(k) {
+      h += '<div class="b-grp" data-extra-group><h4 class="num">' + AA.price(Number(k),{signed:true}) + '</h4><div class="bchips">' + by[k].sort(extraOrder).map(function(it){return extraChip(it,false);}).join('') + '</div></div>';
+    });
+    return h + '</div><p class="b-sub" id="bNoExtras" hidden>Nessuna aggiunta trovata.</p></div></section>';
+  }
   function renderBuilder() {
     var opt = builderOptions(B.start.sec, B.start.item);
-    var h = '<div class="b-head"><p class="b-k">' + (B.from ? 'Personalizza la tua pizza' : 'Crea la tua pizza') + '<button type="button" class="b-reset" data-b="reset">Ricomincia</button></p>' +
+    var h = '<div class="b-head"><p class="b-k">' + (B.extrasOnly ? 'Scegli le aggiunte' : B.from ? 'Personalizza la tua pizza' : 'Crea la tua pizza') + '<button type="button" class="b-reset" data-b="reset">Ricomincia</button></p>' +
       '<div class="b-hero">' + (B.start.item.image ? '<img src="' + esc(AA.src(B.start.item.image)) + '" alt="" decoding="async">' : '') +
       '<div><h2 class="b-t" id="bTitle">' + esc(B.start.item.name) + '</h2><p>Prezzo di partenza <b class="num">' + (knownPrice(B.start.item) ? AA.price(unitPrice(B.start.item)) : 'da confermare') + '</b></p></div></div>' +
       '<p class="b-caution">Per allergie o intolleranze, conferma sempre le modifiche con il personale. Il configuratore non garantisce l’assenza di allergeni.</p></div>';
+    var n = 1;
+    if (!B.extrasOnly) {
     var rec = recipeOf(B.start.item);
     h += '<section class="b-step"><h3><b>1</b>Ingredienti della ricetta</h3>';
     if (!B.from) h += '<div class="bchips b-starts">' + B.starts.map(function (st) {
@@ -584,32 +624,9 @@
         return chip('mod', o.id, o.label, deltaLabel(o.price), B.mods.indexOf(o.id) >= 0);
       }).join('') + '</div></section>';
     }
-    var n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
-    h += '<section class="b-step"><h3><b>' + n + '</b>Aggiungi ingredienti</h3><div id="bMine"></div>';
-    if (false && B.presets.length) { // niente "Idee per cominciare": si parte dalla pizza scelta
-      h += '<p class="b-sub">Idee per cominciare</p><div class="bchips">' + B.presets.map(function (p, i) {
-        return '<button type="button" class="bidea" data-b="preset" data-v="' + i + '"><span>' + esc(p.name) + '</span><small>' + p.ids.map(function (id) {
-          return esc(B.extras.filter(function (x) { return x.id === id; })[0].name);
-        }).join(', ') + '</small></button>';
-      }).join('') + '</div>';
+    n = 2 + (B.doughs.length ? 1 : 0) + (opt.base.length ? 1 : 0) + (opt.mods.length ? 1 : 0);
     }
-    // la ricerca sta sopra i più scelti
-    h += '<label class="b-search b-search-all"><span class="sr-only">Cerca un ingrediente</span><input type="search" id="bQ" placeholder="Cerca un ingrediente" autocomplete="off"></label>';
-    if (B.popular.length) {
-      h += '<p class="b-sub">I più scelti</p><div class="bchips">' + B.popular.map(function (it) {
-        return chip('extra', it.id, it.name, AA.price(it.price, { signed: true }), B.sel.indexOf(it.id) >= 0);
-      }).join('') + '</div>';
-    }
-    // l'elenco completo sta in un comparto chiuso: si apre toccando, o da solo quando cerchi
-    h += '<button type="button" class="b-allt" id="bAllT" aria-expanded="false" aria-controls="bAll">Tutti gli ingredienti' + CHEV + '</button><div id="bAll" hidden>';
-    var by = {};
-    B.extras.forEach(function (it) { var k = String(unitPrice(it)); (by[k] = by[k] || []).push(it); });
-    Object.keys(by).sort(function (a, b) { return Number(a) - Number(b); }).forEach(function (k) {
-      h += '<div class="b-grp" data-grp><h4 class="num">' + AA.price(Number(k), { signed: true }) + '</h4><div class="bchips">' + by[k].map(function (it) {
-        return chip('extra', it.id, it.name, '', B.sel.indexOf(it.id) >= 0, ' small');
-      }).join('') + '</div></div>';
-    });
-    h += '</div></section><section class="b-step b-summary" aria-labelledby="bSummaryTitle"><h3 id="bSummaryTitle"><b>' + (n + 1) + '</b>Riepilogo prezzo</h3><div id="bCosts"></div></section>';
+    h += extraPicker(n) + '<section class="b-step b-summary" aria-labelledby="bSummaryTitle"><h3 id="bSummaryTitle"><b>' + (n + 1) + '</b>Riepilogo prezzo</h3><div id="bCosts"></div></section>';
     $('bBody').innerHTML = h;
     if ($('bPickQ')) $('bPickQ').addEventListener('input', function (e) { $('bPickList').innerHTML = pickList(e.target.value.trim()); });
     if (B.picking) setTimeout(function () { var q = $('bPickQ'); if (q) q.focus({ preventScroll: true }); }, 50);
@@ -619,15 +636,23 @@
     $('bQ').addEventListener('input', function (e) {
       var q = norm(e.target.value.trim());
       if (q && $('bAll').hidden) { $('bAll').hidden = false; $('bAllT').setAttribute('aria-expanded', 'true'); }
-      $('bAll').querySelectorAll('.bchip').forEach(function (b) { b.hidden = q && norm(b.textContent).indexOf(q) < 0; });
-      $('bAll').querySelectorAll('[data-grp]').forEach(function (g) { g.hidden = ![].some.call(g.querySelectorAll('.bchip'), function (b) { return !b.hidden; }); });
+      var count = 0;
+      $('bPicker').querySelectorAll('[data-extra-group]').forEach(function (g) {
+        var found = 0;
+        g.querySelectorAll('[data-b="extra"]').forEach(function (b) {
+          b.hidden = !!q && norm(b.textContent).indexOf(q) < 0;
+          if (!b.hidden) found++;
+        });
+        g.hidden = !found; count += found;
+      });
+      $('bNoExtras').hidden = !q || !!count;
     });
     updateBuilder();
   }
   function builderState() {
     var opt = builderOptions(B.start.sec, B.start.item);
     B.tbc = !knownPrice(B.start.item);
-    var lines = [['Pizza', B.start.item.name, knownPrice(B.start.item) ? unitPrice(B.start.item) : null]];
+    var lines = [[B.extrasOnly ? 'Piatto' : 'Pizza', B.start.item.name, knownPrice(B.start.item) ? unitPrice(B.start.item) : null]];
     var total = unitPrice(B.start.item), algs = (B.start.item.allergens || []).slice();
     if (B.dough) {
       var dp = knownPrice(B.dough) ? unitPrice(B.dough) : null;
@@ -674,8 +699,9 @@
     var costs = $('bCosts');
     if (costs) costs.innerHTML = '<dl class="b-cost-lines">' + st.lines.map(function (l, i) {
       return '<div><dt><small>' + esc(l[0]) + '</small>' + esc(l[1]) + '</dt><dd class="num">' + esc(priceLine(l, i)) + '</dd></div>';
-    }).join('') + (st.rem.length ? '<div><dt><small>Da togliere</small>' + esc(cap(st.rem.join(', '))) + '</dt><dd>—</dd></div>' : '') + '</dl><p class="b-cost-total"><b>' + (B.tbc ? 'Parziale noto' : 'Totale pizza') + '</b><strong class="num">' + AA.price(st.total) + (B.tbc ? ' + da confermare' : '') + '</strong></p>';
-    foot.innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Parziale noto + supplementi da confermare' : 'Totale pizza') + '</p><p class="bf-p num" aria-live="polite">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
+    }).join('') + (st.rem.length ? '<div><dt><small>Da togliere</small>' + esc(cap(st.rem.join(', '))) + '</dt><dd>—</dd></div>' : '') + '</dl><p class="b-cost-total"><b>' + (B.tbc ? 'Parziale noto' : (B.extrasOnly ? 'Totale piatto' : 'Totale pizza')) + '</b><strong class="num">' + AA.price(st.total) + (B.tbc ? ' + da confermare' : '') + '</strong></p>';
+    if (costs && st.ing.some(needsAllergenReview)) costs.insertAdjacentHTML('beforeend','<p class="b-caution">Da verificare con il personale: ' + esc(st.ing.filter(needsAllergenReview).map(function(it){return it.name;}).join(', ')) + '.</p>');
+    foot.innerHTML = '<div class="bf-l"><p class="bf-k">' + (B.tbc ? 'Parziale noto + supplementi da confermare' : (B.extrasOnly ? 'Totale piatto' : 'Totale pizza')) + '</p><p class="bf-p num" aria-live="polite">' + AA.price(st.total) + (B.tbc ? '<small> +?</small>' : '') + '</p>' +
       (parts.length ? '<p class="bf-s">' + esc(cap(parts.join('; '))) + '</p>' : '') + '</div>' +
       '<div class="bf-r"><button type="button" class="b-fire" data-b="waiter">Mostra al cameriere</button></div>';
     if (previousTotal !== undefined && previousTotal !== foot.dataset.total) {
@@ -689,12 +715,13 @@
   function showWaiter() {
     var st = builderState();
     var algs = AA.allergenNums(st.algs);
-    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">La mia pizza</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + '</h2><dl class="w-l">' +
+    $('waiter').innerHTML = '<div class="w-in"><p class="w-k">' + (B.extrasOnly ? 'Il mio piatto' : 'La mia pizza') + '</p><h2 class="w-t" id="wTitle">' + esc(B.start.item.name) + '</h2><dl class="w-l">' +
       st.lines.map(function (l, i) { return '<div><dt>' + esc(l[0]) + '</dt><dd>' + esc(l[1]) + '<span class="w-line-price num">' + esc(priceLine(l, i)) + '</span></dd></div>'; }).join('') +
       (st.rem.length ? '<div class="w-no"><dt>Senza</dt><dd>' + esc(cap(st.rem.join(', '))) + '</dd></div>' : '') +
-      '</dl><p class="w-p num">' + AA.price(st.total) + (B.tbc ? '<small>+ supplementi da confermare</small>' : '<small>Totale pizza</small>') + '</p>' +
+      '</dl><p class="w-p num">' + AA.price(st.total) + (B.tbc ? '<small>+ supplementi da confermare</small>' : '<small>' + (B.extrasOnly ? 'Totale piatto' : 'Totale pizza') + '</small>') + '</p>' +
       (algs.length ? '<p class="w-a">Allergeni indicati e/o possibili tracce ' + algs.map(function (a) { return a.n; }).join(' · ') + '</p>' : '') +
-      '<p class="w-a">Per una pizza personalizzata, confermate allergeni e possibili tracce con il personale; le modifiche non garantiscono l’assenza di allergeni.</p>' +
+      (st.ing.filter(needsAllergenReview).length ? '<p class="w-a"><b>Aggiunte da verificare:</b> ' + esc(st.ing.filter(needsAllergenReview).map(function(it){return it.name;}).join(', ')) + '</p>' : '') +
+      '<p class="w-a">Confermate allergeni e possibili tracce con il personale; le modifiche non garantiscono l’assenza di allergeni.</p>' +
       '<button type="button" class="b-fire" id="wBack">Torna a modificare</button></div>';
     $('waiter').hidden = false;
     $('wBack').onclick = function () { $('waiter').hidden = true; var f = $('bFoot').querySelector('[data-b="waiter"]'); if (f) f.focus({preventScroll:true}); };
@@ -890,6 +917,18 @@
     if ($('qClear')) $('qClear').addEventListener('click', function () { clearTimeout(t); $('q').value = ''; state.q = ''; render(); $('q').focus(); });
     if ($('menuExplore')) $('menuExplore').addEventListener('click', function (e) {
       if (e.target.closest('[data-ex-dough]') && doughSection()) openSheet($('sheet'), doughsHTML());
+    });
+    $('contenuto').addEventListener('input', function(e) {
+      if (e.target.id !== 'extraFind') return;
+      var q = norm(e.target.value.trim()), count = 0, box = e.target.closest('.extra-catalog');
+      box.querySelectorAll('.extra-catalog-group').forEach(function(g) {
+        var found = 0;
+        g.querySelectorAll('[data-extra-search]').forEach(function(el) {
+          el.hidden = !!q && el.dataset.extraSearch.indexOf(q) < 0; if (!el.hidden) found++;
+        });
+        g.hidden = !found; count += found;
+      });
+      $('extraNone').hidden = !!count;
     });
     $('contenuto').addEventListener('click', function (e) {
       var m = e.target.closest('[data-acc]'); if (m) { toggleAcc(m.dataset.acc); return; }

@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-24T19:05:39.204Z",
+ "updatedAt": "2026-11-24T19:24:50.327Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -4675,7 +4675,7 @@
    "group": "pizze",
    "name": "Pizze vegan",
    "subtitle": "Tutto il gusto, solo ingredienti vegetali.",
-   "note": "A partire da € 1,00. Prodotti vegani disponibili: Violife € 3,00 (allergeni: n.d.), grattugiato vegano Vemondo (allergeni: 1), La Pizzeria Valsoia € 4,50 (allergeni: 7, 10, 11), Dream Form € 5,00 (allergeni: 6, 8, 10, 12).",
+   "note": "",
    "supplements": [
     {
      "label": "Senza lattosio",
@@ -5271,7 +5271,7 @@
    "group": "cicci",
    "name": "Le skattate vegan",
    "subtitle": "Le nostre skattate, in versione vegetale.",
-   "note": "Prodotti vegani disponibili: Violife € 3,00 (allergeni: n.d.), grattugiato vegano Vemondo (allergeni: 1), La Pizzeria Valsoia € 4,50 (allergeni: 7, 10, 11), Dream Form € 5,00 (allergeni: 6, 8, 10, 12).",
+   "note": "",
    "supplements": [],
    "layout": "list",
    "deltaPrices": false,
@@ -5285,7 +5285,9 @@
      "price": 8,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "vegana"
+     ],
      "allergens": [
       "solfiti",
       "arachidi",
@@ -5308,7 +5310,9 @@
      "price": 6.5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "vegana"
+     ],
      "allergens": [
       "solfiti",
       "arachidi",
@@ -5331,7 +5335,9 @@
      "price": 9,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "vegana"
+     ],
      "allergens": [
       "solfiti",
       "arachidi",
@@ -5354,7 +5360,9 @@
      "price": 9,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "vegana"
+     ],
      "allergens": [
       "arachidi",
       "frutta-a-guscio",
@@ -5377,7 +5385,8 @@
      "prices": [],
      "note": "",
      "tags": [
-      "piccante"
+      "piccante",
+      "vegana"
      ],
      "allergens": [
       "solfiti",
@@ -5401,7 +5410,9 @@
      "price": 5,
      "prices": [],
      "note": "",
-     "tags": [],
+     "tags": [
+      "vegana"
+     ],
      "allergens": [
       "arachidi",
       "frutta-a-guscio",
@@ -5423,7 +5434,7 @@
    "group": "cicci",
    "name": "I cicci vegan",
    "subtitle": "I nostri cicci, in versione vegetale.",
-   "note": "A partire da € 1,00. Prodotti vegani disponibili: Violife € 3,00 (allergeni: n.d.), grattugiato vegano Vemondo (allergeni: 1), La Pizzeria Valsoia € 4,50 (allergeni: 7, 10, 11), Dream Form € 5,00 (allergeni: 6, 8, 10, 12).",
+   "note": "",
    "supplements": [],
    "layout": "list",
    "deltaPrices": false,
@@ -7613,7 +7624,7 @@
     {
      "id": "i706",
      "name": "Vino bianco bio sfuso – Cantina Polvanera",
-     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
+     "desc": "",
      "price": null,
      "prices": [
       {
@@ -7644,7 +7655,7 @@
     {
      "id": "i707",
      "name": "Vino Primitivo bio sfuso – Cantina Polvanera",
-     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
+     "desc": "",
      "price": null,
      "prices": [
       {
@@ -7675,7 +7686,7 @@
     {
      "id": "i708",
      "name": "Vino rosato bio sfuso – Cantina Polvanera",
-     "desc": "1 litro €14,00 Mezzo litro €7,00 Calice €4,00",
+     "desc": "",
      "price": null,
      "prices": [
       {
@@ -10602,7 +10613,9 @@
      "image": "",
      "frozen": false,
      "available": true,
-     "featured": false
+     "featured": false,
+     "allergenReview": true,
+     "allergenReviewHint": "Il listino riporta latte (7), senape (10) e sesamo (11) per un prodotto indicato tra le alternative vegetali. Verificare la confezione e distinguere ingredienti da tracce prima di qualsiasi dichiarazione vegana o senza latte."
     },
     {
      "id": "x218",
