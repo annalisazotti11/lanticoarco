@@ -1,0 +1,63 @@
+/* Menu V1 — testata e navigazione. Nessuna modifica alla modalità totem. */
+html:not(.kiosk) {
+  --menu-top: calc(70px + env(safe-area-inset-top, 0px));
+  --menu-gutter: clamp(16px, 4vw, 24px);
+}
+html:not(.kiosk) .top {
+  height: var(--menu-top);
+  padding: env(safe-area-inset-top, 0px) max(var(--menu-gutter), calc((100% - 824px)/2)) 0;
+  background: #fff; border-bottom: 1px solid #e2d4c2;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+html:not(.kiosk) .top-logo { height: 52px; flex: none; }
+html:not(.kiosk) .top-r { flex: none; }
+html:not(.kiosk) #filterBtn {
+  width: auto; min-height: 44px; padding: 0 15px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fbf7f1; border-color: #d8c6b1; font-size: .9rem; font-weight: 650;
+}
+html:not(.kiosk) #filterBtn::after { content: "Filtri"; }
+html:not(.kiosk) .intro { padding: 24px var(--menu-gutter) 6px; }
+html:not(.kiosk) .intro-row { display: grid; gap: 8px; margin-bottom: 18px; }
+html:not(.kiosk) .intro-t {
+  font-family: Georgia, "Times New Roman", serif; font-weight: 400;
+  font-size: clamp(2.65rem, 6vw, 3.65rem); line-height: 1.05; letter-spacing: -.045em;
+  color: #241710;
+}
+html:not(.kiosk) .intro-k { color: #6e5f53; font-size: .875rem; font-weight: 500; min-width: 0; }
+html:not(.kiosk) .searchbar {
+  min-height: 52px; border-radius: 999px; padding: 0 17px;
+  background: #fffaf4; border-color: #d8c6b1;
+}
+html:not(.kiosk) .searchbar input { min-width: 0; font-size: 1rem; }
+html:not(.kiosk) .searchbar input::placeholder { color: #796858; }
+html:not(.kiosk) .gnav {
+  top: var(--menu-top); margin-top: 18px;
+  background: rgba(244,235,223,.98); border-bottom: 1px solid #d8c6b1;
+}
+html:not(.kiosk) .gnav-in {
+  position: relative; gap: 7px; padding: 10px var(--menu-gutter);
+  max-width: 896px; justify-content: flex-start; flex-wrap: nowrap;
+}
+html:not(.kiosk) .gnav-in a {
+  min-height: 44px; display: inline-flex; align-items: center;
+  padding: 9px 15px; border: 1px solid #d8c6b1; background: #fbf7f1;
+  color: #47382d; border-radius: 999px; font-size: .875rem; font-weight: 600;
+}
+html:not(.kiosk) .gnav-in a[aria-current="true"] {
+  color: #fff5e8; background: #34251b; border-color: #34251b;
+}
+html:not(.kiosk) .gnav-in a:hover:not([aria-current="true"]) { background: #eaddcc; }
+html:not(.kiosk) .gnav.has-f .gnav-in { flex: 1 1 auto; min-width: 0; margin: 0; padding-left: 8px; mask-image: none; -webkit-mask-image: none; }
+html:not(.kiosk) .gnav.has-f .gnav-row { max-width: 896px; margin: auto; }
+html:not(.kiosk) .gnav-f { min-height: 44px; }
+html:not(.kiosk) .grp, html:not(.kiosk) .sec { scroll-margin-top: calc(var(--menu-top) + 74px); }
+@media (min-width: 1100px) {
+  html:not(.kiosk) .gnav-in { max-width: 1240px; justify-content: center; flex-wrap: wrap; }
+  html:not(.kiosk) .gnav.has-f .gnav-row { max-width: 1240px; }
+}
+@media (max-width: 360px) {
+  html:not(.kiosk) .intro { padding-top: 20px; }
+  html:not(.kiosk) .searchbar { padding-inline: 12px; gap: 7px; }
+  html:not(.kiosk) .searchbar input { font-size: .9rem; }
+}
