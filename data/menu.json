@@ -74,10 +74,10 @@
  },
  "groups": [
   {
-   "id": "impasti",
-   "name": "Impasti",
-   "icon": "🌾",
-   "image": "assets/img/impasti-grano.webp"
+   "id": "pizze",
+   "name": "Pizze",
+   "icon": "🍕",
+   "image": "assets/img/galleria/crudo-rucola.webp"
   },
   {
    "id": "antipasti",
@@ -86,10 +86,10 @@
    "image": "img/menu/media-95.webp"
   },
   {
-   "id": "pizze",
-   "name": "Pizze",
-   "icon": "🍕",
-   "image": "assets/img/galleria/crudo-rucola.webp"
+   "id": "impasti",
+   "name": "Impasti",
+   "icon": "🌾",
+   "image": "assets/img/impasti-grano.webp"
   },
   {
    "id": "cicci",

@@ -285,3 +285,6 @@ details.more-in { margin-top: 12px; border-top: 1px solid var(--line); padding-t
   .day span { font-size: .85rem; }
   .ah-site { display: none; }
 }
+
+/* Publication bar: both real previews without permitting design changes. */
+@media(max-width:430px){.pub{gap:6px;padding:7px 7px 7px 11px}.pub-a{gap:4px;flex-wrap:wrap;justify-content:flex-end}.pub-a .b{padding-inline:8px;font-size:.73rem}.pub-n{font-size:.83rem;min-width:70px}.pub-n span{font-size:.72rem}}

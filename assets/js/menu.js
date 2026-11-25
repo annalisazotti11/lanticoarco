@@ -238,6 +238,7 @@
   }
 
   /* Indice fotografico: usa esclusivamente categorie e immagini del menu pubblicato. */
+  function groupImage(g) {if(g.image)return g.image;var sections=DATA.sections.filter(function(s){return s.group===g.id&&s.visible;});for(var i=0;i<sections.length;i++){var it=sections[i].items.find(function(x){return x.available!==false&&x.image;});if(it)return it.image;}return '';}
   function renderExplore() {
     var box = $('menuExplore'), result = $('menuResults'), clear = $('qClear');
     if (!box) return;
@@ -251,12 +252,10 @@
       box.hidden = true; return;
     }
     var groups = groupsWithContent();
-    var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
-    groups = groups.slice().sort(function (a,b) { var x = order.indexOf(a.id), y = order.indexOf(b.id); return (x < 0 ? 99 : x) - (y < 0 ? 99 : y); });
     var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var featured = '', rest = [], quickSections = '';
     groups.forEach(function (g) {
-      var photo = g.image || '';
+      var photo = groupImage(g);
       var art = photo ? '<span class="ex-photo"><img src="' + esc(AA.src(photo)) + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="ex-photo ex-none">' + AA.archSVG() + '</span>';
       var count = kioskV11 ? DATA.sections.filter(function(s){return s.group===g.id && s.visible;}).reduce(function(n,s){return n+s.items.filter(matches).length;},0) : 0;
       var title = '<span class="ex-copy"><strong>' + esc(g.name) + '</strong>' + (kioskV11 ? '<small class="k13-tile-count">' + count + ' ' + (count===1?'voce':'voci') + '</small>' : '') + '</span>';
@@ -285,12 +284,12 @@
   }
 
   function kioskNavigation() {
-    var order = ['pizze','antipasti','impasti','cicci','piadine','primi','dessert','bevande','aggiunte'];
+    var order = DATA.groups.map(function(g){return g.id;});
     var available = groupsWithContent().map(function(g){return g.id;});
     var html = '<button type="button" class="k11-nav-home" data-k11-home aria-label="Categorie iniziali"><span aria-hidden="true">⌂</span><b>Inizio</b></button><span class="k13-rail-label">Categorie</span>';
     order.forEach(function(id) {
       var g = DATA.groups.filter(function(g){return g.id===id;})[0]; if (!g) return;
-      var label = '<span class="k11-side-photo">' + (g.image ? '<img src="' + esc(AA.src(g.image)) + '" alt="" loading="lazy">' : AA.archSVG()) + '</span><b>' + esc(g.name) + '</b>';
+      var photo=groupImage(g); var label = '<span class="k11-side-photo">' + (photo ? '<img src="' + esc(AA.src(photo)) + '" alt="" loading="lazy">' : AA.archSVG()) + '</span><b>' + esc(g.name) + '</b>';
       if (available.indexOf(id) >= 0) html += '<a href="#g-' + esc(id) + '" data-g="' + esc(id) + '">' + label + '</a>';
       else html += '<button type="button" disabled>' + label + '</button>';
     });

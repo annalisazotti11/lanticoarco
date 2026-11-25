@@ -181,6 +181,7 @@
     document.body.classList.toggle('is-demo', store.mode === 'demo');
     $('demoPill').hidden = store.mode !== 'demo';
     S.published = JSON.parse(S.publishedStr);
+    lockDesign(S.data, S.published);
     histReset(); render(); updateState();
   }
 
@@ -200,6 +201,20 @@
     if (!d.settings.builder.popular) d.settings.builder.popular = ['Bufala all’uscita', 'Stracciatella all’uscita', 'Funghi freschi champignon', 'Salsiccia di Norcia', 'Prosciutto crudo a dadi', 'Nduja', 'Olive leccine', 'Rape stufate', 'Pomodorini confit', 'Acciughe di Cetara', 'Granella di pistacchio', 'Patate fritte'];
   }
 
+  /* Il gestionale editoriale conserva la presentazione pubblicata. */
+  function lockDesign(d, ref) {
+    if (!d || !ref) return;
+    var previous = ref.sections || [];
+    d.settings = d.settings || {};
+    var builder = d.settings.builder || (ref.settings || {}).builder || {};
+    d.settings = clone(ref.settings || {});
+    d.settings.builder = builder;
+    (d.sections || []).forEach(function(sec) {
+      var old = previous.find(function(x){return x.id===sec.id;});
+      sec.layout = old ? (old.layout || 'list') : sec.group === 'impasti' ? 'cards' : sec.group === 'aggiunte' ? 'chips' : 'list';
+    });
+  }
+
   /* ================= Bozza e stato ================= */
   var draftT;
   function changed() {
@@ -209,6 +224,7 @@
     histLater();
   }
   function saveDraft() {
+    if(S.publishedStr) lockDesign(S.data,pubData());
     var ok = AA.writeJSON(AA.DRAFT_KEY, { data: S.data, pending: S.pending, baseSha: S.baseSha, savedAt: new Date().toISOString() });
     if (!ok) toast('Memoria del dispositivo piena: pubblica le modifiche per non perderle.', 6000);
   }
@@ -454,16 +470,17 @@
     var btn = $('publishBtn'); btn.disabled = true; btn.textContent = 'Pubblico…';
     try { window.scrollTo(0, window.scrollY); } catch (e) {}
     try {
-      var current = await S.store.fileSha(MENU_PATH);
+      var current = await S.store.fileSha(MENU_PATH), designRef = pubData();
       if (current && S.baseSha && current !== S.baseSha) {
         var force = await ask('Il menu è cambiato', 'Qualcuno ha pubblicato da un altro dispositivo dopo che hai aperto il gestionale. Pubblicando ora, la tua versione sostituisce la sua.', 'Pubblica comunque', { danger: true });
         if (!force) return;
+        designRef = JSON.parse((await S.store.readFile(MENU_PATH)).text);
       }
-      var out = clone(S.data); out.updatedAt = new Date().toISOString(); // la data entra solo se la pubblicazione riesce
+      var out = clone(S.data); lockDesign(out,designRef); out.updatedAt = new Date().toISOString(); // la data entra solo se la pubblicazione riesce
       var text = JSON.stringify(out, null, 1);
       var files = [{ path: MENU_PATH, text: text }];
       Object.keys(S.pending).forEach(function (p) {
-        if (text.indexOf('"' + p + '"') >= 0) files.push({ path: p, base64: S.pending[p].split(',')[1] });
+        if (/^img\/uploads\/[a-z0-9-]+\.(webp|jpg)$/.test(p) && /^data:image\/(webp|jpeg);base64,/.test(S.pending[p]) && text.indexOf('"' + p + '"') >= 0) files.push({ path: p, base64: S.pending[p].split(',')[1] });
       });
       var res = await S.store.commitFiles(files, 'Menu aggiornato dal gestionale (' + S.user + ')');
       S.baseSha = res.blobs[MENU_PATH] || current;
@@ -555,6 +572,7 @@
     var hello = (hr < 13 ? 'Buongiorno' : hr < 18 ? 'Buon pomeriggio' : 'Buonasera') + (S.user && S.user !== 'demo' ? ', ' + S.user.charAt(0).toUpperCase() + S.user.slice(1) : '');
     var dateTxt = new Date().toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
     var h = pageHead(hello + '.', esc(dateTxt.charAt(0).toUpperCase() + dateTxt.slice(1)));
+    h += '<section class="card"><h2>Gestisci il menù</h2><p class="muted">Modifica piatti, prezzi, ingredienti, foto e categorie. Una sola pubblicazione aggiorna il menù normale e il totem. Grafica e layout sono gestiti separatamente.</p><button type="button" class="b b-main b-wide" data-go="menu">Apri il menù da modificare</button></section>';
     h += '<section class="card status' + (st.open ? ' is-open' : '') + '"><div class="st-row"><span class="st-dot"></span><b>' + esc(st.text || 'Orari non impostati') + '</b></div>' +
       '<label class="line"><span><b>Oggi siamo chiusi</b><small>Per una chiusura straordinaria: sito e menu mostrano "Oggi siamo chiusi".</small></span>' + sw('closed-today', i.closedOn === today, 'Oggi siamo chiusi') + '</label></section>';
     var ann = i.announcement || {};
@@ -584,7 +602,7 @@
     h += '<section class="card"><h2>Novità in vetrina</h2><p class="muted">' + (act.length ? act.length + (act.length === 1 ? ' novità attiva' : ' novità attive') + ': ' + act.map(function (p) { return esc(p.title); }).join(', ') + '.' : 'Nessuna novità attiva.') + '</p>' +
       '<button type="button" class="b b-ghost b-sm" data-go="novita">Gestisci le novità</button></section>';
     h += '<section class="card"><h2>Collegamenti</h2><div class="links">' +
-      '<a href="../" target="_blank" rel="noopener">Sito</a><a href="../menu/" target="_blank" rel="noopener">Menu</a><a href="../totem/" target="_blank" rel="noopener">Cartellone</a>' +
+      '<a href="../" target="_blank" rel="noopener">Sito</a><a href="../menu/" target="_blank" rel="noopener">Menù normale</a><a href="../menu/?totem" target="_blank" rel="noopener">Menù totem</a><a href="../totem/" target="_blank" rel="noopener">Cartellone</a>' +
       '<button type="button" data-act="qr">QR per i tavoli</button></div></section>';
     return h;
   }
@@ -710,16 +728,7 @@
     h += '<section class="card"><h2>Personalizza la pizza</h2><p class="muted">Gli ingredienti «più scelti»: il cliente li vede per primi quando aggiunge ingredienti a una pizza. Tutti gli altri restano nell\'elenco completo.</p>' +
       '<div class="tagl">' + b.popular.map(function (n, j) { return '<span class="tg">' + esc(n) + '<button type="button" data-act="pop-rm" data-j="' + j + '" aria-label="Togli ' + esc(n) + '">×</button></span>'; }).join('') + '</div>' +
       '<select data-act="pop-add" aria-label="Aggiungi ingrediente">' + opts(b.popular) + '</select></section>';
-    var touch = t.touch !== false;
-    h += '<section class="card"><h2>Cartellone in sala</h2>' +
-      '<label class="line"><span><b>Schermo touch</b><small>' + (touch ? 'In attesa gira un carosello di novità e specialità; un tocco ovunque apre il menu da sfogliare. Dopo 90 secondi senza tocchi torna il carosello.' : 'Il menu scorre da solo, una pagina dopo l\'altra.') + '</small></span><label class="sw"><input type="checkbox" data-ck="settings.totem.touch"' + (touch ? ' checked' : '') + '><span></span></label></label>' +
-      (touch ? '<p class="muted">Nel carosello: le <b>novità</b> attive sul cartellone (scheda Novità), i piatti con l\'etichetta <b>Novità</b> e quelli <b>tra le preferite</b>.</p>'
-        : '<div class="two">' + field('Secondi per pagina', 'settings.totem.pageSeconds', { type: 'number' }) + field('Una novità ogni quante pagine', 'settings.totem.promoEvery', { type: 'number', hint: '0 = mai' }) + '</div>' +
-          '<label class="line"><span><b>Foto dei piatti</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showPhotos"' + (t.showPhotos !== false ? ' checked' : '') + '><span></span></label></label>') +
-      '<label class="line"><span><b>QR per aprire il menu sul telefono</b></span><label class="sw"><input type="checkbox" data-ck="settings.totem.showQr"' + (t.showQr !== false ? ' checked' : '') + '><span></span></label></label>' +
-      '<label class="fld">Colori<select data-path="settings.totem.theme"><option value="chiaro"' + (t.theme !== 'scuro' ? ' selected' : '') + '>Chiari, come il sito</option><option value="scuro"' + (t.theme === 'scuro' ? ' selected' : '') + '>Scuri con scintille</option></select></label>' +
-      '<div class="btns"><a class="b b-ghost b-sm" href="../totem/" target="_blank" rel="noopener">Apri il cartellone</a><button type="button" class="b b-ghost b-sm" data-act="qr">Stampa i QR per i tavoli</button></div>' +
-      '<details class="more-in"><summary>Indirizzo del menu nei QR</summary>' + field('Indirizzo', 'settings.menuUrl', { type: 'url', hint: 'Lascia vuoto per usare quello del sito.' }) + '</details></section>';
+    h += '<section class="card"><h2>Anteprime del menù</h2><p class="muted">I contenuti si aggiornano su entrambe le versioni. La grafica del sito e del totem è fissa e non si modifica da qui.</p><div class="btns"><button type="button" class="b b-ghost b-sm" data-act="preview">Anteprima telefono</button><button type="button" class="b b-ghost b-sm" data-act="preview-totem">Anteprima totem</button><a class="b b-ghost b-sm" href="../totem/" target="_blank" rel="noopener">Apri il cartellone</a><button type="button" class="b b-ghost b-sm" data-act="qr">Stampa i QR per i tavoli</button></div></section>';
     h += '<section class="card"><h2>Cronologia</h2><p class="muted">Ogni pubblicazione viene conservata: puoi ricaricarne una e ripubblicarla.</p>' +
       '<div id="hist"></div><button type="button" class="b b-ghost b-sm" data-act="history"' + (demo ? ' disabled' : '') + '>Mostra le ultime pubblicazioni</button></section>';
     h += '<section class="card"><h2>Copia di sicurezza</h2><p class="muted">Scarica tutto il menu in un file, oppure ricaricalo.</p>' +
@@ -728,10 +737,7 @@
       h += '<section class="card"><h2>Accesso</h2><p class="muted">Sei collegato come <b>' + esc(S.user) + '</b>.</p>' +
         '<details class="more-in"><summary>Cambia la tua password</summary><div class="two"><label class="fld">Nuova password<input type="password" id="np1" autocomplete="new-password" minlength="10"></label><label class="fld">Ripeti<input type="password" id="np2" autocomplete="new-password" minlength="10"></label></div>' +
         '<button type="button" class="b b-ghost b-sm" data-act="pass">Cambia password</button></details>' +
-        '<details class="more-in"><summary>Persone che possono entrare</summary><ul class="users">' + S.cfg.users.map(function (u) {
-          return '<li>' + esc(u.user) + (u.user === S.user ? ' (tu)' : ' <button type="button" class="b b-x" data-act="user-del" data-u="' + esc(u.user) + '" aria-label="Rimuovi">×</button>') + '</li>';
-        }).join('') + '</ul><div class="two"><label class="fld">Nuovo utente<input id="nu" autocapitalize="none"></label><label class="fld">Sua password<input type="password" id="nup" autocomplete="new-password" minlength="10"></label></div>' +
-        '<button type="button" class="b b-ghost b-sm" data-act="user-add">Aggiungi</button></details></section>';
+        '</section>';
     }
     h += '<button type="button" class="b b-ghost b-wide" data-act="logout">Esci</button>';
     return h;
@@ -807,14 +813,13 @@
       '<label class="fld">Frase sotto il nome<input data-s="subtitle" value="' + esc(sec.subtitle) + '" placeholder="es. Quelle di sempre, fatte come si deve."><small>Una frase breve che invogli: compare nel menu e sul cartellone.</small></label>' +
       '<label class="fld">Nota (es. "Non disponibili il sabato")<textarea data-s="note" rows="2">' + esc(sec.note) + '</textarea></label>';
     h += '<label class="line"><span><b>Visibile</b><small>Spenta = nascosta ovunque</small></span><label class="sw"><input type="checkbox" data-sb="visible"' + (sec.visible !== false ? ' checked' : '') + '><span></span></label></label>';
-    h += '<label class="line"><span><b>Sul cartellone in sala</b></span><label class="sw"><input type="checkbox" data-sb="totem"' + (sec.totem !== false ? ' checked' : '') + '><span></span></label></label>';
+    h += '<label class="line"><span><b>Sul cartellone automatico in sala</b><small>Il menù interattivo resta uguale a quello normale.</small></span><label class="sw"><input type="checkbox" data-sb="totem"' + (sec.totem !== false ? ' checked' : '') + '><span></span></label></label>';
     h += '<fieldset class="fld"><legend>Varianti con prezzo (es. Pizzella −1,00, Senza lattosio +1,50)</legend><div class="list">' + (sec.supplements || []).map(function (s, k) {
       return '<div class="lrow"><input data-sup="label" data-k="' + k + '" value="' + esc(s.label) + '" aria-label="Variante">' +
         '<label class="row-price">€<input inputmode="decimal" data-sup="price" data-k="' + k + '" value="' + priceInput(s.price) + '" aria-label="Differenza di prezzo"></label>' +
         '<button type="button" class="b b-x" data-act="sup-del" data-k="' + k + '" aria-label="Togli">×</button></div>';
     }).join('') + '</div><button type="button" class="b b-ghost b-sm" data-act="sup-add">+ Aggiungi variante</button></fieldset>';
     h += '<details class="more-in"><summary>Altre opzioni</summary>' +
-      '<label class="fld">Aspetto<select data-s="layout"><option value="list"' + (sec.layout === 'list' ? ' selected' : '') + '>Lista di piatti</option><option value="cards"' + (sec.layout === 'cards' ? ' selected' : '') + '>Schede con foto (come gli impasti)</option><option value="chips"' + (sec.layout === 'chips' ? ' selected' : '') + '>Compatto per prezzo (come le aggiunte)</option></select></label>' +
       '<label class="line"><span><b>I prezzi sono supplementi</b><small>Mostrati come + € …</small></span><label class="sw"><input type="checkbox" data-sb="deltaPrices"' + (sec.deltaPrices ? ' checked' : '') + '><span></span></label></label>' +
       '<label class="fld">Categoria<select data-s="group">' + S.data.groups.map(function (g) { return '<option value="' + esc(g.id) + '"' + (g.id === sec.group ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select></label>' +
       '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="sec-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="sec-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-sec">Elimina sottocategoria</button></div></details>';
@@ -822,7 +827,7 @@
   }
   function groupEditor() {
     var g = S.data.groups.filter(function (x) { return x.id === S.ed.group; })[0];
-    return '<label class="fld">Nome della categoria<input data-g="name" value="' + esc(g.name) + '"></label>' +
+    return '<label class="fld">Nome della categoria<input data-g="name" value="' + esc(g.name) + '"></label>' + '<div class="ph-edit">'+thumb(g.image,'ph-big')+'<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="img-up">'+(g.image?'Cambia foto categoria':'Aggiungi foto categoria')+'</button>'+(g.image?'<button type="button" class="b b-ghost b-sm" data-act="img-del">Togli foto</button>':'')+'</div></div>' +
       '<div class="btns"><button type="button" class="b b-ghost b-sm" data-act="grp-up">Sposta su</button><button type="button" class="b b-ghost b-sm" data-act="grp-down">Sposta giù</button><button type="button" class="b b-danger b-sm" data-act="del-group">Elimina categoria</button></div>';
   }
   function promoEditor() {
@@ -869,11 +874,12 @@
     if (!a) return;
     if (a.dataset.act === 'publish') publish();
     if (a.dataset.act === 'preview') preview();
+    if (a.dataset.act === 'preview-totem') preview(true);
     if (a.dataset.act === 'changes') openChanges();
   });
-  function preview() {
+  function preview(totem) {
     saveDraft();
-    window.open('../menu/?anteprima', '_blank');
+    window.open('../menu/?anteprima'+(totem?'&totem':''), '_blank');
   }
 
   var view = $('view');
@@ -883,6 +889,7 @@
     if (t.id === 'oq') { S.oq = t.value; clearTimeout(view._qt); view._qt = setTimeout(render, 200); return; }
     if (t.dataset.idea === 'name') { S.data.settings.builder.presets[Number(t.closest('.idea').dataset.k)].name = t.value; changed(); return; }
     if (t.dataset.path) {
+      if(t.dataset.path.indexOf('settings.')===0)return;
       var v = t.value;
       if (t.hasAttribute('data-price')) { v = parsePrice(v); if (v === undefined) return; }
       else if (t.type === 'number') v = t.value === '' ? null : Number(t.value);
@@ -919,8 +926,8 @@
       S.data.settings.builder.presets[Number(t.closest('.idea').dataset.k)].items.push(t.value); changed(); render(); return;
     }
     if (t.dataset.act === 'pop-add' && t.value) { S.data.settings.builder.popular.push(t.value); changed(); render(); return; }
-    if (t.dataset.ck) { setPath(S.data, t.dataset.ck, t.checked); changed(); if (t.dataset.ck === 'settings.totem.touch') render(); return; }
-    if (t.tagName === 'SELECT' && t.dataset.path) { setPath(S.data, t.dataset.path, t.value); changed(); }
+    if (t.dataset.ck) { if(t.dataset.ck.indexOf('settings.')===0)return; setPath(S.data, t.dataset.ck, t.checked); changed(); if (t.dataset.ck === 'settings.totem.touch') render(); return; }
+    if (t.tagName === 'SELECT' && t.dataset.path && t.dataset.path.indexOf('settings.')!==0) { setPath(S.data, t.dataset.path, t.value); changed(); }
   });
   view.addEventListener('click', async function (e) {
     var go = e.target.closest('[data-go]');
@@ -983,9 +990,10 @@
     else if (act === 'restore-ver') restoreVersion(a.dataset.sha);
     else if (act === 'backup') backup();
     else if (act === 'restore') restoreBackup();
+    else if (act === 'preview') preview();
+    else if (act === 'preview-totem') preview(true);
     else if (act === 'pass') changePassword();
-    else if (act === 'user-add') addUser();
-    else if (act === 'user-del') delUser(a.dataset.u);
+    
     else if (act === 'logout') logout();
   });
 
@@ -1003,7 +1011,7 @@
       }
     } else if (ed.type === 'sec') {
       var sec = findSec(ed.sec);
-      if (t.dataset.s) sec[t.dataset.s] = t.value;
+      if (t.dataset.s && t.dataset.s !== 'layout') sec[t.dataset.s] = t.value;
       else if (t.dataset.sup) {
         var s = sec.supplements[Number(t.dataset.k)];
         if (t.dataset.sup === 'price') { var v3 = parsePrice(String(t.value).replace('−', '-')); if (v3 !== undefined) s.price = v3; } else s.label = t.value;
@@ -1031,7 +1039,7 @@
     } else if (ed.type === 'sec') {
       var sec = findSec(ed.sec);
       if (t.dataset.sb) sec[t.dataset.sb] = t.checked;
-      if (t.tagName === 'SELECT' && t.dataset.s) sec[t.dataset.s] = t.value;
+      if (t.tagName === 'SELECT' && t.dataset.s && t.dataset.s !== 'layout') sec[t.dataset.s] = t.value;
     } else if (ed.type === 'promo') {
       if (t.dataset.pb) S.data.promos[ed.promo][t.dataset.pb] = t.checked;
     }
@@ -1059,10 +1067,10 @@
     }
     var act = a.dataset.act;
     if (act === 'img-up') {
-      var target = ed.type === 'promo' ? S.data.promos[ed.promo] : it;
+      var target = ed.type === 'promo' ? S.data.promos[ed.promo] : ed.type === 'group' ? S.data.groups.find(function(g){return g.id===ed.group;}) : it; if(!target)return;
       if (await uploadInto(target, target.name || target.title)) refreshEditor();
     } else if (act === 'img-del') {
-      var tgt = ed.type === 'promo' ? S.data.promos[ed.promo] : it;
+      var tgt = ed.type === 'promo' ? S.data.promos[ed.promo] : ed.type === 'group' ? S.data.groups.find(function(g){return g.id===ed.group;}) : it; if(!tgt)return;
       tgt.image = ''; delete tgt.cutout; changed(); refreshEditor();
     } else if (act === 'pmode') {
       if (a.dataset.v === 'n' && !(it.prices && it.prices.length)) it.prices = [{ label: 'Piccola', price: it.price }, { label: 'Grande', price: null }];
@@ -1142,7 +1150,7 @@
     if (!(await ask('Ricaricare questa versione?', 'Sostituisce le modifiche attuali nella bozza. Diventerà visibile ai clienti solo quando premi Pubblica.', 'Ricarica'))) return;
     try {
       var f = await S.store.readFile(MENU_PATH, sha);
-      S.data = JSON.parse(f.text); ensureShape(S.data); changed(); S.tab = 'oggi'; render();
+      S.data = JSON.parse(f.text); ensureShape(S.data); lockDesign(S.data,pubData()); changed(); S.tab = 'oggi'; render();
       toast('Versione ricaricata. Controlla e premi Pubblica per rimetterla online.', 6000);
     } catch (ex) { toast(errText(ex)); }
   }
@@ -1160,7 +1168,7 @@
         var d = JSON.parse(t);
         if (!d.sections || !d.groups) throw new Error('Il file non è una copia del menu.');
         if (!(await ask('Caricare la copia?', 'Sostituisce la bozza attuale. Diventa visibile ai clienti solo dopo Pubblica.', 'Carica'))) return;
-        S.data = d; ensureShape(S.data); changed(); render(); toast('Copia caricata nella bozza.');
+        S.data = d; ensureShape(S.data); lockDesign(S.data,pubData()); changed(); render(); toast('Copia caricata nella bozza.');
       }).catch(function (ex) { toast(ex.message || 'File non valido.'); });
     };
     inp.click();
