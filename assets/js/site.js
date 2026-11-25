@@ -343,9 +343,9 @@
     shot.dataset.ready = '1';
     var M = 2.4, STEP = .55; // mezza schermata abbondante di scorrimento per ogni dettaglio
     var D = [
-      { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Selezioniamo farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani e olio extravergine di oliva biologico.', a: 'Scegli tra nove impasti', href: '#impasti' },
-      { x: .2, y: .5, n: 'Pomodoro', from: 'Torre Guaceto · Presidio Slow Food', t: 'Il pomodoro', p: 'I pomodorini di Torre Guaceto, sulla costa di Brindisi. Su richiesta, anche il pomodoro nickel free.' },
-      { x: .44, y: .56, n: 'Mozzarelle e latticini', from: 'Km 0 · Siero-innesto', t: 'Mozzarelle e latticini a km 0', p: 'Utilizziamo mozzarelle e latticini a km 0, prodotti con latte della Murgia barese secondo il metodo tradizionale del siero-innesto, nel rispetto della tradizione casearia pugliese.' },
+      { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Le nostre farine provengono da un piccolo mulino a km 0 della Murgia barese. L’impasto base è preparato con farina biologica di tipo 1, acqua microfiltrata, sale marino integrale dello Stagnone di Trapani (riserva naturale WWF), pochissimo lievito di birra e olio extravergine di oliva biologico della Murgia barese. Utilizziamo farine 100% naturali, non industriali, senza aggiunta di enzimi, miglioratori o additivi chimici.', a: 'Scegli tra nove impasti', href: '#impasti' },
+      { x: .2, y: .5, n: 'Pomodoro', from: '100% italiano · Basilico fresco', t: 'Il pomodoro', p: 'Utilizziamo pomodoro 100% italiano, condito con sale marino integrale dello Stagnone di Trapani e basilico fresco. Su richiesta, anche il pomodoro nickel free.' },
+      { x: .44, y: .56, n: 'Mozzarelle e latticini', from: 'Km 0 · Siero-innesto', t: 'Mozzarelle e latticini a km 0', p: 'Selezioniamo mozzarelle e latticini a km 0, prodotti secondo il metodo tradizionale del siero-innesto, nel rispetto della tradizione casearia pugliese.' },
       { x: .6, y: .3, n: 'Ingredienti', from: 'Bio · Km 0 · Slow Food', t: 'Gli ingredienti', p: (nIngr ? nIngr + ' ingredienti' : 'Tanti ingredienti') + ' da aggiungere come preferisci. Selezioniamo prodotti biologici e specialità del territorio, privilegiando qualità e provenienza locale.', a: 'Crea la tua pizza', href: AA.ROOT + 'menu/#crea' }
     ];
     var lens = $('anLens'), lensImg = lens.querySelector('img'), dot = $('anDot'), wire = $('anWire'), nameEl = $('anName'), det = $('anDet');
