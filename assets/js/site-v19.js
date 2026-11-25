@@ -1,57 +1,75 @@
-/* Fire: animate the original photograph, not the text or the oven masonry. */
+/* V19.2 — photo-registered motion driven by real flame footage, not a periodic whole-image wave. */
 (function(){
 "use strict";
 var pref=window.matchMedia("(prefers-reduced-motion: reduce)");
 var canvas=document.getElementById("v19Fire"),fire=document.getElementById("fire");
 if(canvas&&fire&&!pref.matches)try{
-  var gl=canvas.getContext("webgl",{alpha:false,antialias:false,powerPreference:"low-power"});
-  if(gl){
-    var vert="attribute vec2 position;void main(){gl_Position=vec4(position,0.,1.);}";
-    var frag=[
-      "precision mediump float;",
-      "uniform sampler2D photo;uniform vec2 resolution,photoSize,anchor;uniform float time;",
-      "float wave(vec2 p,float t){return sin(p.x*32.+p.y*18.-t*4.2)*.55+sin(p.x*71.-p.y*27.+t*2.8)*.28+sin(p.x*19.+p.y*39.-t*1.9)*.17;}",
-      "void main(){",
-      "vec2 xy=vec2(gl_FragCoord.x/resolution.x,1.-gl_FragCoord.y/resolution.y);",
-      "float sc=max(resolution.x/photoSize.x,resolution.y/photoSize.y);vec2 covered=resolution/(photoSize*sc);",
-      "vec2 uv=xy*covered+(1.-covered)*anchor;vec3 base=texture2D(photo,uv).rgb;",
-      "float lum=max(base.r,max(base.g,base.b));float flame=smoothstep(.43,.9,base.r)*smoothstep(.16,.58,base.g)*(1.-smoothstep(.82,1.,base.b));",
-      "float hot=smoothstep(.57,.9,lum)*smoothstep(.16,.53,base.g);float mask=max(flame*.78,hot*.52);",
-      "float w=wave(uv,time);vec2 moving=uv+vec2(w*.012,-.009*sin(uv.y*29.+uv.x*15.-time*3.7))*mask;",
-      "vec3 col=texture2D(photo,clamp(moving,vec2(.001),vec2(.999))).rgb;",
-      "float flicker=.94+.11*sin(time*5.1)+.055*sin(time*8.3+uv.y*14.);",
-      "col*=1.+mask*(flicker-1.);col+=vec3(.045,.014,.002)*flame*(.5+.5*sin(time*3.8+uv.y*21.));",
-      "gl_FragColor=vec4(col,1.);}"
-    ].join("\n");
-    function shader(type,source){var sh=gl.createShader(type);gl.shaderSource(sh,source);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));return sh;}
-    var pr=gl.createProgram();gl.attachShader(pr,shader(gl.VERTEX_SHADER,vert));gl.attachShader(pr,shader(gl.FRAGMENT_SHADER,frag));gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw Error("fire shader link");gl.useProgram(pr);
-    var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-    var pos=gl.getAttribLocation(pr,"position");gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
-    var tx=gl.createTexture();gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tx);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-    var uniform={};["photo","resolution","photoSize","anchor","time"].forEach(function(n){uniform[n]=gl.getUniformLocation(pr,n);});gl.uniform1i(uniform.photo,0);
-    var img=new Image(),loaded=false,onScreen=true,raf=0,last=0,clock=0;
-    function size(){
-      var w=fire.clientWidth,h=fire.clientHeight;if(!w||!h)return;
-      var k=Math.min(1,Math.sqrt(1200000/(w*h)));
-      canvas.width=Math.max(1,Math.round(w*k));canvas.height=Math.max(1,Math.round(h*k));gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(uniform.resolution,canvas.width,canvas.height);
-      var p=getComputedStyle(fire).backgroundPosition.split(" ");function anchor(v){return /%$/.test(v)?parseFloat(v)/100:.5;}gl.uniform2f(uniform.anchor,anchor(p[0]),anchor(p[1]));
-    }
-    function draw(now){
-      raf=0;if(!loaded||!onScreen||document.hidden||pref.matches)return;
-      if(now-last>=32||!last){clock+=last?Math.min((now-last)/1000,.07):0;last=now;gl.uniform1f(uniform.time,clock);gl.drawArrays(gl.TRIANGLES,0,3);canvas.classList.add("ready");}
-      raf=requestAnimationFrame(draw);
-    }
-    function sync(){if(loaded&&onScreen&&!document.hidden&&!pref.matches){if(!raf){last=0;raf=requestAnimationFrame(draw);}}else if(raf){cancelAnimationFrame(raf);raf=0;}}
-    img.onload=function(){try{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);gl.uniform2f(uniform.photoSize,img.naturalWidth,img.naturalHeight);size();loaded=true;sync();}catch(e){canvas.classList.remove("ready");}};
-    img.src=new URL("assets/video/forno-hero-v8.webp",document.baseURI).href;
-    window.addEventListener("resize",size,{passive:true});
-    if("ResizeObserver" in window)new ResizeObserver(size).observe(fire);
-    if("IntersectionObserver" in window)new IntersectionObserver(function(es){onScreen=es[0].isIntersecting;sync();},{threshold:.02}).observe(fire);
-    document.addEventListener("visibilitychange",sync);
-    if(pref.addEventListener)pref.addEventListener("change",sync);
-    canvas.addEventListener("webglcontextlost",function(e){e.preventDefault();loaded=false;sync();canvas.classList.remove("ready");});
+ var gl=canvas.getContext("webgl",{alpha:false,antialias:false,powerPreference:"low-power"});
+ if(gl){
+  var vert="attribute vec2 position;void main(){gl_Position=vec4(position,0.,1.);}";
+  var frag=[
+   "precision mediump float;",
+   "uniform sampler2D photo,flameVideo;uniform vec2 resolution,photoSize,anchor;uniform float time;",
+   "float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
+   "float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}",
+   "float bright(vec3 c){return max(c.r,max(c.g,c.b));}",
+   "float fireMask(vec3 c){return smoothstep(.72,.96,c.r)*smoothstep(.27,.85,c.g);}",
+   "void main(){",
+   "vec2 xy=vec2(gl_FragCoord.x/resolution.x,1.-gl_FragCoord.y/resolution.y);",
+   "float sc=max(resolution.x/photoSize.x,resolution.y/photoSize.y);vec2 covered=resolution/(photoSize*sc);",
+   "vec2 uv=xy*covered+(1.-covered)*anchor;vec3 base=texture2D(photo,uv).rgb;",
+   // Flame area in the actual photo. The wood and bricks remain geometrically stable.
+   "float zone=1.-smoothstep(.76,1.1,length((uv-vec2(.547,.36))/vec2(.205,.38)));",
+   "float root=1.-smoothstep(.22,.72,uv.y);float strength=zone*fireMask(base);",
+   // Actual filmed fire is mapped into the existing flame silhouette, following an upward flow.
+   "vec2 fv=(uv-vec2(.395,.015))/vec2(.305,.68);",
+   "vec2 vt=clamp(fv,vec2(.003),vec2(.997));",
+   "vec3 film=texture2D(flameVideo,vt).rgb;",
+   "float filmed=dot(film,vec3(.32,.55,.13));",
+   "float fEdge=smoothstep(.16,.42,filmed);",
+   "float n=noise(uv*vec2(16.,12.)+vec2(0.,time*2.3));",
+   "float fine=noise(uv*vec2(27.,22.)+vec2(time*.35,time*3.6));",
+   "vec2 flow=vec2((n-.5)*.052+(filmed-.45)*.027,(fine-.5)*.028+.013*(filmed-.5));",
+   "vec2 move=uv+flow*strength*(.24+.76*root);",
+   "vec3 warped=texture2D(photo,clamp(move,vec2(.001),vec2(.999))).rgb;",
+   "vec3 col=mix(base,warped,strength);",
+   "float pulse=.79+.32*filmed+.12*fine;",
+   "col*=1.+strength*(pulse-1.);",
+   "vec3 light=vec3(1.,.57,.15)*smoothstep(.26,.83,filmed)*fEdge;",
+   "col+=light*strength*(.045+.045*root)*(1.-col*.68);",
+   // Reflections respond to the real film but remain still.
+   "float reflected=(1.-smoothstep(.1,.25,abs(uv.x-.55)))*smoothstep(.69,.8,uv.y);",
+   "float glow=dot(texture2D(flameVideo,vec2(.5,.62)).rgb,vec3(.3,.55,.15));",
+   "col*=1.+reflected*(glow-.45)*.12;",
+   "gl_FragColor=vec4(col,1.);}"
+  ].join("\n");
+  function shader(type,source){var sh=gl.createShader(type);gl.shaderSource(sh,source);gl.compileShader(sh);if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(sh));return sh;}
+  var pr=gl.createProgram();gl.attachShader(pr,shader(gl.VERTEX_SHADER,vert));gl.attachShader(pr,shader(gl.FRAGMENT_SHADER,frag));gl.linkProgram(pr);if(!gl.getProgramParameter(pr,gl.LINK_STATUS))throw Error("fire shader link");gl.useProgram(pr);
+  var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  var pos=gl.getAttribLocation(pr,"position");gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+  function texture(unit){var tx=gl.createTexture();gl.activeTexture(unit);gl.bindTexture(gl.TEXTURE_2D,tx);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return tx;}
+  var photo=texture(gl.TEXTURE0),videoTex=texture(gl.TEXTURE1);
+  var uniform={};["photo","flameVideo","resolution","photoSize","anchor","time"].forEach(function(n){uniform[n]=gl.getUniformLocation(pr,n);});gl.uniform1i(uniform.photo,0);gl.uniform1i(uniform.flameVideo,1);
+  var video=document.createElement("video");video.muted=true;video.defaultMuted=true;video.playsInline=true;video.loop=true;video.preload="metadata";video.setAttribute("aria-hidden","true");video.style.cssText="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none";fire.appendChild(video);
+  ["webm","mp4"].forEach(function(ext){var s=document.createElement("source");s.src=new URL("assets/video/fiamma."+ext,document.baseURI).href;s.type="video/"+ext;video.appendChild(s);});
+  var img=new Image(),loaded=false,onScreen=true,failed=false,raf=0,last=0,clock=0,lastVideo=-1;
+  function size(){var w=fire.clientWidth,h=fire.clientHeight;if(!w||!h)return;var k=Math.min(1,Math.sqrt(1200000/(w*h)));canvas.width=Math.max(1,Math.round(w*k));canvas.height=Math.max(1,Math.round(h*k));gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(uniform.resolution,canvas.width,canvas.height);var p=getComputedStyle(fire).backgroundPosition.split(" ");function a(v){return /%$/.test(v)?parseFloat(v)/100:.5;}gl.uniform2f(uniform.anchor,a(p[0]),a(p[1]));}
+  function draw(now){
+   raf=0;if(!loaded||failed||!onScreen||document.hidden||pref.matches||video.paused)return;
+   if(video.readyState>=2&&(!last||now-last>=32)){
+    try{if(lastVideo!==video.currentTime){gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,videoTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);lastVideo=video.currentTime;}clock+=last?Math.min((now-last)/1000,.08):0;last=now;gl.uniform1f(uniform.time,clock);gl.drawArrays(gl.TRIANGLES,0,3);canvas.classList.add("ready");}catch(e){failed=true;canvas.classList.remove("ready");video.pause();return;}
+   }
+   raf=requestAnimationFrame(draw);
   }
+  function sync(){if(loaded&&!failed&&onScreen&&!document.hidden&&!pref.matches){var p=video.play();if(p&&p.catch)p.catch(function(){canvas.classList.remove("ready");});if(!raf&&!video.paused){last=0;raf=requestAnimationFrame(draw);}}else{video.pause();if(raf){cancelAnimationFrame(raf);raf=0;}if(pref.matches)canvas.classList.remove("ready");}}
+  video.addEventListener("playing",sync);video.addEventListener("error",function(){failed=true;sync();canvas.classList.remove("ready");});
+  img.onload=function(){try{gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,photo);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);gl.uniform2f(uniform.photoSize,img.naturalWidth,img.naturalHeight);size();loaded=true;sync();}catch(e){canvas.classList.remove("ready");}};
+  img.src=new URL("assets/video/forno-hero-v8.webp",document.baseURI).href;
+  window.addEventListener("resize",size,{passive:true});if("ResizeObserver" in window)new ResizeObserver(size).observe(fire);
+  if("IntersectionObserver" in window)new IntersectionObserver(function(es){onScreen=es[0].isIntersecting;sync();},{threshold:.02}).observe(fire);
+  document.addEventListener("visibilitychange",sync);if(pref.addEventListener)pref.addEventListener("change",sync);
+  canvas.addEventListener("webglcontextlost",function(e){e.preventDefault();failed=true;sync();canvas.classList.remove("ready");});
+ }
 }catch(e){canvas.classList.remove("ready");}
 /* Curated review carousel: pause on interaction, reduced motion and offscreen. */
 var box=document.querySelector("[data-review-carousel]");if(!box)return;

@@ -355,8 +355,8 @@
     function place(k) {
       var W = shot.clientWidth, H = shot.clientHeight, ir = 4 / 3, dw = W, dh = H, ox = 0, oy = 0;
       if (W / H > ir) { dh = W / ir; oy = (H - dh) / 2; } else { dw = H * ir; ox = (W - dw) / 2; }
-      var Dm = Math.round(Math.max(120, Math.min(W, H) * (W > 900 ? .38 : .44))), r = Dm / 2, pad = 14;
-      var p = D[k], px = ox + p.x * dw, py = oy + p.y * dh;
+      var Dm = Math.round(Math.min(Math.min(W,H)-40, Math.max(104, Math.min(W, H) * .39))), r = Dm / 2, pad = 14;
+      var p = D[k], px = clamp(ox + p.x * dw, 18, W-18), py = clamp(oy + p.y * dh, 18, H-18);
       // la lente va dove c'è spazio, lontana dal punto quanto basta perché la linea si veda
       var best = null, L = r + Math.max(64, Math.min(W, H) * .2);
       for (var i = 0; i < 16; i++) {
@@ -416,6 +416,7 @@
       go(0);layout();addEventListener('scroll',request,{passive:true});addEventListener('resize',layout);
     });
     window.addEventListener('resize', function () { if (cur >= 0) place(cur); });
+    if ('ResizeObserver' in window) new ResizeObserver(function(){if(cur>=0)place(cur);}).observe(shot);
 
   }
 
@@ -630,7 +631,7 @@
  Array.from(page.querySelectorAll(selectors)).forEach(split);
  var shot=document.getElementById('anShot');if(shot){shot.classList.add('v15-reveal-image');reveal.push(shot)}
  ['.an-picks','.proof','.gf-list','.week','.sf-cols'].forEach(function(s){var el=page.querySelector(s);if(el)groups.push(el)});
- ['.im-grid','.ch-vieni'].forEach(function(s){var el=page.querySelector(s);if(el){var rule=document.createElement('div');rule.className='v15-stage-rule';rule.setAttribute('aria-hidden','true');el.insertAdjacentElement('beforebegin',rule);rules.push(rule)}});
+ /* V19.2: section boundaries use space and background alone. */
  if(story&&rail){tip=document.createElement('span');tip.className='v15-fuse-tip';tip.setAttribute('aria-hidden','true');tip.hidden=true;story.appendChild(tip)}
  function clamp(v){return Math.max(0,Math.min(1,v))}
  function smooth(v){v=clamp(v);return v*v*(3-2*v)}

@@ -71,3 +71,44 @@
 /* The previous overlapping chapter assumed a tall sticky hero. The new flow is sequential. */
 .site-v19 #pizza.ch-pizza{margin-top:0!important;border-radius:0;box-shadow:none}
 .site-v19 .v19-news{position:relative;z-index:1}
+
+/* V19.2 — the photo and its four ingredient controls form one complete panel. */
+.site-v19 .an-in{min-width:0;gap:18px clamp(30px,4.2vw,72px)}
+.site-v19 .an-head-side .an-h,.site-v19 .an-head>.an-h{margin-top:10px}
+.site-v19 .an-picks{margin:0;gap:clamp(5px,1vw,16px)}
+.site-v19 .an-picks button{padding:8px 0;min-height:82px}
+.site-v19 .an-det{padding:0;min-height:0;min-width:0}
+.site-v19 .an-det .an-p{max-width:54ch;line-height:1.55}
+.site-v19 .an-det .an-a{display:inline-block;margin-top:12px}
+.site-v19 .an-det .an-a[hidden]{display:none}
+.site-v19 .an-cta{margin:0;padding:0;align-self:start}
+.site-v19 .an-shot.v15-reveal-image{clip-path:none}
+.site-v19 .an-cam{scale:1}
+.site-v19 .an-shot.s1 .an-cam img{filter:brightness(.90) saturate(.98)}
+.site-v19 .an-over::before{display:none}
+@media(min-width:960px){
+ .site-v19 .an-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;align-items:start}
+ .site-v19 .an-head-side{grid-column:2;grid-row:1;margin:0}
+ .site-v19 .an-shot{grid-column:1;grid-row:1/5;align-self:stretch;width:100%;height:auto;min-height:clamp(385px,36vw,610px);aspect-ratio:auto;max-height:none}
+ .site-v19 .an-picks{grid-column:2;grid-row:2}
+ .site-v19 .an-det{grid-column:2;grid-row:3;align-self:start}
+ .site-v19 .an-cta{grid-column:2;grid-row:4;align-self:end}
+}
+@media(max-width:959px){
+ .site-v19 .an-in{display:grid;grid-template-columns:minmax(0,1fr)}
+ .site-v19 .an-shot{max-height:none;width:100%;aspect-ratio:4/3}
+ .site-v19 .an-picks{margin:0;gap:5px}
+ .site-v19 .an-cta{margin-top:4px}
+}
+/* A change of background is the separator. No duplicate horizontal rules or hard-edged light panels. */
+.site-v19 .v15-stage-rule,.site-v19 .gf::after{display:none}
+.site-v19 .gf,.site-v19 .ch-vieni,.site-v19 .v16-album{border:0}
+.site-v19 .ch-pizza>.pr-foot{border:0;padding-top:0}
+.site-v19 .gf{padding-top:0;padding-bottom:0}
+.site-v19 .gf-list{border-top:0}
+.site-v19 .gf-list li:last-child{border-bottom:0}
+.site-v19 .ch-pizze::after{display:none}
+.site-v19 .ch-pizze::before{inset:0;width:auto;height:auto;transform:none;aspect-ratio:auto;background:radial-gradient(ellipse at 74% 48%,#99613b22,transparent 65%)}
+.site-v19 #fuoco.hero-v8 .v14-embers{display:none}
+/* Keep the still image available while the video texture is unavailable. */
+.site-v19 .v19-fire-canvas{transition:opacity .45s}
