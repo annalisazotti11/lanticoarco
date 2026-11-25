@@ -67,3 +67,7 @@
  .site-v19 .v19-slide{min-height:155px}
 }
 @media(prefers-reduced-motion:reduce){.site-v19 .v19-fire-canvas{display:none}.site-v19 .v19-news.swap .v19-news-copy,.site-v19 .v19-slide .v19-enter{animation:none}.site-v19 .v19-action,.site-v19 .v19-news-link{transition:none}}
+
+/* The previous overlapping chapter assumed a tall sticky hero. The new flow is sequential. */
+.site-v19 #pizza.ch-pizza{margin-top:0!important;border-radius:0;box-shadow:none}
+.site-v19 .v19-news{position:relative;z-index:1}
