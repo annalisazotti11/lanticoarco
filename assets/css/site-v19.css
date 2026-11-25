@@ -87,9 +87,10 @@
 .site-v19 .an-shot.s1 .an-cam img{filter:brightness(.90) saturate(.98)}
 .site-v19 .an-over::before{display:none}
 @media(min-width:960px){
- .site-v19 .an-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;align-items:start}
+ .site-v19 .an-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:auto auto minmax(auto,1fr) auto;align-items:start;row-gap:14px}
  .site-v19 .an-head-side{grid-column:2;grid-row:1;margin:0}
- .site-v19 .an-shot{grid-column:1;grid-row:1/5;align-self:stretch;width:100%;height:auto;min-height:clamp(385px,36vw,610px);aspect-ratio:auto;max-height:none}
+ .site-v19 .an-head-side .an-h{font-size:clamp(2.5rem,3.6vw,3.6rem);line-height:1.02}
+ .site-v19 .an-shot{grid-column:1;grid-row:1/5;align-self:stretch;width:100%;height:auto;min-height:clamp(390px,31vw,520px);aspect-ratio:auto;max-height:none}
  .site-v19 .an-picks{grid-column:2;grid-row:2}
  .site-v19 .an-det{grid-column:2;grid-row:3;align-self:start}
  .site-v19 .an-cta{grid-column:2;grid-row:4;align-self:end}
