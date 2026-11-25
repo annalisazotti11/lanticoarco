@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-25T15:36:25.492Z",
+ "updatedAt": "2026-11-25T16:14:56.026Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -1840,11 +1840,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-100.webp",
+     "image": "img/uploads/20261125-definitiva-i552-cacio-e-pepe-v2.webp",
      "frozen": false,
      "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-100.webp"
+     "featured": true
     },
     {
      "id": "i553",
@@ -2031,11 +2030,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-28.webp",
+     "image": "img/uploads/20261125-definitiva-i561-laziale-v2.webp",
      "frozen": false,
      "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-28.webp"
+     "featured": true
     },
     {
      "id": "i562",
