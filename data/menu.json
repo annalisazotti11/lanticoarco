@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-25T13:12:42.970Z",
+ "updatedAt": "2026-11-25T15:36:25.492Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -247,7 +247,7 @@
       "uova",
       "sesamo"
      ],
-     "image": "img/uploads/20261123-173101-impasto-curcuma-zenzero-e-semi-d.webp",
+     "image": "img/uploads/20261125-161034-impasto-curcuma-zenzero-e-semi-d.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -1914,11 +1914,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/cetara-2-restauro.webp",
+     "image": "img/uploads/20261125-161735-cetara-2.webp",
      "frozen": false,
      "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-4.webp"
+     "featured": true
     },
     {
      "id": "i557",
@@ -2472,11 +2471,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-5.webp",
+     "image": "img/uploads/20261125-162136-barese.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-5.webp"
+     "featured": false
     },
     {
      "id": "i581",
@@ -4377,11 +4375,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-6.webp",
+     "image": "img/uploads/20261125-162736-la-porcina.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-6.webp"
+     "featured": false
     },
     {
      "id": "i658",
@@ -6015,7 +6012,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/menu/media-8.webp",
+     "image": "img/uploads/20261125-163428-puccia-beef-burger.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6621,7 +6618,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/menu/media-1.webp",
+     "image": "img/uploads/20261125-160253-cassata-al-cioccolato.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7000,7 +6997,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-7.webp",
+     "image": "img/uploads/20261125-163218-pizza-dessert-alla-nutella.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7267,7 +7264,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-3.webp",
+     "image": "img/uploads/20261125-161355-acqua-frizz-vetro-75-cl.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8128,7 +8125,7 @@
      "allergens": [
       "glutine"
      ],
-     "image": "img/menu/media-9.webp",
+     "image": "img/uploads/20261125-163558-grus-golden-ale-5-0-vol.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8551,7 +8548,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-2.webp",
+     "image": "img/uploads/20261125-160932-limoncello.webp",
      "frozen": false,
      "available": true,
      "featured": false,
