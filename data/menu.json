@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-25T16:27:04.707Z",
+ "updatedAt": "2026-11-25T16:40:29.119Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -1888,11 +1888,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/cetara-restauro.webp",
+     "image": "img/uploads/20261125-definitiva-i554-cetara-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-170.webp"
+     "featured": true
     },
     {
      "id": "i555",
@@ -1913,7 +1912,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261125-161735-cetara-2.webp",
+     "image": "img/uploads/20261125-definitiva-i555-cetara-2-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": true
@@ -2007,7 +2006,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-44.avif",
+     "image": "img/uploads/20261125-definitiva-i560-la-campana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2053,11 +2052,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-147.webp",
+     "image": "img/uploads/20261125-definitiva-i562-lucana-1-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-147.webp"
+     "featured": false
     },
     {
      "id": "i563",
@@ -2346,11 +2344,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-123.webp",
+     "image": "img/uploads/20261125-definitiva-i575-amatriciana-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-123.webp"
+     "featured": false
     },
     {
      "id": "i576",
@@ -2416,11 +2413,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-18.webp",
+     "image": "img/uploads/20261125-definitiva-i578-baresaccia-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-18.webp"
+     "featured": false
     },
     {
      "id": "i579",
@@ -2463,7 +2459,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261125-162136-barese.webp",
+     "image": "img/uploads/20261125-definitiva-i580-barese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2509,11 +2505,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-177.webp",
+     "image": "img/uploads/20261125-definitiva-i582-bufala-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-177.webp"
+     "featured": false
     },
     {
      "id": "i583",
@@ -2556,11 +2551,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-146.webp",
+     "image": "img/uploads/20261125-definitiva-i584-bufala-e-norcia-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-146.webp"
+     "featured": false
     },
     {
      "id": "i585",
