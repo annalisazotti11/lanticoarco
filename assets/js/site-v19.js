@@ -3,6 +3,16 @@
 "use strict";
 var pref=window.matchMedia("(prefers-reduced-motion: reduce)");
 var canvas=document.getElementById("v19Fire"),fire=document.getElementById("fire");
+var heroLoop=document.getElementById("heroLoop"),realPlaying=false;
+if(heroLoop){
+ function heroState(active){realPlaying=active&&!pref.matches;heroLoop.classList.toggle("is-playing",realPlaying);}
+ heroLoop.muted=true;heroLoop.defaultMuted=true;
+ heroLoop.addEventListener("playing",function(){heroState(true);});
+ ["waiting","stalled","pause","error","emptied"].forEach(function(event){heroLoop.addEventListener(event,function(){heroState(false);});});
+ function heroPreference(){if(pref.matches){heroLoop.pause();heroState(false);}else{var play=heroLoop.play();if(play&&play.catch)play.catch(function(){heroState(false);});}}
+ if(pref.addEventListener)pref.addEventListener("change",heroPreference);
+ heroPreference();
+}
 if(canvas&&fire&&!pref.matches)try{
  var gl=canvas.getContext("webgl",{alpha:false,antialias:false,powerPreference:"low-power"});
  if(gl){
@@ -55,13 +65,14 @@ if(canvas&&fire&&!pref.matches)try{
   var img=new Image(),loaded=false,onScreen=true,failed=false,raf=0,last=0,clock=0,lastVideo=-1;
   function size(){var w=fire.clientWidth,h=fire.clientHeight;if(!w||!h)return;var k=Math.min(1,Math.sqrt(1200000/(w*h)));canvas.width=Math.max(1,Math.round(w*k));canvas.height=Math.max(1,Math.round(h*k));gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(uniform.resolution,canvas.width,canvas.height);var p=getComputedStyle(fire).backgroundPosition.split(" ");function a(v){return /%$/.test(v)?parseFloat(v)/100:.5;}gl.uniform2f(uniform.anchor,a(p[0]),a(p[1]));}
   function draw(now){
-   raf=0;if(!loaded||failed||!onScreen||document.hidden||pref.matches||video.paused)return;
+   raf=0;if(!loaded||failed||!onScreen||document.hidden||pref.matches||realPlaying||video.paused)return;
    if(video.readyState>=2&&(!last||now-last>=32)){
     try{if(lastVideo!==video.currentTime){gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,videoTex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);lastVideo=video.currentTime;}clock+=last?Math.min((now-last)/1000,.08):0;last=now;gl.uniform1f(uniform.time,clock);gl.drawArrays(gl.TRIANGLES,0,3);canvas.classList.add("ready");}catch(e){failed=true;canvas.classList.remove("ready");video.pause();return;}
    }
    raf=requestAnimationFrame(draw);
   }
-  function sync(){if(loaded&&!failed&&onScreen&&!document.hidden&&!pref.matches){var p=video.play();if(p&&p.catch)p.catch(function(){canvas.classList.remove("ready");});if(!raf&&!video.paused){last=0;raf=requestAnimationFrame(draw);}}else{video.pause();if(raf){cancelAnimationFrame(raf);raf=0;}if(pref.matches)canvas.classList.remove("ready");}}
+  function sync(){if(loaded&&!failed&&onScreen&&!document.hidden&&!pref.matches&&!realPlaying){var p=video.play();if(p&&p.catch)p.catch(function(){canvas.classList.remove("ready");});if(!raf&&!video.paused){last=0;raf=requestAnimationFrame(draw);}}else{video.pause();if(raf){cancelAnimationFrame(raf);raf=0;}if(pref.matches)canvas.classList.remove("ready");}}
+  if(heroLoop)["playing","waiting","stalled","pause","error","emptied"].forEach(function(e){heroLoop.addEventListener(e,sync);});
   video.addEventListener("playing",sync);video.addEventListener("error",function(){failed=true;sync();canvas.classList.remove("ready");});
   img.onload=function(){try{gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,photo);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);gl.uniform2f(uniform.photoSize,img.naturalWidth,img.naturalHeight);size();loaded=true;sync();}catch(e){canvas.classList.remove("ready");}};
   img.src=new URL("assets/video/forno-hero-v8.webp",document.baseURI).href;

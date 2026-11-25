@@ -115,27 +115,8 @@
 .site-v19 .v19-fire-canvas{transition:opacity .45s}
 
 
-/* V19.5 — video H.264; conserva l'inquadratura e la posizione originali della hero. */
-/* Non sovrascrivere inset, translate, maschera e background del vecchio #fire. */
-.site-v19 #fuoco.hero-v8 .fire{
-  z-index:0;
-  overflow:hidden;
-}
-.site-v19 #fuoco.hero-v8 .hero-loop{
-  position:absolute;
-  inset:0;
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:65% 54%;
-  border:0;
-  pointer-events:none;
-}
-.site-v19 #fuoco.hero-v8 .shade{z-index:1}
-.site-v19 #fuoco.hero-v8 .content,
-.site-v19 #fuoco.hero-v8 .signature{z-index:2}
-@media(max-width:900px){
-  .site-v19 #fuoco.hero-v8 .hero-loop{object-position:53% 48%}
-}
-/* Il loop è richiesto anche se il sistema preferisce ridurre le animazioni. */
+/* V19.6 — preserve the original composition and use the existing animated fallback until playback starts. */
+.site-v19 #fuoco.hero-v8 .hero-loop{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:65% 54%;border:0;pointer-events:none;opacity:0;transition:opacity .3s}
+.site-v19 #fuoco.hero-v8 .hero-loop.is-playing{opacity:1}
+@media(max-width:900px){.site-v19 #fuoco.hero-v8 .hero-loop{object-position:53% 48%}}
+@media(prefers-reduced-motion:reduce){.site-v19 #fuoco.hero-v8 .hero-loop{display:none!important}}
