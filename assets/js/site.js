@@ -343,10 +343,10 @@
     shot.dataset.ready = '1';
     var M = 2.4, STEP = .55; // mezza schermata abbondante di scorrimento per ogni dettaglio
     var D = [
-      { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio.', a: 'Scegli tra nove impasti', href: '#impasti' },
+      { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Selezioniamo farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani e olio extravergine di oliva biologico.', a: 'Scegli tra nove impasti', href: '#impasti' },
       { x: .2, y: .5, n: 'Pomodoro', from: 'Torre Guaceto · Presidio Slow Food', t: 'Il pomodoro', p: 'I pomodorini di Torre Guaceto, sulla costa di Brindisi. Su richiesta, anche il pomodoro nickel free.' },
-      { x: .44, y: .56, n: 'Latticini e formaggi', from: 'Siero-innesto · Murgia barese', t: 'Latticini e formaggi della Murgia', p: 'Tutti i nostri latticini e formaggi sono prodotti con siero-innesto e latte della Murgia barese, nel rispetto della tradizione casearia pugliese, per portare sulle nostre pizze il gusto autentico del territorio.' },
-      { x: .6, y: .3, n: 'Ingredienti', from: 'Bio · Km 0 · Slow Food', t: 'Gli ingredienti', p: (nIngr ? nIngr + ' ingredienti' : 'Tanti ingredienti') + ' da aggiungere come preferisci. Molti biologici, molti del nostro territorio.', a: 'Crea la tua pizza', href: AA.ROOT + 'menu/#crea' }
+      { x: .44, y: .56, n: 'Mozzarelle e latticini', from: 'Km 0 · Siero-innesto', t: 'Mozzarelle e latticini a km 0', p: 'Utilizziamo mozzarelle e latticini a km 0, prodotti con latte della Murgia barese secondo il metodo tradizionale del siero-innesto, nel rispetto della tradizione casearia pugliese.' },
+      { x: .6, y: .3, n: 'Ingredienti', from: 'Bio · Km 0 · Slow Food', t: 'Gli ingredienti', p: (nIngr ? nIngr + ' ingredienti' : 'Tanti ingredienti') + ' da aggiungere come preferisci. Selezioniamo prodotti biologici e specialità del territorio, privilegiando qualità e provenienza locale.', a: 'Crea la tua pizza', href: AA.ROOT + 'menu/#crea' }
     ];
     var lens = $('anLens'), lensImg = lens.querySelector('img'), dot = $('anDot'), wire = $('anWire'), nameEl = $('anName'), det = $('anDet');
     var lis = [].slice.call(document.querySelectorAll('#anPicks li'));
