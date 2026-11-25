@@ -321,8 +321,7 @@
     function paint() {
       var p = list[k];
       box.classList.toggle('no-img', !p.image);
-      box.innerHTML = (p.image ? '<img alt="" src="' + esc(AA.src(p.image)) + '">' : '') + '<div>' + (p.kicker ? '<p class="pf-k">' + esc(p.kicker) + '</p>' : '') +
-        '<p class="pf-t">' + esc(p.title) + '</p>' + (p.price ? '<p class="pf-p">' + esc(p.price) + '</p>' : '') + '</div>';
+      box.innerHTML = '<div class="v19-news-inner">' + (p.image ? '<img class="v19-news-photo" alt="" src="' + esc(AA.src(p.image)) + '">' : '<span class="v19-news-symbol" aria-hidden="true">✦</span>') + '<div class="v19-news-copy"><p class="v19-news-label">' + esc(p.kicker || 'Da provare') + '</p><p class="v19-news-title">' + esc(p.title) + '</p>' + (p.price ? '<p class="v19-news-price">' + esc(p.price) + '</p>' : '') + '</div><a class="v19-news-link" href="' + AA.ROOT + 'menu/">Guarda il menù <span aria-hidden="true">↗</span></a></div>';
       box.classList.remove('swap'); void box.offsetWidth; box.classList.add('swap');
     }
     box.hidden = false; paint();

@@ -57,7 +57,7 @@
     var box = document.createElement('div');
     box.className = 'k-qr'; box.dataset.reviewUrl = "https://search.google.com/local/writereview?placeid=ChIJhysMvM7BRxMRJVI7vmv50eQ";
     var maps = "https://search.google.com/local/writereview?placeid=ChIJhysMvM7BRxMRJVI7vmv50eQ";
-    box.innerHTML = '<div class="k-qr-pair"><div class="k-qr-item"><div class="k-qr-code">' + AA.qrSVG(url, { margin: 2 }) + '</div><p><b>Menù sul telefono</b>Inquadra il codice</p></div>' + (maps ? '<div class="k-qr-item"><div class="k-qr-code">' + AA.qrSVG(maps, { margin: 4 }) + '</div><p><b>Lasciaci una recensione</b>Scrivi una recensione su Google</p></div>' : '') + '</div>';
+    box.innerHTML = '<div class="k-qr-pair"><div class="k-qr-item k-qr-menu"><div class="k-qr-code">' + AA.qrSVG(url, { margin: 2 }) + '</div><p><b>Menù sul telefono</b>Inquadra il codice</p></div>' + (maps ? '<div class="k-qr-item k-qr-review"><div class="k-qr-code">' + AA.qrSVG(maps, { margin: 4 }) + '</div><p><b>Lasciaci una recensione</b>Scrivi una recensione su Google</p></div>' : '') + '</div>';
     intro.appendChild(box);
   }
   AA.loadMenu().then(addQr).catch(function () { addQr(null); });

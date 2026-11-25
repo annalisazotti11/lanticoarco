@@ -202,3 +202,13 @@ body.attract { cursor: pointer; }
 .tv-brand{margin-right:auto}
 .tv-qr{gap:.5rem}.tv-qr p{font-size:clamp(.64rem,1.15vw,1rem)}.tv-qr-code{width:clamp(4.5rem,7vw,7.4rem);height:clamp(4.5rem,7vw,7.4rem)}
 @media(max-width:600px){.tv-head{padding:1rem}.tv-qr{flex-direction:column-reverse;text-align:center;gap:.25rem}.tv-qr p{order:0;font-size:.65rem}.tv-qr-code{width:4.2rem;height:4.2rem;padding:.25rem}}
+
+/* High contrast QR captions. The actual codes retain their white quiet zone. */
+.tv-qr{padding:clamp(.4rem,.8vw,.85rem);border-radius:clamp(.6rem,1vw,1rem);gap:clamp(.35rem,.9vw,.85rem);flex:none}
+.tv-qr[hidden]{display:none!important}
+.tv-menu{background:#7e3e2a}
+.tv-review{background:#315b43}
+.tv-qr p{font-weight:750;color:#fff;font-size:clamp(.78rem,1.45vw,1.18rem);line-height:1.18;text-align:left;margin:0}
+.tv-qr p small{display:block;font-size:.71em;font-weight:500;color:#fff9ef;margin-top:.3em}
+.tv-qr-code{border-radius:.55rem;padding:.35rem;flex:none}
+@media(max-width:600px){.tv-qr{padding:.35rem;gap:.25rem}.tv-qr p{text-align:center;font-size:.67rem}.tv-qr-code{width:3.9rem;height:3.9rem;padding:.25rem}}

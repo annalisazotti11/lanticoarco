@@ -282,3 +282,14 @@ html.menu-v13.kiosk.kiosk-v11 #promos .promo-t{font-size:clamp(1rem,1.65vw,1.15r
 html.menu-v13.kiosk.kiosk-v11 #promos .promo{min-height:97px}
 html.menu-v13.kiosk.kiosk-v11 .k13-home-link{min-height:37px}
 @media(max-width:600px){html.menu-v13.kiosk.kiosk-v11 #builder .b-recipe .b-rec{min-height:57px}html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-label b{font-size:.92rem}html.menu-v13.kiosk.kiosk-v11 #builder .b-rec-label small{font-size:.75rem}html.menu-v13.kiosk.kiosk-v11 #builder .bf-r .b-fire{min-height:53px}html.menu-v13.kiosk.kiosk-v11 #builder .b-foot{min-height:84px}}
+
+/* V13.3: visually distinct QR actions, with unaltered white scan areas. */
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr{padding:0!important;background:transparent;border:0;box-shadow:none}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(9px,1.2vw,16px);width:100%}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-item{display:flex;align-items:center;gap:clamp(9px,1.5vw,18px);border:0;padding:clamp(10px,1.5vw,18px);border-radius:17px;min-width:0;text-align:left;color:#fff}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-menu{background:#7e3e2a}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-review{background:#315b43}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-code{width:clamp(88px,11vw,122px);height:clamp(88px,11vw,122px);flex:0 0 auto;background:white;border-radius:9px;padding:5px}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-item p{color:#fff9ee;line-height:1.3;font-size:clamp(.82rem,1.5vw,1.05rem);margin:0;min-width:0;overflow-wrap:anywhere}
+html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-item b{display:block;color:white;font-weight:800;font-size:clamp(1rem,2vw,1.37rem);line-height:1.12;margin-bottom:6px;letter-spacing:-.02em}
+@media(max-width:560px){html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-item{flex-direction:column;text-align:center;gap:8px;align-items:center}html.menu-v13.kiosk.kiosk-v11 #k13Support .k-qr-item p{font-size:.8rem}}
