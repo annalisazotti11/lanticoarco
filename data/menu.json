@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-25T16:49:21.299Z",
+ "updatedAt": "2026-11-25T17:04:38.562Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -3970,11 +3970,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-65.webp",
+     "image": "img/uploads/20261125-definitiva-i641-asparagina-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-65.webp"
+     "featured": false
     },
     {
      "id": "i642",
@@ -3994,11 +3993,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-83.webp",
+     "image": "img/uploads/20261125-definitiva-i642-bacon-ricca-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-83.webp"
+     "featured": false
     },
     {
      "id": "i643",
@@ -4041,7 +4039,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-26.webp",
+     "image": "img/uploads/20261125-definitiva-i644-chiusa-sorpresa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4064,11 +4062,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-76.webp",
+     "image": "img/uploads/20261125-definitiva-i645-cinghialina-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-76.webp"
+     "featured": false
     },
     {
      "id": "i646",
@@ -4088,11 +4085,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-92.webp",
+     "image": "img/uploads/20261125-definitiva-i646-del-boscaiolo-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-92.webp"
+     "featured": false
     },
     {
      "id": "i647",
@@ -4135,11 +4131,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-173.webp",
+     "image": "img/uploads/20261125-definitiva-i648-genovana-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-173.webp"
+     "featured": false
     },
     {
      "id": "i649",
@@ -4184,11 +4179,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-22.webp",
+     "image": "img/uploads/20261125-definitiva-i650-la-caramellata-1-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-22.webp"
+     "featured": false
     },
     {
      "id": "i651",
@@ -4208,11 +4202,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-32.webp",
+     "image": "img/uploads/20261125-definitiva-i651-la-caramellata-2-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-32.webp"
+     "featured": false
     },
     {
      "id": "i652",
@@ -4304,11 +4297,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-56.webp",
+     "image": "img/uploads/20261125-definitiva-i655-oslo-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-56.webp"
+     "featured": false
     },
     {
      "id": "i656",
@@ -4351,7 +4343,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261125-162736-la-porcina.webp",
+     "image": "img/uploads/20261125-definitiva-i657-la-porcina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4466,11 +4458,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-90.webp",
+     "image": "img/uploads/20261125-definitiva-i662-sole-nel-bosco-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-90.webp"
+     "featured": false
     },
     {
      "id": "i663",
@@ -4490,11 +4481,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-162.webp",
+     "image": "img/uploads/20261125-definitiva-i663-sole-nel-bosco-2-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-162.webp"
+     "featured": false
     },
     {
      "id": "i664",
@@ -4537,11 +4527,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-79.webp",
+     "image": "img/uploads/20261125-definitiva-i665-tartufata-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-79.webp"
+     "featured": false
     },
     {
      "id": "i666",
@@ -4584,11 +4573,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-159.webp",
+     "image": "img/uploads/20261125-definitiva-i667-vesuvio-bufala-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-159.webp"
+     "featured": false
     },
     {
      "id": "i668",
@@ -4608,11 +4596,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-112.webp",
+     "image": "img/uploads/20261125-definitiva-i668-violetta-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-112.webp"
+     "featured": false
     }
    ]
   },
@@ -4870,11 +4857,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-97.webp",
+     "image": "img/uploads/20261125-definitiva-i677-pizza-vegan-vito-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-97.webp"
+     "featured": false
     }
    ]
   },
