@@ -113,3 +113,33 @@
 .site-v19 #fuoco.hero-v8 .v14-embers{display:none}
 /* Keep the still image available while the video texture is unavailable. */
 .site-v19 .v19-fire-canvas{transition:opacity .45s}
+
+
+/* V19.4 — video hero del forno, con immagine statica di fallback. */
+.site-v19 #fuoco.hero-v8 .fire{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  background:#140d09 url("../video/forno-hero-v8.webp") center/cover no-repeat;
+}
+.site-v19 #fuoco.hero-v8 .hero-loop{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:55% 50%;
+  border:0;
+  pointer-events:none;
+}
+.site-v19 #fuoco.hero-v8 .shade{z-index:1}
+.site-v19 #fuoco.hero-v8 .content,
+.site-v19 #fuoco.hero-v8 .signature{z-index:2}
+@media(max-width:760px){
+  .site-v19 #fuoco.hero-v8 .hero-loop{object-position:55% 50%}
+}
+@media(prefers-reduced-motion:reduce){
+  .site-v19 #fuoco.hero-v8 .hero-loop{display:none!important}
+}
