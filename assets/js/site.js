@@ -345,7 +345,7 @@
     var D = [
       { x: .43, y: .84, n: 'Impasto', from: 'Murgia · Trapani', t: 'L’impasto', p: 'Farine biologiche di un piccolo mulino della Murgia, sale marino integrale di Trapani, olio extravergine bio.', a: 'Scegli tra nove impasti', href: '#impasti' },
       { x: .2, y: .5, n: 'Pomodoro', from: 'Torre Guaceto · Presidio Slow Food', t: 'Il pomodoro', p: 'I pomodorini di Torre Guaceto, sulla costa di Brindisi. Su richiesta, anche il pomodoro nickel free.' },
-      { x: .44, y: .56, n: 'Mozzarella', from: 'Siero innesto · Bufala DOP', t: 'La mozzarella', p: 'Mozzarella a siero innesto e provolone della Murgia. La bufala arriva sulla pizza all’uscita dal forno.' },
+      { x: .44, y: .56, n: 'Latticini e formaggi', from: 'Siero-innesto · Murgia barese', t: 'Latticini e formaggi della Murgia', p: 'Tutti i nostri latticini e formaggi sono prodotti con siero-innesto e latte della Murgia barese, nel rispetto della tradizione casearia pugliese, per portare sulle nostre pizze il gusto autentico del territorio.' },
       { x: .6, y: .3, n: 'Ingredienti', from: 'Bio · Km 0 · Slow Food', t: 'Gli ingredienti', p: (nIngr ? nIngr + ' ingredienti' : 'Tanti ingredienti') + ' da aggiungere come preferisci. Molti biologici, molti del nostro territorio.', a: 'Crea la tua pizza', href: AA.ROOT + 'menu/#crea' }
     ];
     var lens = $('anLens'), lensImg = lens.querySelector('img'), dot = $('anDot'), wire = $('anWire'), nameEl = $('anName'), det = $('anDet');
