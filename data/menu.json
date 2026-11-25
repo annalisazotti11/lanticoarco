@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-25T16:14:56.026Z",
+ "updatedAt": "2026-11-25T16:27:04.707Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -2148,11 +2148,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-168.webp",
+     "image": "img/uploads/20261125-definitiva-i568-murgiana-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-168.webp"
+     "featured": true
     },
     {
      "id": "i569",
@@ -2196,11 +2195,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-121.webp",
+     "image": "img/uploads/20261125-definitiva-i570-pezzente-rape-stufate-e-funghi-cardoncelli-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-121.webp"
+     "featured": false
     },
     {
      "id": "i571",
@@ -2220,11 +2218,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-145.webp",
+     "image": "img/uploads/20261125-definitiva-i571-pezzente-rape-e-datterini-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": true,
-     "cutout": "img/scontorni/media-145.webp"
+     "featured": true
     },
     {
      "id": "i572",
@@ -2244,11 +2241,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-134.webp",
+     "image": "img/uploads/20261125-definitiva-i572-pistacchiona-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-134.webp"
+     "featured": false
     },
     {
      "id": "i573",
@@ -2269,11 +2265,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-96.webp",
+     "image": "img/uploads/20261125-definitiva-i573-soddisfacente-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-96.webp"
+     "featured": false
     },
     {
      "id": "i574",
@@ -2293,11 +2288,10 @@
       "senape",
       "soia"
      ],
-     "image": "img/menu/media-59.webp",
+     "image": "img/uploads/20261125-definitiva-i574-super-tartufata-1x1.webp",
      "frozen": false,
      "available": true,
-     "featured": false,
-     "cutout": "img/scontorni/media-59.webp"
+     "featured": false
     }
    ]
   },
