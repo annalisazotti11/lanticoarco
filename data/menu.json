@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-25T17:20:19.174Z",
+ "updatedAt": "2026-11-25T20:08:08.334Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -2366,7 +2366,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i576-americana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2389,7 +2389,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i577-antico-arco-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2435,7 +2435,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i579-baresana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2481,7 +2481,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i581-bresaola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2527,7 +2527,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i583-bufala-e-capocollo-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2573,7 +2573,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i585-bufala-e-prosciutto-crudo-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2664,7 +2664,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i589-ciccio-rosso-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2686,7 +2686,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i590-ciccio-rosso-con-verdure-gratinate-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2732,7 +2732,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i592-contadina-verdure-gratinate-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2780,7 +2780,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i594-diavola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2826,7 +2826,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i596-francese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2849,7 +2849,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i597-francese-e-bacon-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2872,7 +2872,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i598-fume-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2895,7 +2895,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i599-funghi-trifolati-cotti-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2942,7 +2942,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i601-isolana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2965,7 +2965,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i602-italiana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -2988,7 +2988,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i603-leggera-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3011,7 +3011,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i604-manzotin-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3034,7 +3034,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i605-margherita-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3059,7 +3059,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i606-mare-e-monti-rossa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3083,7 +3083,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i607-marinata-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3129,7 +3129,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i609-mediterranea-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3152,7 +3152,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i610-milanese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3199,7 +3199,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i612-nduja-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3222,7 +3222,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i613-norcia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3270,7 +3270,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i615-pastore-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3293,7 +3293,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i616-pesantuccia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3339,7 +3339,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i618-pezzente-e-rape-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3362,7 +3362,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i619-pezzente-rape-e-funghi-cardoncelli-trifolati-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3386,7 +3386,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i620-prataiola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3409,7 +3409,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i621-principessa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3432,7 +3432,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i622-principessa-2-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3455,7 +3455,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i623-quattro-formaggi-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3478,7 +3478,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i624-quattro-stagioni-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3524,7 +3524,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i626-rape-e-norcia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3549,7 +3549,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i627-romana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3572,7 +3572,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i628-sfiziosa-rossa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3596,7 +3596,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i629-siciliana-rossa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3621,7 +3621,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i630-silana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3644,7 +3644,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i631-stracciatella-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3669,7 +3669,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i632-super-diavola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3694,7 +3694,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i633-terra-e-mare-rossa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3718,7 +3718,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i634-tirolese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3742,7 +3742,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i635-tonno-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3765,7 +3765,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i636-valtellinese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3791,7 +3791,7 @@
       "soia",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i637-veneziana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3814,7 +3814,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i638-wurstel-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3837,7 +3837,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i639-zampina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3861,7 +3861,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i640-zar-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -3884,7 +3884,7 @@
       "sesamo",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i805-margherita-e-basilico-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -3909,7 +3909,7 @@
       "sesamo",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i806-bufala-e-basilico-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -4015,7 +4015,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i643-chioggia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4107,7 +4107,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i647-foresta-nera-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4154,7 +4154,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i649-green-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4226,7 +4226,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i652-mare-e-monti-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4249,7 +4249,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i653-martina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4272,7 +4272,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i654-murgetta-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4319,7 +4319,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i656-pistacchio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4365,7 +4365,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i658-porcini-e-bacon-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4388,7 +4388,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i659-reale-bianca-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4411,7 +4411,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i660-siciliana-bianca-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4434,7 +4434,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i661-sole-mio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4503,7 +4503,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i664-tango-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4549,7 +4549,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i666-vesuvio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4654,7 +4654,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i669-pizza-vegan-alle-rape-stufate-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4678,7 +4678,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i670-pizza-vegan-contadina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4702,7 +4702,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i671-pizza-vegan-gratinata-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4727,7 +4727,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i672-pizza-vegan-mix-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4753,7 +4753,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i673-pizza-vegan-ortolana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4779,7 +4779,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i674-pizza-vegan-puglia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4805,7 +4805,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i675-pizza-vegan-sfiziosa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -4830,7 +4830,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261125-definitiva-i676-pizza-vegan-siciliana-rossa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
