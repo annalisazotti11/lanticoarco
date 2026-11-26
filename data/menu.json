@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:02:36.766Z",
+ "updatedAt": "2026-11-26T13:09:50.751Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -77,55 +77,55 @@
    "id": "pizze",
    "name": "Pizze",
    "icon": "🍕",
-   "image": "assets/img/galleria/crudo-rucola.webp"
+   "image": "img/uploads/20261125-definitiva-i667-vesuvio-bufala-1x1.webp"
   },
   {
    "id": "antipasti",
    "name": "Antipasti e fritti",
    "icon": "🧀",
-   "image": "img/menu/media-95.webp"
+   "image": "img/uploads/20261125-definitiva-i446-tagliere-di-salumi-e-formaggi-per-3-1x1.webp"
   },
   {
    "id": "impasti",
    "name": "Impasti",
    "icon": "🌾",
-   "image": "assets/img/impasti-grano.webp"
+   "image": "img/uploads/20261126-definitiva-i406-impasto-classico-1x1.webp"
   },
   {
    "id": "cicci",
    "name": "Cicci e skattate",
    "icon": "🫓",
-   "image": "img/menu/media-98.webp"
+   "image": "img/uploads/20261125-definitiva-i540-piccante-1x1.webp"
   },
   {
    "id": "piadine",
    "name": "Piadine, pucce e insalate",
    "icon": "🥙",
-   "image": "img/menu/media-120.webp"
+   "image": "img/uploads/20261126-definitiva-i498-puccia-bolognese-1x1.webp"
   },
   {
    "id": "primi",
    "name": "Primi e secondi",
    "icon": "🍝",
-   "image": "img/menu/media-52.webp"
+   "image": "img/uploads/20261126-definitiva-i510-assassina-classica-1x1.webp"
   },
   {
    "id": "dessert",
    "name": "Dessert",
    "icon": "🍰",
-   "image": "img/menu/media-20.webp"
+   "image": "img/uploads/20261126-definitiva-i748-delizia-croccante-al-pistacchio-1x1.webp"
   },
   {
    "id": "bevande",
    "name": "Bevande",
    "icon": "🍺",
-   "image": "img/menu/media-41.webp"
+   "image": "img/uploads/20261126-definitiva-i723-cellamara-i-p-a-6-6-vol-1x1.webp"
   },
   {
    "id": "aggiunte",
    "name": "Aggiunte",
    "icon": "➕",
-   "image": ""
+   "image": "img/uploads/20261126-definitiva-i444-verdure-miste-sott-olio-1x1.webp"
   }
  ],
  "sections": [
