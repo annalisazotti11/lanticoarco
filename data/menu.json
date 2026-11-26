@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:29:40.813Z",
+ "updatedAt": "2026-11-26T13:49:21.817Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -113,7 +113,7 @@
    "id": "dessert",
    "name": "Dessert",
    "icon": "🍰",
-   "image": "img/uploads/20261126-definitiva-i748-delizia-croccante-al-pistacchio-1x1.webp"
+   "image": "img/uploads/20261126-definitiva-i748-delizia-croccante-al-pistacchio-obliqua.webp"
   },
   {
    "id": "bevande",
@@ -6509,7 +6509,7 @@
       "latte",
       "soia"
      ],
-     "image": "img/uploads/20261126-definitiva-i732-bomboniera-algida-12-pz-classica-o-mista-v2.webp",
+     "image": "img/uploads/20261126-definitiva-i732-bomboniera-algida-12-pz-classica-o-mista-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6535,7 +6535,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i733-caramelle-e-panzerottini-artigianali-10-pz-v3.webp",
+     "image": "img/uploads/20261126-definitiva-i733-caramelle-e-panzerottini-artigianali-10-pz-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6557,7 +6557,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i734-cassata-al-caffe-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i734-cassata-al-caffe-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6579,7 +6579,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i735-cassata-al-cioccolato-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i735-cassata-al-cioccolato-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6601,7 +6601,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i736-cassata-al-limoncello-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i736-cassata-al-limoncello-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6623,7 +6623,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i737-cassata-alla-nocciola-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i737-cassata-alla-nocciola-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6645,7 +6645,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i738-cassata-pistacchio-e-ricotta-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i738-cassata-pistacchio-e-ricotta-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6667,7 +6667,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i739-cassata-al-torroncino-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i739-cassata-al-torroncino-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6689,7 +6689,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i740-cheese-cake-gelato-ai-frutti-di-bosco-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i740-cheese-cake-gelato-ai-frutti-di-bosco-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6711,7 +6711,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i741-cheese-cake-gelato-nocciola-e-cacao-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i741-cheese-cake-gelato-nocciola-e-cacao-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6733,7 +6733,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i742-cheese-cake-al-pistacchio-gelato-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i742-cheese-cake-al-pistacchio-gelato-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6755,7 +6755,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i743-cremoso-paradiso-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i743-cremoso-paradiso-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6777,7 +6777,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i744-cremoso-tiramisu-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i744-cremoso-tiramisu-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6799,7 +6799,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i745-cremoso-tris-cioccolato-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i745-cremoso-tris-cioccolato-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6821,7 +6821,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i746-croccantino-all-amarena-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i746-croccantino-all-amarena-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6843,7 +6843,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i747-cubano-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i747-cubano-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6865,7 +6865,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i748-delizia-croccante-al-pistacchio-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i748-delizia-croccante-al-pistacchio-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6887,7 +6887,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i749-delizia-pralinata-alla-gianduia-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i749-delizia-pralinata-alla-gianduia-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6909,7 +6909,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i750-delizia-pralinata-bianca-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i750-delizia-pralinata-bianca-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6933,7 +6933,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261126-definitiva-i751-pizza-dessert-nocciolata-bio-v2.webp",
+     "image": "img/uploads/20261126-definitiva-i751-pizza-dessert-nocciolata-bio-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6958,7 +6958,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261126-definitiva-i752-pizza-dessert-alla-nutella-v3.webp",
+     "image": "img/uploads/20261126-definitiva-i752-pizza-dessert-alla-nutella-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6979,7 +6979,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i753-pizza-dessert-ricotta-fresca-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i753-pizza-dessert-ricotta-fresca-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7001,7 +7001,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i754-rolle-alla-nutella-v2.webp",
+     "image": "img/uploads/20261126-definitiva-i754-rolle-alla-nutella-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7023,7 +7023,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i755-sorbetto-al-limone-v3.webp",
+     "image": "img/uploads/20261126-definitiva-i755-sorbetto-al-limone-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7045,7 +7045,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i756-sorbetto-al-mandarino-v3.webp",
+     "image": "img/uploads/20261126-definitiva-i756-sorbetto-al-mandarino-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7067,7 +7067,7 @@
       "frutta-a-guscio",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i757-souffle-al-cioccolato-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i757-souffle-al-cioccolato-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7089,7 +7089,7 @@
       "frutta-a-guscio",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i758-souffle-al-pistacchio-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i758-souffle-al-pistacchio-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7110,7 +7110,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i759-tartufo-classico-bianco-al-caffe-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i759-tartufo-classico-bianco-al-caffe-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7131,7 +7131,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i760-tartufo-classico-cioccolato-e-cacao-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i760-tartufo-classico-cioccolato-e-cacao-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7153,7 +7153,7 @@
       "frutta-a-guscio",
       "soia"
      ],
-     "image": "img/uploads/20261126-definitiva-i761-tartufo-vegano-alla-gianduia-manfredonia-fg-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i761-tartufo-vegano-alla-gianduia-manfredonia-fg-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7175,7 +7175,7 @@
       "pesce",
       "uova"
      ],
-     "image": "img/uploads/20261126-definitiva-i762-torta-ai-frutti-rossi-martinucci-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i762-torta-ai-frutti-rossi-martinucci-obliqua.webp",
      "frozen": false,
      "available": true,
      "featured": false,
