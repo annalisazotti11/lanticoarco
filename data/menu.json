@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:01:26.349Z",
+ "updatedAt": "2026-11-26T13:01:51.324Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -5795,7 +5795,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i490-italiana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5863,7 +5863,7 @@
       "lupini",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i493-vegana-1-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5887,7 +5887,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i494-vegana-2-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5912,7 +5912,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i495-vegetariana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5935,7 +5935,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i496-zar-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6019,7 +6019,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i499-puccia-bresaola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6042,7 +6042,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i500-puccia-calabrese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6065,7 +6065,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i501-puccia-formaggio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6088,7 +6088,7 @@
       "soia",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i502-puccia-hamburger-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6180,7 +6180,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i506-puccia-martina-franca-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6205,7 +6205,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i507-puccia-vegana-marilena-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6229,7 +6229,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i508-puccia-vegana-2-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6252,7 +6252,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i509-puccia-zampina-1x1.webp",
      "frozen": true,
      "available": true,
      "featured": false
@@ -6299,7 +6299,7 @@
       "glutine",
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i511-assassina-gourmet-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6315,7 +6315,7 @@
       "senza-glutine"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i512-assassina-senza-glutine-v2.webp",
      "frozen": false,
      "available": true,
      "featured": false,
