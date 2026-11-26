@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T12:45:04.296Z",
+ "updatedAt": "2026-11-26T12:47:42.731Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -157,7 +157,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-172646-impasto-classico.webp",
+     "image": "img/uploads/20261126-definitiva-i406-impasto-classico-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -179,7 +179,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-172543-impasto-canapa-sativa.webp",
+     "image": "img/uploads/20261126-definitiva-i407-impasto-canapa-sativa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -201,7 +201,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-172901-impasto-carbone-vegetale-da-cocc.webp",
+     "image": "img/uploads/20261126-definitiva-i408-impasto-carbone-vegetale-da-cocco-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -224,7 +224,7 @@
       "uova",
       "sesamo"
      ],
-     "image": "img/uploads/20261123-173004-impasto-cereali-misti.webp",
+     "image": "img/uploads/20261126-definitiva-i409-impasto-cereali-misti-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -247,7 +247,7 @@
       "uova",
       "sesamo"
      ],
-     "image": "img/uploads/20261125-161034-impasto-curcuma-zenzero-e-semi-d.webp",
+     "image": "img/uploads/20261126-definitiva-i410-impasto-curcuma-zenzero-e-semi-di-sesamo-nero-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -269,7 +269,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-173159-impasto-farro-integrale.webp",
+     "image": "img/uploads/20261126-definitiva-i411-impasto-farro-integrale-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -291,7 +291,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-173303-impasto-kamut-grano-khorasan.webp",
+     "image": "img/uploads/20261126-definitiva-i412-impasto-kamut-grano-khorasan-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -313,7 +313,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-173356-impasto-senatore-cappelli-integr.webp",
+     "image": "img/uploads/20261126-definitiva-i413-impasto-senatore-cappelli-integrale-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -330,7 +330,7 @@
       "senza-glutine"
      ],
      "allergens": [],
-     "image": "img/uploads/20261123-173615-impasto-senza-glutine.webp",
+     "image": "img/uploads/20261126-definitiva-i414-impasto-senza-glutine-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -412,7 +412,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261123-174138-bruschetta-ai-cereali-al-pezzo.webp",
+     "image": "img/uploads/20261126-definitiva-i415-bruschetta-ai-cereali-al-pezzo-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -478,7 +478,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "img/uploads/20261123-174338-caprese-con-mozzarella-artigiana.webp",
+     "image": "img/uploads/20261126-definitiva-i418-caprese-con-mozzarella-artigianale-a-siero-innesto-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -494,7 +494,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "img/uploads/20261123-175140-caprese-di-bufala-km-0.webp",
+     "image": "img/uploads/20261126-definitiva-i419-caprese-di-bufala-km-0-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -510,7 +510,7 @@
      "allergens": [
       "solfiti"
      ],
-     "image": "img/uploads/20261123-175506-carciofi-grigliati-sott-olio.webp",
+     "image": "img/uploads/20261126-definitiva-i420-carciofi-grigliati-sott-olio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -542,7 +542,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "img/uploads/20261123-175806-carpaccio-di-salmone-affumicato-.webp",
+     "image": "img/uploads/20261126-definitiva-i423-carpaccio-di-salmone-affumicato-rucola-pepe-olio-evo-e-limone-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -626,7 +626,7 @@
       "sedano",
       "senape"
      ],
-     "image": "img/uploads/20261123-175931-olive-miste-piccole-in-calce-e-s.webp",
+     "image": "img/uploads/20261126-definitiva-i428-olive-miste-piccole-in-calce-e-salamoia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -646,7 +646,7 @@
       "sedano",
       "senape"
      ],
-     "image": "img/uploads/20261123-180100-olive-miste-grandi-in-calce-e-sa.webp",
+     "image": "img/uploads/20261126-definitiva-i429-olive-miste-grandi-in-calce-e-salamoia-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5973,7 +5973,7 @@
       "soia",
       "uova"
      ],
-     "image": "img/uploads/20261125-163428-puccia-beef-burger.webp",
+     "image": "img/uploads/20261126-definitiva-i497-puccia-beef-burger-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -7225,7 +7225,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "img/uploads/20261125-161355-acqua-frizz-vetro-75-cl.webp",
+     "image": "img/uploads/20261126-definitiva-i690-acqua-frizz-vetro-75-cl-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8086,7 +8086,7 @@
      "allergens": [
       "glutine"
      ],
-     "image": "img/uploads/20261125-163558-grus-golden-ale-5-0-vol.webp",
+     "image": "img/uploads/20261126-definitiva-i726-grus-golden-ale-5-0-vol-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8509,7 +8509,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/uploads/20261125-160932-limoncello.webp",
+     "image": "img/uploads/20261126-definitiva-i776-limoncello-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
