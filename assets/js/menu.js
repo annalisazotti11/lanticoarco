@@ -107,8 +107,11 @@
     var nums = AA.allergenNums(it.allergens).map(function (a) { return a.n; });
     return nums.length ? 'Allergeni ' + nums.join(' · ') + (needsAllergenReview(it) ? ' · da verificare' : '') : needsAllergenReview(it) ? 'Allergeni da verificare' : 'Nessun allergene dichiarato';
   }
+  function ingredientThumb(it) {
+    return it.image ? '<img class="ingredient-thumb" width="42" height="42" alt="" loading="lazy" decoding="async" src="' + esc(AA.src(it.image)) + '">' : '';
+  }
   function extraListButton(it, showPrice) {
-    return '<li class="extra-entry" data-extra-search="' + esc(it.name) + '"><button type="button" data-item="' + esc(it.id) + '" class="extra-entry-btn"><span><strong>' + hl(it.name) + '</strong><small>' + esc(extraAllergenText(it)) + '</small></span><span class="extra-entry-price num">' + (showPrice ? AA.price(it.price, {signed:true}) : '') + '<span aria-hidden="true">›</span></span></button></li>';
+    return '<li class="extra-entry" data-extra-search="' + esc(it.name) + '"><button type="button" data-item="' + esc(it.id) + '" class="extra-entry-btn">' + ingredientThumb(it) + '<span class="ingredient-label"><strong>' + hl(it.name) + '</strong><small>' + esc(extraAllergenText(it)) + '</small></span><span class="extra-entry-price num">' + (showPrice ? AA.price(it.price, {signed:true}) : '') + '<span aria-hidden="true">›</span></span></button></li>';
   }
   function chipsHTML(items) {
     var plant = items.filter(plantAlternative).sort(extraOrder), by = {};
@@ -504,7 +507,7 @@
     var price = priceHTML(it, sec);
     if (/class="tbc"/.test(price)) price = '<span class="d-tbc">Prezzo: chiedi al personale</span>';
     var algs = AA.allergenNums(it.allergens);
-    return (it.image ? '<img class="d-ph" alt="" onload="if(this.naturalWidth<400)this.classList.add(\'lowres\')" src="' + esc(AA.src(it.image)) + '">' : '') +
+    return (it.image ? '<img class="d-ph' + (sec.group === 'aggiunte' ? ' ingredient-detail-thumb' : '') + '" alt="" onload="if(this.naturalWidth<400)this.classList.add(\'lowres\')" src="' + esc(AA.src(it.image)) + '">' : '') +
       '<div class="d-body"><p class="d-sec">' + esc(sec.name) + '</p>' +
       '<h2 class="d-name" id="sheetTitle">' + esc(it.name) + (it.frozen ? '<span class="frz">*</span>' : '') + '</h2>' +
       '<div class="d-price num">' + price + '</div>' +
@@ -652,7 +655,7 @@
   function deltaLabel(v) { return v == null || v === '' ? 'da chiedere' : (Number(v) ? AA.price(Number(v), { signed: true }) : 'compreso'); }
   function extraChip(it, detail) {
     var on = B.sel.indexOf(it.id) >= 0;
-    return '<button type="button" class="bchip b-extra-choice' + (detail ? ' b-extra-plant' : '') + '" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="' + on + '"><span><b>' + esc(it.name) + '</b>' + (detail ? '<small>' + esc(extraAllergenText(it)) + '</small>' : '') + '</span><em class="num">' + deltaLabel(it.price) + '</em></button>';
+    return '<button type="button" class="bchip b-extra-choice' + (detail ? ' b-extra-plant' : '') + '" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="' + on + '">' + ingredientThumb(it) + '<span class="ingredient-label"><b>' + esc(it.name) + '</b>' + (detail ? '<small>' + esc(extraAllergenText(it)) + '</small>' : '') + '</span><em class="num">' + deltaLabel(it.price) + '</em></button>';
   }
   function extraPicker(n) {
     var veg = veganRecipe(B.start.item,B.start.sec), plant = B.extras.filter(plantAlternative).sort(extraOrder);
@@ -790,7 +793,7 @@
     }
     var mine = $('bMine');
     if (mine) mine.innerHTML = st.ing.length ? '<p class="b-sub">Aggiunti da te. Tocca per togliere</p><div class="bchips">' + st.ing.map(function (it) {
-      return '<button type="button" class="bchip b-mine" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="true" aria-label="' + esc(it.name) + ', tocca per toglierlo"><span>' + esc(it.name) + '</span><em class="num">' + AA.price(unitPrice(it), { signed: true }) + '</em><i aria-hidden="true"></i></button>';
+      return '<button type="button" class="bchip b-mine" data-b="extra" data-v="' + esc(it.id) + '" aria-pressed="true" aria-label="' + esc(it.name) + ', tocca per toglierlo">' + ingredientThumb(it) + '<span class="ingredient-label">' + esc(it.name) + '</span><em class="num">' + AA.price(unitPrice(it), { signed: true }) + '</em><i aria-hidden="true"></i></button>';
     }).join('') + '</div>' : '';
   }
   function showWaiter() {

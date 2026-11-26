@@ -1,0 +1,7 @@
+/* Small transparent ingredient photographs in the extras catalogue and builder. */
+html .ingredient-thumb { display:block; flex:0 0 42px; width:42px; height:42px; max-width:42px; object-fit:contain; border:0; border-radius:0; box-shadow:none; padding:0; background:transparent; }
+html .extra-entry-btn .ingredient-label, html .b-extra-choice .ingredient-label, html .b-mine .ingredient-label { flex:1 1 auto; min-width:0; overflow-wrap:anywhere; }
+html .b-extra-choice .ingredient-thumb, html .b-mine .ingredient-thumb { flex-basis:30px; width:30px; height:30px; max-width:30px; }
+html .b-extra-choice { padding-inline:8px; }
+html img.d-ph.ingredient-detail-thumb, html img.d-ph.ingredient-detail-thumb.lowres { display:block; width:112px; max-width:112px; height:112px; margin:18px auto 0; object-fit:contain; background:transparent; border:0; box-shadow:none; border-radius:0; }
+html.kiosk .extra-entry-btn .ingredient-thumb { flex-basis:52px; width:52px; max-width:52px; height:52px; }

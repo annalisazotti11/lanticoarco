@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:15:04.851Z",
+ "updatedAt": "2026-11-26T13:29:40.813Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -5067,7 +5067,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261126-definitiva-i537-classica-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i537-classica-v2.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8787,7 +8787,7 @@
      "allergens": [
       "solfiti"
      ],
-     "image": "",
+     "image": "img/ingredienti/x113.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8801,7 +8801,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x114.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8817,7 +8817,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x225.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8841,7 +8841,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/ingredienti/x115.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8857,7 +8857,7 @@
      "allergens": [
       "frutta-a-guscio"
      ],
-     "image": "",
+     "image": "img/ingredienti/x116.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8871,7 +8871,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x117.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8887,7 +8887,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x118.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8903,7 +8903,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x230.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8921,7 +8921,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x119.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8937,7 +8937,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x120.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8951,7 +8951,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x121.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8967,7 +8967,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x122.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8985,7 +8985,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x123.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9001,7 +9001,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x124.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9015,7 +9015,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x125.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9031,7 +9031,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x126.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9049,7 +9049,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x127.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9063,7 +9063,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x128.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9079,7 +9079,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x129.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9095,7 +9095,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x130.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9111,7 +9111,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x131.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9127,7 +9127,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x132.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9143,7 +9143,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x133.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9159,7 +9159,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x134.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9178,7 +9178,7 @@
       "frutta-a-guscio",
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x135.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9194,7 +9194,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x136.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9208,7 +9208,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x137.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9224,7 +9224,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x137.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9240,7 +9240,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x139.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9258,7 +9258,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x140.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9272,7 +9272,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x141.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9288,7 +9288,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x142.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9304,7 +9304,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x132.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9320,7 +9320,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x122.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9336,7 +9336,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x146.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9352,7 +9352,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x147.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9368,7 +9368,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x148.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9384,7 +9384,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x227.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9402,7 +9402,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "",
+     "image": "img/ingredienti/x229.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9418,7 +9418,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "",
+     "image": "img/ingredienti/x149.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9434,7 +9434,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "",
+     "image": "img/ingredienti/x150.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9450,7 +9450,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "",
+     "image": "img/ingredienti/x151.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9464,7 +9464,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x152.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9480,7 +9480,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x153.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9496,7 +9496,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x154.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9512,7 +9512,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x155.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9530,7 +9530,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x156.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9544,7 +9544,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x157.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9562,7 +9562,7 @@
      "allergens": [
       "frutta-a-guscio"
      ],
-     "image": "",
+     "image": "img/ingredienti/x158.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9576,7 +9576,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x159.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9592,7 +9592,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x160.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9610,7 +9610,7 @@
      "allergens": [
       "frutta-a-guscio"
      ],
-     "image": "",
+     "image": "img/ingredienti/x161.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9624,7 +9624,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x162.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9640,7 +9640,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x163.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9656,7 +9656,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x224.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9672,7 +9672,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x164.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9688,7 +9688,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x165.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9706,7 +9706,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x140.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9720,7 +9720,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x167.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9738,7 +9738,7 @@
      "allergens": [
       "frutta-a-guscio"
      ],
-     "image": "",
+     "image": "img/ingredienti/x168.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9752,7 +9752,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x170.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9770,7 +9770,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x171.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9786,7 +9786,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x171.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9802,7 +9802,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x172.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -9816,7 +9816,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x173.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9832,7 +9832,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x174.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9848,7 +9848,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x175.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9864,7 +9864,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x176.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9880,7 +9880,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x177.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9896,7 +9896,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x178.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9912,7 +9912,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x179.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9928,7 +9928,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x180.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9944,7 +9944,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x181.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9960,7 +9960,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x182.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9976,7 +9976,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x183.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -9992,7 +9992,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x126.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10008,7 +10008,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x185.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10024,7 +10024,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x186.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10040,7 +10040,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x162.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10058,7 +10058,7 @@
      "allergens": [
       "frutta-a-guscio"
      ],
-     "image": "",
+     "image": "img/ingredienti/x188.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10072,7 +10072,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x189.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10088,7 +10088,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x190.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10104,7 +10104,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x137.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10120,7 +10120,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x192.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10138,7 +10138,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x193.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10152,7 +10152,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x194.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10168,7 +10168,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x195.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10184,7 +10184,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x196.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10200,7 +10200,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x197.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10218,7 +10218,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x198.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10232,7 +10232,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x199.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10248,7 +10248,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x200.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10264,7 +10264,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x182.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10282,7 +10282,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x198.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10296,7 +10296,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x203.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10312,7 +10312,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x204.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10331,7 +10331,7 @@
       "solfiti",
       "crostacei"
      ],
-     "image": "",
+     "image": "img/ingredienti/x205.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10347,7 +10347,7 @@
      "allergens": [
       "glutine"
      ],
-     "image": "",
+     "image": "img/ingredienti/x206.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10363,7 +10363,7 @@
      "allergens": [
       "soia"
      ],
-     "image": "",
+     "image": "img/ingredienti/x207.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10377,7 +10377,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x208.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10395,7 +10395,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x209.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10409,7 +10409,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x210.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10427,7 +10427,7 @@
      "allergens": [
       "frutta-a-guscio"
      ],
-     "image": "",
+     "image": "img/ingredienti/x195.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10443,7 +10443,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x212.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10457,7 +10457,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x213.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10473,7 +10473,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x214.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10489,7 +10489,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x215.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10505,7 +10505,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x223.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10523,7 +10523,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/ingredienti/x216.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10541,7 +10541,7 @@
       "sesamo",
       "senape"
      ],
-     "image": "",
+     "image": "img/ingredienti/x217.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10557,7 +10557,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/ingredienti/x218.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -10575,7 +10575,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "",
+     "image": "img/ingredienti/x219.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -10594,7 +10594,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/ingredienti/x220.webp",
      "frozen": false,
      "available": true,
      "featured": false
