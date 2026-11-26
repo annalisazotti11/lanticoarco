@@ -1,0 +1,33 @@
+/* Vetrina: nella home compaiono solo i ritagli reali delle pizze, non i piatti. */
+.ch-pizze .pz-stage { width:min(100%, 590px); max-width:min(100%, 590px); }
+.ch-pizze .pz-stage::before { inset:1%; border-color:#f7e5cf29; }
+.ch-pizze .pz-stage::after { bottom:0; opacity:.65; }
+.ch-pizze .pz-plate { inset:0; overflow:visible; }
+.ch-pizze .pz-plate:not(.photo) img { display:block; object-fit:contain; filter:drop-shadow(0 20px 25px #0008); }
+/* Fallback per una nuova foto caricata dal gestore senza un ritaglio dedicato. */
+.ch-pizze .pz-plate.photo { inset:8%; border-radius:50%; overflow:hidden; box-shadow:0 18px 35px #0006; }
+.ch-pizze .pz-plate.photo img { object-fit:cover; transform:scale(1.22); filter:none; }
+.ch-pizze .pz-plate.inn { animation:pz-v20-enter .48s cubic-bezier(.18,.72,.26,1) both; }
+@keyframes pz-v20-enter { from { opacity:.35; transform:scale(.96) rotate(-3deg); } to { opacity:1; transform:none; } }
+.ch-pizze .pz-tabs { max-width:100%; }
+.ch-pizze .pz-tabs button { min-width:0; white-space:nowrap; }
+.ch-pizze .pz-tabs button:focus-visible,.ch-pizze .pz-ctl :is(button,a):focus-visible { outline:2px solid #f0bd83; outline-offset:3px; }
+.ch-pizze .pz-ctl .round { transition:transform .2s,background .2s; }
+.ch-pizze .pz-ctl .round:active { transform:scale(.92); }
+/* The closing invitation stands on its own; the brand is already in the header. */
+.sf .sf-brand { display:block; }
+.sf .sf-big { max-width:none; text-wrap:balance; }
+.sf .sf-cols > div { min-width:0; overflow-wrap:anywhere; }
+@media(max-width:759px) {
+  .ch-pizze .pz-grid { grid-template-columns:minmax(0,1fr); }
+  .ch-pizze .pz-eyebrow { order:-1; }
+  .ch-pizze .pz-stage { width:min(86vw,390px); max-width:100%; margin:14px auto 6px; }
+  .ch-pizze .pz-tabs { gap:2px; }
+  .ch-pizze .pz-tabs button { flex:1 1 0; padding-inline:5px; font-size:clamp(.74rem,3.5vw,.91rem); }
+  .ch-pizze .pz-card { min-width:0; }
+  .ch-pizze .pz-ctl { gap:9px; }
+  .ch-pizze .pz-all { margin-left:0; }
+  .sf .sf-big { max-width:100%; font-size:clamp(2.6rem,11vw,4rem); }
+}
+@media(hover:none),(pointer:coarse) { .ch-pizze .pz-stage { transform:none!important; rotate:0deg; scale:1; translate:none; touch-action:pan-y; } }
+@media(prefers-reduced-motion:reduce) { .ch-pizze .pz-plate.inn,.ch-pizze .pz-card.swap>* { animation:none!important; } .ch-pizze .pz-stage,.ch-pizze .pz-ctl .round { transition:none!important; } }

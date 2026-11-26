@@ -255,8 +255,7 @@
     data.sections.forEach(function (s) {
       if (!s.visible || s.group !== 'pizze') return;
       var all = AA.visibleItems(s).filter(function (it) { return it.available !== false; });
-      var cut = all.filter(function (it) { return it.cutout; });
-      var list = cut.length ? cut : all.filter(function (it) { return it.image; });
+      var list = all.filter(function (it) { return it.image || it.cutout; });
       if (!list.length) return;
       list.sort(function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0); });
       var hint = s.subtitle || '';
@@ -265,9 +264,12 @@
     });
     if (!tabs.length) return;
     var tabBox = $('pzTabs'), plate = $('pzPlate'), card = $('pzCard');
-    var t = 0, i = 0, timer = null;
+    var t = 0, i = 0;
+    var cutouts = window.AAPizzaCutouts || {};
+    function pizzaAsset(it) { return cutouts[it.image] || it.cutout || it.image; }
+    function prefetch(it) { if (it) { var p = new Image(); p.decoding = 'async'; p.src = AA.src(pizzaAsset(it)); } }
     tabBox.innerHTML = tabs.map(function (tb, k) {
-      return '<button type="button" role="tab" data-k="' + k + '" aria-selected="' + (k === 0) + '">' + esc(tb.label) + '</button>';
+      return '<button type="button" role="tab" id="pzTab' + k + '" data-k="' + k + '" aria-controls="pzCard" tabindex="' + (k === 0 ? 0 : -1) + '" aria-selected="' + (k === 0) + '">' + esc(tb.label) + '</button>';
     }).join('');
     function paint() {
       var tb = tabs[t], it = tb.items[i];
@@ -276,38 +278,51 @@
       $('pzTags').innerHTML = (it.tags || []).map(function (c) { var tg = AA.TAG_BY_CODE[c]; return tg ? '<span>' + esc(tg.short) + '</span>' : ''; }).join('') + (it.featured ? '<span>Preferita</span>' : '');
       $('pzCount').textContent = (i + 1) + ' / ' + tb.items.length;
       var img = $('pzImg');
-      plate.classList.toggle('photo', !it.cutout);
-      img.src = AA.src(it.cutout || it.image);
+      plate.classList.toggle('photo', !(cutouts[it.image] || it.cutout));
+      img.src = AA.src(pizzaAsset(it));
       img.alt = 'Pizza ' + it.name;
       card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+      prefetch(tb.items[(i + 1) % tb.items.length]);
+      prefetch(tb.items[(i - 1 + tb.items.length) % tb.items.length]);
     }
     function swapTo(fn) {
-      if (reduce) { fn(); paint(); return; }
-      plate.classList.remove('inn'); plate.classList.add('out');
-      setTimeout(function () { fn(); paint(); plate.classList.remove('out'); void plate.offsetWidth; plate.classList.add('inn'); }, 420);
+      fn(); paint();
+      plate.classList.remove('out', 'inn');
+      if (!reduce) { void plate.offsetWidth; plate.classList.add('inn'); }
     }
     function setTab(k) {
       t = k; i = 0;
-      tabBox.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-selected', Number(b.dataset.k) === k); });
+      tabBox.querySelectorAll('button').forEach(function (b) { var selected = Number(b.dataset.k) === k; b.setAttribute('aria-selected', selected); b.tabIndex = selected ? 0 : -1; });
+      card.setAttribute('role', 'tabpanel'); card.setAttribute('aria-labelledby', 'pzTab' + k);
       $('pzHint').textContent = tabs[k].hint;
       var a = $('pzAll');
       a.href = AA.ROOT + 'menu/#' + encodeURIComponent(tabs[k].sec.id);
       a.textContent = 'Tutte le ' + tabs[k].total + ' nel menu';
     }
-    function stop() { clearInterval(timer); timer = null; }
     tabBox.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || Number(b.dataset.k) === t) return;
-      stop(); var k = Number(b.dataset.k); swapTo(function () { setTab(k); });
+      var k = Number(b.dataset.k); swapTo(function () { setTab(k); });
     });
-    $('pzPrev').onclick = function () { stop(); swapTo(function () { i = (i - 1 + tabs[t].items.length) % tabs[t].items.length; }); };
-    $('pzNext').onclick = function () { stop(); swapTo(function () { i = (i + 1) % tabs[t].items.length; }); };
+    tabBox.addEventListener('keydown', function (e) {
+      var k = t;
+      if (e.key === 'ArrowRight') k = (t + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft') k = (t - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') k = 0;
+      else if (e.key === 'End') k = tabs.length - 1;
+      else return;
+      e.preventDefault(); swapTo(function () { setTab(k); });
+      tabBox.querySelector('[data-k="' + k + '"]').focus();
+    });
+    $('pzPrev').onclick = function () { swapTo(function () { i = (i - 1 + tabs[t].items.length) % tabs[t].items.length; }); };
+    $('pzNext').onclick = function () { swapTo(function () { i = (i + 1) % tabs[t].items.length; }); };
     // scorrimento col dito sulla pizza
-    var sx = null;
-    plate.parentNode.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    var sx = null, sy = null;
+    plate.parentNode.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
     plate.parentNode.addEventListener('touchend', function (e) {
-      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null;
-      if (Math.abs(dx) > 40) (dx < 0 ? $('pzNext') : $('pzPrev')).click();
+      if (sx == null) return; var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = sy = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.25) (dx < 0 ? $('pzNext') : $('pzPrev')).click();
     });
+    plate.parentNode.addEventListener('touchcancel', function () { sx = sy = null; }, { passive: true });
     setTab(0); paint();
     // Pizze: cambia solo su scelta del cliente.
   }
@@ -668,3 +683,4 @@
  dialog.querySelector('.v16-close').addEventListener('click',function(){dialog.close()});dialog.addEventListener('click',function(e){if(e.target===dialog)dialog.close()});dialog.addEventListener('close',function(){if(lastFocus)lastFocus.focus({preventScroll:true})});fp.addEventListener('click',function(){show(current-1)});fn.addEventListener('click',function(){show(current+1)});dialog.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();show(current+(e.key==='ArrowLeft'?-1:1))}});
  rail.parentElement.classList.add('v16-motion');addEventListener('scroll',request,{passive:true});addEventListener('resize',request);paint();
 })();
+

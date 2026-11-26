@@ -1,0 +1,39 @@
+/* Le foto del catalogo sono quadrate: mai ingrandirle o ritagliarle. */
+html.menu-v13.kiosk.kiosk-v11 .k11-product.k11-has-photo .k11-product-photo {
+  display:block; width:100%; height:auto; aspect-ratio:1 / 1; max-height:none; flex:none;
+  background:#eee4d5; overflow:hidden;
+}
+html.menu-v13.kiosk.kiosk-v11 .k11-product.k11-has-photo .k11-product-photo img {
+  display:block; width:100%; height:100%; object-fit:contain; object-position:center; transform:none!important;
+}
+/* The 32-inch vertical display keeps its three columns; narrower phones retain their layout. */
+@media (min-width:700px) {
+  html.menu-v13.kiosk.kiosk-v11 #contenuto .items { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+html.menu-v13 .item-ph,html.menu-v13 .card-ph { object-fit:contain; }
+html.menu-v13 .card-ph { border-radius:12px; }
+html.menu-v13 .ex-card .ex-photo img,html.menu-v13 .k11-side-photo img { object-fit:contain; }
+/* The detail dialog shows the whole photo, including bottle caps and the complete plate. */
+html.menu-v13 #sheet img.d-ph:not(.lowres):not(.ingredient-detail-thumb) {
+  display:block; width:min(100%,390px); height:auto; aspect-ratio:1; object-fit:contain;
+  max-height:min(42vh,390px); margin:16px auto 0; border-radius:16px; background:transparent;
+}
+html.menu-v13.kiosk.kiosk-v11 #sheet img.d-ph:not(.lowres):not(.ingredient-detail-thumb) { max-height:min(29vh,420px); width:min(100%,420px); height:auto; aspect-ratio:1; }
+html.menu-v13 #sheet img.ingredient-detail-thumb { width:112px!important; height:112px!important; margin:16px auto 0; background:transparent; border:0; box-shadow:none; border-radius:0!important; object-fit:contain; }
+html.menu-v13 .ingredient-thumb { transform:none; background:transparent; }
+html.menu-v13 .item-btn,html.menu-v13 .b-extra-choice,html.menu-v13 .extra-entry-btn { transition:background .18s ease,border-color .18s ease,box-shadow .18s ease; }
+html.menu-v13 .b-extra-choice[aria-pressed=true] .ingredient-thumb { filter:drop-shadow(0 0 3px #fff5); }
+@media (hover:hover) and (pointer:fine) {
+  html.menu-v13 .item-btn:hover { background:#f6efe5; }
+  html.menu-v13 .ex-card:hover .ex-photo img { transform:none; }
+  html.menu-v13 .b-extra-choice:not([aria-pressed=true]):hover { background:#f0e5d7; }
+}
+@media(max-width:420px) {
+  html.menu-v13:not(.kiosk) #sheet img.d-ph:not(.lowres):not(.ingredient-detail-thumb) { width:min(100%,320px); max-height:36vh; }
+  html.menu-v13 .extra-entry-btn { gap:6px; padding-inline:8px; }
+  html.menu-v13 .extra-entry-btn .ingredient-thumb { width:36px;height:36px;max-width:36px;flex-basis:36px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html.menu-v13 .item-btn,html.menu-v13 .b-extra-choice,html.menu-v13 .extra-entry-btn,html.menu-v13 .k11-product { transition:none!important; }
+  html.menu-v13 .k11-product.in { animation:none!important; }
+}
