@@ -511,15 +511,25 @@
   AA.loadMenu().then(function (data) {
     var info = data.info || {};
     bind(info);
-    var st = AA.openStatus(info);
-    if (st) {
-      var s = $('status'); s.hidden = false; s.textContent = st.text; s.classList.toggle('is-open', st.open);
-      var vs = $('viStatus'); vs.hidden = false; vs.textContent = st.text; vs.classList.toggle('is-open', st.open);
-      var ns = $('nsStatus'); if (ns) { ns.textContent = st.text; ns.classList.toggle('is-open', st.open); }
-      var now = new Date(), d = now.getDay(), open = (info.openDays || []).indexOf(d) >= 0 && !st.closedToday;
-      var late = info.openTo && (now.getHours() * 60 + now.getMinutes()) >= (function (x) { var p = x.split(':'); return p[0] * 60 + Number(p[1]); })(info.openTo);
-      $('viTitle').textContent = st.open ? 'Ti teniamo un tavolo?' : (open && !late ? 'Ci vediamo stasera?' : 'Ti teniamo un tavolo?');
+    function refreshStatus() {
+      var st = AA.openStatus(info);
+      if (!st) return;
+      var upcoming = !st.open && st.text.indexOf('Stasera siamo aperti') === 0;
+      var label = upcoming ? 'Apertura stasera alle ' + info.openFrom : st.text;
+      ['status', 'viStatus', 'nsStatus'].forEach(function (id) {
+        var el = $(id); if (!el) return;
+        el.hidden = false;
+        if (el.textContent !== label) el.textContent = label;
+        el.classList.toggle('is-open', st.open);
+        el.classList.toggle('is-upcoming', upcoming);
+      });
+      var title = $('viTitle'), copy = upcoming ? 'Ci vediamo stasera?' : 'Ti teniamo un tavolo?';
+      if (title && title.textContent !== copy) title.textContent = copy;
+      week(info);
     }
+    refreshStatus();
+    setInterval(refreshStatus, 60000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshStatus(); });
     var ann = AA.announcement(data);
     if (ann) { $('notice').hidden = false; $('notice').textContent = ann; }
     doughs(data); pizzas(data); promos(data); product(data);
