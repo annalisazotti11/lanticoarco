@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:01:51.324Z",
+ "updatedAt": "2026-11-26T13:02:18.717Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -6334,7 +6334,7 @@
       "glutine",
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i513-bucatini-all-amatriciana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6352,7 +6352,7 @@
       "latte",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i514-spaghetti-cacio-e-pepe-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6418,7 +6418,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i517-entrecote-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6435,7 +6435,7 @@
       "frutta-a-guscio",
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i518-entrecote-reale-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -6455,7 +6455,7 @@
       "sedano",
       "senape"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i520-salsiccia-suino-punta-di-coltello-con-insalata-verde-o-patate-fritte-1x1.webp",
      "frozen": true,
      "available": true,
      "featured": false
@@ -6475,7 +6475,7 @@
       "sedano",
       "senape"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i521-zampina-al-piatto-con-insalata-verde-o-patate-fritte-1x1.webp",
      "frozen": true,
      "available": true,
      "featured": false
@@ -6509,7 +6509,7 @@
       "latte",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i732-bomboniera-algida-12-pz-classica-o-mista-v2.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6601,7 +6601,7 @@
       "latte",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i736-cassata-al-limoncello-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6623,7 +6623,7 @@
       "latte",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i737-cassata-alla-nocciola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6689,7 +6689,7 @@
       "latte",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i740-cheese-cake-gelato-ai-frutti-di-bosco-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6933,7 +6933,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i751-pizza-dessert-nocciolata-bio-v2.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -6979,7 +6979,7 @@
       "latte",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i753-pizza-dessert-ricotta-fresca-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7001,7 +7001,7 @@
       "soia",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i754-rolle-alla-nutella-v2.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7089,7 +7089,7 @@
       "frutta-a-guscio",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i758-souffle-al-pistacchio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7297,7 +7297,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i694-fanta-33-cl-vetro-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
