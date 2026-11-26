@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T12:44:56.459Z",
+ "updatedAt": "2026-11-26T12:45:04.296Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -8739,7 +8739,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "img/menu/media-107.webp",
+     "image": "img/uploads/20261126-definitiva-i788-caffe-espresso-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8755,7 +8755,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "img/menu/media-107.webp",
+     "image": "img/uploads/20261126-definitiva-i789-caffe-decaffeinato-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
