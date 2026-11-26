@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T12:29:45.408Z",
+ "updatedAt": "2026-11-26T12:44:35.473Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -6958,7 +6958,7 @@
       "senape",
       "soia"
      ],
-     "image": "img/uploads/20261125-163218-pizza-dessert-alla-nutella.webp",
+     "image": "img/uploads/20261126-definitiva-i752-pizza-dessert-alla-nutella-v3.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7023,7 +7023,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/menu/media-166.webp",
+     "image": "img/uploads/20261126-definitiva-i755-sorbetto-al-limone-v3.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7045,7 +7045,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/menu/media-111.webp",
+     "image": "img/uploads/20261126-definitiva-i756-sorbetto-al-mandarino-v3.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7067,7 +7067,7 @@
       "frutta-a-guscio",
       "uova"
      ],
-     "image": "img/uploads/20261125-definitiva-i757-souffle-al-cioccolato-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i757-souffle-al-cioccolato-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7110,7 +7110,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/uploads/20261125-definitiva-i759-tartufo-classico-bianco-al-caffe-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i759-tartufo-classico-bianco-al-caffe-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7131,7 +7131,7 @@
       "latte",
       "uova"
      ],
-     "image": "img/menu/media-84.webp",
+     "image": "img/uploads/20261126-definitiva-i760-tartufo-classico-cioccolato-e-cacao-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7153,7 +7153,7 @@
       "frutta-a-guscio",
       "soia"
      ],
-     "image": "img/menu/media-148.webp",
+     "image": "img/uploads/20261126-definitiva-i761-tartufo-vegano-alla-gianduia-manfredonia-fg-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7175,7 +7175,7 @@
       "pesce",
       "uova"
      ],
-     "image": "img/uploads/20261125-definitiva-i762-torta-ai-frutti-rossi-martinucci-1x1.webp",
+     "image": "img/uploads/20261126-definitiva-i762-torta-ai-frutti-rossi-martinucci-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8274,7 +8274,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-12.webp",
+     "image": "img/uploads/20261126-definitiva-i763-averna-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8294,7 +8294,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "img/menu/media-57.webp",
+     "image": "img/uploads/20261126-definitiva-i764-baileys-irish-cream-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8311,7 +8311,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-68.webp",
+     "image": "img/uploads/20261126-definitiva-i765-baileys-irish-cream-senza-lattosio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8329,7 +8329,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-13.webp",
+     "image": "img/uploads/20261126-definitiva-i766-branca-menta-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8347,7 +8347,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-144.webp",
+     "image": "img/uploads/20261126-definitiva-i767-chartreuse-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8365,7 +8365,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-63.webp",
+     "image": "img/uploads/20261126-definitiva-i768-cynar-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8383,7 +8383,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "img/menu/media-66.webp",
+     "image": "img/uploads/20261126-definitiva-i769-vecchio-amaro-del-capo-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
