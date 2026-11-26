@@ -336,7 +336,7 @@
     function paint() {
       var p = list[k];
       box.classList.toggle('no-img', !p.image);
-      box.innerHTML = '<div class="v19-news-inner">' + (p.image ? '<img class="v19-news-photo" alt="" src="' + esc(AA.src(p.image)) + '">' : '<span class="v19-news-symbol" aria-hidden="true">✦</span>') + '<div class="v19-news-copy"><p class="v19-news-label">' + esc(p.kicker || 'Da provare') + '</p><p class="v19-news-title">' + esc(p.title) + '</p>' + (p.price ? '<p class="v19-news-price">' + esc(p.price) + '</p>' : '') + '</div><a class="v19-news-link" href="' + AA.ROOT + 'menu/">Guarda il menù <span aria-hidden="true">↗</span></a></div>';
+      box.innerHTML = '<div class="v19-news-inner">' + (p.image ? '<img class="v19-news-photo" alt="" src="' + esc(AA.src(p.image)) + '">' : '<span class="v19-news-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2-5.5-2.9-5.5 2.9 1-6.2-4.5-4.4 6.2-.9z"/></svg></span>') + '<div class="v19-news-copy"><p class="v19-news-label">' + esc(p.kicker || 'Da provare') + '</p><p class="v19-news-title">' + esc(p.title) + '</p>' + (p.price ? '<p class="v19-news-price">' + esc(p.price) + '</p>' : '') + '</div><a class="v19-news-link" href="' + AA.ROOT + 'menu/">Guarda il menù <span class="aa-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></span></a></div>';
       box.classList.remove('swap'); void box.offsetWidth; box.classList.add('swap');
     }
     box.hidden = false; paint();
