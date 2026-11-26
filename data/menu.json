@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:01:04.375Z",
+ "updatedAt": "2026-11-26T13:01:26.349Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -5391,7 +5391,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i678-ciccio-vegan-1-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5415,7 +5415,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i679-ciccio-vegan-2-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5439,7 +5439,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i680-ciccio-vegan-3-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5487,7 +5487,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i682-ciccio-vegan-vito-5-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5511,7 +5511,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i683-ciccio-vegan-6-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5535,7 +5535,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i684-ciccio-vegan-7-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5583,7 +5583,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i686-ciccio-vegan-9-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5607,7 +5607,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i687-ciccio-vegan-10-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5631,7 +5631,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i688-ciccio-vegan-vito-11-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5668,7 +5668,7 @@
       "soia",
       "uova"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i479-insalata-argentina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5682,7 +5682,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i484-insalata-verde-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -5701,7 +5701,7 @@
       "glutine",
       "pesce"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i485-insalata-mediterranea-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5719,7 +5719,7 @@
       "pesce",
       "sesamo"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i486-insalata-norvegese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5735,7 +5735,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i488-insalata-valtellinese-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -5772,7 +5772,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i489-classica-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
