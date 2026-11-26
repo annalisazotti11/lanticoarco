@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:02:18.717Z",
+ "updatedAt": "2026-11-26T13:02:36.766Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -7387,7 +7387,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i700-coca-in-lattina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7423,7 +7423,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i796-bio-chinotto-galvanina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7441,7 +7441,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i801-estathe-al-limone-50-cl-v2.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7459,7 +7459,7 @@
       "analcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i802-bio-cola-galvanina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7576,7 +7576,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i706-vino-bianco-bio-sfuso-cantina-polvanera-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7607,7 +7607,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i707-vino-primitivo-bio-sfuso-cantina-polvanera-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7638,7 +7638,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i708-vino-rosato-bio-sfuso-cantina-polvanera-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -7807,7 +7807,7 @@
      "allergens": [
       "glutine"
      ],
-     "image": "img/menu/media-152.webp",
+     "image": "img/uploads/20261126-definitiva-i795-menabrea-rossa-33-cl-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -7883,7 +7883,7 @@
      "allergens": [
       "glutine"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i718-peroni-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -8242,7 +8242,7 @@
      "allergens": [
       "glutine"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i797-birra-ambar-senza-glutine-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8419,7 +8419,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i771-fernet-branca-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -8491,7 +8491,7 @@
       "alcolico"
      ],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i775-lucano-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
