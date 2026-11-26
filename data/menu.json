@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:00:16.385Z",
+ "updatedAt": "2026-11-26T13:00:41.528Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -1426,7 +1426,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i463-panzerotto-ai-capperi-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1449,7 +1449,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i464-panzerotto-al-cotto-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1472,7 +1472,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i465-panzerotto-alle-rape-stufate-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1497,7 +1497,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i466-panzerotto-alla-romana-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1520,7 +1520,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i467-panzerotto-alla-bufala-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1543,7 +1543,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i468-panzerotto-ai-wurstel-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1567,7 +1567,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i469-panzerotto-alla-capricciosa-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1592,7 +1592,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i470-panzerotto-alla-diavola-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1612,7 +1612,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i471-panzerotto-senza-glutine-classico-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1633,7 +1633,7 @@
       "soia",
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i472-panzerotto-senza-glutine-e-senza-lattosio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -1660,7 +1660,7 @@
       "soia",
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i473-panzerotto-senza-lattosio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -1684,7 +1684,7 @@
       "senape",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i474-panzerotto-solo-pomodoro-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -1706,7 +1706,7 @@
       "sesamo",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i476-panzerotto-alla-carne-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -1730,7 +1730,7 @@
       "sesamo",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i477-panzerotto-alla-carne-bianco-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -1755,7 +1755,7 @@
       "sesamo",
       "soia"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i478-panzerotto-ai-4-formaggi-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
