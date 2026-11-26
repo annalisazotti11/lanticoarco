@@ -56,3 +56,18 @@ html.menu-v13 .b-extra-choice[aria-pressed=true] .ingredient-thumb { filter:drop
   html.menu-v13 .item-btn,html.menu-v13 .b-extra-choice,html.menu-v13 .extra-entry-btn,html.menu-v13 .k11-product { transition:none!important; }
   html.menu-v13 .k11-product.in { animation:none!important; }
 }
+
+/* V14.2 — titles and product text must not sit beneath the image/decorative layers. */
+html.menu-v13 :is(.intro-t,.grp-t,.d-name,.w-t) { line-height:1.13; overflow-wrap:break-word; }
+html.menu-v13 :is(.item-name,.acc-tx b,.extra-entry-btn strong,.b-extra-choice b,.ex-copy strong) { line-height:1.30; overflow-wrap:anywhere; }
+html.menu-v13 :is(.promo-t,.acc-tx i,.bf-s) { white-space:normal; overflow:visible; text-overflow:clip; overflow-wrap:anywhere; }
+html.menu-v13 :is(.item-desc,.k11-product-desc) { display:block; overflow:visible; -webkit-line-clamp:unset; line-clamp:unset; overflow-wrap:anywhere; }
+html.menu-v13.kiosk.kiosk-v11 .k11-product-copy>strong { line-height:1.28; }
+html.menu-v13.kiosk.kiosk-v11 .k11-product-desc,
+html.menu-v13.kiosk.kiosk-v11 .k11-no-photo .k11-product-desc {display:block;overflow:visible;-webkit-line-clamp:unset;line-clamp:unset;}
+html.menu-v13 .ex-special .ex-feature .ex-copy { z-index:3; }
+html.menu-v13 .ex-special .ex-feature .ex-arrow { z-index:4; }
+html.menu-v13 .acc-ph img,html.menu-v13 .k13-shortcut-photo img { object-fit:contain; transform:none; }
+html.menu-v13 .ex-special .ex-feature .ex-photo img,
+html.menu-v13.kiosk.kiosk-v11 .ex-special .ex-feature .ex-photo img { object-fit:contain; transform:none!important; }
+html.menu-v13 .gnav.has-f .gnav-in { -webkit-mask-image:none; mask-image:none; scroll-padding-inline:12px; }

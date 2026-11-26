@@ -36,3 +36,28 @@
 }
 @media(hover:none),(pointer:coarse) { .ch-pizze .pz-stage { transform:none!important; rotate:0deg; scale:1; translate:none; touch-action:pan-y; } }
 @media(prefers-reduced-motion:reduce) { .ch-pizze .pz-plate.inn,.ch-pizze .pz-card.swap>* { animation:none!important; } .ch-pizze .pz-stage,.ch-pizze .pz-ctl .round { transition:none!important; } }
+
+/* V20.2 — reveal the text itself, never crop the italic glyph outlines. */
+.site-v15 .v15-word, .site-v9 .ch .h2.words .w, .hero-t .ln,
+.site-v14 #fuoco.hero-v8 .v14-line {
+  overflow:visible; clip-path:none; -webkit-mask:none; mask:none;
+}
+.site-v15 .v15-word { padding-inline:.025em; margin-inline:-.012em; }
+.site-v15 .v15-word>span { transform:translateY(calc((1 - var(--word-p,1)) * .10em)); opacity:1; }
+.site-v14.motion-enter #fuoco.hero-v8 .v14-line>span,
+.site-v14.motion-enter #fuoco.hero-v8 .v14-line>em {
+  animation-name:aa-title-readable;
+}
+@keyframes aa-title-readable { from{transform:translateY(.12em);opacity:.88} to{transform:none;opacity:1} }
+.site-v9 .ch :is(.h2,.h3,.an-h,.pz-name),.sf .sf-big { line-height:1.12; overflow-wrap:break-word; }
+.ch-pizze .pz-card { overflow:visible; }
+#pizza,#senza-glutine,#storia,#album,#vieni { scroll-margin-top:108px; }
+/* Preserve full original photos outside the intentionally cut-out pizza showcase. */
+.site-v9 .im-photo:not(.dough) { border-radius:18px; background:#eee4d4; }
+.site-v9 .im-photo:not(.dough) img { object-fit:contain; }
+.site-v16 .v16-photo img,.site-v16 .v16-photo.room img,
+.site-v16 .v16-photo button:hover img,.social-latest-card img { object-fit:contain; transform:none; }
+.site-v16 .v16-photo button { background:#e8d8c5; }
+.social-latest-card>span>span { display:block; overflow:visible; -webkit-line-clamp:unset; line-clamp:unset; }
+@media(max-width:759px) { #pizza,#senza-glutine,#storia,#album,#vieni { scroll-margin-top:130px; } }
+@media(prefers-reduced-motion:reduce) { .site-v15 .v15-word>span,.site-v14.motion-enter #fuoco.hero-v8 .v14-line>span,.site-v14.motion-enter #fuoco.hero-v8 .v14-line>em {transform:none!important;animation:none!important;opacity:1!important;} }

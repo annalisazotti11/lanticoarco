@@ -29,3 +29,7 @@
   .promo:not(.no-ph) .promo-p { grid-column:1;grid-row:5; }
 }
 @media(prefers-reduced-motion:reduce){.car-s,.car-s.on,.pg.enter,.pg.leave{transition:none!important;animation:none!important}.att-go span::after{animation:none!important}}
+/* V3.2 — provide breathing room around tall, accented and italic glyphs. */
+.car-t h2,.promo-t,.pg-title { line-height:1.10; overflow-wrap:break-word; }
+.car-t,.promo-x,.cd-name,.row-name { min-width:0; overflow-wrap:anywhere; }
+.car-x { display:block; -webkit-line-clamp:unset; line-clamp:unset; overflow:visible; }
