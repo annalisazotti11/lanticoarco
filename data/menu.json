@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T13:09:50.751Z",
+ "updatedAt": "2026-11-26T13:15:04.851Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -125,7 +125,7 @@
    "id": "aggiunte",
    "name": "Aggiunte",
    "icon": "➕",
-   "image": "img/uploads/20261126-definitiva-i444-verdure-miste-sott-olio-1x1.webp"
+   "image": "img/uploads/20261126-categoria-aggiunte-ingredienti-1x1.webp"
   }
  ],
  "sections": [
@@ -10624,7 +10624,7 @@
    "kicker": "Da provare",
    "text": "Spaghetti 100% italiani trafilati al bronzo, pomodoro pugliese e olio EVO bio. Anche senza glutine.",
    "price": "da € 10,00",
-   "image": "img/menu/media-52.webp",
+   "image": "img/uploads/20261126-definitiva-i510-assassina-classica-1x1.webp",
    "from": "",
    "until": "",
    "totem": true,
@@ -10638,7 +10638,7 @@
    "kicker": "Km 0",
    "text": "Le birre artigianali del micro birrificio del nostro paese, in bottiglia da 33 e 75 cl.",
    "price": "",
-   "image": "img/menu/media-41.webp",
+   "image": "img/uploads/20261126-definitiva-i723-cellamara-i-p-a-6-6-vol-1x1.webp",
    "from": "",
    "until": "",
    "totem": true,
