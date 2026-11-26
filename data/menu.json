@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "updatedAt": "2026-11-26T12:47:42.731Z",
+ "updatedAt": "2026-11-26T12:59:54.264Z",
  "info": {
   "name": "Pizzeria L'Antico Arco",
   "shortName": "L'Antico Arco",
@@ -363,7 +363,7 @@
      "allergens": [
       "pesce"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i804-alici-marinati-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -388,7 +388,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i798-bologna-mortadella-al-forno-terrina-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -428,7 +428,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i803-capocollo-e-bufala-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -446,7 +446,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i416-capocollo-e-mozzarella-artigianale-a-siero-innesto-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -460,7 +460,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i417-capocollo-nazionale-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -526,7 +526,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i421-carpaccio-di-bresaola-rucola-grana-padana-olio-e-limone-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -556,7 +556,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i424-crudite-verdure-crude-di-stagione-miste-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -574,7 +574,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i425-involtini-di-speck-e-mozzarella-artigianale-a-siero-innesto-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -590,7 +590,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i426-mozzarella-artigianale-a-siero-innesto-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -606,7 +606,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i427-mozzarella-di-bufala-km-0-125-g-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -662,7 +662,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i430-pecorino-murgiano-altamura-potenza-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -698,7 +698,7 @@
       "sedano",
       "senape"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i432-pomodori-secchi-sott-olio-bio-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -749,7 +749,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i435-prosciutto-crudo-e-mozzarella-artigianale-a-siero-innesto-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false
@@ -763,7 +763,7 @@
      "note": "",
      "tags": [],
      "allergens": [],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i799-prosciutto-crudo-nazionale-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
@@ -781,7 +781,7 @@
      "allergens": [
       "latte"
      ],
-     "image": "",
+     "image": "img/uploads/20261126-definitiva-i436-provolone-di-bufala-km-0-1x1.webp",
      "frozen": false,
      "available": true,
      "featured": false,
