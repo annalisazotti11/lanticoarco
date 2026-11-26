@@ -1,4 +1,8 @@
 /* Full product photos on the passive screen: no Ken Burns crop or circular masking. */
+/* Never leave the previous slide text visible while the next slide appears. */
+.car-s { visibility:hidden; transition:none; pointer-events:none; }
+.car-s.on { visibility:visible; pointer-events:auto; animation:aa-totem-slide-in .35s ease-out both; }
+@keyframes aa-totem-slide-in {from{opacity:.72}to{opacity:1}}
 .row-ph { object-fit:contain; }
 .cd-ph { object-fit:contain; border-radius:1rem; }
 .pg-hero img { object-fit:contain; animation:none; background:var(--tv-ph); }
@@ -24,4 +28,4 @@
   .promo:not(.no-ph) .promo-x { grid-column:1;grid-row:4; }
   .promo:not(.no-ph) .promo-p { grid-column:1;grid-row:5; }
 }
-@media(prefers-reduced-motion:reduce){.car-s,.pg.enter,.pg.leave{transition:none!important;animation:none!important}.att-go span::after{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.car-s,.car-s.on,.pg.enter,.pg.leave{transition:none!important;animation:none!important}.att-go span::after{animation:none!important}}

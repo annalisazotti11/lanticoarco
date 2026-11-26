@@ -22,6 +22,11 @@ html.menu-v13.kiosk.kiosk-v11 #sheet img.d-ph:not(.lowres):not(.ingredient-detai
 html.menu-v13 #sheet img.ingredient-detail-thumb { width:112px!important; height:112px!important; margin:16px auto 0; background:transparent; border:0; box-shadow:none; border-radius:0!important; object-fit:contain; }
 html.menu-v13 .ingredient-thumb { transform:none; background:transparent; }
 html.menu-v13 .item-btn,html.menu-v13 .b-extra-choice,html.menu-v13 .extra-entry-btn { transition:background .18s ease,border-color .18s ease,box-shadow .18s ease; }
+/* Brief entrance effects keep names, prices and menu controls readable from the start. */
+html.menu-v13 .ex-grid .aa-enter,html.menu-v13 .acc-h.aa-enter {
+  animation:aa-menu-v14-in .24s ease-out both; animation-delay:0ms;
+}
+@keyframes aa-menu-v14-in { from { opacity:.86; translate:0 5px; } to {opacity:1;translate:none;} }
 html.menu-v13 .b-extra-choice[aria-pressed=true] .ingredient-thumb { filter:drop-shadow(0 0 3px #fff5); }
 @media (hover:hover) and (pointer:fine) {
   html.menu-v13 .item-btn:hover { background:#f6efe5; }
@@ -32,6 +37,20 @@ html.menu-v13 .b-extra-choice[aria-pressed=true] .ingredient-thumb { filter:drop
   html.menu-v13:not(.kiosk) #sheet img.d-ph:not(.lowres):not(.ingredient-detail-thumb) { width:min(100%,320px); max-height:36vh; }
   html.menu-v13 .extra-entry-btn { gap:6px; padding-inline:8px; }
   html.menu-v13 .extra-entry-btn .ingredient-thumb { width:36px;height:36px;max-width:36px;flex-basis:36px; }
+}
+/* The mobile language selector shows an unclipped language code; the native
+   dropdown keeps the full language names and all accessible labels. */
+@supports selector(:has(*)) {
+  @media(max-width:450px) {
+    html.menu-v13:not(.kiosk) .aa-language { min-width:52px; justify-content:center; padding:0 8px; gap:4px; }
+    html.menu-v13:not(.kiosk) .aa-language svg { display:none; }
+    html.menu-v13:not(.kiosk) .aa-language select { position:absolute; inset:0; width:100%; max-width:none; height:100%; opacity:0; cursor:pointer; }
+    html.menu-v13:not(.kiosk) .aa-language::after { content:'IT ▾'; font-size:.77rem; font-weight:700; pointer-events:none; }
+    html.menu-v13:not(.kiosk) .aa-language:has(option[value=en]:checked)::after { content:'EN ▾'; }
+    html.menu-v13:not(.kiosk) .aa-language:has(option[value=fr]:checked)::after { content:'FR ▾'; }
+    html.menu-v13:not(.kiosk) .aa-language:has(option[value=es]:checked)::after { content:'ES ▾'; }
+    html.menu-v13:not(.kiosk) .aa-language:has(option[value=de]:checked)::after { content:'DE ▾'; }
+  }
 }
 @media(prefers-reduced-motion:reduce) {
   html.menu-v13 .item-btn,html.menu-v13 .b-extra-choice,html.menu-v13 .extra-entry-btn,html.menu-v13 .k11-product { transition:none!important; }

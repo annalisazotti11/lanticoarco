@@ -1,5 +1,7 @@
 /* Vetrina: nella home compaiono solo i ritagli reali delle pizze, non i piatti. */
 .ch-pizze .pz-stage { width:min(100%, 590px); max-width:min(100%, 590px); }
+#pizze { scroll-margin-top:106px; }
+#pizze :is(button,a) { scroll-margin-block:116px 32px; }
 .ch-pizze .pz-stage::before { inset:1%; border-color:#f7e5cf29; }
 .ch-pizze .pz-stage::after { bottom:0; opacity:.65; }
 .ch-pizze .pz-plate { inset:0; overflow:visible; }
@@ -19,13 +21,16 @@
 .sf .sf-big { max-width:none; text-wrap:balance; }
 .sf .sf-cols > div { min-width:0; overflow-wrap:anywhere; }
 @media(max-width:759px) {
-  .ch-pizze .pz-grid { grid-template-columns:minmax(0,1fr); }
+  #pizze { scroll-margin-top:130px; }
+  #pizze :is(button,a) { scroll-margin-block:142px 28px; }
+  .ch-pizze .pz-grid { grid-template-columns:minmax(0,1fr); gap:12px; }
   .ch-pizze .pz-eyebrow { order:-1; }
-  .ch-pizze .pz-stage { width:min(86vw,390px); max-width:100%; margin:14px auto 6px; }
-  .ch-pizze .pz-tabs { gap:2px; }
+  .ch-pizze .pz-stage { width:min(86vw,390px); max-width:100%; margin:4px auto; }
+  .ch-pizze .pz-tabs { gap:2px; margin-top:10px; }
+  .ch-pizze .pz-hint { margin-top:1px; }
   .ch-pizze .pz-tabs button { flex:1 1 0; padding-inline:5px; font-size:clamp(.74rem,3.5vw,.91rem); }
-  .ch-pizze .pz-card { min-width:0; }
-  .ch-pizze .pz-ctl { gap:9px; }
+  .ch-pizze .pz-card { min-width:0; margin-top:0; }
+  .ch-pizze .pz-ctl { gap:9px; margin-top:2px; }
   .ch-pizze .pz-all { margin-left:0; }
   .sf .sf-big { max-width:100%; font-size:clamp(2.6rem,11vw,4rem); }
 }
